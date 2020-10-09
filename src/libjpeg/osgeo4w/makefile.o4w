@@ -1,0 +1,57 @@
+SRC = \
+	jaricom.c jcapimin.c jcapistd.c jcarith.c jccoefct.c jccolor.c \
+        jcdctmgr.c jchuff.c jcinit.c jcmainct.c jcmarker.c jcmaster.c \
+        jcomapi.c jcparam.c jcprepct.c jcsample.c jctrans.c jdapimin.c \
+        jdapistd.c jdarith.c jdatadst.c jdatasrc.c jdcoefct.c jdcolor.c \
+        jddctmgr.c jdhuff.c jdinput.c jdmainct.c jdmarker.c jdmaster.c \
+        jdmerge.c jdpostct.c jdsample.c jdtrans.c jerror.c jfdctflt.c \
+        jfdctfst.c jfdctint.c jidctflt.c jidctfst.c jidctint.c jquant1.c \
+        jquant2.c jutils.c jmemmgr.c jmemansi.c
+
+INST_DIR = osgeo4w\install
+
+OBJ = $(SRC:j=8\j)
+OBJ = $(OBJ:.c=.obj)
+
+OBJ12 = $(SRC:j=12\j)
+OBJ12 = $(OBJ12:.c=.obj)
+
+OPTFLAGS= /nologo /Ox /MD
+
+CFLAGS	= $(OPTFLAGS) $(CFLAGS)
+
+{.}.c{8}.obj:
+	if not exist 8 mkdir 8
+	$(CC) $(CFLAGS) /DBITS_IN_JSAMPLE=8 /c $< /Fo$*.obj
+
+{.}.c{12}.obj:
+	if not exist 12 mkdir 12
+	$(CC) $(CFLAGS) /DBITS_IN_JSAMPLE=12 /c $< /Fo$*.obj
+
+default: \
+	$(INST_DIR)\bin\jpeg.dll \
+	$(INST_DIR)\lib\jpeg_i.lib \
+	$(INST_DIR)\bin\jpeg12.dll \
+	$(INST_DIR)\lib\jpeg12_i.lib \
+
+osgeo4w\install\bin\jpeg.dll osgeo4w\install\lib\jpeg_i.lib: $(OBJ)
+	if not exist $(INST_DIR) mkdir $(INST_DIR)
+	if not exist $(INST_DIR)\bin mkdir $(INST_DIR)\bin
+	if not exist $(INST_DIR)\lib mkdir $(INST_DIR)\lib
+	link /dll $(OBJ) /implib:$(INST_DIR)\lib\jpeg_i.lib /out:$(INST_DIR)\bin\jpeg.dll
+
+osgeo4w\install\bin\jpeg12.dll osgeo4w\install\lib\jpeg12_i.lib: $(OBJ12)
+	if not exist $(INST_DIR) mkdir $(INST_DIR)
+	if not exist $(INST_DIR)\bin mkdir $(INST_DIR)\bin
+	if not exist $(INST_DIR)\lib mkdir $(INST_DIR)\lib
+	link /dll $(OBJ12) /implib:$(INST_DIR)\lib\jpeg12_i.lib /out:$(INST_DIR)\bin\jpeg12.dll
+
+clean:
+	-del $(INST_DIR)\bin\jpeg.dll
+	-del $(INST_DIR)\lib\jpeg_i.lib
+	-del $(INST_DIR)\bin\jpeg12.dll
+	-del $(INST_DIR)\lib\jpeg12_i.lib
+
+install: default
+	-if not exist $(INST_DIR)\include mkdir $(INST_DIR)\include
+	copy *.h $(INST_DIR)\include

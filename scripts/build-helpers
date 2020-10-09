@@ -1,0 +1,335 @@
+set -e
+
+
+if [ -n "$OSGEO4W_ROOT" ]; then
+	echo "Builds are supposed to be run outside of OSGeo4W" >&2
+	exit 1
+fi
+
+export OSGEO4W_PWD=$PWD
+export OSGEO4W_SCRIPTS=$(cygpath -a "$( dirname "${BASH_SOURCE[0]}" )")
+
+savelog() {
+	local f=$1
+	rm -f $f.9
+	for i in $(seq 8 -1 0); do ! [ -f "$f.$i" ] || mv $f.$i $f.$(( i + 1 )); done
+	! [ -f $f ] || mv $f $f.0
+}
+declare -x savelog
+
+log() {
+	echo "$(date -Ihours): $*"
+}
+declare -x log
+
+startlog() {
+	echo "Local package repository: $OSGEO4W_REP"
+	echo "Logging to $OSGEO4W_PWD/package.log"
+	savelog package.log
+	exec > >(tee package.log) 2>&1
+
+	export PATH=$(cygpath -S):$(cygpath -W):$(cygpath -S)/WBem:/bin:/usr/bin
+	log "Starting with clean PATH: $PATH"
+
+	trap "faillog" EXIT
+}
+declare -x startlog
+
+endlog() {
+	local r=$?
+	if [ $r == 0 ]; then
+		log "Local repository updates:"
+		regen
+		(
+			cd $OSGEO4W_REP
+			diff -u x86_64/setup.ini.prev x86_64/setup.ini || true
+		)
+	fi
+	trap "" EXIT
+	finishlog
+	return $r
+}
+declare -x endlog
+
+faillog() {
+	log "FAILED: $?"
+	finishlog
+}
+declare -x faillog
+
+finishlog() {
+	log "END"
+}
+declare -x finishlog
+
+#
+# run a configuration batch file and source environment changes
+#
+fetchenv() {
+        local IFS
+        IFS=
+        batch=$1
+        shift
+
+        if ! [ -f "$batch" ]; then
+                echo "$batch not found"
+                return 1
+        fi
+
+        srcenv=$(mktemp /tmp/srcenv.XXXXXXXXXX)
+        dstenv=$(mktemp /tmp/dstenv.XXXXXXXXXX)
+        diffenv=$(mktemp /tmp/diffenv.XXXXXXXXXX)
+        envdiff=$(mktemp /tmp/envdiff.XXXXXXXXXX)
+        cmd /c set >$srcenv
+        cmd /c call $(cygpath -w $batch) "$@" \>nul 2\>nul \& set >$dstenv
+        cat <<EOF >$envdiff
+/^+++/d;
+/^[^+]/d;
+s/^+//;
+# s/\\\\/\\\\\\\\/g;
+/^PATH=/ {
+        s/\\\\/\\//g;
+        s#\\([=;]\\)\\([a-zA-Z]\\):#\\1/cygdrive/\\2#g;
+        s/;/:/g;
+}
+s/;/\\\\;/g;
+s/^/export /;
+s/=/='/;
+s/\\\\r//g;
+s/\r$/'/;
+EOF
+        diff -u $srcenv $dstenv | sed -f $envdiff >$diffenv
+        . $diffenv
+        PATH=$PATH:/bin:/usr/bin:$(cygpath --sysdir):$(cygpath --windir)
+        rm -f $srcenv $dstenv $diffenv $envdiff
+}
+declare -x fetchenv
+
+vs2019env() {
+	local e vcdir
+
+	vcdir=0
+	for e in Community Professional Enterprise; do
+		d=$(cygpath "$PROGRAMFILES (x86)\\Microsoft Visual Studio\\2019\\$e")
+		if [ -d "$d" ]; then
+			vcdir=$d
+			break
+		fi
+	done
+
+	if [ -z "$vcdir" ]; then
+		echo "Visual Studio 2019 not found" >&2
+		exit 1
+	fi
+
+	export VS160COMNTOOLS=$(cygpath -aw "$vcdir")/Common7/Tools
+	fetchenv "$vcdir/VC/Auxiliary/Build/vcvarsall.bat" ${VCARCH:-amd64} $VCSDK
+	export PATH="$VCDIR/VC/bin:$PATH"
+	export CC=cl.exe
+	export CXX=cl.exe
+}
+declare -x vs2019env
+
+cmakeenv() {
+	local pf=$(cygpath "$PROGRAMFILES")
+
+	if ! [ -x "$pf/CMake/bin/cmake.exe" ]; then
+		# FIXME: install
+		echo "CMake not found"
+		exit 1
+	fi
+
+	export PATH="$pf/CMake/bin:$PATH"
+}
+declare -x cmakeenv
+
+ninjaenv() {
+	if ! [ -x "$OSGEO4W_SCRIPTS/ninja.exe" ]; then
+		(
+			cd $OSGEO4W_SCRIPTS
+			wget -O /tmp/ninja.zip https://github.com/ninja-build/ninja/releases/download/v1.10.1/ninja-win.zip
+			unzip /tmp/ninja.zip
+
+			chmod a+rx ninja.exe
+		)
+	fi
+
+	if ! [ -x "$OSGEO4W_SCRIPTS/ninja.exe" ]; then
+		echo "Ninja not found"
+		exit 1
+	fi
+
+	export PATH="$PATH:$OSGEO4W_SCRIPTS"
+}
+
+regen() {
+	(
+		# update local package repository
+		cd $OSGEO4W_REP
+		! [ -f x86_64/setup.ini ] || cp x86_64/setup.ini x86_64/setup.ini.prev
+		perl $OSGEO4W_SCRIPTS/genini --arch=x86_64  --output=x86_64/setup.ini --recursive --output=x86_64/setup.ini x86_64/release
+		bzip2 -c x86_64/setup.ini >x86_64/setup.ini.bz2
+	)
+}
+declare -x regen
+
+setuppid() {
+	local pid rest
+	while read pid rest; do
+		echo $pid
+	done < <(ps auxw -W | fgrep "$(cygpath -aw $OSGEO4W_SCRIPTS/osgeo4w-setup.exe)")
+}
+declare -x setuppid
+
+fetchdeps() {
+	local p missing
+
+	if [ -d "$OSGEO4W_PWD/osgeo4w" ]; then
+		missing=
+		for p in "$@"; do
+			if [ -f "$OSGEO4W_PWD/osgeo4w/etc/setup/$p.lst.gz" ]; then
+				continue
+			fi
+
+			missing="$missing $p"
+		done
+
+		if [ -z "$missing" ]; then
+			log "No missing dependencies"
+			return 0
+		fi
+	fi
+
+	if ! [ -x "$OSGEO4W_SCRIPTS/osgeo4w-setup.exe" ]; then
+		wget -O "$OSGEO4W_SCRIPTS/osgeo4w-setup.exe" https://download.osgeo.org/osgeo4w/osgeo4w-setup-x86_64.exe
+	fi
+
+	regen
+
+	local pid=$(setuppid)
+	if [ -n "$pid" ]; then
+		log "osgeo4w-setup still running"
+		false
+	fi
+
+	local cmd="cygstart --action=runas"
+	cmd="$cmd $OSGEO4W_SCRIPTS/osgeo4w-setup.exe"
+	cmd="$cmd --root $(cygpath -aw $OSGEO4W_PWD/osgeo4w)"
+	cmd="$cmd --autoaccept"
+	cmd="$cmd --advanced"
+	cmd="$cmd --arch x86_64"
+	cmd="$cmd --quiet-mode"
+	cmd="$cmd --upgrade-also"
+	cmd="$cmd --only-site"
+	cmd="$cmd -s $(cygpath -am $OSGEO4W_REP)"
+	# cmd="$cmd -s https://download.osgeo.org/osgeo4w"    # FIXME
+	cmd="$cmd -l $(cygpath -aw $OSGEO4W_REP/package-cache)"
+
+	for p in "$@"; do
+		cmd="$cmd -P $p"
+	done
+
+	log "OSGEO4W:$cmd"
+	$cmd
+
+	until pid=$(setuppid); do
+		:
+	done
+
+	log "osgeo4w-setup started [$pid]"
+
+	local cpid=
+	while cpid=$(setuppid) && (( pid == cpid )); do
+		log "osgeo4w-setup $pid still running"
+		sleep 1
+	done
+
+	log "osgeo4w-setup ended"
+
+	missing=
+	for p in "$@"; do
+		if [ -f "$OSGEO4W_PWD/osgeo4w/etc/setup/$p.lst.gz" ]; then
+			continue
+		fi
+
+		missing="$missing $p"
+	done
+
+	if [ -z "$missing" ]; then
+		return 0
+	else
+		log "Missing dependencies:$missing"
+		return 1
+	fi
+}
+declare -x fetchdeps
+
+nextbinary() {
+	wget -c -q -O /tmp/setup-main.ini http://download.osgeo.org/osgeo4w/x86_64/setup.ini 1>&2
+
+	regen 1>&2
+
+	b=$(
+		(
+			sed -ne '/^@ '$P'$/,/^$/ { s/^version: '$V'-\([0-9]*\)$/\1/p; }' /tmp/setup-main.ini
+			sed -ne '/^@ '$P'$/,/^$/ { s/^version: '$V'-\([0-9]*\)$/\1/p; }' $OSGEO4W_REP/x86_64/setup.ini
+			echo 0
+		) | sort -rn | head -1
+	)
+
+	(( b++ )) || true
+
+	echo $b
+}
+
+# make sure we are using what we expect
+cat() { /bin/cat "$@"; }
+cp() { /bin/cp "$@"; }
+rm() { /bin/rm "$@"; }
+mkdir() { /bin/mkdir "$@"; }
+tar() { /bin/tar "$@"; }
+ls() { /bin/ls "$@"; }
+sed() { /bin/sed "$@"; }
+diff() { /bin/diff "$@"; }
+find() { /bin/find "$@"; }
+xargs() { /bin/xargs "$@"; }
+
+declare -x cat cp rm mkdir tar ls sed diff
+
+# Verify that a repository is set
+if ! [ -d "$OSGEO4W_REP" ]; then
+        echo "No repository" >&2
+        exit 1
+fi
+
+if [ -z "$MAINTAINER" ]; then
+        echo "No maintainer" >&2
+        exit 1
+fi
+
+if [ -z "$P" ]; then
+	echo "no package name in P" >&2
+	exit 1
+fi
+
+if [ -z "$V" ]; then
+	echo "No (upstream) version in V" >&2
+	exit 1
+fi
+
+case "$B" in
+next)
+	B=$(nextbinary)
+	echo "Binary package version: $P-$V-$B"
+	;;
+
+[0-9]*)
+	;;
+
+"")
+	echo "No binary version in B" >&2
+	exit 1
+	;;
+esac
+
+# vim: syntax=bash :

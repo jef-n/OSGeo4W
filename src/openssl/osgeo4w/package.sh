@@ -1,0 +1,116 @@
+export P=openssl
+export V=1.1.1h
+export B=next
+export MAINTAINER=JuergenFischer
+
+# perl also used in libpq
+SBPERL=5.32.0.1
+
+source ../../../scripts/build-helpers
+
+startlog
+
+[ -f $P-$V.tar.gz ] || wget https://www.openssl.org/source/$P-$V.tar.gz
+[ -f ../CMakeLists.txt ] || tar -C .. -xzf  $P-$V.tar.gz --xform "s,^$P-$V,.,"
+
+if ! [ -d nasm-$NASM ]; then
+	wget -c https://www.nasm.us/pub/nasm/releasebuilds/$NASM/win64/nasm-$NASM-win64.zip
+	unzip nasm-$NASM-win64.zip
+fi
+
+if ! [ -d perl ]; then
+	wget -c http://strawberryperl.com/download/$SBPERL/strawberry-perl-$SBPERL-64bit-portable.zip
+	mkdir perl
+	cd perl
+	unzip ../strawberry-perl-$SBPERL-64bit-portable.zip
+	cd ..
+fi
+
+vs2019env
+fetchenv perl/portableshell.bat /SETENV
+
+export PATH=$PATH:$(cygpath -a nasm-$NASM)
+
+if ! [ -f built ]; then
+	cd ..
+
+	perl Configure VC-WIN64A --prefix=$(cygpath -aw osgeo4w/install) --openssldir=$(cygpath -aw osgeo4w/install/apps/openssl)
+
+	nmake clean
+	nmake
+	nmake test
+	nmake install
+
+	cd osgeo4w
+
+	touch built
+fi
+
+export R=$OSGEO4W_REP/x86_64/release/$P
+mkdir -p $R/$P-devel $R/$P-doc install/etc/postinstall install/etc/ini
+
+cat <<EOF >install/etc/postinstall/$P.bat
+dllupdate -oite -copy -reboot "%OSGEO4W_ROOT%\bin\libcrypto-1_1-x64.dll"
+dllupdate -oite -copy -reboot "%OSGEO4W_ROOT%\bin\libssl-1_1-x64.dll"
+EOF
+
+cat <<EOF >install/etc/ini/$P.bat
+set OPENSSL_ENGINES=%OSGEO4W_ROOT%\\lib\\engines-1_1
+EOF
+
+cat <<EOF >$R/setup.hint
+sdesc: "OpenSSL Cryptography (Runtime)"
+ldesc: "OpenSSL Cryptography (Runtime)"
+category: Libs
+requires: msvc2019
+maintainer: $MAINTAINER
+EOF
+
+cp ../LICENSE $R/$P-$V-$B.txt
+
+tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
+	bin/libcrypto-1_1-x64.dll \
+	bin/libssl-1_1-x64.dll \
+	lib/engines-1_1/capi.dll \
+	lib/engines-1_1/padlock.dll \
+	etc/postinstall/$P.bat \
+	etc/ini/$P.bat
+
+tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 \
+	osgeo4w/package.sh
+
+cp ../LICENSE $R/$P-devel/$P-$V-$B.txt
+
+cat <<EOF >$R/$P-devel/setup.hint
+sdesc: "OpenSSL Cryptography (Development)"
+ldesc: "OpenSSL Cryptography (Development)"
+category: Libs
+requires: $P
+external-source: $P
+maintainer: $MAINTAINER
+EOF
+
+tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
+	apps/openssl \
+	bin/c_rehash.pl \
+	bin/openssl.exe \
+	include/openssl \
+	lib/libcrypto.lib \
+	lib/libssl.lib \
+	bin/libcrypto-1_1-x64.pdb \
+	bin/libssl-1_1-x64.pdb \
+	bin/openssl.pdb
+
+cat <<EOF >$R/$P-doc/setup.hint
+sdesc: "OpenSSL Cryptography (Documentation)"
+ldesc: "OpenSSL Cryptography (Documentation)"
+category: Libs
+requires: $P
+external-source: $P
+maintainer: $MAINTAINER
+EOF
+
+tar -C install -cjf $R/$P-doc/$P-doc-$V-$B.tar.bz2 \
+	html
+
+endlog

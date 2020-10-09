@@ -1,0 +1,19 @@
+CFLAGS=-DMBCS
+
+all: dllupdate.exe textreplace.exe bgspawn.exe getspecialfolder.exe
+
+dllupdate.exe: dllupdate.cpp
+	cl /nologo dllupdate.cpp version.lib advapi32.lib
+
+textreplace.exe: textreplace.c
+	cl /nologo textreplace.c
+
+bgspawn.exe: bgspawn.c
+	cl /nologo bgspawn.c shell32.lib
+
+getspecialfolder.exe: getspecialfolder.c
+	cl /nologo getspecialfolder.c shell32.lib ole32.lib
+
+clean:
+	-del *.exe
+	-del *.obj

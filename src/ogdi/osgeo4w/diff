@@ -1,0 +1,37 @@
+--- config/win32.mak	2018-10-11 16:46:33.265294600 +0200
++++ config/win32.mak	2018-10-11 16:42:33.142090200 +0200
+@@ -82,8 +82,8 @@
+ # With these flags, you could run purify.
+ #
+ 
+-WINCPP_DEBUG	= /GX /D_DEBUG /Zi $(CPP_DEBUG) 
+-WINCPP_RELEASE	= /GX /Gi- /Gy /Od /DNDEBUG $(CPP_RELEASE) 
++WINCPP_DEBUG	= /EHsc /D_DEBUG /Zi $(CPP_DEBUG) 
++WINCPP_RELEASE	= /EHsc /Gy /Od /DNDEBUG $(CPP_RELEASE) 
+ LINK_DEBUG	= /DEBUG /INCREMENTAL:no /FIXED:NO
+ LINK_RELEASE	= /INCREMENTAL:no /OPT:REF
+ 
+@@ -146,7 +146,7 @@
+ 	/Dpclose=_pclose \
+ 	/DMISSING_DLFCN_H \
+ 	$(OPTIMIZATION) \
+-	/W3 /YX /MD /c /Fpheaders.pch
++	/W3 /MD /c /Fpheaders.pch
+ 
+ # Disabled since it causes issue on 64bit build, and no longer needed
+ # FLAGS_X86DEF = /D_X86_
+--- ogdi/c-api/ogdi.def	2019-11-02 22:23:11.635545200 +0100
++++ ogdi/c-api/ogdi.def	2019-11-02 22:26:13.729842300 +0100
+@@ -121,12 +121,6 @@
+ 	ecs_CopyObject
+ 	ecs_CopyResult
+ 	ecs_FreeObject
+-	pj_free
+-	pj_init
+-	pj_inv
+-	pj_fwd
+-        rtodms
+-        set_rtodms
+ 	ecs_TileInitialize
+ 	ecs_TileGetLine
+ 	ecs_TileClearBuffer

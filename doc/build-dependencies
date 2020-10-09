@@ -1,0 +1,173 @@
+curl	openssl
+curl	zlib
+
+exiv2	expat
+exiv2	zlib
+
+xerces-c	zlib
+
+gdal	curl
+gdal	expat
+gdal	freexl
+gdal	geos
+gdal	hdf4
+gdal	hdf5
+gdal	libiconv
+gdal	libgeotiff
+gdal	libjpeg
+gdal	libkml-devel
+gdal	libmysqlclient
+gdal	libpng
+gdal	libpq
+gdal	libtiff
+gdal	msoledbsql
+gdal	netcdf
+gdal	oci
+gdal	ogdi
+gdal	openfyba
+gdal	openjpeg
+gdal	poppler
+gdal	proj
+gdal	python3-core
+gdal	libspatialite
+gdal	sqlite3
+gdal	swig
+gdal	xerces-c
+gdal	xz
+gdal	zstd
+gdal	libwebp
+
+gpsbabel	expat
+gpsbabel	qt5
+gpsbabel	zlib
+
+#grass	[msys:curses]
+#grass	[msys:fftw]
+#grass	[msys:freetype]
+#grass	[msys:regex]
+grass	avce00
+grass	gdal
+grass	geos
+grass	libiconv
+grass	libmysqlclient
+grass	libpng
+grass	libtiff
+grass	python3-core
+grass	python3-wx
+grass	zstd
+
+# hdf4	libxdr
+hdf4	szip
+hdf4	zlib
+hdf5	szip
+
+libkml-devel	boost
+libkml-devel	expat
+libkml-devel	zlib
+
+libpng	zlib
+
+libtiff	libjpeg
+libtiff	xz
+libtiff	zlib
+
+libwebp	libjpeg
+libwebp	libpng
+libwebp	libtiff
+libwebp	zlib
+
+libzip	curl
+libzip	zlib
+
+netcdf	zlib
+
+ogdi	expat
+
+openjpeg	libpng
+openjpeg	zlib
+
+proj	sqlite3
+proj	libtiff
+proj	curl
+
+pyqt5	python3-core
+pyqt5	qt5
+pyqt5	qtwebkit
+pyqt5	sip
+
+python3-core	sqlite3
+python3-core	openssl
+
+python3-fiona	gdal
+python3-fiona	python3-core
+
+python3-rasterio	gdal
+python3-rasterio	python3-core
+
+qgis	exiv2
+qgis	gdal
+qgis	geos
+qgis	gsl
+qgis	libspatialindex
+qgis	libzip
+qgis	oci
+qgis	proj
+qgis	protobuf
+qgis	pyqt5
+qgis	python3-core
+qgis	qca
+qgis	qscintilla-qt5
+qgis	qt5
+qgis	qtkeychain
+qgis	qwt-libs-qt5
+qgis	sip
+qgis	libspatialite
+qgis	sqlite3
+qgis	grass
+
+qt5	openssl
+qt5	sqlite3
+qt5	zlib
+
+qca	qt5
+qtkeychain	qt5
+qscintilla-qt5	qt5
+qwt-libs-qt5	qt5
+
+qtwebkit	qt5
+qtwebkit	zlib
+
+python3-wx	wxwidgets
+python3-wx	python3-core
+
+saga	boost
+saga	libpng
+saga	wxwidgets
+saga	libharu
+
+libspatialite	freexl
+libspatialite	geos
+libspatialite	libiconv
+libspatialite	librttopo
+libspatialite	libxml2
+libspatialite	proj
+libspatialite	sqlite3
+libspatialite	zlib
+
+freexl	libiconv
+
+libgeotiff	proj
+protobuf	zlib
+sip	python3-core
+poppler	freetype
+libharu	zlib
+libharu	libpng
+freetype	zlib
+freetype	libpng
+hdf4	zlib
+hdf4	libjpeg
+
+libtiff	zstd
+
+
+# vim: set ts=20 :

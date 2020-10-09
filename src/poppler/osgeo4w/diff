@@ -1,0 +1,32 @@
+diff -ur poppler-20.10.0/goo/JpegWriter.cc ../goo/JpegWriter.cc
+--- poppler-20.10.0/goo/JpegWriter.cc	2020-10-01 21:44:58.000000000 +0200
++++ ../goo/JpegWriter.cc	2020-10-09 15:43:26.483331300 +0200
+@@ -19,12 +19,12 @@
+ 
+ #ifdef ENABLE_LIBJPEG
+ 
++#    include "poppler/Error.h"
++
+ extern "C" {
+ #    include <jpeglib.h>
+ }
+ 
+-#    include "poppler/Error.h"
+-
+ struct JpegWriterPrivate
+ {
+     bool progressive;
+diff -ur poppler-20.10.0/utils/pdftocairo.cc ../utils/pdftocairo.cc
+--- poppler-20.10.0/utils/pdftocairo.cc	2020-10-01 21:44:58.000000000 +0200
++++ ../utils/pdftocairo.cc	2020-10-09 16:55:41.858833400 +0200
+@@ -42,6 +42,10 @@
+ //
+ //========================================================================
+ 
++#ifdef _MSC_VER
++#define strcasecmp _stricmp
++#endif
++
+ #include "config.h"
+ #include <poppler-config.h>
+ #include <cstdint>

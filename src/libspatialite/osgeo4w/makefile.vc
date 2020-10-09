@@ -1,0 +1,170 @@
+# $Id: $
+#
+# NMAKE Makefile to build libspatialite on Windows
+#
+OPTFLAGS=	/nologo /Ox /fp:precise /W4 /MD /D_CRT_SECURE_NO_WARNINGS \
+		/DDLL_EXPORT /DYY_NO_UNISTD_H
+
+# Set the version number for the DLL.  Normally we leave this blank since
+# we want software that is dynamically loading the DLL to have no problem
+# with version numbers.
+VERSION=
+
+LIBSRC = src\gaiaaux\gg_sqlaux.c src\gaiaaux\gg_utf8.c \
+	src\gaiaexif\gaia_exif.c src\gaiageo\gg_advanced.c \
+	src\gaiageo\gg_endian.c src\gaiageo\gg_ewkt.c \
+	src\gaiageo\gg_geodesic.c src\gaiageo\gg_geoJSON.c \
+	src\gaiageo\gg_geometries.c src\gaiageo\gg_geoscvt.c \
+	src\gaiageo\gg_gml.c src\gaiageo\gg_kml.c \
+	src\gaiageo\gg_relations.c src\gaiageo\gg_shape.c \
+	src\gaiageo\gg_transform.c src\gaiageo\gg_vanuatu.c \
+	src\gaiageo\gg_wkb.c src\gaiageo\gg_wkt.c \
+	src\gaiageo\gg_extras.c src\gaiageo\gg_xml.c \
+	src\gaiageo\gg_voronoj.c src\gaiageo\gg_matrix.c \
+	src\gaiageo\gg_relations_ext.c src\gaiageo\gg_rttopo.c \
+	src/connection_cache/alloc_cache.c src/connection_cache/gg_sequence.c \
+	src\spatialite\mbrcache.c src\shapefiles\shapefiles.c \
+	src\spatialite\spatialite.c src\spatialite\virtualdbf.c \
+	src\spatialite\virtualfdo.c src\spatialite\virtualnetwork.c \
+	src\spatialite\virtualshape.c src\spatialite\virtualspatialindex.c \
+	src\spatialite\statistics.c src\spatialite\metatables.c \
+	src\spatialite\virtualXL.c src\spatialite\extra_tables.c \
+	src\spatialite\virtualxpath.c src\spatialite\virtualbbox.c \
+	src\spatialite\spatialite_init.c src\spatialite\se_helpers.c \
+	src\spatialite\srid_aux.c src\spatialite\table_cloner.c \
+	src\spatialite\virtualelementary.c src\spatialite\virtualgeojson.c \
+	src\spatialite\virtualrouting.c src\spatialite\create_routing.c \
+	src\spatialite\dbobj_scopes.c src\spatialite\pause.c \
+	src\wfs\wfs_in.c src\srsinit\srs_init.c src\spatialite\virtualgpkg.c \
+	src\dxf\dxf_parser.c src\dxf\dxf_loader.c src\dxf\dxf_writer.c \
+	src\dxf\dxf_load_distinct.c src\dxf\dxf_load_mixed.c \
+	src\shapefiles\validator.c src\md5\md5.c src\md5\gaia_md5.c \
+	src\srsinit\epsg_inlined_00.c src\srsinit\epsg_inlined_01.c \
+	src\srsinit\epsg_inlined_02.c src\srsinit\epsg_inlined_03.c \
+	src\srsinit\epsg_inlined_04.c src\srsinit\epsg_inlined_05.c \
+	src\srsinit\epsg_inlined_06.c src\srsinit\epsg_inlined_07.c \
+	src\srsinit\epsg_inlined_08.c src\srsinit\epsg_inlined_09.c \
+	src\srsinit\epsg_inlined_10.c src\srsinit\epsg_inlined_11.c \
+	src\srsinit\epsg_inlined_12.c src\srsinit\epsg_inlined_13.c \
+	src\srsinit\epsg_inlined_14.c src\srsinit\epsg_inlined_15.c \
+	src\srsinit\epsg_inlined_16.c src\srsinit\epsg_inlined_17.c \
+	src\srsinit\epsg_inlined_18.c src\srsinit\epsg_inlined_19.c \
+	src\srsinit\epsg_inlined_20.c src\srsinit\epsg_inlined_21.c \
+	src\srsinit\epsg_inlined_22.c src\srsinit\epsg_inlined_23.c \
+	src\srsinit\epsg_inlined_24.c src\srsinit\epsg_inlined_25.c \
+	src\srsinit\epsg_inlined_26.c src\srsinit\epsg_inlined_27.c \
+	src\srsinit\epsg_inlined_28.c src\srsinit\epsg_inlined_29.c \
+	src\srsinit\epsg_inlined_30.c src\srsinit\epsg_inlined_31.c \
+	src\srsinit\epsg_inlined_32.c src\srsinit\epsg_inlined_33.c \
+	src\srsinit\epsg_inlined_34.c src\srsinit\epsg_inlined_35.c \
+	src\srsinit\epsg_inlined_36.c src\srsinit\epsg_inlined_37.c \
+	src\srsinit\epsg_inlined_38.c src\srsinit\epsg_inlined_39.c \
+	src\srsinit\epsg_inlined_40.c src\srsinit\epsg_inlined_41.c \
+	src\srsinit\epsg_inlined_42.c src\srsinit\epsg_inlined_43.c \
+	src\srsinit\epsg_inlined_44.c src\srsinit\epsg_inlined_45.c \
+	src\srsinit\epsg_inlined_46.c src\srsinit\epsg_inlined_47.c \
+	src\srsinit\epsg_inlined_48.c src\srsinit\epsg_inlined_49.c \
+	src\srsinit\epsg_inlined_50.c src\srsinit\epsg_inlined_51.c \
+	src\srsinit\epsg_inlined_52.c src\srsinit\epsg_inlined_53.c \
+	src\srsinit\epsg_inlined_54.c src\srsinit\epsg_inlined_55.c \
+	src\srsinit\epsg_inlined_56.c src\srsinit\epsg_inlined_57.c \
+	src\srsinit\epsg_inlined_58.c src\srsinit\epsg_inlined_59.c \
+	src\srsinit\epsg_inlined_extra.c src\srsinit\epsg_inlined_prussian.c \
+	src\srsinit\epsg_inlined_wgs84_00.c src\srsinit\epsg_inlined_wgs84_01.c \
+	src\versioninfo\version.c src\virtualtext\virtualtext.c \
+	src\cutter\gaia_cutter.c src\spatialite\virtualknn.c \
+	src\control_points\gaia_control_points.c \
+	src\control_points\grass_crs3d.c src\control_points\grass_georef_tps.c \
+	src\control_points\grass_georef.c src\stored_procedures\stored_procedures.c \
+	src\geopackage\gaia_cvt_gpkg.c \
+	src\geopackage\gpkgAddGeometryColumn.c \
+	src\geopackage\gpkg_add_geometry_triggers.c \
+	src\geopackage\gpkg_add_spatial_index.c \
+	src\geopackage\gpkg_add_tile_triggers.c \
+	src\geopackage\gpkgBinary.c \
+	src\geopackage\gpkgCreateBaseTables.c \
+	src\geopackage\gpkgCreateTilesTable.c \
+	src\geopackage\gpkgCreateTilesZoomLevel.c \
+	src\geopackage\gpkgGetImageType.c \
+	src\geopackage\gpkg_get_normal_row.c \
+	src\geopackage\gpkg_get_normal_zoom.c \
+	src\geopackage\gpkgInsertEpsgSRID.c \
+	src\geopackage\gpkgMakePoint.c \
+	src\topology\gaia_auxnet.c src\topology\gaia_auxtopo.c \
+	src\topology\gaia_auxtopo_table.c src\topology\gaia_netstmts.c \
+	src\topology\gaia_network.c src\topology\gaia_topology.c \
+	src\topology\gaia_topostmts.c src\topology\lwn_network.c \
+	src\topology\net_callbacks.c src\topology\topo_callbacks.c
+
+LIBOBJ     = $(LIBSRC:.c=.libobj)
+MOD_LIBOBJ = $(LIBSRC:.c=.modobj)
+
+SPATIALITE_DLL = spatialite$(VERSION).dll
+MOD_SPATIALITE_DLL = mod_spatialite$(VERSION).dll
+
+LDLIBS = \
+	$(OSGEO4W_ROOT)\lib\proj.lib \
+	$(OSGEO4W_ROOT)\lib\geos_c.lib \
+	$(OSGEO4W_ROOT)\lib\freexl_i.lib \
+	$(OSGEO4W_ROOT)\lib\iconv.dll.lib \
+	$(OSGEO4W_ROOT)\lib\sqlite3_i.lib \
+	$(OSGEO4W_ROOT)\lib\zlib.lib \
+	$(OSGEO4W_ROOT)\lib\libxml2.lib \
+	$(OSGEO4W_ROOT)\lib\librttopo.lib
+
+CFLAGS = /nologo -I.\src\headers -I.\src\topology \
+	-I. \
+	-I$(OSGEO4W_ROOT)\include \
+	-I$(OSGEO4W_ROOT)\include\libxml2 \
+	$(OPTFLAGS)
+
+default:	all
+
+all: spatialite.lib spatialite_i.lib $(SPATIALITE_DLL) $(MOD_SPATIALITE_DLL)
+
+spatialite.lib:	$(LIBOBJ)
+	if exist spatialite.lib del spatialite.lib
+	lib /out:spatialite.lib $(LIBOBJ)
+
+mod_spatialite.lib:	$(MOD_LIBOBJ)
+	if exist mod_spatialite.lib del mod_spatialite.lib
+	lib /out:mod_spatialite.lib $(MOD_LIBOBJ)
+
+$(SPATIALITE_DLL) spatialite_i.lib:     $(LIBOBJ)
+	link /dll /out:$(SPATIALITE_DLL) \
+		/implib:spatialite_i.lib $(LIBOBJ) $(LDLIBS)
+	if exist $(SPATIALITE_DLL).manifest mt -manifest \
+		$(SPATIALITE_DLL).manifest -outputresource:$(SPATIALITE_DLL);2
+
+$(MOD_SPATIALITE_DLL) mod_spatialite_i.lib:     $(MOD_LIBOBJ)
+	link /dll /out:$(MOD_SPATIALITE_DLL) \
+		/implib:mod_spatialite_i.lib $(MOD_LIBOBJ) $(LDLIBS)
+	if exist $(MOD_SPATIALITE_DLL).manifest mt -manifest \
+		$(MOD_SPATIALITE_DLL).manifest -outputresource:$(MOD_SPATIALITE_DLL);2
+		
+.c.modobj:
+	$(CC) $(CFLAGS) /DLOADABLE_EXTENSION /c $< /Fo$*.modobj
+
+.c.libobj:
+	if not exist 12 mkdir 12
+	$(CC) $(CFLAGS) /c $< /Fo$*.libobj
+
+clean:
+	del *.dll
+	del *.exp
+	del *.manifest
+	del *.lib
+	del *.pdb
+	del /s *.libobj
+	del /s *.modobj
+
+install: all
+	-mkdir $(INSTDIR)
+	-mkdir $(INSTDIR)\bin
+	-mkdir $(INSTDIR)\lib
+	-mkdir $(INSTDIR)\include
+	-mkdir $(INSTDIR)\include\spatialite
+	copy *.dll $(INSTDIR)\bin
+	copy *.lib $(INSTDIR)\lib
+	copy src\headers\spatialite.h $(INSTDIR)\include
+	copy src\headers\spatialite\*.h $(INSTDIR)\include\spatialite
