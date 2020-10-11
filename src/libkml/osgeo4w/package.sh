@@ -46,7 +46,7 @@ cat <<EOF >$R/setup.hint
 sdesc: "LibKML (Development)"
 ldesc: " LibKML (Development)"
 category: Libs
-requires: 
+requires: boost-devel
 maintainer: $MAINTAINER
 EOF
 
