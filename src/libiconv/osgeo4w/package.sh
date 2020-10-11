@@ -1,6 +1,6 @@
 export P=libiconv
 export V=1.16
-export B=1
+export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
 
@@ -27,7 +27,6 @@ vs2019env
 
 cd ..
 
-if false; then
 ./configure \
 	--host=x86_64-w64-mingw32 \
 	--prefix=$OSGEO4W_PWD/install \
@@ -42,8 +41,6 @@ if false; then
 	AR="$OSGEO4W_PWD/ar-lib lib" \
 	RANLIB=":"
 make clean
-fi
-
 # make check
 make install
 

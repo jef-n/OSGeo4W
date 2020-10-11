@@ -292,10 +292,15 @@ tar() { /bin/tar "$@"; }
 ls() { /bin/ls "$@"; }
 sed() { /bin/sed "$@"; }
 diff() { /bin/diff "$@"; }
+patch() { /bin/patch "$@"; }
 find() { /bin/find "$@"; }
 xargs() { /bin/xargs "$@"; }
+flip() { /bin/flip "$@"; }
+touch() { /bin/touch "$@"; }
+unzip() { /bin/unzip "$@"; }
+7z() { /bin/7z "$@"; }
 
-declare -x cat cp rm mkdir tar ls sed diff
+declare -x cat cp rm mkdir tar ls sed diff patch find xargs flip touch unzip
 
 # Verify that a repository is set
 if ! [ -d "$OSGEO4W_REP" ]; then
