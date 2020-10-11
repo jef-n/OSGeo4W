@@ -1,4 +1,4 @@
-export P=msoledbsql
+export P=msodbcsql
 export V=manual
 export B=0
 export MAINTAINER=JuergenFischer
@@ -8,30 +8,34 @@ source ../../../scripts/build-helpers
 
 startlog
 
-wget -q -c -O $P.msi "https://go.microsoft.com/fwlink/?linkid=2129954"
+wget -q -c -O $P.msi "https://go.microsoft.com/fwlink/?linkid=2137027"
 
 msiexec /a $P.msi /qb "TARGETDIR=$(cygpath -aw extract)"
 
-V=$(echo "extract/Program Files/Microsoft SQL Server/Client SDK/OLEDB"/*)
-V=${V##*/}
+v=$(echo "extract/Program Files/Microsoft SQL Server/Client SDK/ODBC/"*)
+v=${v##*/}
+
+major=${v%?}
+minor=${v#$major}
+V=$major.$minor
 B=$(nextbinary)
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R/$P-devel
 
 cat <<EOF >$R/setup.hint
-sdesc: "Microsoft OLE DB Driver for SQL Server (runtime)"
-ldesc: "Microsoft OLE DB Driver for SQL Server (runtime)"
+sdesc: "Microsoft ODBC Driver for SQL Server (runtime)"
+ldesc: "Microsoft ODBC Driver for SQL Server (runtime)"
 category: Libs
 requires: msvcrt2019
 maintainer: $MAINTAINER
 EOF
 
-cp "extract/Program Files/Microsoft SQL Server/Client SDK/OLEDB/$V/License Terms/License_MSOLEDBSQL_ENU.txt" $R/$P-devel/$P-devel-$V-$B.txt
+cp "extract/Program Files/Microsoft SQL Server/Client SDK/ODBC/$v/License Terms/License_msodbcsql_ENU.txt" $R/$P-devel/$P-devel-$V-$B.txt
 
 cat <<EOF >$R/$P-devel/setup.hint
-sdesc: "Microsoft OLE DB Driver for SQL Server (Development)"
-ldesc: "Microsoft OLE DB Driver for SQL Server (Development)"
+sdesc: "Microsoft ODBC Driver for SQL Server (Development)"
+ldesc: "Microsoft ODBC Driver for SQL Server (Development)"
 category: Libs
 requires: $P
 external-source: $P
@@ -48,12 +52,11 @@ tar -cjf $R/$P-$V-$B.tar.bz2 \
 	postinstall.bat \
 	$P.msi
 
-tar -C "extract/Program Files/Microsoft SQL Server/Client SDK/OLEDB/$V/SDK" -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
+tar -C "extract/Program Files/Microsoft SQL Server/Client SDK/ODBC/$v/SDK" -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	--xform "s,Lib/x64,lib," \
-	Include/msoledbsql.h \
-	Lib/x64/msoledbsql.lib \
+	Include/msodbcsql.h \
+	Lib/x64/msodbcsql$major.lib \
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 
 endlog
-

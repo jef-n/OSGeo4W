@@ -16,11 +16,11 @@ gdal	libiconv
 gdal	libgeotiff
 gdal	libjpeg
 gdal	libkml-devel
-gdal	libmysqlclient
+gdal	libmysql
 gdal	libpng
 gdal	libpq
 gdal	libtiff
-gdal	msoledbsql
+gdal	msodbcsql
 gdal	netcdf
 gdal	oci
 gdal	ogdi
@@ -49,7 +49,7 @@ grass	avce00
 grass	gdal
 grass	geos
 grass	libiconv
-grass	libmysqlclient
+grass	libmysql
 grass	libpng
 grass	libtiff
 grass	python3-core
@@ -145,6 +145,13 @@ saga	libpng
 saga	wxwidgets
 saga	libharu
 saga	gdal
+
+wxwidgets	zlib
+wxwidgets	expat
+wxwidgets	libjpeg
+wxwidgets	libpng
+wxwidgets	libtiff
+wxwidgets	xz
 
 libspatialite	freexl
 libspatialite	geos
