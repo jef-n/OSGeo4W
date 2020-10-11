@@ -144,6 +144,7 @@ saga	boost
 saga	libpng
 saga	wxwidgets
 saga	libharu
+saga	gdal
 
 libspatialite	freexl
 libspatialite	geos
