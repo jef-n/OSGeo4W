@@ -18,7 +18,7 @@ savelog() {
 declare -x savelog
 
 log() {
-	echo "$(date -Ihours): $*"
+	echo "$(date +"%Y-%m-%d %H:%M:%S"): $*"
 }
 declare -x log
 
