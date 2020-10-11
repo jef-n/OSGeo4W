@@ -2,6 +2,7 @@ export P=libwebp
 export V=1.1.0
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS="libtiff-devel libpng-devel libjpeg-devel libtiff-devel zlib-devel"
 
 source ../../../scripts/build-helpers
 
@@ -9,8 +10,6 @@ startlog
 
 [ -f $P-$V.tar.gz ] || wget https://storage.googleapis.com/downloads.webmproject.org/releases/webp/$P-$V.tar.gz
 [ -f ../CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz --xform "s,^$P-$V,.,"
-
-fetchdeps libtiff-devel libpng-devel libjpeg-devel libtiff-devel zlib-devel
 
 vs2019env
 cmakeenv

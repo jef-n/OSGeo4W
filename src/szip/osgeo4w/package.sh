@@ -2,6 +2,7 @@ export P=szip
 export V=2.1.1
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS=none
 
 source ../../../scripts/build-helpers
 

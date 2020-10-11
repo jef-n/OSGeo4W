@@ -2,6 +2,7 @@ export P=libpq
 export V=13.0
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS="openssl-devel zlib-devel libiconv-devel"
 
 # perl also used in openssl
 SBPERL=5.32.0.1
@@ -20,9 +21,6 @@ if ! [ -d perl ]; then
 	unzip ../strawberry-perl-$SBPERL-64bit-portable.zip
 	cd ..
 fi
-
-fetchdeps openssl-devel zlib-devel libiconv-devel
-
 
 cat <<EOF >../src/tools/msvc/config.pl
 # Configuration arguments for vcbuild.

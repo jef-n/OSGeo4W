@@ -2,6 +2,7 @@ export P=freexl
 export V=1.0.6
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS="libiconv-devel"
 
 source ../../../scripts/build-helpers
 
@@ -11,8 +12,6 @@ startlog
 [ -f ../configure ] || tar -C .. -xzf  $P-$V.tar.gz --xform "s,^$P-$V,.,"
 
 vs2019env
-
-fetchdeps libiconv-devel
 
 cp makefile.vc ..
 

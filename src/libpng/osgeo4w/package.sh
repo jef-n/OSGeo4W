@@ -2,6 +2,7 @@ export P=libpng
 export V=1.6.37
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS=zlib-devel
 
 source ../../../scripts/build-helpers
 
@@ -9,8 +10,6 @@ startlog
 
 [ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://sourceforge.net/projects/libpng/files/libpng16/$V/$P-$V.tar.gz/download
 [ -f ../CMakeLists.txt ] || tar -C .. -xzf  $P-$V.tar.gz --xform "s,^$P-$V,.,"
-
-fetchdeps zlib-devel
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R/$P-devel

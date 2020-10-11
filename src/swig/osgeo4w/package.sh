@@ -2,6 +2,7 @@ export P=swig
 export V=4.0.2
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS=none
 
 source ../../../scripts/build-helpers
 

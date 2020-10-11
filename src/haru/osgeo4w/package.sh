@@ -2,6 +2,7 @@ export P=libharu
 export V=2.3.0
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS="libpng-devel zlib-devel"
 
 source ../../../scripts/build-helpers
 
@@ -14,7 +15,6 @@ vs2019env
 cmakeenv
 ninjaenv
 
-fetchdeps libpng-devel zlib-devel
 mkdir -p build install
 cd build
 

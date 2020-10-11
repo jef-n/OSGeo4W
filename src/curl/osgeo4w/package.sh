@@ -2,6 +2,7 @@ export P=curl
 export V=7.72.0
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS="openssl-devel zlib-devel"
 
 export VC=15
 export VCARCH=x64
@@ -13,7 +14,6 @@ startlog
 [ -f $P-$V.tar.gz ] || wget https://curl.haxx.se/download/$P-$V.tar.gz
 [ -f ../CMakeLists.txt ] || tar -C .. -xzf  $P-$V.tar.gz --xform "s,^$P-$V,.,"
 
-fetchdeps openssl-devel zlib-devel
 
 vs2019env
 

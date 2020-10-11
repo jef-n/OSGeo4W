@@ -2,6 +2,7 @@ export P=protobuf
 export V=3.13.0
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS=zlib-devel
 
 source ../../../scripts/build-helpers
 
@@ -9,8 +10,6 @@ startlog
 
 [ -f $P-$V.tar.gz ] || wget -c -O $P-$V.tar.gz https://github.com/protocolbuffers/protobuf/archive/v$V.tar.gz
 [ -d ../cmake ] || tar -C .. -xzf $P-$V.tar.gz --xform "s,^$P-$V,.,"
-
-fetchdeps zlib-devel
 
 vs2019env
 cmakeenv

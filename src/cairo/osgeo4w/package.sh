@@ -1,14 +1,13 @@
 export P=cairo
 export V=1.17.2
 export B=next
-
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS="zlib-devel libpng-devel freetype-devel"
 
 source ../../../scripts/build-helpers
 
 startlog
 
-fetchdeps zlib-devel libpng-devel freetype-devel
 
 cp osgeo4w/lib/zlib.lib osgeo4w/lib/zdll.lib
 cp osgeo4w/lib/libpng16.lib osgeo4w/lib/libpng.lib

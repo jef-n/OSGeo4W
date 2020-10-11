@@ -2,6 +2,7 @@ export P=xerces-c
 export V=3.2.3
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS=none
 
 source ../../../scripts/build-helpers
 

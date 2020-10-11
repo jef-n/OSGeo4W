@@ -2,6 +2,7 @@ export P=proj
 export V=7.1.1
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS="sqlite3-devel libtiff-devel curl-devel"
 
 source ../../../scripts/build-helpers
 
@@ -9,8 +10,6 @@ startlog
 
 [ -f $P-$V.tar.gz ] || wget https://download.osgeo.org/$P/$P-$V.tar.gz
 [ -f ../CMakeLists.txt ] || tar -C .. -xzf  $P-$V.tar.gz --xform "s,^$P-$V,.,"
-
-fetchdeps sqlite3-devel libtiff-devel curl-devel
 
 vs2019env
 cmakeenv

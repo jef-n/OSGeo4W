@@ -2,6 +2,7 @@ export P=zlib
 export V=1.2.11
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS=none
 
 source ../../../scripts/build-helpers
 

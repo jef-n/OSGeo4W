@@ -2,6 +2,7 @@ export P=hdf4
 export V=4.2.15
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS="libjpeg-devel zlib-devel szip-devel"
 
 source ../../../scripts/build-helpers
 
@@ -9,8 +10,6 @@ startlog
 
 [ -f hdf-$V.tar.bz2 ] || wget https://support.hdfgroup.org/ftp/HDF/releases/HDF$V/src/hdf-$V.tar.bz2
 [ -f ../CMakeLists.txt ] || tar -C .. --xform s,hdf-$V/,, -xjf hdf-$V.tar.bz2
-
-fetchdeps libjpeg-devel zlib-devel szip-devel
 
 vs2019env
 cmakeenv

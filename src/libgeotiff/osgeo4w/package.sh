@@ -2,6 +2,7 @@ export P=libgeotiff
 export V=1.6.0
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS="proj-devel libtiff-devel"
 
 source ../../../scripts/build-helpers
 
@@ -9,8 +10,6 @@ startlog
 
 [ -f $P-$V.tar.gz ] || wget http://download.osgeo.org/geotiff/$P/$P-$V.tar.gz
 [ -f ../CMakeLists.txt ] || tar -C .. -xzf  $P-$V.tar.gz --xform "s,^$P-$V,.,"
-
-fetchdeps proj-devel libtiff-devel
 
 vs2019env
 cmakeenv

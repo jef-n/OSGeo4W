@@ -2,6 +2,7 @@ export P=python3
 export V=3.9.0
 export B=1
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS=none
 
 source ../../../scripts/build-helpers
 

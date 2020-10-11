@@ -1,7 +1,8 @@
-xport P=exiv2
+export P=exiv2
 export V=0.27.3
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS="expat-devel zlib-devel libiconv-devel"
 
 source ../../../scripts/build-helpers
 
@@ -9,8 +10,6 @@ startlog
 
 [ -f $P-$V-Source.tar.gz ] || wget https://www.exiv2.org/builds/$P-$V-Source.tar.gz
 [ -f ../CMakeLists.txt ] || tar -C .. -xzf  $P-$V-Source.tar.gz --xform "s,^$P-$V-Source,.,"
-
-fetchdeps expat-devel zlib-devel libiconv-devel
 
 vs2019env
 cmakeenv

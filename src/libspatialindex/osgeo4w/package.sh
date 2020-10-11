@@ -2,6 +2,7 @@ export P=libspatialindex
 export V=1.9.3
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS=none
 
 source ../../../scripts/build-helpers
 

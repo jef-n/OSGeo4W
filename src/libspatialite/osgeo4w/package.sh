@@ -2,6 +2,7 @@ export P=libspatialite
 export V=5.0.0
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS="sqlite3-devel libiconv-devel geos-devel proj-devel freexl-devel libxml2-devel librttopo-devel zlib-devel"
 
 source ../../../scripts/build-helpers
 
@@ -9,8 +10,6 @@ startlog
 
 [ -f $P-$V.tar.gz ] || wget http://www.gaia-gis.it/gaia-sins/$P-$V.tar.gz
 [ -f ../makefile.vc ] || tar -C .. -xzf  $P-$V.tar.gz --xform "s,^$P-$V,.,"
-
-fetchdeps sqlite3-devel libiconv-devel geos-devel proj-devel freexl-devel libxml2-devel librttopo-devel zlib-devel
 
 vs2019env
 

@@ -2,7 +2,7 @@ export P=librttopo
 export V=1.1.0
 export B=next
 export MAINTAINER=JuergenFischer
-
+export BUILDDEPENDS=geos-devel
 
 source ../../../scripts/build-helpers
 
@@ -12,8 +12,6 @@ startlog
 [ -f ../makefile.vc ] || tar -C .. -xzf  $P-$V.tar.gz --xform "s,^$P,.,"
 [ -f ../src/rttopo_config.h ] || wget -O ../src/rttopo_config.h https://git.osgeo.org/gitea/attachments/d6ae54b6-109d-480e-bd7c-020d2a543cd6
 [ -f ../headers/librttopo_geom.h ] || wget -O ../headers/librttopo_geom.h https://git.osgeo.org/gitea/attachments/b4e500d5-6168-4022-91c5-b7de6346167e
-
-fetchdeps geos-devel
 
 vs2019env
 

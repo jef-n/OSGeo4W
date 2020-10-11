@@ -1,6 +1,5 @@
 set -e
 
-
 if [ -n "$OSGEO4W_ROOT" ]; then
 	echo "Builds are supposed to be run outside of OSGeo4W" >&2
 	exit 1
@@ -30,6 +29,8 @@ startlog() {
 
 	export PATH=$(cygpath -S):$(cygpath -W):$(cygpath -S)/WBem:/bin:/usr/bin
 	log "Starting with clean PATH: $PATH"
+
+	[ "$BUILDDEPENDS" == "none" ] || fetchdeps $BUILDDEPENDS
 
 	trap "faillog" EXIT
 }
@@ -331,5 +332,10 @@ next)
 	exit 1
 	;;
 esac
+
+if [ -z "$BUILDDEPENDS" ]; then
+        echo "No build dependencies" >&2
+        exit 1
+fi
 
 # vim: syntax=bash :

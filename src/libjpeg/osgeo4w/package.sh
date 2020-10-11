@@ -2,6 +2,7 @@ export P=libjpeg
 export V=9d
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS=zlib-devel
 
 source ../../../scripts/build-helpers
 
@@ -9,8 +10,6 @@ startlog
 
 [ -f jpegsrc.v$V.tar.gz ] || wget http://ijg.org/files/jpegsrc.v$V.tar.gz
 [ -f ../makefile.vs ] || tar -C .. -xzf jpegsrc.v$V.tar.gz --xform "s,^jpeg-$V,.,"
-
-fetchdeps zlib-devel
 
 vs2019env
 

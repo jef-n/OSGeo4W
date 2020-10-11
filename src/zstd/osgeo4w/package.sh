@@ -2,6 +2,7 @@ export P=zstd
 export V=1.4.5
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS=none
 
 source ../../../scripts/build-helpers
 

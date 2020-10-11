@@ -2,6 +2,7 @@ export P=libtiff
 export V=4.1.0
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS="libjpeg-devel libjpeg12-devel xz-devel zlib-devel zstd-devel"	# webp <=> libtiff
 
 source ../../../scripts/build-helpers
 
@@ -11,8 +12,6 @@ startlog
 [ -f ../CMakeLists.txt ] || tar -C .. -xzf tiff-$V.tar.gz --xform "s,^tiff-$V,.,"
 
 sed -i -e 's/ @LIBJPEG_12_PATH@/ "@LIBJPEG_12_PATH@"/' ../libtiff/tif_config.h.cmake.in
-
-fetchdeps libjpeg-devel libjpeg12-devel xz-devel zlib-devel zstd-devel	# webp <=> libtiff
 
 vs2019env
 cmakeenv

@@ -2,6 +2,7 @@ export P=libzip
 export V=1.7.3
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS="openssl-devel zlib-devel xz-devel"
 
 source ../../../scripts/build-helpers
 
@@ -9,8 +10,6 @@ startlog
 
 [ -f $P-$V.tar.gz ] || wget https://libzip.org/download/$P-$V.tar.gz
 [ -f ../CMakeLists.txt ] || tar -C .. -xzf  $P-$V.tar.gz --xform "s,^$P-$V,.,"
-
-fetchdeps openssl-devel zlib-devel xz-devel
 
 vs2019env
 cmakeenv

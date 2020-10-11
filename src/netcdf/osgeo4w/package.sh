@@ -2,6 +2,7 @@ export P=netcdf
 export V=4.7.4
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS="hdf4-devel hdf5-devel curl-devel zlib-devel hdf5-tools szip-devel"
 
 source ../../../scripts/build-helpers
 
@@ -37,8 +38,6 @@ if ! [ -f patched ]; then
 EOF
 	touch patched
 fi
-
-fetchdeps hdf4-devel hdf5-devel curl-devel zlib-devel hdf5-tools szip-devel
 
 vs2019env
 cmakeenv

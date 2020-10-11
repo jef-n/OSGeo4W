@@ -2,6 +2,7 @@ export P=geos
 export V=3.8.1
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS=none
 
 source ../../../scripts/build-helpers
 

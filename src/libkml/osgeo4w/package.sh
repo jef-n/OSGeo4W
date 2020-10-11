@@ -2,6 +2,7 @@ export P=libkml
 export V=1.3.0
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS="zlib-devel expat-devel boost-devel"
 
 source ../../../scripts/build-helpers
 
@@ -9,8 +10,6 @@ startlog
 
 [ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://github.com/$P/$P/archive/$V.tar.gz
 [ -f ../CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz --xform "s,^$P-$V,.,"
-
-fetchdeps zlib-devel expat-devel boost-devel
 
 vs2019env
 cmakeenv

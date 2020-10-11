@@ -2,6 +2,7 @@ export P=msoledbsql
 export V=manual
 export B=0
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS=none
 
 source ../../../scripts/build-helpers
 

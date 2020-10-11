@@ -2,6 +2,7 @@ export P=proj-data
 export V=1.2
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS=none
 
 source ../../../scripts/build-helpers
 

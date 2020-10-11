@@ -2,6 +2,7 @@ export P=msvcrt2019
 export V=14.2
 export B=1
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS=none
 
 source ../../../scripts/build-helpers
 

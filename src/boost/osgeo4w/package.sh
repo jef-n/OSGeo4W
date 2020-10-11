@@ -2,6 +2,7 @@ export P=boost
 export V=1.74.0
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS=none
 
 source ../../../scripts/build-helpers
 

@@ -2,12 +2,11 @@ export P=poppler
 export V=20.10.0
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS="freetype-devel libjpeg-devel zlib-devel libpng-devel libtiff-devel curl-devel boost-devel cairo-devel libiconv-devel"
 
 source ../../../scripts/build-helpers
 
 startlog
-
-fetchdeps freetype-devel libjpeg-devel zlib-devel libpng-devel libtiff-devel curl-devel boost-devel cairo-devel libiconv-devel
 
 [ -f $P-$V.tar.xz ] || wget https://poppler.freedesktop.org/$P-$V.tar.xz
 [ -f ../CMakeLists.txt ] || tar -C .. -xJf $P-$V.tar.xz --xform "s,^$P-$V,.,"

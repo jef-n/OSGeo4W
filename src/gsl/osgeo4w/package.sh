@@ -2,6 +2,7 @@ export P=gsl
 export V=2.6
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS=none
 
 export sha=f682a568d3a8724ffec01edc72c40423444b1e8b
 

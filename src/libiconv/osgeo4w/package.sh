@@ -2,6 +2,7 @@ export P=libiconv
 export V=1.16
 export B=1
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS=none
 
 source ../../../scripts/build-helpers
 

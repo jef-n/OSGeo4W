@@ -2,6 +2,8 @@ export P=sqlite3
 export V=3.33.0
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS=none
+
 export BASE=sqlite-amalgamation-3330000
 
 source ../../../scripts/build-helpers

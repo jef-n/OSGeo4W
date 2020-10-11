@@ -2,6 +2,7 @@ export P=freetype
 export V=2.10.2
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS="libpng-devel zlib-devel"
 
 source ../../../scripts/build-helpers
 
@@ -9,8 +10,6 @@ startlog
 
 [ -f $P-$V.tar.gz ] || wget https://download.savannah.gnu.org/releases/$P/$P-$V.tar.gz
 [ -f ../CMakeLists.txt ] || tar -C .. -xzf  $P-$V.tar.gz --xform "s,^$P-$V,.,"
-
-fetchdeps libpng-devel zlib-devel
 
 vs2019env
 cmakeenv

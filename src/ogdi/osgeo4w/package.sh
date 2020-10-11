@@ -2,6 +2,7 @@ export P=ogdi
 export V=4.1.0
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS="expat-devel zlib-devel"
 
 source ../../../scripts/build-helpers
 
@@ -23,8 +24,6 @@ sed \
         -e "s#^cp \$(TARGETGEN) \$(INST_LIB)\$#&/ogdi#" \
 	-e "s#^.*mkdir -p \$(INST_LIB)\$#&/ogdi#" \
 	../config/common.mak.in >../config/common.mak
-
-fetchdeps expat-devel zlib-devel
 
 vs2019env
 

@@ -2,6 +2,7 @@ export P=base
 export V=1.0.0
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS=none
 
 source ../../../scripts/build-helpers
 

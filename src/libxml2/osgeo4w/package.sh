@@ -2,12 +2,12 @@ export P=libxml2
 export V=2.9.10
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS="zlib-devel libiconv-devel xz-devel"
 
 source ../../../scripts/build-helpers
 
 startlog
 
-fetchdeps zlib-devel libiconv-devel xz-devel
 cp -uv osgeo4w/lib/iconv.dll.lib osgeo4w/lib/iconv.lib
 
 [ -f $P-$V.tar.gz ] || wget -c ftp://xmlsoft.org/$P/$P-$V.tar.gz

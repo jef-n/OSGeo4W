@@ -2,6 +2,7 @@ export P=openssl
 export V=1.1.1h
 export B=next
 export MAINTAINER=JuergenFischer
+export BUILDDEPENDS=none
 
 # perl also used in libpq
 SBPERL=5.32.0.1
