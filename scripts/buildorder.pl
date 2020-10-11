@@ -29,7 +29,7 @@ while(<F>) {
 	die "invalid $_" unless defined $a && defined $b;
 
 	$dep{$a}{$b} = 1;
-	$fdep{$a}{$b} = 1 unless $done{$b};
+	$fdep{$a}{$b} = 1;
 	$rdep{$b}{$a} = 1;
 	$pkg{$a} = 1;
 	$pkg{$b} = 1;
@@ -58,29 +58,34 @@ while(keys %pkg) {
 			delete $dep{$a} unless keys %{ $dep{$a} };
 		}
 
+		my $t;
 		if($done{$b}) {
-			$b = "\e[42m$b\e[0m"
-		} elsif( keys %{ $fdep{$b} } ) {
-			my $t = "\e[41m" . $b . "\e[0m [needs:";
+			$t = "\e[32m$b\e[0m";
+		} else {
+			my $u = 0;
+			foreach( keys %{ $fdep{$b} } ) {
+				$u++ unless $done{$_};
+			}
+			$t .= $u > 0 ? "\e[31m$b\e[0m" : "\e[33m$b\e[0m";
+		}
+
+		if( keys %{ $fdep{$b} } ) {
+			$t .= " <=";
 
 			for my $c (keys %{ $fdep{$b} }) {
 				if($done{$c}) {
-					$t .= " \e[42m$c\e[0m";
+					$t .= " \e[32m$c\e[0m";
 				} else {
 					my $u = 0;
 					foreach ( keys %{ $fdep{$c} } ) {
 						$u++ unless $done{$_};
 					}
-					$t .= $u == 0 ? " \e[33m$c\e[0m" : " \e[41m$c($u)\e[0m";
+					$t .= $u == 0 ? " \e[33m$c\e[0m" : " \e[31m$c($u)\e[0m";
 				}
 			}
-
-			$b = "$t]";
-		} else {
-			$b = "\e[33m$b\e[0m"
 		}
 
-		print "    " x $l . $b . "\n";
+		print "    " x $l . $t . "\n";
 	}
 
 	$l++;
