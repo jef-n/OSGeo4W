@@ -1,0 +1,161 @@
+PYDIR			= $(OSGEO4W)\bin
+
+BINDIR			= $(GDAL_HOME)\bin
+LIBDIR			= $(GDAL_HOME)\lib
+INCDIR			= $(GDAL_HOME)\include
+DATADIR			= $(GDAL_HOME)\share\gdal
+# HTMLDIR		= $(GDAL_HOME)\share\gdal\html
+
+EXTRAFLAGS		= $(EXTRAFLAGS) -DFRMT_zlib
+EXTRA_LINKER_FLAGS	= /FORCE
+
+MSVC_VER		= 1923
+WIN64			= 1
+
+OPTFLAGS		= /nologo /MD /EHsc /Ox /D_CRT_SECURE_NO_DEPRECATE /D_CRT_NONSTDC_NO_DEPRECATE /DNDEBUG /DIPPJ_HUFF /Z7 /DH5_BUILT_AS_DYNAMIC_LIB
+CPPFLAGS		= $(CFLAGS)
+
+SETARGV			= "$(VCDIR)\lib\x64\setargv.obj"
+
+# JPEG_DIR		= $(OSGEO4W)/include
+# JPEG_LIB		= $(OSGEO4W)/lib/jpeg_i.lib $(OSGEO4W)/lib/jpeg12_i.lib
+
+PNG_EXTERNAL_LIB	= 1
+PNGDIR			= $(OSGEO4W)/include
+PNG_LIB			= $(OSGEO4W)/lib/libpng16.lib
+
+TIFF_INC		= -I$(OSGEO4W)\include
+TIFF_LIB		= $(OSGEO4W)\lib\tiff.lib
+TIFF_OPTS		= -DBIGTIFF_SUPPORT
+
+GEOTIFF_INC		= -I$(OSGEO4W)/include
+GEOTIFF_LIB		= $(OSGEO4W)/lib/geotiff_i.lib
+
+EXPAT_DIR		= $(OSGEO4W)
+EXPAT_INCLUDE		= -I$(OSGEO4W)\include
+EXPAT_LIB		= $(OSGEO4W)\lib\libexpat.lib
+
+# to enable ECW support.
+ECW_PLUGIN		= YES
+ECWLIB			= $(ECWDIR)\lib\vc140\x64\NCSEcw.lib $(ECWDIR)\lib\vc140\x64\NCSEcwS.lib
+ECWFLAGS		= -DECWSDK_VERSION=50 -I$(ECWDIR)\include
+
+OGDIDIR			= $(OSGEO4W)
+OGDI_INCLUDE		= $(OSGEO4W)\include\ogdi -I$(OSGEO4W)\include -D_WINREG_
+OGDILIB			= $(OSGEO4W)\lib\ogdi.lib $(OSGEO4W)\lib\zlib.lib
+
+XERCES_DIR		= $(OSGEO4W)
+XERCES_INCLUDE		= -I$(XERCES_DIR)\include\xercesc -I$(XERCES_DIR)\include
+XERCES_LIB		= $(XERCES_DIR)/lib/xerces-c_3.lib
+
+OPENJPEG_ENABLED	= YES
+OPENJPEG_CFLAGS		= -I$(OSGEO4W)\include\openjpeg-2.3
+OPENJPEG_LIB		= $(OSGEO4W)\lib\openjp2.lib
+
+HDF4_DIR		= $(OSGEO4W)
+HDF4_LIB		= /LIBPATH:$(HDF4_DIR)\lib libhdf.lib libmfhdf.lib libxdr.lib szip.lib Ws2_32.lib
+HDF4_INCLUDE		= $(OSGEO4W)\include
+
+HDF5_PLUGIN		= YES
+HDF5_DIR		= $(OSGEO4W)
+HDF5_LIB		= $(OSGEO4W)\lib\hdf5.lib 
+
+PG_INC_DIR		= $(OSGEO4W)\include -DPG_ENABLED
+PG_LIB			= $(OSGEO4W)\lib\libpq.lib wsock32.lib
+
+MYSQL_INC_DIR		= $(OSGEO4W)\include
+MYSQL_LIB		= $(OSGEO4W)\lib\libmysql.lib advapi32.lib
+
+SQLITE_INC		   = -I$(OSGEO4W)\include -DHAVE_SPATIALITE
+SQLITE_LIB		   = $(OSGEO4W)\lib\sqlite3_i.lib $(OSGEO4W)\lib\spatialite_i.lib
+SPATIALITE_412_OR_LATER    = yes
+SQLITE_HAS_COLUMN_METADATA = yes 
+
+FREEXL_CFLAGS		= -I$(OSGEO4W)\include
+FREEXL_LIBS		= $(OSGEO4W)\lib\freexl_i.lib
+
+#NETCDF_PLUGIN		= YES
+NETCDF_SETTING		= yes
+NETCDF_LIB		= $(OSGEO4W)\lib\netcdf.lib
+NETCDF_INC_DIR		= $(OSGEO4W)\include
+NETCDF_HAS_NC4		= yes
+NETCDF_HAS_HDF4		= yes
+
+PROJ_INCLUDE		= -I$(OSGEO4W)/include
+PROJ_LIBRARY		= $(OSGEO4W)\lib\proj.lib
+
+CURL_INC		= -I$(OSGEO4W)\include
+CURL_LIB		= $(OSGEO4W)/lib/libcurl.lib wsock32.lib wldap32.lib winmm.lib
+
+GEOS_CFLAGS		= -DHAVE_GEOS -I$(OSGEO4W)\include 
+GEOS_LIB		= $(OSGEO4W)\lib\geos_c.lib
+
+LIBICONV_DIR		= $(OSGEO4W)
+LIBICONV_INCLUDE	= -I$(LIBICONV_DIR)\include
+LIBICONV_LIBRARY	= $(LIBICONV_DIR)\lib\iconv.dll.lib
+LIBICONV_CFLAGS		= -DICONV_CONST=
+
+OCI_PLUGIN		= YES
+OCI_LIB			= $(OSGEO4W)\lib\oci.lib
+OCI_INCLUDE		= -I$(OSGEO4W)\include
+
+FGDB_PLUGIN		= YES
+FGDB_INC		= $(FGDB_SDK)/include/
+FGDB_LIB		= $(FGDB_SDK)/lib64/FileGDBAPI.lib
+
+MRSID_PLUGIN		= YES
+MRSID_LIDAR_PLUGIN	= YES
+MRSID_JP2		= YES
+MRSID_CONFIG		= .
+MRSID_RASTER_DIR	= $(MRSID_SDK)/Raster_DSDK
+MRSID_LIDAR_DIR		= $(MRSID_SDK)/Lidar_DSDK
+MRSID_INCLUDE		= -I$(MRSID_RASTER_DIR)/include
+MRSID_LIB		= $(MRSID_RASTER_DIR)/lib/lti_dsdk.lib $(MRSID_RASTER_DIR)/lib/lti_dsdk_cdll.lib
+
+SOSI_PLUGIN             = YES
+SOSI_INC_DIR            = $(OSGEO4W)/include/fyba
+SOSI_LIBS		= $(OSGEO4W)/Lib/GM.lib $(OSGEO4W)/Lib/UT.lib $(OSGEO4W)/Lib/FYBA.lib
+
+MSODBCSQL_VERSION	= 17
+MSODBCSQL_DIR		= $(OSGEO4W)/include
+MSODBCSQL_LIB		= $(OSGEO4W)/lib/msodbcsql$(MSODBCSQL_VERSION).lib
+MSODBCSQL_INCLUDE	= -I$(OSGEO4W)/include -DMSODBCSQL_VERSION=$(MSODBCSQL_VERSION) -DMSSQL_BCP_SUPPORTED=1
+
+# enables mssql plugin
+SQLNCLI_LIB		= $(OSGEO4W)/lib/msodbcsql$(MSODBCSQL_VERSION).lib
+
+ILI_ENABLED		= YES
+
+POPPLER_ENABLED		= YES
+POPPLER_MAJOR_VERSION   = 20
+POPPLER_MINOR_VERSION   = 20
+POPPLER_CFLAGS		= -I$(OSGEO4W)/include -I$(OSGEO4W)/include/poppler
+POPPLER_LIBS		= $(OSGEO4W)/lib/poppler.lib $(OSGEO4W)/lib/freetype.lib advapi32.lib gdi32.lib
+
+LIBKML_DIR		= $(OSGEO4W)
+LIBKML_INCLUDE		= -I$(OSGEO4W)/include -I$(OSGEO4W)/include/. -I$(OSGEO4W)/include/boost-1_74
+LIBKML_LIBS		= $(OSGEO4W)/lib/kmlbase.lib \
+			  $(OSGEO4W)/lib/kmlconvenience.lib \
+			  $(OSGEO4W)/lib/kmldom.lib \
+			  $(OSGEO4W)/lib/kmlengine.lib \
+			  $(OSGEO4W)/lib/kmlregionator.lib \
+			  $(OSGEO4W)/lib/kmlxsd.lib \
+			  $(OSGEO4W)/lib/minizip.lib \
+			  $(OSGEO4W)/lib/uriparser.lib \
+			  $(EXPAT_LIB) \
+			  $(OSGEO4W)/lib/zlib.lib
+
+LZMA_CFLAGS		= -I$(OSGEO4W)/include/./.
+LZMA_LIBS		= $(OSGEO4W)/lib/liblzma.lib
+
+ZSTD_CFLAGS		= -I$(OSGEO4W)/include
+ZSTD_LIBS		= $(OSGEO4W)/lib/zstd.lib
+
+WEBP_ENABLED		= YES
+WEBP_CFLAGS		= -I$(OSGEO4W)/include
+WEBP_LIBS		= $(OSGEO4W)/lib/webp.lib
+
+HAVE_LERC		= 1
+
+# sneak in for building internal mssqlspatial
+JASPER_LIB		= $(MSODBCSQL_LIB)

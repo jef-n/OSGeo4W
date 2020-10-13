@@ -1,0 +1,63 @@
+diff -ur orig/gdal-3.1.3/frmts/gtiff/libtiff/makefile.vc ../frmts/gtiff/libtiff/makefile.vc
+--- orig/gdal-3.1.3/frmts/gtiff/libtiff/makefile.vc	2020-09-01 10:36:30.000000000 +0200
++++ ../frmts/gtiff/libtiff/makefile.vc	2020-10-11 16:12:10.142034500 +0200
+@@ -56,14 +56,14 @@
+ !IFDEF JPEG_EXTERNAL_LIB
+ JPEG_FLAGS =	-I$(JPEGDIR) -DJPEG_SUPPORT  -DOJPEG_SUPPORT
+ !ELSE
+-JPEG_FLAGS =	-I..\..\jpeg\libjpeg -DJPEG_SUPPORT -DOJPEG_SUPPORT
++EXTRAFLAGS =	-I..\..\jpeg\libjpeg -DJPEG_SUPPORT -DOJPEG_SUPPORT $(EXTRAFLAGS)
+ !ENDIF
+ !ENDIF
+ 
+ !IFDEF ZLIB_EXTERNAL_LIB
+ ZLIB_FLAGS = $(ZLIB_INC)
+ !ELSE
+-ZLIB_FLAGS = -I..\..\zlib
++EXTRA_FLAGS = -I..\..\zlib $(EXTRA_FLAGS)
+ !ENDIF
+ 
+ !IFDEF JPEG12_SUPPORTED
+diff -ur orig/gdal-3.1.3/frmts/gtiff/makefile.vc ../frmts/gtiff/makefile.vc
+--- orig/gdal-3.1.3/frmts/gtiff/makefile.vc	2020-09-01 10:36:30.000000000 +0200
++++ ../frmts/gtiff/makefile.vc	2020-10-11 16:12:10.140034100 +0200
+@@ -39,7 +39,7 @@
+ !IFDEF GEOTIFF_INC
+ SUB_GEOTIFF_TARGET =	
+ !ELSE
+-GEOTIFF_INC   =	-Ilibgeotiff -DINTERNAL_LIBGEOTIFF
++EXTRAFLAGS	=	-Ilibgeotiff -DINTERNAL_LIBGEOTIFF $(EXTRAFLAGS)
+ SUB_GEOTIFF_TARGET =	geotiff
+ !ENDIF
+ 
+@@ -47,7 +47,7 @@
+ !IFDEF JPEG_EXTERNAL_LIB
+ JPEG_FLAGS =	-I..\jpeg -I$(JPEGDIR) -DHAVE_LIBJPEG
+ !ELSE
+-JPEG_FLAGS =	-I..\jpeg -I..\jpeg\libjpeg -DHAVE_LIBJPEG
++EXTRAFLAGS =	-I..\jpeg -I..\jpeg\libjpeg -DHAVE_LIBJPEG $(EXTRAFLAGS)
+ !ENDIF
+ !ENDIF
+ 
+diff -ur orig/gdal-3.1.3/swig/makefile.vc ../swig/makefile.vc
+--- orig/gdal-3.1.3/swig/makefile.vc	2020-09-01 10:36:31.000000000 +0200
++++ ../swig/makefile.vc	2020-10-12 16:46:02.716946800 +0200
+@@ -14,12 +14,12 @@
+         cd python
+         -del setup_vars.ini
+         echo 'GNM_ENABLED=$(INCLUDE_GNM_FRMTS)' > setup_vars.ini
+-        $(SWIG) -python -modern -new_repr -o extensions/gdalconst_wrap.c -outdir osgeo ..\include\gdalconst.i
+-        $(SWIG) -c++ -python -modern -new_repr -I../include/python -I../include/python/docs -o extensions/gdal_wrap.cpp -outdir osgeo ..\include\gdal.i
+-        $(SWIG) -c++ -python -modern -new_repr -I../include/python -I../include/python/docs -o extensions/osr_wrap.cpp -outdir osgeo ..\include\osr.i
+-        $(SWIG) -c++ -python -modern -new_repr -I../include/python -I../include/python/docs -o extensions/ogr_wrap.cpp -outdir osgeo ..\include\ogr.i
+-        $(SWIG) -c++ -python -modern -new_repr -I../include/python -I../include/python/docs -o extensions/gnm_wrap.cpp -outdir osgeo ..\include\gnm.i
+-        $(SWIG) -c++ -python -modern -new_repr -I../include/python -I../include/python/docs -o extensions/gdal_array_wrap.cpp -outdir osgeo ..\include\gdal_array.i
++        $(SWIG) -python -o extensions/gdalconst_wrap.c -outdir osgeo ..\include\gdalconst.i
++        $(SWIG) -c++ -python -I../include/python -I../include/python/docs -o extensions/gdal_wrap.cpp -outdir osgeo ..\include\gdal.i
++        $(SWIG) -c++ -python -I../include/python -I../include/python/docs -o extensions/osr_wrap.cpp -outdir osgeo ..\include\osr.i
++        $(SWIG) -c++ -python -I../include/python -I../include/python/docs -o extensions/ogr_wrap.cpp -outdir osgeo ..\include\ogr.i
++        $(SWIG) -c++ -python -I../include/python -I../include/python/docs -o extensions/gnm_wrap.cpp -outdir osgeo ..\include\gnm.i
++        $(SWIG) -c++ -python -I../include/python -I../include/python/docs -o extensions/gdal_array_wrap.cpp -outdir osgeo ..\include\gdal_array.i
+         $(PYDIR)\python.exe setup.py build
+ 	cd ..
+ 
