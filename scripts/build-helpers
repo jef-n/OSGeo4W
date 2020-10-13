@@ -1,12 +1,8 @@
 set -e
 
-if [ -n "$OSGEO4W_ROOT" ]; then
-	echo "Builds are supposed to be run outside of OSGeo4W" >&2
-	exit 1
-fi
-
-export OSGEO4W_PWD=$PWD
+export MASTER_REPO=http://download.osgeo.org/osgeo4w
 export OSGEO4W_SCRIPTS=$(cygpath -a "$( dirname "${BASH_SOURCE[0]}" )")
+export OSGEO4W_PWD=$PWD
 
 savelog() {
 	local f=$1
@@ -125,7 +121,7 @@ vs2019env() {
 
 	export VS160COMNTOOLS=$(cygpath -aw "$vcdir")/Common7/Tools
 	fetchenv "$vcdir/VC/Auxiliary/Build/vcvarsall.bat" ${VCARCH:-amd64} $VCSDK
-	export PATH="$VCDIR/VC/bin:$PATH"
+	export PATH="$vcdir/VC/bin:$PATH"
 	export CC=cl.exe
 	export CXX=cl.exe
 }
@@ -197,15 +193,17 @@ fetchdeps() {
 
 		if [ -z "$missing" ]; then
 			log "No missing dependencies"
-			return 0
+			# return 0
 		fi
 	fi
 
 	if ! [ -x "$OSGEO4W_SCRIPTS/osgeo4w-setup.exe" ]; then
-		wget -O "$OSGEO4W_SCRIPTS/osgeo4w-setup.exe" https://download.osgeo.org/osgeo4w/osgeo4w-setup-x86_64.exe
+		wget -O "$OSGEO4W_SCRIPTS/osgeo4w-setup.exe" $MASTER_REPO/osgeo4w-setup-x86_64.exe
 	fi
 
-	regen
+	if ! regen; then
+		log "regen failed"
+	fi
 
 	local pid=$(setuppid)
 	if [ -n "$pid" ]; then
@@ -223,7 +221,7 @@ fetchdeps() {
 	cmd="$cmd --upgrade-also"
 	cmd="$cmd --only-site"
 	cmd="$cmd -s $(cygpath -am $OSGEO4W_REP)"
-	# cmd="$cmd -s https://download.osgeo.org/osgeo4w"    # FIXME
+	# cmd="$cmd -s $MASTER_REPO"    # FIXME
 	cmd="$cmd -l $(cygpath -aw $OSGEO4W_REP/package-cache)"
 
 	for p in "$@"; do
@@ -260,20 +258,40 @@ fetchdeps() {
 		return 0
 	else
 		log "Missing dependencies:$missing"
+		for i in osgeo4w/setup.log osgeo4w/setup.log.full osgeo4w/var/log/setup.log osgeo4w/var/log/setup.log.full; do
+			[ -f $i ] && cat $i
+		done
 		return 1
 	fi
 }
 declare -x fetchdeps
 
+getpackages() {
+	wget -c -q -O /tmp/setup-main.ini $MASTER_REPO/x86_64/setup.ini 1>&2
+
+	(
+		# sed -ne 's/^@ //p' /tmp/setup-main.ini
+		sed -ne 's/^@ //p' /tmp/setup.ini
+	) | sort -u
+}
+declare -x getpackages
+
 nextbinary() {
-	wget -c -q -O /tmp/setup-main.ini http://download.osgeo.org/osgeo4w/x86_64/setup.ini 1>&2
+	local p
+	if [ "$1" = "next" ]; then
+		p=$P
+	else
+		p=$1
+	fi
+
+	wget -c -q -O /tmp/setup-main.ini $MASTER_REPO/x86_64/setup.ini 1>&2
 
 	regen 1>&2
 
 	b=$(
 		(
-			sed -ne '/^@ '$P'$/,/^$/ { s/^version: '$V'-\([0-9]*\)$/\1/p; }' /tmp/setup-main.ini
-			sed -ne '/^@ '$P'$/,/^$/ { s/^version: '$V'-\([0-9]*\)$/\1/p; }' $OSGEO4W_REP/x86_64/setup.ini
+			sed -ne '/^@ '$p'$/,/^$/ { s/^version: '$V'-\([0-9]*\)$/\1/p; }' /tmp/setup-main.ini
+			sed -ne '/^@ '$p'$/,/^$/ { s/^version: '$V'-\([0-9]*\)$/\1/p; }' $OSGEO4W_REP/x86_64/setup.ini
 			echo 0
 		) | sort -rn | head -1
 	)
@@ -284,6 +302,8 @@ nextbinary() {
 }
 
 # make sure we are using what we expect
+awk() { /bin/awk "$@"; }
+bash() { /bin/bash "$@"; }
 cat() { /bin/cat "$@"; }
 cp() { /bin/cp "$@"; }
 rm() { /bin/rm "$@"; }
@@ -298,49 +318,64 @@ xargs() { /bin/xargs "$@"; }
 flip() { /bin/flip "$@"; }
 touch() { /bin/touch "$@"; }
 unzip() { /bin/unzip "$@"; }
+sort() { /bin/sort "$@"; }
+make() { /bin/make "$@"; }
 7z() { /bin/7z "$@"; }
+cygpath() { /bin/cygpath "$@"; }
 
-declare -x cat cp rm mkdir tar ls sed diff patch find xargs flip touch unzip
+declare -x awk bash cat cp rm mkdir tar ls sed diff patch find xargs flip touch unzip cygpath
 
-# Verify that a repository is set
-if ! [ -d "$OSGEO4W_REP" ]; then
-        echo "No repository" >&2
-        exit 1
-fi
+init() {
+	if [ -n "$OSGEO4W_ROOT" ]; then
+		echo "Builds are supposed to be run outside of OSGeo4W" >&2
+		exit 1
+	fi
 
-if [ -z "$MAINTAINER" ]; then
-        echo "No maintainer" >&2
-        exit 1
-fi
 
-if [ -z "$P" ]; then
-	echo "no package name in P" >&2
-	exit 1
-fi
+	# Verify that a repository is set
+	if ! [ -d "$OSGEO4W_REP" ]; then
+		echo "No repository" >&2
+		exit 1
+	fi
 
-if [ -z "$V" ]; then
-	echo "No (upstream) version in V" >&2
-	exit 1
-fi
+	if [ -z "$MAINTAINER" ]; then
+		echo "No maintainer" >&2
+		exit 1
+	fi
 
-case "$B" in
-next)
-	B=$(nextbinary)
-	echo "Binary package version: $P-$V-$B"
-	;;
+	if [ -z "$P" ]; then
+		echo "no package name in P" >&2
+		exit 1
+	fi
 
-[0-9]*)
-	;;
+	if [ -z "$V" ]; then
+		echo "No (upstream) version in V" >&2
+		exit 1
+	fi
 
-"")
-	echo "No binary version in B" >&2
-	exit 1
-	;;
-esac
+	case "$B" in
+	next|"next "*)
+		B=$(nextbinary ${B#next })
+		echo "Binary package version: $P-$V-$B"
+		;;
 
-if [ -z "$BUILDDEPENDS" ]; then
-        echo "No build dependencies" >&2
-        exit 1
+	[0-9]*)
+		;;
+
+	"")
+		echo "No binary version in B" >&2
+		exit 1
+		;;
+	esac
+
+	if [ -z "$BUILDDEPENDS" ]; then
+		echo "No build dependencies" >&2
+		exit 1
+	fi
+}
+
+if [ -z "$NOINIT" ]; then
+	init
 fi
 
 # vim: syntax=bash :
