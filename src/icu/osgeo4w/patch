@@ -1,0 +1,31 @@
+diff -ur icu/source/extra/scrptrun/Makefile.in ../source/extra/scrptrun/Makefile.in
+--- icu/source/extra/scrptrun/Makefile.in	2020-04-22 22:04:20.000000000 +0200
++++ ../source/extra/scrptrun/Makefile.in	2020-10-13 15:19:13.197553800 +0200
+@@ -12,9 +12,6 @@
+ 
+ include $(top_builddir)/icudefs.mk
+ 
+-## Platform-specific setup
+-include @platform_make_fragment@
+-
+ ## Build directory information
+ subdir = extra/scrptrun
+ 
+@@ -22,7 +19,7 @@
+ CLEANFILES = *~ $(DEPS)
+ 
+ ## Target information
+-TARGET = srtest
++TARGET = srtest$(EXEEXT)
+ 
+ DEFS = @DEFS@
+ CPPFLAGS = @CPPFLAGS@ -I$(top_srcdir)/common -I$(top_srcdir) 
+@@ -74,7 +71,7 @@
+ 	 && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
+ 
+ $(TARGET) : $(OBJECTS)
+-	$(LINK.cc) -o $@ $^ $(LIBS)
++	$(LINK.cc) $(OUTOPT)$@ $^ $(LIBS)
+ 	$(POST_BUILD_STEP)
+ 
+ invoke:
