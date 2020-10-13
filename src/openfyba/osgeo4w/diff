@@ -1,0 +1,22 @@
+diff --git a/src/UT/UT3.cpp b/src/UT/UT3.cpp
+index 4824168..bda44d1 100644
+--- a/src/UT/UT3.cpp
++++ b/src/UT/UT3.cpp
+@@ -54,7 +54,7 @@ SK_EntPnt_UT void UT_Sound (short freq, short dur)
+ #endif
+ 
+ #ifdef WIN32
+-	Beep((DWORD)freq,((DWORD)dur)*10);
++	// Beep((DWORD)freq,((DWORD)dur)*10);
+ #endif
+ }
+ 
+@@ -81,7 +81,7 @@ SK_EntPnt_UT void UT_Pause (short dur)
+ #endif
+ 
+ #ifdef WIN32
+-	Sleep(((DWORD)dur)*10);
++	// Sleep(((DWORD)dur)*10);
+ #endif
+ }
+ 
