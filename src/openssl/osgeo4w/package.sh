@@ -6,6 +6,7 @@ export BUILDDEPENDS=none
 
 # perl also used in libpq
 SBPERL=5.32.0.1
+NASM=2.15.05
 
 source ../../../scripts/build-helpers
 
@@ -28,31 +29,33 @@ if ! [ -d perl ]; then
 fi
 
 vs2019env
-fetchenv perl/portableshell.bat /SETENV
 
-export PATH=$PATH:$(cygpath -a nasm-$NASM)
+(
+	fetchenv perl/portableshell.bat /SETENV
+	export PATH=$PATH:$(cygpath -a nasm-$NASM)
 
-if ! [ -f built ]; then
-	cd ..
+	if ! [ -f built ]; then
+		cd ..
 
-	perl Configure VC-WIN64A --prefix=$(cygpath -aw osgeo4w/install) --openssldir=$(cygpath -aw osgeo4w/install/apps/openssl)
+		perl Configure VC-WIN64A --prefix=$(cygpath -aw osgeo4w/install) --openssldir=$(cygpath -aw osgeo4w/install/apps/openssl)
 
-	nmake clean
-	nmake
-	nmake test
-	nmake install
+		nmake clean
+		nmake
+		nmake test
+		nmake install
 
-	cd osgeo4w
+		cd osgeo4w
 
-	touch built
-fi
+		touch built
+	fi
+)
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R/$P-devel $R/$P-doc install/etc/postinstall install/etc/ini
 
 cat <<EOF >install/etc/postinstall/$P.bat
-dllupdate -oite -copy -reboot "%OSGEO4W_ROOT%\bin\libcrypto-1_1-x64.dll"
-dllupdate -oite -copy -reboot "%OSGEO4W_ROOT%\bin\libssl-1_1-x64.dll"
+dllupdate -oite -copy -reboot "%OSGEO4W_ROOT%\\bin\\libcrypto-1_1-x64.dll"
+dllupdate -oite -copy -reboot "%OSGEO4W_ROOT%\\bin\\libssl-1_1-x64.dll"
 EOF
 
 cat <<EOF >install/etc/ini/$P.bat
@@ -63,7 +66,7 @@ cat <<EOF >$R/setup.hint
 sdesc: "OpenSSL Cryptography (Runtime)"
 ldesc: "OpenSSL Cryptography (Runtime)"
 category: Libs
-requires: msvc2019
+requires: base msvc2019
 maintainer: $MAINTAINER
 EOF
 
