@@ -43,26 +43,6 @@ vs2019env
 cmakeenv
 ninjaenv
 
-cat <<EOF >$R/setup.hint
-sdesc: "The NetCDF library and commands for reading and writing NetCDF format (Runtime)"
-ldesc: "The NetCDF library and commands for reading and writing NetCDF format (Runtime)"
-category: Libs
-requires: hdf4 hdf5 curl zlib szip
-maintainer: $MAINTAINER
-EOF
-
-cat <<EOF >$R/$P-devel/setup.hint
-sdesc: "The NetCDF library and commands for reading and writing NetCDF format (Development)"
-ldesc: "The NetCDF library and commands for reading and writing NetCDF format (Development)"
-category: Libs
-requires: $P
-external-source: $P
-maintainer: $MAINTAINER
-EOF
-
-cp ../COPYRIGHT $R/$P-$V-$B.txt
-cp ../COPYRIGHT $R/$P-devel/$P-devel-$V-$B.txt
-
 mkdir -p build install
 cd build
 
@@ -83,13 +63,44 @@ ninja install
 cd ..
 
 export R=$OSGEO4W_REP/x86_64/release/$P
-mkdir -p $R/$P-devel
+mkdir -p $R/$P-{devel,tools}
+
+cat <<EOF >$R/setup.hint
+sdesc: "The NetCDF library and commands for reading and writing NetCDF format (Runtime)"
+ldesc: "The NetCDF library and commands for reading and writing NetCDF format (Runtime)"
+category: Libs
+requires: base hdf4 hdf5 curl zlib szip
+maintainer: $MAINTAINER
+EOF
+
+cat <<EOF >$R/$P-tools/setup.hint
+sdesc: "The NetCDF library and commands for reading and writing NetCDF format (Tools)"
+ldesc: "The NetCDF library and commands for reading and writing NetCDF format (Tools)"
+category: Commandline_Utilities
+requires: $P
+external-source: $P
+maintainer: $MAINTAINER
+EOF
+
+cat <<EOF >$R/$P-devel/setup.hint
+sdesc: "The NetCDF library and commands for reading and writing NetCDF format (Development)"
+ldesc: "The NetCDF library and commands for reading and writing NetCDF format (Development)"
+category: Libs
+requires: $P
+external-source: $P
+maintainer: $MAINTAINER
+EOF
+
+cp ../COPYRIGHT $R/$P-$V-$B.txt
+cp ../COPYRIGHT $R/$P-devel/$P-devel-$V-$B.txt
+cp ../COPYRIGHT $R/$P-tools/$P-tools-$V-$B.txt
 
 sed -e "s#$(cygpath -am install)#@osgeo4w_msys@#" install/bin/nc-config >install/bin/nc-config.tmpl
 
 mkdir -p install/etc/postinstall install/etc/preremove
+
 cat >install/etc/postinstall/$P.bat <<EOF
-textreplace -std -t "%OSGEO4W_ROOT%"\\bin\\nc-config
+textreplace -std -t "%OSGEO4W_ROOT%\\bin\\nc-config"
 EOF
 
 cat >install/etc/preremove/$P.bat <<EOF
@@ -97,12 +108,15 @@ del "%OSGEO4W_ROOT%\\bin\\nc-config"
 EOF
 
 tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
+	bin/netcdf.dll
+
+tar -C install -cjf $R/$P-tools/$P-tools-$V-$B.tar.bz2 \
 	--exclude bin/nc-config \
-	bin include lib etc
+	--exclude "*.dll" \
+	bin
 
 tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
-	--exclude bin/nc-config \
-	bin include lib etc
+	include lib etc
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 
