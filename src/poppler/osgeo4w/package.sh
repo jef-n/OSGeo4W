@@ -38,6 +38,8 @@ vs2019env
 mkdir -p build
 cd build
 
+# ENABLE_UNSTABLE_API_ABI_HEADERS for private headers
+
 PATH=$(echo $PATH | sed -e "s,:/bin,,g" -e "s,:/usr/bin,,g") \
 cmake -G Ninja \
 	-D CMAKE_BUILD_TYPE=Release \
@@ -47,11 +49,12 @@ cmake -G Ninja \
 	-D BUILD_QT6_TESTS=OFF \
 	-D BUILD_CPP_TESTS=OFF \
 	-D ENABLE_UTILS=ON \
-	-D ENABLE_CPP=ON \
+	-D ENABLE_CPP=OFF \
 	-D ENABLE_QT5=OFF \
 	-D ENABLE_QT6=OFF \
 	-D ENABLE_GLIB=OFF \
 	-D ENABLE_LIBOPENJPEG=none \
+	-D ENABLE_UNSTABLE_API_ABI_HEADERS=ON \
 	-D FREETYPE_INCLUDE_DIRS=$(cygpath -am ../osgeo4w/include/freetype2) \
 	-D FREETYPE_LIBRARY=$(cygpath -am ../osgeo4w/lib/freetype.lib) \
         -D ZLIB_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
