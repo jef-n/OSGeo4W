@@ -75,8 +75,8 @@ tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	--exclude "*.dll" \
 	include lib
 
-cp ../doc/licence.txt $R/$P-$V-$B.txt
-cp ../doc/license.txt $R/$P-devel/$P-devel-$P-$V-$B.txt
+cp ../docs/licence.txt $R/$P-$V-$B.txt
+cp ../docs/licence.txt $R/$P-devel/$P-devel-$P-$V-$B.txt
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 
