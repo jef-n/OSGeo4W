@@ -58,7 +58,7 @@ sdesc: "Python core interpreter and runtime"
 ldesc: "Python core interpreter and runtime"
 maintainer: $MAINTAINER
 category: Commandline_Utilities
-requires: msvcrt2019 sqlite3 openssl
+requires: base msvcrt2019 sqlite3 openssl
 external-source: $P
 EOF
 
