@@ -24,7 +24,7 @@ gdal	msodbcsql
 gdal	netcdf
 gdal	oci
 gdal	ogdi
-gdal	openfyba
+gdal	openfyba-devel
 gdal	openjpeg
 gdal	poppler
 gdal	proj
@@ -36,6 +36,7 @@ gdal	xerces-c
 gdal	xz
 gdal	zstd
 gdal	libwebp
+gdal	python3-numpy
 
 gpsbabel	expat
 gpsbabel	qt5
@@ -128,6 +129,7 @@ qgis	grass
 qt5	openssl
 qt5	sqlite3
 qt5	zlib
+qt5	icu
 
 qca	qt5
 qtkeychain	qt5
