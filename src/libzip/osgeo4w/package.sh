@@ -54,7 +54,7 @@ cat <<EOF >$R/$P-tools/setup.hint
 sdesc: "libzip (executables)"
 ldesc: "libzip (executables)"
 maintainer: JuergenFischer
-category: Desktop
+category: Commandline_Utilities
 requires: $P
 external-source: $P
 EOF

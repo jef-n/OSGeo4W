@@ -50,7 +50,7 @@ EOF
 cat <<EOF >$R/$P-tools/setup.hint
 sdesc: "The Xerces-C 3 library for parsing XML files (tools)"
 ldesc: "The Xerces-C 3 library for parsing XML files (tools)"
-category: Libs
+category: Commandline_Utilities
 requires: $P
 external-source: $P
 maintainer: $MAINTAINER

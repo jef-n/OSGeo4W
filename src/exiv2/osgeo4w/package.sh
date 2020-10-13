@@ -59,7 +59,7 @@ cat <<EOF >$R/$P-tools/setup.hint
 sdesc: "Image metadata library (tools)"
 ldesc: "Image metadata library (tools)"
 maintainer: $MAINTAINER
-category: Libs
+category: Commandline_Utilities
 requires: $P
 external-source: $P
 EOF

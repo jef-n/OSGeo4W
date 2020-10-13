@@ -94,7 +94,7 @@ tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
 cat <<EOF >$R/$P-tools/setup.hint
 sdesc: "Poppler is a PDF rendering library based on the xpdf-3.0 code base. (Tools)"
 ldesc: "Poppler is a PDF rendering library based on the xpdf-3.0 code base. (Tools)"
-category: Libs
+category: Commandline_Utilities
 requires: $P
 external-source: $P
 maintainer: $MAINTAINER

@@ -70,7 +70,7 @@ EOF
 cat <<EOF >$R/$P-tools/setup.hint
 sdesc: "The HDF5 library for reading and writing HDF5 format (Tools)"
 ldesc: "The HDF5 library for reading and writing HDF5 format (Tools)"
-category: Libs
+category: Commandline_Utilities
 requires: $P
 external-source: $P
 maintainer: $MAINTAINER

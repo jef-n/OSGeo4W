@@ -71,7 +71,7 @@ tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 cat <<EOF >$R/$P-tools/setup.hint
 sdesc: "A library for manipulating TIFF format image files (tools)"
 ldesc: "A library for manipulating TIFF format image files (tools)"
-category: Libs
+category: Commandline_Utilities
 requires: $P
 maintainer: $MAINTAINER
 external-source: $P

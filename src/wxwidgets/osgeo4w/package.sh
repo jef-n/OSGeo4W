@@ -53,7 +53,7 @@ tar -cjf $R/$P-$V-$B.tar.bz2 \
 cat <<EOF >$R/$P-tools/setup.hint
 sdesc: "cross-platform GUI library (tools)"
 ldesc: "cross-platform GUI library (tools)"
-category: CommandLine_Tools
+category: Commandline_Utilities
 requires: $P
 maintainer: $MAINTAINER
 external-source: $P

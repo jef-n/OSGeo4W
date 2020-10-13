@@ -59,7 +59,7 @@ EOF
 cat <<EOF >$R/$P-tools/setup.hint
 sdesc: "WebP is a modern image format that provides superior lossless and lossy compression. (Tools)"
 ldesc: "WebP is a modern image format that provides superior lossless and lossy compression. (Tools)"
-category: Libs
+category: Commandline_Utilities
 requires: $P
 external-source: $P
 maintainer: $MAINTAINER
