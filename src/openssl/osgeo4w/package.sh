@@ -66,7 +66,7 @@ cat <<EOF >$R/setup.hint
 sdesc: "OpenSSL Cryptography (Runtime)"
 ldesc: "OpenSSL Cryptography (Runtime)"
 category: Libs
-requires: base msvc2019
+requires: base msvcrt2019
 maintainer: $MAINTAINER
 EOF
 
