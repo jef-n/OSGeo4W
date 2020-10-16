@@ -46,7 +46,7 @@ cat <<EOF >$R/$P-devel/setup.hint
 sdesc: "An XML read/write library (Development)"
 ldesc: "An XML read/write library (Development)"
 category: Libs
-requires: $P
+requires: $P libiconv-devel
 external-source: $P
 maintainer: $MAINTAINER
 EOF
