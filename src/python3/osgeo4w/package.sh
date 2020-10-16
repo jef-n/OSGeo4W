@@ -341,7 +341,7 @@ sdesc: "The PyPA recommended tool for installing Python packages."
 ldesc: "The PyPA recommended tool for installing Python packages."
 maintainer: $MAINTAINER
 category: Commandline_Utilities
-requires: base $P
+requires: base $P-core
 EOF
 
 tar -cjf $R/$P-pip/$P-pip-$PIPV-$B.tar.bz2 \
@@ -374,7 +374,7 @@ sdesc: "setuptools - Easily download, build, install, upgrade, and uninstall Pyt
 ldesc: "setuptools - Easily download, build, install, upgrade, and uninstall Python packages"
 maintainer: $MAINTAINER
 category: Commandline_Utilities
-requires: base $P
+requires: base $P-core $P-devel
 EOF
 
 tar -cjf $R/$P-setuptools/$P-setuptools-$STV-$B.tar.bz2 \
