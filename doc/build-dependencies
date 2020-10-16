@@ -39,7 +39,7 @@ gdal	libwebp
 gdal	python3-numpy
 
 gpsbabel	expat
-gpsbabel	qt5
+gpsbabel	qt5-libs
 gpsbabel	zlib
 
 #grass	[msys:curses]
@@ -92,7 +92,7 @@ proj	libtiff
 proj	curl
 
 pyqt5	python3-core
-pyqt5	qt5
+pyqt5	qt5-libs
 pyqt5	qtwebkit
 pyqt5	sip
 
@@ -118,25 +118,26 @@ qgis	pyqt5
 qgis	python3-core
 qgis	qca
 qgis	qscintilla-qt5
-qgis	qt5
+qgis	qt5-libs
 qgis	qtkeychain
 qgis	qwt-libs-qt5
 qgis	sip
 qgis	libspatialite
 qgis	sqlite3
 qgis	grass
+qgis	qtwebkit
 
-qt5	openssl
-qt5	sqlite3
-qt5	zlib
-qt5	icu
+qt5-libs	openssl
+qt5-libs	sqlite3
+qt5-libs	zlib
+qt5-libs	icu
 
-qca	qt5
-qtkeychain	qt5
-qscintilla-qt5	qt5
-qwt-libs-qt5	qt5
+qca	qt5-libs
+qtkeychain	qt5-libs
+qscintilla-qt5	qt5-libs
+qwt-libs-qt5	qt5-libs
 
-qtwebkit	qt5
+qtwebkit	qt5-libs
 qtwebkit	zlib
 
 python3-wx	wxwidgets
