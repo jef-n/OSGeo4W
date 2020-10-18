@@ -4,6 +4,8 @@ export MASTER_REPO=http://download.osgeo.org/osgeo4w
 export OSGEO4W_SCRIPTS=$(cygpath -a "$( dirname "${BASH_SOURCE[0]}" )")
 export OSGEO4W_PWD=$PWD
 
+export PYTHON=Python39
+
 savelog() {
 	local f=$1
 	rm -f $f.9
@@ -51,6 +53,7 @@ declare -x endlog
 faillog() {
 	log "FAILED: $?"
 	finishlog
+	return 1
 }
 declare -x faillog
 
@@ -164,7 +167,8 @@ regen() {
 		# update local package repository
 		cd $OSGEO4W_REP
 		! [ -f x86_64/setup.ini ] || cp x86_64/setup.ini x86_64/setup.ini.prev
-		perl $OSGEO4W_SCRIPTS/genini --arch=x86_64  --output=x86_64/setup.ini --recursive --output=x86_64/setup.ini x86_64/release
+		perl $OSGEO4W_SCRIPTS/genini --arch=x86_64 --output=x86_64/setup.ini.tmp --recursive x86_64/release
+		mv x86_64/setup.ini.tmp x86_64/setup.ini
 		bzip2 -c x86_64/setup.ini >x86_64/setup.ini.bz2
 	)
 }
@@ -193,7 +197,9 @@ fetchdeps() {
 
 		if [ -z "$missing" ]; then
 			log "No missing dependencies"
-			# return 0
+			if [ -n "$OSGEO4W_SKIP_UPDATE" ]; then
+				return 0
+			fi
 		fi
 	fi
 
@@ -267,10 +273,10 @@ fetchdeps() {
 declare -x fetchdeps
 
 getpackages() {
-	wget -c -q -O /tmp/setup-main.ini $MASTER_REPO/x86_64/setup.ini 1>&2
+	# wget -c -q -O /tmp/setup-master.ini $MASTER_REPO/x86_64/setup.ini 1>&2
 
 	(
-		# sed -ne 's/^@ //p' /tmp/setup-main.ini
+		# sed -ne 's/^@ //p' /tmp/setup-master.ini
 		sed -ne 's/^@ //p' /tmp/setup.ini
 	) | sort -u
 }
@@ -284,13 +290,13 @@ nextbinary() {
 		p=$1
 	fi
 
-	wget -c -q -O /tmp/setup-main.ini $MASTER_REPO/x86_64/setup.ini 1>&2
+	wget -c -q -O /tmp/setup-master.ini $MASTER_REPO/x86_64/setup.ini 1>&2
 
 	regen 1>&2
 
 	b=$(
 		(
-			sed -ne '/^@ '$p'$/,/^$/ { s/^version: '$V'-\([0-9]*\)$/\1/p; }' /tmp/setup-main.ini
+			sed -ne '/^@ '$p'$/,/^$/ { s/^version: '$V'-\([0-9]*\)$/\1/p; }' /tmp/setup-master.ini
 			sed -ne '/^@ '$p'$/,/^$/ { s/^version: '$V'-\([0-9]*\)$/\1/p; }' $OSGEO4W_REP/x86_64/setup.ini
 			echo 0
 		) | sort -rn | head -1
@@ -299,6 +305,141 @@ nextbinary() {
 	(( b++ )) || true
 
 	echo $b
+}
+
+packagewheel() {
+	log "Packaging $P-$V with pip"
+
+	local p=${P#python3-}
+	if [ "$P" == "$p" ]; then
+		log "Expecting python3- prefix"
+		return 1
+	fi
+
+	local v
+	export v
+	if [ "$V" == "pip" ]; then
+		v=
+	else
+		v="==$V"
+	fi
+
+	mkdir -p build install
+
+	export wheelopts
+	(
+		fetchenv osgeo4w/bin/o4w_env.bat
+		vs2019env
+
+		type -p python
+
+		#	--ignore-installed \
+		#	--no-compile \
+
+		log building extension $p$v
+		if ! python -m pip \
+			wheel \
+			-w "$(cygpath -am install)" \
+			--no-binary :all: \
+			--no-cache-dir \
+			--no-deps \
+			$wheelopts \
+			"$p$v"
+		then
+			log wheel failed: $?
+			return 1
+		fi
+
+		if [ $(ls -1 install/*.whl | wc -l) != 1 ]; then
+			log expected one wheel: install/*.whl
+			return 1
+		fi
+	)
+
+	whl=install/*.whl
+
+	export R=$OSGEO4W_REP/x86_64/release/python3/$P
+	mkdir -p $R/$P
+
+	unzip -p $whl "*/METADATA" >/tmp/$P.metadata
+
+	declare -A fields
+	exec 3</tmp/$P.metadata
+
+	local IFS=": "
+	while read k v <&3; do
+		[ -n "$k" ] || break
+		v="${fields[$k]} $v"
+		fields+=([$k]=${v## })
+	done
+
+	set +x
+	desc=
+	while read r <&3; do
+		desc="$desc
+$r"
+	done
+	set -x
+
+	exec 3>&-
+
+	[ "$p" == "${fields[Name]}" ]
+
+	if [ "$V" == "pip" ]; then
+		V=${fields[Version]}
+		if [ "$B" == "pip" ]; then
+			B=$(nextbinary)
+		fi
+	fi
+
+	[ "$V" != "pip" ]
+	[ "$B" != "pip" ]
+	[ -n "${fields[Summary]}" ]
+	[ -n "$desc" ] || desc=${fields[Summary]}
+
+	requires=${fields[Requires-Dist]}
+	[ -z "$requires" ] || requires=" $requires"
+	requires="${requires// / python3-}"
+	[ "$p" != "setuptools" ] || requires=" python3-devel$requires"
+
+	log "Package: $P-$V-$B"
+
+	cat <<EOF >$R/setup.hint
+sdesc: "${fields[Summary]}"
+ldesc: "$desc"
+category: Libs
+maintainer: $MAINTAINER
+requires: python3-core python3-pip$requires
+EOF
+
+	cat <<EOF >postinstall.bat
+call "%OSGEO4W_ROOT%\\bin\\o4w_env.bat"
+pip install "%OSGEO4W_ROOT%\\apps\\$PYTHON\\wheels\\$base"
+$postinstall
+EOF
+
+	cat <<EOF >preremove.bat
+call "%OSGEO4W_ROOT%\\bin\\o4w_env.bat"
+pip uninstall $name
+del "%OSGEO4W_ROOT%\\apps\\$PYTHON\\wheels\\$base"
+$preremove
+EOF
+
+	tar -cjf "$R/$P-$V-$B.tar.bz2" \
+		--xform "s,postinstall.bat,etc/postinstall/$P.bat," \
+		--xform "s,preremove.bat,etc/preremove/$P.bat," \
+		--xform "s,install/,apps/$PYTHON/wheels/," \
+		$additionalfiles \
+		postinstall.bat \
+		preremove.bat \
+		$whl
+
+	tar -C .. -cjf "$R/$P-$V-$B-src.tar.bz2" osgeo4w/package.sh
+
+	(
+		echo "License from wheel metadata:"
+		sed -ne "s/^Classifier: License :://p" /tmp/$P.metadata
+	) >$R/$P-$V-$B.txt
 }
 
 # make sure we are using what we expect
@@ -357,6 +498,9 @@ init() {
 	next|"next "*)
 		B=$(nextbinary ${B#next })
 		echo "Binary package version: $P-$V-$B"
+		;;
+
+	pip)
 		;;
 
 	[0-9]*)
