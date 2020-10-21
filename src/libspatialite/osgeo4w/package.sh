@@ -31,7 +31,7 @@ cat <<EOF >$R/setup.hint
 sdesc: "The SpatiaLite library for adding spatial capabilities to SQLite3 DBMS. (Runtime)"
 ldesc: "The SpatiaLite library for adding spatial capabilities to SQLite3 DBMS. (Runtime)"
 category: Libs
-requires: msvcrt2019 sqlite3 libiconv geos proj freexl libxml2 librttopo zlib
+requires: msvcrt2019 sqlite3 libiconv geos freexl libxml2 librttopo zlib $RUNTIMEDEPENDS
 maintainer: $MAINTAINER
 EOF
 

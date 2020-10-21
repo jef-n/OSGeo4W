@@ -28,11 +28,27 @@ startlog() {
 	export PATH=$(cygpath -S):$(cygpath -W):$(cygpath -S)/WBem:/bin:/usr/bin
 	log "Starting with clean PATH: $PATH"
 
-	[ "$BUILDDEPENDS" == "none" ] || fetchdeps $BUILDDEPENDS
+	[ "$BUILDDEPENDS" == "none" ] || {
+		fetchdeps $BUILDDEPENDS
+		export RUNTIMEDEPENDS=$(runtimedepends $BUILDDEPENDS)
+	}
 
 	trap "faillog" EXIT
 }
 declare -x startlog
+
+runtimedepends() {
+	local depends
+
+	for p in "$@"; do
+                if [ -f "$OSGEO4W_PWD/osgeo4w/etc/abi/$p" ]; then
+			depends="$depends $(<$OSGEO4W_PWD/osgeo4w/etc/abi/$p)"
+                fi
+        done
+
+	echo ${depends# }
+}
+declare -x runtimedepends
 
 endlog() {
 	local r=$?
