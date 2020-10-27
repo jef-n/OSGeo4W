@@ -54,7 +54,7 @@ cat <<EOF >$R/setup.hint
 sdesc: "The HDF5 library for reading and writing HDF5 format (Runtime)"
 ldesc: "The HDF5 library for reading and writing HDF5 format (Runtime)"
 category: Libs
-requires: msvcrt2019 libjpeg szip
+requires: msvcrt2019 libjpeg szip zlib
 maintainer: $MAINTAINER
 EOF
 
