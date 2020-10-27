@@ -54,7 +54,7 @@ grass	libmysql
 grass	libpng
 grass	libtiff
 grass	python3-core
-grass	python3-wx
+grass	python3-wxpython
 grass	zstd
 
 # hdf4	libxdr
@@ -91,10 +91,10 @@ proj	sqlite3
 proj	libtiff
 proj	curl
 
-pyqt5	python3-core
-pyqt5	qt5-libs
-pyqt5	qtwebkit
-pyqt5	sip
+python3-pyqt5	python3-core
+python3-pyqt5	qt5-libs
+python3-pyqt5	qtwebkit-libs
+python3-pyqt5	python3-sip
 
 python3-core	sqlite3
 python3-core	openssl
@@ -114,18 +114,18 @@ qgis	libzip
 qgis	oci
 qgis	proj
 qgis	protobuf
-qgis	pyqt5
+qgis	python3-pyqt5
 qgis	python3-core
 qgis	qca
-qgis	qscintilla-qt5
+qgis	qscintilla
 qgis	qt5-libs
 qgis	qtkeychain
-qgis	qwt-libs-qt5
-qgis	sip
+qgis	qwt-libs
+qgis	python3-sip
 qgis	libspatialite
 qgis	sqlite3
 qgis	grass
-qgis	qtwebkit
+qgis	qtwebkit-libs
 
 qt5-libs	openssl
 qt5-libs	sqlite3
@@ -134,14 +134,14 @@ qt5-libs	icu
 
 qca	qt5-libs
 qtkeychain	qt5-libs
-qscintilla-qt5	qt5-libs
-qwt-libs-qt5	qt5-libs
+qscintilla	qt5-libs
+qwt-libs	qt5-libs
 
-qtwebkit	qt5-libs
-qtwebkit	zlib
+qtwebkit-libs	qt5-libs
+qtwebkit-libs	zlib
 
-python3-wx	wxwidgets
-python3-wx	python3-core
+python3-wxpython	wxwidgets
+python3-wxpython	python3-core
 
 saga	boost
 saga	libpng
@@ -169,7 +169,7 @@ freexl	libiconv
 
 libgeotiff	proj
 protobuf	zlib
-sip	python3-core
+python3-sip	python3-core
 poppler	freetype
 libharu	zlib
 libharu	libpng
