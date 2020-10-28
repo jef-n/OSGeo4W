@@ -7,6 +7,8 @@ export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libtiff-devel libpn
 
 source ../../../scripts/build-helpers
 
+export PYTHON=Python39
+
 # TODO: revive (unused) csharp
 
 startlog
@@ -18,6 +20,11 @@ startlog
 	patch -p1 -d.. <patch
 	touch patched
 }
+
+
+#
+# Download MrSID, ECW and filegdb dependencies
+#
 
 mkdir -p gdaldeps
 cd gdaldeps
@@ -64,10 +71,14 @@ mkdir -p ecw
 
 cd ..
 
-export PYTHON=Python39
+major=${V%%.*}
+minor=${V#$major.}
+minor=${minor%%.*}
+
+abi=$(printf "%d%02d" $major $minor)
 
 R=$OSGEO4W_REP/x86_64/release/$P
-mkdir -p $R/$P-{oracle,filegdb,ecw,mrsid,sosi,mss,hdf5} $R/python3-$P
+mkdir -p $R/$P-{devel,oracle,filegdb,ecw,mrsid,sosi,mss,hdf5} $R/$P$abi-runtime $R/python3-$P
 
 if [ -f $R/$P-$V-$B-src.tar.bz2 ]; then
 	echo "$R/$P-$V-$B-src.tar.bz2 already exists - skipping"
@@ -146,6 +157,11 @@ done
 
 cd ../../osgeo4w
 
+mkdir -p $DESTDIR/etc/abi
+cat <<EOF >$DESTDIR/etc/abi/$P-devel
+$P$abi-runtime
+EOF
+
 cat <<EOF >$DESTDIR/etc/ini/$P.bat
 SET GDAL_DATA=%OSGEO4W_ROOT%\\share\\gdal
 SET GDAL_DRIVER_PATH=%OSGEO4W_ROOT%\\bin\\gdalplugins
@@ -160,7 +176,25 @@ sdesc: "The GDAL/OGR library and commandline tools"
 ldesc: "The GDAL/OGR library and commandline tools"
 maintainer: $MAINTAINER
 category: Libs Commandline_Utilities
-requires: msvcrt2019 libtiff libpng proj curl geos libmysql sqlite3 netcdf libpq expat xerces-c hdf4 ogdi libiconv openjpeg spatialite freexl libkml xz zstd poppler libgeotiff
+requires: msvcrt2019 $P$abi-runtime
+EOF
+
+cat <<EOF >$R/$P$abi-runtime/setup.hint
+sdesc: "The GDAL/OGR $V runtime library"
+ldesc: "The GDAL/OGR $V runtime library"
+maintainer: $MAINTAINER
+category: Libs Commandline_Utilities
+requires: msvcrt2019 libtiff libpng curl geos libmysql sqlite3 netcdf libpq expat xerces-c hdf4 ogdi libiconv openjpeg spatialite freexl libkml xz zstd poppler libgeotiff $RUNTIMEDEPENDS
+external-source: $P
+EOF
+
+cat <<EOF >$R/$P-devel/setup.hint
+sdesc: "The GDAL/OGR headers and libraries"
+ldesc: "The GDAL/OGR headers and libraries"
+maintainer: $MAINTAINER
+category: Libs Commandline_Utilities
+requires: $P$abi-runtime
+external-source: $P
 EOF
 # libjpeg libjpeg12
 
@@ -168,7 +202,7 @@ cat <<EOF >$R/python3-$P/setup.hint
 sdesc: "The GDAL/OGR Python3 Bindings and Scripts"
 ldesc: "The GDAL/OGR Python3 Bindings and Scripts"
 category: Libs
-requires: $P python3-core python3-numpy
+requires: $P$abi-runtime python3-core python3-numpy
 maintainer: $MAINTAINER
 external-source: $P
 EOF
@@ -177,7 +211,7 @@ cat <<EOF >$R/$P-oracle/setup.hint
 sdesc: "OGR OCI and GDAL GeoRaster Plugins for Oracle"
 ldesc: "OGR OCI and GDAL GeoRaster Plugins for Oracle"
 category: Libs
-requires: $P oci
+requires: $P$abi-runtime oci
 maintainer: $MAINTAINER
 external-source: $P
 EOF
@@ -187,7 +221,7 @@ sdesc: "OGR FileGDB Driver"
 ldesc: "OGR FileGDB Driver"
 category: Libs
 maintainer: $MAINTAINER
-requires: $P
+requires: $P$abi-runtime
 external-source: $P
 EOF
 
@@ -195,7 +229,7 @@ cat <<EOF >$R/$P-ecw/setup.hint
 sdesc: "ECW Raster Plugin for GDAL"
 ldesc: "ECW Raster Plugin for GDAL"
 category: Libs
-requires: $P
+requires: $P$abi-runtime
 maintainer: $MAINTAINER
 external-source: $P
 EOF
@@ -205,7 +239,7 @@ sdesc: "MrSID Raster Plugin for GDAL"
 ldesc: "MrSID Raster Plugin for GDAL"
 category: Libs
 maintainer: $MAINTAINER
-requires: $P
+requires: $P$abi-runtime
 external-source: $P
 EOF
 
@@ -213,7 +247,7 @@ cat <<EOF >$R/$P-sosi/setup.hint
 sdesc: "OGR SOSI Driver"
 ldesc: "The OGR SOSI Driver enables OGR to read data in Norwegian SOSI standard (.sos)"
 category: Libs
-requires: $P
+requires: $P$abi-runtime
 maintainer: $MAINTAINER
 external-source: $P
 EOF
@@ -222,7 +256,7 @@ cat <<EOF >$R/$P-mss/setup.hint
 sdesc: "OGR plugin with SQL Native Client support for MSSQL Bulk Copy"
 ldesc: "OGR plugin with SQL Native Client support for MSSQL Bulk Copy"
 category: Libs
-requires: $P msodbcsql
+requires: $P$abi-runtime msodbcsql
 maintainer: $MAINTAINER
 external-source: $P
 EOF
@@ -232,19 +266,20 @@ sdesc: "HDF5 Plugin for GDAL"
 ldesc: "HDF5 Plugin for GDAL"
 category: Libs
 maintainer: $MAINTAINER
-requires: $P hdf5
+requires: $P$abi-runtime hdf5
 external-source: $P
 EOF
 
 cp ../LICENSE.TXT $R/$P-$V-$B.txt
 cp ../LICENSE.TXT $R/$P-oracle/$P-oracle-$V-$B.txt
+cp ../LICENSE.TXT $R/$P$abi-runtime/$P$abi-runtime-$V-$B.txt
+cp ../LICENSE.TXT $R/$P-devel/$P-devel-$V-$B.txt
 cp ../LICENSE.TXT $R/$P-mss/$P-mss-$V-$B.txt
 cp ../LICENSE.TXT $R/$P-sosi/$P-sosi-$V-$B.txt
 cp ../LICENSE.TXT $R/python3-$P/python3-$P-$V-$B.txt
 cp $FGDB_SDK/license/userestrictions.txt $R/$P-filegdb/$P-filegdb-$V-$B.txt
 cp $ECW_SDK/ERDAS_ECW_JPEG2000_SDK.pdf $R/$P-ecw/$P-ecw-$V-$B.rtf
 cp $MRSID_SDK/LICENSE.pdf $R/$P-mrsid/$P-mrsid-$V-$B.pdf
-
 
 cp $FGDB_SDK/bin64/FileGDBAPI.dll $DESTDIR/bin
 cp $ECW_SDK/bin/vc140/x64/NCSEcw.dll $DESTDIR/bin
@@ -256,25 +291,25 @@ cp $MRSID_SDK/Lidar_DSDK/lib/lti_lidar_dsdk_1.1.dll $DESTDIR/bin
 tar -C $PYDESTDIR --exclude="*.pyc" --exclude __pycache__ -cjvf $R/python3-$P/python3-$P-$V-$B.tar.bz2 \
 	apps/$PYTHON
 
-tar -C install --remove-files -cjvf $R/$P-filegdb/$P-filegdb-$V-$B.tar.bz2 \
+tar -C install -cjvf $R/$P-filegdb/$P-filegdb-$V-$B.tar.bz2 \
 	bin/gdalplugins/ogr_FileGDB.dll \
 	bin/FileGDBAPI.dll
 
-tar -C install --remove-files -cjvf $R/$P-sosi/$P-sosi-$V-$B.tar.bz2 \
+tar -C install -cjvf $R/$P-sosi/$P-sosi-$V-$B.tar.bz2 \
 	bin/gdalplugins/ogr_SOSI.dll
 
-tar -C install --remove-files -cjvf $R/$P-oracle/$P-oracle-$V-$B.tar.bz2 \
+tar -C install -cjvf $R/$P-oracle/$P-oracle-$V-$B.tar.bz2 \
 	bin/gdalplugins/gdal_GEOR.dll \
 	bin/gdalplugins/ogr_OCI.dll
 
-tar -C install --remove-files -cjvf $R/$P-mss/$P-mss-$V-$B.tar.bz2 \
+tar -C install -cjvf $R/$P-mss/$P-mss-$V-$B.tar.bz2 \
 	bin/gdalplugins/ogr_MSSQLSpatial.dll
 
-tar -C install --remove-files -cjvf $R/$P-ecw/$P-ecw-$V-$B.tar.bz2 \
+tar -C install -cjvf $R/$P-ecw/$P-ecw-$V-$B.tar.bz2 \
 	bin/gdalplugins/gdal_ECW_JP2ECW.dll \
 	bin/NCSEcw.dll
 
-tar -C install --remove-files -cjvf $R/$P-mrsid/$P-mrsid-$V-$B.tar.bz2 \
+tar -C install -cjvf $R/$P-mrsid/$P-mrsid-$V-$B.tar.bz2 \
 	bin/gdalplugins/gdal_MG4Lidar.dll \
 	bin/gdalplugins/gdal_MrSID.dll \
 	bin/lti_dsdk_cdll_9.5.dll \
@@ -282,15 +317,51 @@ tar -C install --remove-files -cjvf $R/$P-mrsid/$P-mrsid-$V-$B.tar.bz2 \
 	bin/lti_lidar_dsdk_1.1.dll \
 	bin/tbb.dll
 
-tar -C install --remove-files -cjvf $R/$P-hdf5/$P-hdf5-$V-$B.tar.bz2 \
+tar -C install -cjvf $R/$P-hdf5/$P-hdf5-$V-$B.tar.bz2 \
 	bin/gdalplugins/gdal_HDF5.dll
 
-tar -C install --remove-files -cjvf $R/$P-$V-$B.tar.bz2 \
-	bin \
-	etc \
+tar -C install -cjvf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	include \
 	lib \
+	etc/abi/$P-devel
+
+tar -C install -cjvf $R/$P$abi-runtime/$P$abi-runtime-$V-$B.tar.bz2 \
+	bin/gdal$abi.dll
+
+tar -C install -cjvf $R/$P-$V-$B.tar.bz2 \
+	--exclude "*.dll" \
+	--exclude etc/abi/$P-devel \
+	bin \
+	etc \
 	share
+
+find install -type f | sed -e "s#^install/##" >/tmp/$P.installed
+
+(
+	tar tjf $R/$P-$V-$B.tar.bz2
+	for i in -filegdb -sosi -oracle -mss -ecw -mrsid -hdf5 -devel $abi-runtime; do
+		tar tjf $R/$P$i/$P$i-$V-$B.tar.bz2
+	done
+) >/tmp/$P.packaged
+
+sort /tmp/$P.packaged | uniq -d >/tmp/$P.dupes
+if [ -s /tmp/$P.dupes ]; then
+	echo Duplicate files:
+	cat /tmp/$P.dupes
+	false
+fi
+
+if fgrep -v -x -f /tmp/$P.packages /tmp/$P.installed >/tmp/$P.unpackaged; then
+	echo Unpackaged files:
+	cat /tmp/$P.unpackaged
+fi
+
+if fgrep -v -x -f /tmp/$P.installed /tmp/$P.packaged >/tmp/$P.generated; then
+	echo Generated files:
+	cat /tmp/$P.generated
+fi
+
+! [ -s /tmp/$P.dupes ] && ! [ -s /tmp/$P.unpackaged ] && ! [ -s /tmp/$P.generated ]
 
 tar -C .. -cjvf $R/$P-$V-$B-src.tar.bz2 \
 	osgeo4w/package.sh \
