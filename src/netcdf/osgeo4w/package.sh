@@ -108,6 +108,7 @@ del "%OSGEO4W_ROOT%\\bin\\nc-config"
 EOF
 
 tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
+	bin/nc-config.tmpl \
 	bin/netcdf.dll
 
 tar -C install -cjf $R/$P-tools/$P-tools-$V-$B.tar.bz2 \
