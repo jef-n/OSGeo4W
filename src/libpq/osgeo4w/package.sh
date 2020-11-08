@@ -77,7 +77,7 @@ sdesc: "The libpq library for accessing PostgreSQL + psql commandline client"
 ldesc: "The libpq library for accessing PostgreSQL + psql commandline client"
 maintainer: $MAINTAINER
 category: Libs Commandline_Utilities
-requires: msvcrt2019 openssl iconv zlib
+requires: msvcrt2019 openssl libiconv zlib
 EOF
 
 cat <<EOF >$R/$P-devel/setup.hint
