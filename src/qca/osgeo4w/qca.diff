@@ -1,0 +1,14 @@
+diff -ur qca-2.3.1/src/qca_plugin.cpp ../src/qca_plugin.cpp
+--- qca-2.3.1/src/qca_plugin.cpp	2020-07-06 11:43:51.000000000 +0200
++++ ../src/qca_plugin.cpp	2020-10-22 14:24:12.458867200 +0200
+@@ -523,7 +523,10 @@
+ 	{
+ 		ProviderItem *i = providerItemList.first();
+ 		const QString name = i->p->name();
++#if !defined(_MSC_VER)
++		// workaround for 2.1.0: crashes for some reason on windows
+ 		delete i;
++#endif
+ 		providerItemList.removeFirst();
+ 		providerList.removeFirst();
+ 
