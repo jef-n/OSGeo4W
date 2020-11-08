@@ -79,8 +79,10 @@ cat <<EOF >$R/setup.hint
 sdesc: "GRASS GIS"
 ldesc: "Geographic Resources Analysis Support System (GRASS GIS)"
 category: Desktop
-requires: liblas $RUNTIMEDEPENDS avce00 gpsbabel gs python3-gdal python3-matplotlib iconv libtiff python3-wxpython python3-pillow python3-pip python3-ply python3-pyopengl cairo python3-psycopg2-binary python3-six zstd zstd-bin python3-pywin32 freetype
+requires: liblas $RUNTIMEDEPENDS avce00 gpsbabel gs python3-gdal python3-matplotlib libtiff python3-wxpython python3-pillow python3-pip python3-ply python3-pyopengl cairo python3-psycopg2-binary python3-six zstd python3-pywin32 freetype
 maintainer: $MAINTAINER
 EOF
+
+tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/patch
 
 endlog
