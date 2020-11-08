@@ -107,6 +107,7 @@ print "$main::setup_version\n" if $main::setup_version;
 
 undef $main::curfile;
 for my $p (sort keys %pkg) {
+    # print STDERR "P:$p requires:$pkg{$p}{''}{requires}\n";
     print "\n@ $p\n";
     for my $key ('sdesc', 'ldesc', 'category', 'requires', 'message', 'build-depends') {
 	my $val = $pkg{$p}{''}{$key};
@@ -117,12 +118,12 @@ for my $p (sort keys %pkg) {
 	    if ($key eq 'requires') {
 		for my $p1 (split(' ', $val)) {
 		     mywarn "package $p requires an unknown package '$p1'"
-		      unless $pkg{$p};
+		      unless exists $pkg{$p1};
 		}
 	    } elsif ($key eq 'build-depends') {
 		for my $p1 (split(' ', $val)) {
 		    mywarn "build of package $p requires an unknown package '$p1'"
-		      unless $pkg{$p};
+		      unless exists $pkg{$p1};
 		}
 	    } elsif ($key eq 'category') {
 		for my $c (split(' ', $val)) {
