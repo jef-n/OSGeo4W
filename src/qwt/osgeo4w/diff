@@ -1,0 +1,174 @@
+diff -ur qwt-6.1.3/qwtbuild.pri ../qwtbuild.pri
+--- qwt-6.1.3/qwtbuild.pri	2016-06-13 09:14:23.029601000 +0200
++++ ../qwtbuild.pri	2020-10-27 16:14:10.099187900 +0100
+@@ -27,8 +27,7 @@
+     # might need a debug version. 
+     # Enable debug_and_release + build_all if you want to build both.
+ 
+-    CONFIG           += debug_and_release
+-    CONFIG           += build_all
++    CONFIG           += release
+ }
+ else {
+ 
+diff -ur qwt-6.1.3/qwtconfig.pri ../qwtconfig.pri
+--- qwt-6.1.3/qwtconfig.pri	2016-06-13 09:14:23.031601000 +0200
++++ ../qwtconfig.pri	2020-10-27 16:14:10.101189200 +0100
+@@ -24,13 +24,13 @@
+ }
+ 
+ win32 {
+-    QWT_INSTALL_PREFIX    = C:/Qwt-$$QWT_VERSION
++    QWT_INSTALL_PREFIX    = $$PWD/osgeo4w/install
+     # QWT_INSTALL_PREFIX = C:/Qwt-$$QWT_VERSION-qt-$$QT_VERSION
+ }
+ 
+-QWT_INSTALL_DOCS      = $${QWT_INSTALL_PREFIX}/doc
+-QWT_INSTALL_HEADERS   = $${QWT_INSTALL_PREFIX}/include
+-QWT_INSTALL_LIBS      = $${QWT_INSTALL_PREFIX}/lib
++QWT_INSTALL_DOCS      = $${QWT_INSTALL_PREFIX}/apps/qwt6/doc
++QWT_INSTALL_HEADERS   = $${QWT_INSTALL_PREFIX}/apps/Qt5/include/qwt6
++QWT_INSTALL_LIBS      = $${QWT_INSTALL_PREFIX}/apps/Qt5/lib
+ 
+ ######################################################################
+ # Designer plugin
+@@ -42,14 +42,14 @@
+ # runtime environment of designer/creator.
+ ######################################################################
+ 
+-QWT_INSTALL_PLUGINS   = $${QWT_INSTALL_PREFIX}/plugins/designer
++QWT_INSTALL_PLUGINS   = $${QWT_INSTALL_PREFIX}/apps/Qt5/plugins/designer
+ 
+ # linux distributors often organize the Qt installation
+ # their way and QT_INSTALL_PREFIX doesn't offer a good
+ # path. Also QT_INSTALL_PREFIX is only one of the default
+ # search paths of the designer - not the Qt creator
+ 
+-#QWT_INSTALL_PLUGINS   = $$[QT_INSTALL_PREFIX]/plugins/designer
++#QWT_INSTALL_PLUGINS   = $${QT_INSTALL_PREFIX}/plugins/designer
+ 
+ ######################################################################
+ # Features
+@@ -63,8 +63,8 @@
+ # with every Qt upgrade. 
+ ######################################################################
+ 
+-QWT_INSTALL_FEATURES  = $${QWT_INSTALL_PREFIX}/features
+-# QWT_INSTALL_FEATURES  = $$[QT_INSTALL_PREFIX]/features
++QWT_INSTALL_FEATURES = $${QWT_INSTALL_PREFIX}/apps/Qt5/features
++# QWT_INSTALL_FEATURES  = $${QT_INSTALL_PREFIX}/features
+ 
+ ######################################################################
+ # Build the static/shared libraries.
+@@ -163,13 +163,3 @@
+ 
+     QWT_CONFIG += QwtFramework
+ }  
+-
+-######################################################################
+-# Create and install pc files for pkg-config
+-# See http://www.freedesktop.org/wiki/Software/pkg-config/
+-######################################################################
+-
+-unix {
+-
+-    #QWT_CONFIG     += QwtPkgConfig
+-}
+diff -ur qwt-6.1.3/src/qwt_null_paintdevice.cpp ../src/qwt_null_paintdevice.cpp
+--- qwt-6.1.3/src/qwt_null_paintdevice.cpp	2016-06-13 09:14:22.797596300 +0200
++++ ../src/qwt_null_paintdevice.cpp	2020-10-27 16:29:05.561700400 +0100
+@@ -10,6 +10,7 @@
+ #include "qwt_null_paintdevice.h"
+ #include <qpaintengine.h>
+ #include <qpixmap.h>
++#include <qpainterpath.h>
+ 
+ class QwtNullPaintDevice::PrivateData
+ {
+diff -ur qwt-6.1.3/src/qwt_painter.cpp ../src/qwt_painter.cpp
+--- qwt-6.1.3/src/qwt_painter.cpp	2016-06-13 09:14:22.944599300 +0200
++++ ../src/qwt_painter.cpp	2020-10-27 16:29:25.840991100 +0100
+@@ -27,6 +27,7 @@
+ #include <qpaintengine.h>
+ #include <qapplication.h>
+ #include <qdesktopwidget.h>
++#include <qpainterpath.h>
+ 
+ #if QT_VERSION >= 0x050000
+ #include <qwindow.h>
+diff -ur qwt-6.1.3/src/qwt_painter.h ../src/qwt_painter.h
+--- qwt-6.1.3/src/qwt_painter.h	2016-06-13 09:14:21.762575500 +0200
++++ ../src/qwt_painter.h	2020-10-27 16:34:46.337705200 +0100
+@@ -17,6 +17,7 @@
+ #include <qpen.h>
+ #include <qline.h>
+ #include <qpalette.h>
++#include <qpainterpath.h>
+ 
+ class QPainter;
+ class QBrush;
+@@ -31,7 +32,6 @@
+ class QwtInterval;
+ 
+ class QTextDocument;
+-class QPainterPath;
+ 
+ /*!
+   \brief A collection of QPainter workarounds
+diff -ur qwt-6.1.3/src/qwt_painter_command.h ../src/qwt_painter_command.h
+--- qwt-6.1.3/src/qwt_painter_command.h	2016-06-13 09:14:21.857577400 +0200
++++ ../src/qwt_painter_command.h	2020-10-27 16:27:53.200387800 +0100
+@@ -15,8 +15,7 @@
+ #include <qpixmap.h>
+ #include <qimage.h>
+ #include <qpolygon.h>
+-
+-class QPainterPath;
++#include <qpainterpath.h>
+ 
+ /*!
+   QwtPainterCommand represents the attributes of a paint operation
+diff -ur qwt-6.1.3/src/qwt_plot_glcanvas.h ../src/qwt_plot_glcanvas.h
+--- qwt-6.1.3/src/qwt_plot_glcanvas.h	2016-06-13 09:14:21.725574700 +0200
++++ ../src/qwt_plot_glcanvas.h	2020-10-27 16:39:10.118127100 +0100
+@@ -13,6 +13,7 @@
+ #include "qwt_global.h"
+ #include <qframe.h>
+ #include <qgl.h>
++#include <qpainterpath.h>
+ 
+ class QwtPlot;
+ 
+diff -ur qwt-6.1.3/src/qwt_plot_panner.cpp ../src/qwt_plot_panner.cpp
+--- qwt-6.1.3/src/qwt_plot_panner.cpp	2016-06-13 09:14:22.961599600 +0200
++++ ../src/qwt_plot_panner.cpp	2020-10-27 16:33:46.282097300 +0100
+@@ -14,6 +14,7 @@
+ #include <qbitmap.h>
+ #include <qstyle.h>
+ #include <qstyleoption.h>
++#include <qpainterpath.h>
+ 
+ static QBitmap qwtBorderMask( const QWidget *canvas, const QSize &size )
+ {
+diff -ur qwt-6.1.3/src/qwt_plot_renderer.cpp ../src/qwt_plot_renderer.cpp
+--- qwt-6.1.3/src/qwt_plot_renderer.cpp	2016-06-13 09:14:22.847597300 +0200
++++ ../src/qwt_plot_renderer.cpp	2020-10-27 16:33:19.204811100 +0100
+@@ -32,6 +32,7 @@
+ #include <qsvggenerator.h>
+ #endif
+ #endif
++#include <qpainterpath.h>
+ 
+ static QPainterPath qwtCanvasClip( 
+     const QWidget* canvas, const QRectF &canvasRect )
+diff -ur qwt-6.1.3/src/qwt_widget_overlay.cpp ../src/qwt_widget_overlay.cpp
+--- qwt-6.1.3/src/qwt_widget_overlay.cpp	2016-06-13 09:14:22.880598000 +0200
++++ ../src/qwt_widget_overlay.cpp	2020-10-27 16:32:24.439628200 +0100
+@@ -13,6 +13,7 @@
+ #include <qpaintengine.h>
+ #include <qimage.h>
+ #include <qevent.h>
++#include <qpainterpath.h>
+ 
+ static QImage::Format qwtMaskImageFormat()
+ {
