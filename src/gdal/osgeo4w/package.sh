@@ -1,5 +1,5 @@
 export P=gdal
-export V=3.1.3
+export V=3.2.0rc1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libtiff-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libgeotiff-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy"
@@ -13,8 +13,8 @@ export PYTHON=Python39
 
 startlog
 
-[ -f $P-$V.tar.gz ] || wget -q https://github.com/OSGeo/$P/releases/download/v$V/$P-$V.tar.gz
-[ -f ../makefile.vc ] || tar -C .. -xzf $P-$V.tar.gz --xform "s,^$P-$V,.,"
+[ -f $P-$V.tar.gz ] || wget -q http://download.osgeo.org/gdal/${V%rc*}/$P-$V.tar.gz
+[ -f ../makefile.vc ] || tar -C .. -xzf $P-$V.tar.gz --xform "s,^$P-${V%rc*},.,"
 [ -f patched ] || {
 	patch -p1 --dry-run -d.. <patch
 	patch -p1 -d.. <patch
@@ -30,12 +30,12 @@ mkdir -p gdaldeps
 cd gdaldeps
 
 export MRSID_SDK=MrSID_DSDK-9.5.4.4703-win64-vc14
-export ECW_ZIP=erdas-ecw-sdk-5.3.0-win.zip
-export ECW_EXE=ECWJP2SDKSetup_5.3.0.exe
+export ECW_ZIP=erdas-ecw-sdk-5.4.0-win.zip
+export ECW_EXE=ECWJP2SDKSetup_5.4.0.exe
 
 for i in \
 	https://raw.githubusercontent.com/Esri/file-geodatabase-api/master/FileGDB_API_1.5/FileGDB_API_1_5_VS2015.zip \
-	http://downloads.hexagongeospatial.com/software/2016/ECWJP2SDK/erdas-ecw-sdk-5.3.0-win.zip \
+	http://downloads.hexagongeospatial.com/software/2018/ECW/erdas-ecw-sdk-5.4.0-win.zip \
 	http://bin.lizardtech.com/download/developer/$MRSID_SDK.zip \
 	; do
 	[ -f "${i##*/}" ] || wget -q "$i"
@@ -49,8 +49,8 @@ mkdir -p ecw
 [ -d ecw/lib ] || {
 	7z x -aoa -oecw $ECW_EXE \
 		'$0/include/*' \
-		'lib/vc140/x64/*' \
-		'bin/vc140/x64/*' \
+		'lib/vc141/x64/*' \
+		'bin/vc141/x64/*' \
 		'ERDAS_ECW_JPEG2000_SDK.pdf'
 	mv 'ecw/$0/include' ecw/include
 	rmdir 'ecw/$0'
@@ -184,7 +184,7 @@ sdesc: "The GDAL/OGR $V runtime library"
 ldesc: "The GDAL/OGR $V runtime library"
 maintainer: $MAINTAINER
 category: Libs Commandline_Utilities
-requires: msvcrt2019 libtiff libpng curl geos libmysql sqlite3 netcdf libpq expat xerces-c hdf4 ogdi libiconv openjpeg spatialite freexl libkml xz zstd poppler libgeotiff $RUNTIMEDEPENDS
+requires: msvcrt2019 libtiff libpng curl geos libmysql sqlite3 netcdf libpq expat xerces-c hdf4 ogdi libiconv openjpeg libspatialite freexl libkml xz zstd poppler libgeotiff $RUNTIMEDEPENDS
 external-source: $P
 EOF
 
@@ -282,7 +282,7 @@ cp $ECW_SDK/ERDAS_ECW_JPEG2000_SDK.pdf $R/$P-ecw/$P-ecw-$V-$B.rtf
 cp $MRSID_SDK/LICENSE.pdf $R/$P-mrsid/$P-mrsid-$V-$B.pdf
 
 cp $FGDB_SDK/bin64/FileGDBAPI.dll $DESTDIR/bin
-cp $ECW_SDK/bin/vc140/x64/NCSEcw.dll $DESTDIR/bin
+cp $ECW_SDK/bin/vc141/x64/NCSEcw.dll $DESTDIR/bin
 cp $MRSID_SDK/Raster_DSDK/lib/lti_dsdk_cdll_9.5.dll $DESTDIR/bin
 cp $MRSID_SDK/Raster_DSDK/lib/tbb.dll $DESTDIR/bin
 cp $MRSID_SDK/Raster_DSDK/lib/lti_dsdk_9.5.dll $DESTDIR/bin
