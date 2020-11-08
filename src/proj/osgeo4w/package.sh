@@ -1,5 +1,5 @@
 export P=proj
-export V=7.1.1
+export V=7.2.0RC2
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="sqlite3-devel libtiff-devel curl-devel"
@@ -9,7 +9,7 @@ source ../../../scripts/build-helpers
 startlog
 
 [ -f $P-$V.tar.gz ] || wget https://download.osgeo.org/$P/$P-$V.tar.gz
-[ -f ../CMakeLists.txt ] || tar -C .. -xzf  $P-$V.tar.gz --xform "s,^$P-$V,.,"
+[ -f ../CMakeLists.txt ] || tar -C .. -xzf  $P-$V.tar.gz --xform "s,^$P-${V%RC*},.,"
 
 vs2019env
 cmakeenv
@@ -47,24 +47,24 @@ abi=${abi//./}
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 
-mkdir -p $R/$P-{devel,$abi-runtime}
+mkdir -p $R/$P-devel $R/$P$abi-runtime
 
 mkdir -p install/etc/abi
-echo $P-$abi-runtime >install/etc/abi/$P-devel
+echo $P$abi-runtime >install/etc/abi/$P-devel
 
 cat <<EOF >$R/setup.hint
 sdesc: "The PROJ library and commands for coordinate system transformations (Tools)."
 ldesc: "The PROJ library and commands for coordinate system transformations (Tools)."
 category: Libs Commandline_Utilities
-requires: $P-$abi-runtime
+requires: $P$abi-runtime
 maintainer: $MAINTAINER
 EOF
 
-cat <<EOF >$R/$P-$abi-runtime/setup.hint
+cat <<EOF >$R/$P$abi-runtime/setup.hint
 sdesc: "The PROJ library and commands for coordinate system transformations (Runtime)."
 ldesc: "The PROJ library and commands for coordinate system transformations (Runtime)."
 category: Libs
-requires: msvcrt2019 sqlite3 libtiff curl proj-data $P-$abi-runtime
+requires: msvcrt2019 sqlite3 libtiff curl proj-data $P$abi-runtime
 maintainer: $MAINTAINER
 external-source: $P
 EOF
@@ -92,7 +92,7 @@ tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
 	share/proj \
 	bin
 
-tar -C install -cjf $R/$P-$abi-runtime/$P-$abi-runtime-$V-$B.tar.bz2 \
+tar -C install -cjf $R/$P$abi-runtime/$P$abi-runtime-$V-$B.tar.bz2 \
 	--exclude "*.exe" \
 	bin
 
