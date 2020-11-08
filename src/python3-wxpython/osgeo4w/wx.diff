@@ -1,0 +1,15 @@
+diff -ur wxPython-4.1.0/buildtools/config.py ../buildtools/config.py
+--- wxPython-4.1.0/buildtools/config.py	2020-04-24 00:14:41.000000000 +0200
++++ ../buildtools/config.py	2020-10-22 00:56:26.676464700 +0200
+@@ -175,6 +175,11 @@
+                 self.defines += [ ('wxUSE_RC_MANIFEST', '1'),
+                                   ('wxUSE_DPI_AWARE_MANIFEST', '2') ]
+ 
++                if os.environ.get('CPU', None) in ['AMD64', 'X64']:
++                    self.defines.append( ('WX_CPU_AMD64', '1') )
++                else:
++                    self.defines.append( ('WX_CPU_X86', '1') )
++
+             self.libs = []
+             self.libdirs = [ opj(self.WXDIR, 'lib', self.VCDLL) ]
+             if self.MONOLITHIC:
