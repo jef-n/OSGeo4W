@@ -42,7 +42,7 @@ tar -C ../libfcgi/Release -cjf $R/$P-$V-$B.tar.bz2 \
 
 cp ../LICENSE.TERMS $R/$P-$V-$B.txt
 
-cat <<EOF >$R/setup.hint
+cat <<EOF >$R/$P-devel/setup.hint
 sdesc: "FastCGI Library (Development)"
 ldesc: "FastCGI Library (Development)"
 maintainer: $MAINTAINER
