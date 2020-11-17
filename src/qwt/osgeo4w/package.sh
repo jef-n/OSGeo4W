@@ -1,8 +1,8 @@
 export P=qwt
 export V=6.1.3
-export B=5
+export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="qt5-devel"
+export BUILDDEPENDS=qt5-devel
 
 source ../../../scripts/build-helpers
 
@@ -48,8 +48,8 @@ external-source: $P
 EOF
 
 cat <<EOF >$R/$P-libs/setup.hint
-sdesc: "Qt5 widgets library for technical applications (runtime)"
-ldesc: "Qt5 widgets library for technical applications (runtime)"
+sdesc: "Qt5 widgets library for technical applications (Runtime)"
+ldesc: "Qt5 widgets library for technical applications (Runtime)"
 maintainer: $MAINTAINER
 category: Libs
 requires: $P-libs
@@ -75,11 +75,9 @@ tar -C install -cjvf $R/$P-libs/$P-libs-$V-$B.tar.bz2 \
 tar -C install -cjvf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	--absolute-names \
 	--xform s,../../lib/qwt.lib,apps/Qt5/lib/qwt.lib, \
-	--xform s,../.././lib/qwt.lib,apps/Qt5/lib/qwt.lib, \
 	apps/Qt5/features \
 	apps/Qt5/include/qwt6 \
 	../../lib/qwt.lib \
-	../.././lib/qwt.lib \
 	apps/Qt5/plugins/designer/qwt_designer_plugin.dll
 
 tar -C .. -cjvf $R/$P-$V-$B-src.tar.bz2 \
