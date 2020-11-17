@@ -29,6 +29,7 @@ tar -cjf $R/$P-$V-$B.tar.bz2 \
 	--xform "s,^bgspawn.exe,bin/bgspawn.exe," \
 	--xform "s,^dllupdate.exe,bin/dllupdate.exe," \
 	--xform "s,^getspecialfolder.exe,bin/getspecialfolder.exe," \
+	--xform "s,^xxmklink.exe,bin/xxmklink.exe," \
 	--xform "s,^textreplace.exe,bin/textreplace.exe," \
 	--xform "s,^o4w_env.bat,bin/o4w_env.bat," \
 	--xform "s,^ini-base.bat,etc/ini/base.bat," \
@@ -36,6 +37,7 @@ tar -cjf $R/$P-$V-$B.tar.bz2 \
 	dllupdate.exe \
 	getspecialfolder.exe \
 	textreplace.exe \
+	xxmklink.exe \
 	ini-base.bat \
 	o4w_env.bat \
 	OSGeo4W.ico
