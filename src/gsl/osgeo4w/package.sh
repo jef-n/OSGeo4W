@@ -27,7 +27,7 @@ mkdir -p $R/$P-devel
 
 mkdir -p install/bin install/include/gsl install/lib
 
-cp -r ../gsl install/include/gsl
+cp -r ../gsl install/include/
 cp ../dll/x64/Release/{cblas,gsl}.dll install/bin
 cp ../dll/x64/Release/{cblas,gsl}.lib install/lib
 
