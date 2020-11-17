@@ -83,7 +83,7 @@ tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	--exclude "bin/pdal.exe" \
 	bin include lib
 
-cp ../LICENSE.txt $R/$P-devel/$P-$V-$B.txt
+cp ../LICENSE.txt $R/$P-devel/$P-devel-$V-$B.txt
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 
