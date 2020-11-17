@@ -31,7 +31,7 @@ export INSTDIR=$(cygpath -am install)
 	cd build
 	cmake -G Ninja \
 		-Wno-dev \
-		-D CMAKE_CONFIGURATION_TYPES=RelWithDebInfo \
+		-D CMAKE_BUILD_TYPE=RelWithDebInfo \
 		-D QCA_PREFIX_INSTALL_DIR=$INSTDIR/apps/Qt5 \
 		-D QCA_PLUGINS_INSTALL_DIR=$INSTDIR/apps/Qt5/plugins/ \
 		-D QCA_BINARY_INSTALL_DIR=$INSTDIR/apps/Qt5/bin \
@@ -41,7 +41,6 @@ export INSTDIR=$(cygpath -am install)
 		-D QCA_PRIVATE_INCLUDE_INSTALL_DIR=$INSTDIR/apps/Qt5/include \
 		-D QCA_DOC_INSTALL_DIR=$INSTDIR/apps/Qt5/doc/html/qca \
 		-D QCA_MAN_INSTALL_DIR=$INSTDIR/apps/Qt5/man/ \
-		-D QCA_SUFFIX=qt5 \
 		-D BUILD_TESTS=OFF \
 		-D PKGCONFIG_INSTALL_PREFIX=$INSTDIR/apps/Qt5/lib/pkgconfig \
 		-D CMAKE_SYSTEM_PREFIX_PATH=$(cygpath -am $OSGEO4W_PWD/osgeo4w/apps/Qt5/lib/cmake) \

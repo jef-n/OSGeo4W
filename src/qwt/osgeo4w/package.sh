@@ -1,6 +1,6 @@
 export P=qwt
 export V=6.1.3
-export B=next
+export B="next qwt-libs"
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=qt5-devel
 
