@@ -74,10 +74,11 @@ tar -C install -cjvf $R/$P-libs/$P-libs-$V-$B.tar.bz2 \
 
 tar -C install -cjvf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	--absolute-names \
-	--xform s,../../lib/qwt.lib,apps/Qt5/lib/qwt.lib, \
+	--xform s,./apps/Qt5/lib/qwt.lib,apps/Qt5/lib/qwt-qt5.lib, \
 	apps/Qt5/features \
 	apps/Qt5/include/qwt6 \
-	../../lib/qwt.lib \
+	apps/Qt5/lib/qwt.lib \
+	./apps/Qt5/lib/qwt.lib \
 	apps/Qt5/plugins/designer/qwt_designer_plugin.dll
 
 tar -C .. -cjvf $R/$P-$V-$B-src.tar.bz2 \
