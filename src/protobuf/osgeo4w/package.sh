@@ -22,6 +22,7 @@ cmake -G Ninja \
 	-D CMAKE_BUILD_TYPE=Release \
 	-D CMAKE_INSTALL_PREFIX=../install \
 	-D protobuf_BUILD_TESTS=OFF \
+	-D protobuf_MSVC_STATIC_RUNTIME=OFF \
 	-D ZLIB_LIBRARY=$(cygpath -am ../osgeo4w/lib/zlib.lib) \
 	-D ZLIB_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	../../cmake
