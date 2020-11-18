@@ -85,10 +85,66 @@ diff -ur grass-7.8.4/mswindows/osgeo4w/env.bat.tmpl ../mswindows/osgeo4w/env.bat
 -IF EXIST "%ProgramFiles%\RStudio\bin\rstudio.exe" set PATH=%PATH%;%ProgramFiles%\RStudio\bin
 -REM set R_USER if %USERPROFILE%\Documents\R\ exists to catch most common cases of private R libraries
 -IF EXIST "%USERPROFILE%\Documents\R\" set R_USER=%USERPROFILE%\Documents\
+diff -ur grass-7.8.4/mswindows/osgeo4w/mklibs.sh ../mswindows/osgeo4w/mklibs.sh
+--- grass-7.8.4/mswindows/osgeo4w/mklibs.sh	2020-10-05 08:39:31.000000000 +0200
++++ ../mswindows/osgeo4w/mklibs.sh	2020-11-18 12:11:53.836510400 +0100
+@@ -1,31 +1,14 @@
+ #!/bin/sh
+ 
+ set -e
++set -x
+ 
+-if [ -z "$OSGEO4W_POSTFIX" ]; then
+-    OSGEO4W_POSTFIX=""
+-fi
++[ -d mswindows/osgeo4w/vc ] || mkdir mswindows/osgeo4w/vc
+ 
+-if [ "$OSGEO4W_POSTFIX" != "64" ]; then
+-    MACHINE=x86
+-else
+-    MACHINE=x64
++if [ -n "$VCPATH" ]; then
++	PATH=$PATH:$VCPATH
+ fi
+ 
+-PROGRAMFILES="/c/Program Files (x86)"
+-VSDIR="$PROGRAMFILES/Microsoft Visual Studio 14.0"
+-# add example for MS Visual Studio 2017 Community 64 bit
+-# VSDIR="$PROGRAMFILES/Microsoft Visual Studio/2017/Community"
+-PATH="$VSDIR/Common7/IDE:$PATH"
+-PATH="$VSDIR/VC/bin:$PATH"
+-# add example for MS Visual Studio 2017 Community 64 bit
+-# PATH="$VSDIR/VC/Tools/MSVC/14.12.25827/bin/Hostx64/x64:$PATH"
+-PATH="$VSDIR/Common7/Tools:$PATH"
+-PATH="$PATH:/c/OSGeo4W${OSGEO4W_POSTFIX}/bin"
+-export PATH
+-
+-[ -d mswindows/osgeo4w/vc ] || mkdir mswindows/osgeo4w/vc
+-
+ for dllfile in "$@"; do
+ 	dlldir=${dllfile%/*}
+ 	dllfile=${dllfile##*/}
+@@ -43,6 +26,7 @@
+ 		egrep -v "^[	 ]*(_+IMPORT_DESCRIPTOR_.*|_+NULL_IMPORT_DESCRIPTOR)$" >mswindows/osgeo4w/vc/${defname%$VERSION}
+ 
+ 	(cd mswindows/osgeo4w/vc ;
+-	    lib -nologo -def:${defname} -subsystem:windows -machine:${MACHINE}
++	    lib -nologo -def:${defname} -subsystem:windows -machine:x64
+ 	    lib -nologo $libname || exit)
+ done
++
 diff -ur grass-7.8.4/mswindows/osgeo4w/package.sh ../mswindows/osgeo4w/package.sh
 --- grass-7.8.4/mswindows/osgeo4w/package.sh	2020-10-05 08:39:31.000000000 +0200
-+++ ../mswindows/osgeo4w/package.sh	2020-11-08 17:46:45.471455600 +0100
-@@ -29,19 +29,8 @@
++++ ../mswindows/osgeo4w/package.sh	2020-11-18 12:13:37.303734600 +0100
+@@ -1,7 +1,5 @@
+ #!/usr/bin/bash
+ 
+-# osgeo4w-setup -g -k -a x86_64 -q -P gdal -P proj -P geos -P fftw -P libjpeg -P liblas-devel -P libpng -P libpq -P libtiff -P libxdr -P pdcurses -P regex-devel -P sqlite3 -P zstd-devel -P zstd -P laszip2 -P python3-core -P python3-six
+-
+ set -e
+ 
+ PWD="$(pwd)"
+@@ -29,19 +27,8 @@
      PACKAGE_POSTFIX=""
  fi
  
@@ -110,8 +166,12 @@ diff -ur grass-7.8.4/mswindows/osgeo4w/package.sh ../mswindows/osgeo4w/package.s
  
  fetchenv() {
      local IFS
-@@ -56,19 +45,15 @@
-     cmd.exe //c "call `cygpath -w $batch` $args \>nul 2\>nul \& set" >$dstenv
+@@ -53,22 +40,16 @@
+     diffenv=$(mktemp /tmp/diffenv.XXXXXXXXXX)
+     args="$@"
+     cmd.exe //c set >$srcenv
+-    cmd.exe //c "call `cygpath -w $batch` $args \>nul 2\>nul \& set" >$dstenv
++    cmd.exe //c "call `cygpath -sw $batch` $args \>nul 2\>nul \& set" >$dstenv
      diff -u $srcenv $dstenv | sed -f mswindows/osgeo4w/envdiff.sed >$diffenv
      . $diffenv
 -    PATH=$PATH:/usr/bin:/mingw${MINGW_POSTFIX}/bin/:$PWD/mswindows/osgeo4w/lib:$PWD/mswindows/osgeo4w:/c/windows32/system32:/c/windows:/c/windows32/system32:/c/windows
@@ -124,17 +184,15 @@ diff -ur grass-7.8.4/mswindows/osgeo4w/package.sh ../mswindows/osgeo4w/package.s
 -
  fetchenv $OSGEO4W_ROOT_MSYS/bin/o4w_env.bat
 -fetchenv $OSGEO4W_ROOT_MSYS/bin/py3_env.bat
--
--! [ -f $OSGEO4W_ROOT_MSYS/etc/ini/msys.bat.off ] || mv $OSGEO4W_ROOT_MSYS/etc/ini/msys.bat.off $OSGEO4W_ROOT_MSYS/etc/ini/msys.bat
  
+-! [ -f $OSGEO4W_ROOT_MSYS/etc/ini/msys.bat.off ] || mv $OSGEO4W_ROOT_MSYS/etc/ini/msys.bat.off $OSGEO4W_ROOT_MSYS/etc/ini/msys.bat
+-
 -PATH=/mingw${MINGW_POSTFIX}/lib/ccache/bin:$PATH
 +PATH=/mingw64/lib/ccache/bin:$PATH
-+echo "$0: PATH:$PATH"
-+type -p gdal302.dll
  
  T0=$(date +%s)
  LT=$T0
-@@ -125,42 +110,19 @@
+@@ -125,42 +106,19 @@
  
  exec 3>&1 > >(tee mswindows/osgeo4w/package.log) 2>&1
  
@@ -190,7 +248,7 @@ diff -ur grass-7.8.4/mswindows/osgeo4w/package.sh ../mswindows/osgeo4w/package.s
  
  if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
  	if [ -e include/Make/Platform.make ] ; then
-@@ -171,17 +133,17 @@
+@@ -171,17 +129,17 @@
  	log remove old logs
  	rm -f mswindows/osgeo4w/package.log.*
  
@@ -212,7 +270,7 @@ diff -ur grass-7.8.4/mswindows/osgeo4w/package.sh ../mswindows/osgeo4w/package.s
  		--with-libs="$OSGEO4W_ROOT/lib" \
  		--with-includes=$OSGEO4W_ROOT_MSYS/include \
                  --libexecdir=$OSGEO4W_ROOT_MSYS/bin \
-@@ -194,10 +156,10 @@
+@@ -194,10 +152,10 @@
  		--enable-largefile \
  		--with-fftw \
  		--with-freetype \
@@ -225,7 +283,7 @@ diff -ur grass-7.8.4/mswindows/osgeo4w/package.sh ../mswindows/osgeo4w/package.s
  		--with-postgres \
  		--with-postgres-includes=$OSGEO4W_ROOT_MSYS/include \
  		--with-postgres-libs=$PWD/mswindows/osgeo4w/lib \
-@@ -211,10 +173,11 @@
+@@ -211,10 +169,11 @@
  		--with-zstd \
  		--with-odbc \
  	        --with-cairo \
@@ -240,7 +298,17 @@ diff -ur grass-7.8.4/mswindows/osgeo4w/package.sh ../mswindows/osgeo4w/package.s
  
  	touch mswindows/osgeo4w/configure-stamp
  fi
-@@ -267,8 +230,6 @@
+@@ -248,8 +207,7 @@
+ 
+ if [ -n "$PACKAGE_PATCH" ]; then
+     log building vc libraries
+-    OSGEO4W_POSTFIX=$OSGEO4W_POSTFIX sh \
+-        mswindows/osgeo4w/mklibs.sh $OSGEO4W_ROOT_MSYS/apps/grass/grass$POSTFIX/lib/*.${MAJOR}.${MINOR}.dll
++    sh mswindows/osgeo4w/mklibs.sh $OSGEO4W_ROOT_MSYS/apps/grass/grass$POSTFIX/lib/*.${MAJOR}.${MINOR}.dll
+     mv mswindows/osgeo4w/vc/grass*.lib $OSGEO4W_ROOT_MSYS/apps/grass/grass$POSTFIX/lib
+ 
+     log creating package
+@@ -267,8 +225,6 @@
  
      # copy dependencies (TODO: to be reduced)
      cp -uv $DLLS apps/grass/grass$POSTFIX/bin
@@ -249,7 +317,7 @@ diff -ur grass-7.8.4/mswindows/osgeo4w/package.sh ../mswindows/osgeo4w/package.s
  
      # creating grass package
      /bin/tar -cjf $PDIR/grass$PACKAGE_POSTFIX-$VERSION-$PACKAGE_PATCH.tar.bz2 \
-@@ -277,7 +238,6 @@
+@@ -277,7 +233,6 @@
  	bin/python-${GRASS_EXECUTABLE}.bat \
  	etc/postinstall/grass${PACKAGE_POSTFIX}.bat \
  	etc/preremove/grass${PACKAGE_POSTFIX}.bat

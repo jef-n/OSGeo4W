@@ -31,9 +31,12 @@ msysarch=msys2-base-x86_64-20200903.tar.xz
 	export OSGEO4W_ROOT_MSYS="${OSGEO4W_ROOT//\\/\/}"
 	export OSGEO4W_ROOT_MSYS="/${OSGEO4W_ROOT_MSYS:0:1}/${OSGEO4W_ROOT_MSYS:3}"
 
-	export PATH="$(cygpath -a msys64/usr/bin):$PATH"
+	export VCPATH=$(
+		vs2019env
+		echo ${PATH//\/cygdrive/}
+	)
 
-	echo PATH:$PATH
+	export PATH="$(cygpath -a msys64/usr/bin):$PATH"
 
 	[ -f msys64/msys2.init ] || {
 		cmd.exe /c bash pacman-key --init

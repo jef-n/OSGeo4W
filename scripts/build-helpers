@@ -124,7 +124,7 @@ declare -x fetchenv
 vs2019env() {
 	local e vcdir
 
-	vcdir=0
+	vcdir=
 	for e in Community Professional Enterprise; do
 		d=$(cygpath "$PROGRAMFILES (x86)\\Microsoft Visual Studio\\2019\\$e")
 		if [ -d "$d" ]; then
