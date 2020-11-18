@@ -68,7 +68,7 @@ sdesc: "Qt5 Cryptographic Architecture headers and libraries (Development)"
 ldesc: "Qt5 Cryptographic Architecture headers and libraries (Development)"
 maintainer: $MAINTAINER
 category: Libs
-requires: qt5-devel qt5-libs
+requires: $P qt5-devel
 external-source: $P
 EOF
 
