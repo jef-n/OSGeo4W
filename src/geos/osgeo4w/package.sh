@@ -1,5 +1,5 @@
 export P=geos
-export V=3.8.1
+export V=3.9.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
@@ -42,8 +42,8 @@ cat <<EOF >$R/$P-devel/setup.hint
 sdesc: "The GEOS geometry library (Development)"
 ldesc: "The GEOS geometry library (Development)"
 category: Libs
-requires: geos
-external-source: geos
+requires: $P
+external-source: $P
 Maintainer: $MAINTAINER
 EOF
 
@@ -58,7 +58,6 @@ tar -cjf $R/$P-$V-$B.tar.bz2 \
 	bin/*.dll
 
 tar -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
-	bin/geos-config \
 	lib \
 	include
 
