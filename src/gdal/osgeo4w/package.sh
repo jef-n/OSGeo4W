@@ -1,9 +1,8 @@
 export P=gdal
-export V=3.2.0rc1
+export V=3.2.1
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libtiff-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libgeotiff-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy"
-# libjpeg-devel libjpeg12-devel
+export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libtiff-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libgeotiff-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-devel libjpeg12-devel"
 
 source ../../../scripts/build-helpers
 
