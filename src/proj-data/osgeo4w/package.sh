@@ -1,5 +1,5 @@
 export P=proj-data
-export V=1.3RC1
+export V=1.4
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
