@@ -1,5 +1,5 @@
 export P=qt5
-export V=5.15.1
+export V=5.15.2
 export B="next qt5-libs"
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="openssl-devel sqlite3-devel zlib-devel libjpeg-devel libtiff-devel libpng-devel oci-devel libwebp-devel libmysql-devel zstd-devel libpq-devel icu-devel freetype-devel"
@@ -68,12 +68,14 @@ export LIB="$(cygpath -aw $O4W/lib);$LIB"
 	(
 		export PATH=$O4W/bin:$PATH
 
-		# build everything and then up to the error
+		# build everything and maybe to the first error
 		[ -f ../built ] || ./jom /k || ./jom /j1
 		touch ../built
 
 		[ -f ../installed ] || ./jom install
 		touch ../installed
+
+		rm -f /tmp/qt.files
 	)
 }
 
