@@ -1,5 +1,5 @@
 export P=grass
-export V=7.8.4
+export V=7.8.5
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="gdal-devel proj-devel geos-devel libjpeg-devel libpng-devel libpq-devel libtiff-devel sqlite3-devel zstd-devel python3-core python3-six liblas-devel cairo-devel freetype-devel python3-wxpython"
@@ -16,8 +16,8 @@ MM=${MM//./}
 [ -f $P-$V.tar.gz ] || wget http://download.osgeo.org/$P/${P}$MM/source/$P-$V.tar.gz
 [ -f ../configure ] || tar -C .. -xzf  $P-$V.tar.gz --xform "s,^$P-$V,.,"
 [ -f patched ] || {
-	patch -d .. -p1 --dry-run <patch
-	patch -d .. -p1 <patch
+	patch -l -d .. -p1 --dry-run <patch
+	patch -l -d .. -p1 <patch
 	touch patched
 }
 

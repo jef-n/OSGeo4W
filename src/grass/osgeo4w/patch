@@ -265,9 +265,10 @@ diff -ur grass-7.8.4/mswindows/osgeo4w/package.sh ../mswindows/osgeo4w/package.s
  
  	log configure
  	./configure \
--	        --host=$conf_host \
+-		--host=$conf_host \
+- 		--with-libs="$OSGEO4W_ROOT/lib" \
 +	        --host=x86_64-w64-mingw32 \
- 		--with-libs="$OSGEO4W_ROOT/lib" \
++		--with-libs="$OSGEO4W_ROOT_MSYS/lib" \
  		--with-includes=$OSGEO4W_ROOT_MSYS/include \
                  --libexecdir=$OSGEO4W_ROOT_MSYS/bin \
 @@ -194,10 +152,10 @@
@@ -293,7 +294,7 @@ diff -ur grass-7.8.4/mswindows/osgeo4w/package.sh ../mswindows/osgeo4w/package.s
 -                --with-bzlib $conf_opts
 -# see #3047
 -#	        --with-mysql
-+                --with-bzlib \
++		--with-bzlib \
 +		--with-liblas=$PWD/mswindows/osgeo4w/liblas-config
  
  	touch mswindows/osgeo4w/configure-stamp
