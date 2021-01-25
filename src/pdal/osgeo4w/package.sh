@@ -73,7 +73,7 @@ cat <<EOF >$R/$P-devel/setup.hint
 sdesc: "PDAL: Point Data Abstraction Library (Development)"
 ldesc: "PDAL is a library for manipulating and translating point cloud data"
 category: Libs
-requires: $P-libs
+requires: $P-libs liblas-devel laszip-devel
 maintainer: $MAINTAINER
 external-source: $P
 EOF

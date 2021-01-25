@@ -298,6 +298,78 @@ getpackages() {
 }
 declare -x getpackages
 
+# determine whether first version argument is higher than seconds
+higherversion() {
+	local a=$1
+	local b=$2
+
+	if [ "$a" == "-" ]; then
+		a=
+	fi
+	if [ "$b" == "-" ]; then
+		b=
+	fi
+
+	if [ "$a" == "$b" ]; then
+		echo "V: $a == $b" >&2
+		return 1	# equal
+	elif [ "$a" == "$(sort -V <(echo $a; echo $b) | head -1)" ]; then
+		echo "V: $a < $b" >&2
+		return 1	# lower
+	else
+		echo "V: $a > $b!" >&2
+		return 0	# higher
+	fi
+}
+declare -x higherversion
+
+# retrieve highest available package version for package argument
+availablepackageversions() {
+	local p=$1
+
+	wget -c -q -O /tmp/setup-master.ini $MASTER_REPO/x86_64/setup.ini 1>&2
+
+	regen 1>&2
+
+	version_curr= binary_curr=
+	version_prev= binary_prev=
+	version_test= binary_test=
+
+	local i section f
+	for i in /tmp/setup-master.ini $OSGEO4W_REP/x86_64/setup.ini; do
+		section=curr
+		while read f; do
+			case "$f" in
+			"[prev]")
+				section=prev
+				;;
+			"[test]")
+				section=test
+				;;
+			"version: "*)
+				f=${f#version: }
+				if eval higherversion \$f \$version_$section-\$binary_$section; then
+					local version=${f%-[0-9]*}
+					local binary=${f#$version-}
+					eval version_$section=$version binary_$section=$binary
+				fi
+				;;
+			esac
+		done < <(sed -ne '/^@ '$p'$/,/^$/p' $i)
+	done
+}
+declare -x availablepackageversions
+
+appendversions() {
+	local hint=$1
+	[ -f "$hint" ]
+
+	[ -z "$version_curr" ] || echo "curr: $version_curr-$binary_curr" >>$hint
+	[ -z "$version_prev" ] || echo "prev: $version_prev-$binary_prev" >>$hint
+	[ -z "$version_test" ] || echo "test: $version_test-$binary_test" >>$hint
+}
+declare -x appendversions
+
 nextbinary() {
 	local p
 	if [ "$1" = "next" ]; then
@@ -306,22 +378,29 @@ nextbinary() {
 		p=$1
 	fi
 
-	wget -c -q -O /tmp/setup-master.ini $MASTER_REPO/x86_64/setup.ini 1>&2
+	availablepackageversions $p
 
-	regen 1>&2
+	if [ "$OSGEO4W_BUILDMODE" = "test" ]; then
+		if [ "$version_test" == "$V" ]; then
+			(( binary_test++ )) || true
+		else
+			binary_test=1
+		fi
+		echo $binary_test
+	else
+		version_prev=$version_curr
+		binary_prev=$binary_curr
 
-	b=$(
-		(
-			sed -ne '/^@ '$p'$/,/^$/ { s/^version: '$V'-\([0-9]*\)$/\1/p; }' /tmp/setup-master.ini
-			sed -ne '/^@ '$p'$/,/^$/ { s/^version: '$V'-\([0-9]*\)$/\1/p; }' $OSGEO4W_REP/x86_64/setup.ini
-			echo 0
-		) | sort -rn | head -1
-	)
-
-	(( b++ )) || true
-
-	echo $b
+		if [ "$version_curr" == "$V" ]; then
+			(( binary_curr++ )) || true
+		else
+			version_curr=$V
+			binary_curr=1
+		fi
+		echo $binary_curr
+	fi
 }
+declare -x nextbinary
 
 packagewheel() {
 	log "Packaging $P==$V with pip"

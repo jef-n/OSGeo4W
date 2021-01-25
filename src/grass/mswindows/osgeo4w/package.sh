@@ -140,7 +140,7 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
 	log configure
 	./configure \
 	        --host=x86_64-w64-mingw32 \
-		--with-libs="$OSGEO4W_ROOT/lib" \
+		--with-libs="$OSGEO4W_ROOT_MSYS/lib" \
 		--with-includes=$OSGEO4W_ROOT_MSYS/include \
                 --libexecdir=$OSGEO4W_ROOT_MSYS/bin \
                 --prefix=$OSGEO4W_ROOT_MSYS/apps/grass \
@@ -172,7 +172,7 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
 		--with-cairo-includes=$OSGEO4W_ROOT_MSYS/include \
 		--with-cairo-ldflags="-L$PWD/mswindows/osgeo4w/lib -lcairo" \
 	        --with-opengl=windows \
-                --with-bzlib \
+		--with-bzlib \
 		--with-liblas=$PWD/mswindows/osgeo4w/liblas-config
 
 	touch mswindows/osgeo4w/configure-stamp
