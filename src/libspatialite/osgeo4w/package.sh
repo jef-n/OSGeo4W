@@ -1,5 +1,5 @@
 export P=libspatialite
-export V=5.0.0
+export V=5.0.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="sqlite3-devel libiconv-devel geos-devel proj-devel freexl-devel libxml2-devel librttopo-devel zlib-devel"
