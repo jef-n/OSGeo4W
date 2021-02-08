@@ -15,7 +15,7 @@ unzip -q -o -d basic instantclient-basiclite-windows.zip
 V=$(echo basic/instantclient_*)
 V=${V#basic/instantclient_}
 V=${V//_/.}
-B=$(nextbinary)
+nextbinary
 
 [ -d basic/instantclient_${V/./_} ]
 

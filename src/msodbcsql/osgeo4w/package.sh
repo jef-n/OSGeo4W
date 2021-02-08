@@ -18,7 +18,7 @@ v=${v##*/}
 major=${v%?}
 minor=${v#$major}
 V=$major.$minor
-B=$(nextbinary)
+nextbinary
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R/$P-devel

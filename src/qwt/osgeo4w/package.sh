@@ -56,7 +56,7 @@ requires: $P-libs
 external-source: $P
 EOF
 
-		cat <<EOF >$R/$P-devel/setup.hint
+cat <<EOF >$R/$P-devel/setup.hint
 sdesc: "Qt5 widgets library for technical applications (Development)"
 ldesc: "Qt5 widgets library for technical applications (Development)"
 maintainer: $MAINTAINER
