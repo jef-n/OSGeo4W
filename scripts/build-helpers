@@ -1,6 +1,10 @@
 set -e
 
-export MASTER_REPO=http://download.osgeo.org/osgeo4w
+export MASTER_HOST=download.osgeo.org
+export MASTER_BASE=osgeo4w/testing
+export MASTER_REPO=http://$MASTER_HOST/$MASTER_BASE
+export MASTER_REGEN_URI=http://$MASTER_HOST/cgi-bin/osgeo4w-regen-testing.sh
+export MASTER_SCP=$MASTER_HOST:/osgeo/download/$MASTER_BASE
 export OSGEO4W_SCRIPTS=$(cygpath -a "$( dirname "${BASH_SOURCE[0]}" )")
 export OSGEO4W_PWD=$PWD
 
@@ -55,10 +59,14 @@ endlog() {
 	if [ $r == 0 ]; then
 		log "Local repository updates:"
 		regen
+
 		(
 			cd $OSGEO4W_REP
 			diff -u x86_64/setup.ini.prev x86_64/setup.ini || true
 		)
+
+		log "Uploading to master repo:"
+		perl $OSGEO4W_SCRIPTS/upload.pl
 	fi
 	trap "" EXIT
 	finishlog
@@ -326,6 +334,9 @@ declare -x higherversion
 # retrieve highest available package version for package argument
 availablepackageversions() {
 	local p=$1
+	if [ -z "$p" ]; then
+		return 1
+	fi
 
 	wget -c -q -O /tmp/setup-master.ini $MASTER_REPO/x86_64/setup.ini 1>&2
 
@@ -357,6 +368,8 @@ availablepackageversions() {
 			esac
 		done < <(sed -ne '/^@ '$p'$/,/^$/p' $i)
 	done
+
+	return 0
 }
 declare -x availablepackageversions
 
@@ -372,7 +385,7 @@ declare -x appendversions
 
 nextbinary() {
 	local p
-	if [ "$1" = "next" ]; then
+	if [ "$1" = "next" -o -z "$1" ]; then
 		p=$P
 	else
 		p=$1
@@ -386,7 +399,7 @@ nextbinary() {
 		else
 			binary_test=1
 		fi
-		echo $binary_test
+		B=$binary_test
 	else
 		version_prev=$version_curr
 		binary_prev=$binary_curr
@@ -397,7 +410,8 @@ nextbinary() {
 			version_curr=$V
 			binary_curr=1
 		fi
-		echo $binary_curr
+
+		B=$binary_curr
 	fi
 }
 declare -x nextbinary
@@ -503,7 +517,7 @@ init() {
 
 	case "$B" in
 	next|"next "*)
-		B=$(nextbinary ${B#next })
+		nextbinary ${B#next }
 		echo "Binary package version: $P-$V-$B"
 		;;
 
