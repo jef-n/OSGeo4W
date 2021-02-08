@@ -34,7 +34,7 @@ MAJOR=$(sed -ne 's/SET(CPACK_PACKAGE_VERSION_MAJOR "\([0-9]*\)")/\1/ip' CMakeLis
 MINOR=$(sed -ne 's/SET(CPACK_PACKAGE_VERSION_MINOR "\([0-9]*\)")/\1/ip' CMakeLists.txt)
 PATCH=$(sed -ne 's/SET(CPACK_PACKAGE_VERSION_PATCH "\([0-9]*\)")/\1/ip' CMakeLists.txt)
 
-availablepackageversions
+availablepackageversions $P
 # Version: $QGISVER-$BUILD-$SHA-$BINARY
 
 V=$MAJOR.$MINOR.$PATCH
@@ -46,7 +46,6 @@ if [ -n "$version_curr" ]; then
 	v=${v#*-}
 
 	build=${v%%-*}
-	sha=${v#*-}
 
 	if [ "$V" = "$version" ]; then
 		(( build++ )) || true
@@ -54,7 +53,7 @@ if [ -n "$version_curr" ]; then
 fi
 
 V=$V-$build-$SHA
-B=$(nextbinary)
+nextbinary
 
 (
 	set -e
@@ -73,17 +72,15 @@ B=$(nextbinary)
 	cd ../qgis
 
 
-	if false; then
 	if [ -n "$TX_TOKEN" ] && ! PATH=/bin:$PATH bash -x scripts/pull_ts.sh; then
 		echo "TSPULL FAILED $?"
 		rm -rf i18n doc/TRANSLATORS
 		git checkout i18n doc/TRANSLATORS
 	fi
-	fi
 
 	cd ../osgeo4w
 
-	export BUILDNAME=$P-$V-$SHA-$TARGET-VC16-x86_64
+	export BUILDNAME=$P-$V-$TARGET-VC16-x86_64
 	export BUILDDIR=$PWD/build
 	export INSTDIR=$PWD/install
 	export SRCDIR=$(cygpath -am ../qgis)
@@ -103,8 +100,6 @@ B=$(nextbinary)
 	cd $BUILDDIR
 
 	echo CMAKE: $(date)
-
-	export PYVER=$(basename $PYTHONHOME)
 
 	rm -f qgsversion.h
 	touch $SRCDIR/CMakeLists.txt
@@ -139,7 +134,7 @@ B=$(nextbinary)
 		-D PYTHON_EXECUTABLE=$(cygpath -am $O4W_ROOT/bin/python3.exe) \
 		-D SIP_BINARY_PATH=$(cygpath -am $PYTHONHOME/sip.exe) \
 		-D PYTHON_INCLUDE_PATH=$(cygpath -am $PYTHONHOME/include) \
-		-D PYTHON_LIBRARY=$(cygpath -am $PYTHONHOME/libs/$PYVER.lib) \
+		-D PYTHON_LIBRARY=$(cygpath -am $PYTHONHOME/libs/$(basename $PYTHONHOME).lib) \
 		-D QT_LIBRARY_DIR=$(cygpath -am $O4W_ROOT/lib) \
 		-D QT_HEADERS_DIR=$(cyppath -am $O4W_ROOT/apps/qt5/include) \
 		-D CMAKE_INSTALL_PREFIX=$(cygpath -am $INSTDIR/apps/$P) \
@@ -153,10 +148,8 @@ B=$(nextbinary)
 		-D DART_TESTING_TIMEOUT=60 \
 		$(cygpath -m $SRCDIR)
 
-	if ! [ -f ../skipclean ]; then
-		echo CLEAN: $(date)
-		cmake --build $(cygpath -am $BUILDDIR) --target clean --config $BUILDCONF
-	fi
+	echo CLEAN: $(date)
+	cmake --build $(cygpath -am $BUILDDIR) --target clean --config $BUILDCONF
 
 	mkdir -p $BUILDDIR/apps/$P/pdb
 
@@ -169,12 +162,10 @@ B=$(nextbinary)
 		exit 1
 	fi
 
-	echo RUN_TESTS: $(date)
-
-	reg add "HKCU\\Software\\Microsoft\\Windows\\Windows Error Reporting" /v DontShow /t REG_DWORD /d 1 /f
-
-	if ! [ -f ../skiptests ]; then
 	(
+		echo RUN_TESTS: $(date)
+		reg add "HKCU\\Software\\Microsoft\\Windows\\Windows Error Reporting" /v DontShow /t REG_DWORD /d 1 /f
+
 		export TEMP=$TEMP/$P
 		export TMP=$TEMP
 		export TMPDIR=$TEMP
@@ -194,7 +185,6 @@ B=$(nextbinary)
 			touch ../testfailure
 		fi
 	)
-	fi
 
 	cmake --build $(cygpath -am $BUILDDIR) --target ${TARGET}Submit --config $BUILDCONF
 
@@ -225,7 +215,7 @@ B=$(nextbinary)
 	cp "$PYTHONHOME/Lib/site-packages/PyQt5/uic/widget-plugins/qgis_customwidgets.py" install/apps/$P/python
 
 	export R=$OSGEO4W_REP/x86_64/release/qgis/$P
-	mkdir -p $R/$P-pdb
+	mkdir -p $R/$P-{pdb,full}
 
 	touch exclude
 	/bin/tar -cjf $R/$P-$V-$B.tar.bz2 \
@@ -244,12 +234,14 @@ B=$(nextbinary)
 	/bin/tar -C $BUILDDIR -cjf $R/$P-pdb/$P-pdb-$V-$B.tar.bz2 \
 		apps/$P/pdb
 
+	/bin/tar -T /dev/null -cjf $R/$P-full/$P-full-$V-$B.tar.bz2
+
 	cat <<EOF >$R/setup.hint
 sdesc: "QGIS nightly build of the development branch"
 ldesc: "QGIS nightly build of the development branch"
 maintainer: $MAINTAINER
 category: Desktop
-requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl spatialite zlib iconv fcgi libspatialindex oci qt5-libs qt5-qml qt5-devel qt5-tools qca-qt5-libs qwt-libs-qt5 sip-qt5 python3-core python3-pyqt5 python3-psycopg2 python3-qscintilla python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-gdal python3-requests python3-plotly python3-pyproj python3-owslib qtkeychain libzip-libs opencl exiv2 hdf5 python3-gdal-dev pdal pdal-libs
+requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl libspatialite zlib libiconv fcgi libspatialindex oci qt5-libs qt5-qml qt5-devel qt5-tools qtwebkit-libs qca qwt-libs python3-sip python3-core python3-pyqt5 python3-psycopg2-binary python3-qscintilla python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-gdal python3-requests python3-plotly python3-pyproj python3-owslib qtkeychain-libs libzip opencl exiv2 hdf5 python3-gdal-dev pdal pdal-libs
 EOF
 
 	appendversions $R/setup.hint
@@ -264,6 +256,15 @@ external-source: $P
 EOF
 
 	appendversions $R/$P-pdb/setup.hint
+
+	cat <<EOF >$R/$P-full/setup.hint
+sdesc: "QGIS nightly build of the development branch (metapackage with additional dependencies)"
+ldesc: "QGIS nightly build of the development branch (metapackage with additional dependencies)"
+maintainer: $MAINTAINER
+category: Desktop
+requires: $P python3-pyparsing python3-simplejson python3-shapely python3-matplotlib gdal-hdf5 gdal-ecw gdal-mrsid gdal-oracle gdal-sosi python3-pygments qt5-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-pillow python3-pandas python3-geographiclib grass saga-ltr
+external-source: $P
+EOF
 
 	/bin/tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 \
 		osgeo4w/package.sh \
