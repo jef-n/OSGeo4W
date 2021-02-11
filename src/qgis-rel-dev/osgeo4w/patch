@@ -1,0 +1,78 @@
+diff --git a/cmake/PyQtMacros.cmake b/cmake/PyQtMacros.cmake
+index 774d04278..ece1b3e7f 100644
+--- a/cmake/PyQtMacros.cmake
++++ b/cmake/PyQtMacros.cmake
+@@ -9,15 +9,7 @@ SET(PYUIC_PROG_NAMES pyuic5)
+ SET(PYRCC_PROG_NAME pyrcc5)
+ 
+ IF(NOT PYUIC_PROGRAM)
+-  IF (MSVC)
+-    FIND_PROGRAM(PYUIC_PROGRAM
+-      NAMES ${PYUIC_PROG_NAME}.bat
+-      PATHS $ENV{LIB_DIR}/bin
+-    )
+-  ELSE(MSVC)
+-    FIND_PROGRAM(PYUIC_PROGRAM NAMES ${PYUIC_PROG_NAMES} PATHS $ENV{LIB_DIR}/bin)
+-  ENDIF (MSVC)
+-
++  FIND_PROGRAM(PYUIC_PROGRAM NAMES ${PYUIC_PROG_NAMES} PATHS $ENV{LIB_DIR}/bin)
+   IF (NOT PYUIC_PROGRAM)
+     MESSAGE(FATAL_ERROR "pyuic5 not found - aborting")
+   ENDIF (NOT PYUIC_PROGRAM)
+@@ -53,15 +45,7 @@ MACRO(PYQT_WRAP_UI outfiles )
+ ENDMACRO(PYQT_WRAP_UI)
+ 
+ IF(NOT PYRCC_PROGRAM)
+-  IF (MSVC)
+-    FIND_PROGRAM(PYRCC_PROGRAM
+-      NAMES ${PYRCC_PROG_NAME}.bat
+-      PATHS $ENV{LIB_DIR}/bin
+-    )
+-  ELSE(MSVC)
+-    FIND_PROGRAM(PYRCC_PROGRAM ${PYRCC_PROG_NAME} PATHS $ENV{LIB_DIR}/bin)
+-  ENDIF (MSVC)
+-
++  FIND_PROGRAM(PYRCC_PROGRAM NAMES ${PYRCC_PROG_NAME} PATHS $ENV{LIB_DIR}/bin)
+   IF (NOT PYRCC_PROGRAM)
+     MESSAGE(FATAL_ERROR "pyrcc5 not found - aborting")
+   ENDIF (NOT PYRCC_PROGRAM)
+diff --git a/python/core/auto_generated/auth/qgsauthmanager.sip.in b/python/core/auto_generated/auth/qgsauthmanager.sip.in
+index 16d2d73fc..264292b79 100644
+--- a/python/core/auto_generated/auth/qgsauthmanager.sip.in
++++ b/python/core/auto_generated/auth/qgsauthmanager.sip.in
+@@ -818,6 +818,7 @@ Clear an authentication config from its associated authentication method cache
+   protected:
+ 
+ 
++    explicit QgsAuthManager();
+ 
+ };
+ 
+diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
+index e0588340e..7b21bf7eb 100644
+--- a/src/core/CMakeLists.txt
++++ b/src/core/CMakeLists.txt
+@@ -1630,9 +1630,7 @@ endif()
+ protobuf_generate_cpp(VECTOR_TILE_PROTO_SRCS VECTOR_TILE_PROTO_HDRS vectortile/vector_tile.proto)
+ set(QGIS_CORE_SRCS ${QGIS_CORE_SRCS} ${VECTOR_TILE_PROTO_SRCS})
+ set(QGIS_CORE_HDRS ${QGIS_CORE_HDRS} ${VECTOR_TILE_PROTO_HDRS})
+-if (MSVC)
+-  set_source_files_properties(${VECTOR_TILE_PROTO_SRCS} vectortile/qgsvectortilemvtdecoder.cpp vectortile/qgsvectortilemvtencoder.cpp vectortile/qgsvectortilewriter.cpp PROPERTIES COMPILE_DEFINITIONS PROTOBUF_USE_DLLS)
+-else()
++if (NOT MSVC)
+   # automatically generated file produces warnings (unused-parameter, unused-variable, misleading-indentation)
+   set_source_files_properties(${VECTOR_TILE_PROTO_SRCS} PROPERTIES COMPILE_FLAGS -w)
+ endif()
+diff --git a/src/core/auth/qgsauthmanager.h b/src/core/auth/qgsauthmanager.h
+index 0d90ee3a4..bf59b37a1 100644
+--- a/src/core/auth/qgsauthmanager.h
++++ b/src/core/auth/qgsauthmanager.h
+@@ -752,7 +752,7 @@ class CORE_EXPORT QgsAuthManager : public QObject
+      */
+     static QgsAuthManager *instance() SIP_SKIP;
+ 
+-    explicit QgsAuthManager() SIP_SKIP;
++    explicit QgsAuthManager();
+ 
+   private:
+ 

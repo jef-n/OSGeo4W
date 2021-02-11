@@ -1,4 +1,4 @@
-export P=qgis-dev
+export P=qgis-rel-dev
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
@@ -18,14 +18,39 @@ source ../../../scripts/build-helpers
 
 startlog
 
-if cd ../qgis; then
-	git reset --hard
-	git pull
+# Get latest release branch
+RELBRANCH=$(git ls-remote --heads $REPO "refs/heads/release-*_*" | sed -e '/\^{}$/d' -ne 's#^.*refs/heads/release-#release-#p' | sort -V | tail -1)
+RELBRANCH=${RELBRANCH#*/}
+
+LTRTAG=$(git ls-remote --tags $REPO | sed -e '/\^{}$/d' -ne 's#^.*refs/tags/ltr-#ltr-#p' | sort -V | tail -1)
+LTRBRANCH=release-${LTRTAG#ltr-}
+
+if [ "$RELBRANCH" = "$LTRBRANCH" ]; then
+	LABEL="latest long term release"
 else
-	cd ..
-	git clone --depth 120 $REPO qgis
-	cd qgis
+	LABEL="latest release"
 fi
+
+cd ..
+
+if [ -d qgis ]; then
+	cd qgis
+
+	if [ $(git branch --show-current) != $RELBRANCH ]; then
+		cd ..
+		rm -rf qgis
+	else
+		git reset --hard
+		git pull
+		cd ..
+	fi
+fi
+
+if ! [ -d qgis ]; then
+	git clone $REPO --branch $RELBRANCH --single-branch --depth 1 qgis
+fi
+
+cd qgis
 
 patch -p1 --dry-run <../osgeo4w/patch
 patch -p1 <../osgeo4w/patch
@@ -242,8 +267,8 @@ nextbinary
 	rmdir $d
 
 	cat <<EOF >$R/setup.hint
-sdesc: "QGIS nightly build of the development branch"
-ldesc: "QGIS nightly build of the development branch"
+sdesc: "QGIS nightly build of the $LABEL branch"
+ldesc: "QGIS nightly build of the $LABEL branch"
 maintainer: $MAINTAINER
 category: Desktop
 requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl gdal libspatialite zlib libiconv fcgi libspatialindex oci qt5-libs qt5-qml qt5-tools qtwebkit-libs qca qwt-libs python3-sip python3-core python3-pyqt5 python3-psycopg2-binary python3-qscintilla python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-gdal python3-requests python3-plotly python3-pyproj python3-owslib qtkeychain-libs libzip opencl exiv2 hdf5 python3-gdal-dev pdal pdal-libs
@@ -252,8 +277,8 @@ EOF
 	appendversions $R/setup.hint
 
 	cat <<EOF >$R/$P-pdb/setup.hint
-sdesc: "Debugging symbols for QGIS nightly build of the development branch"
-ldesc: "Debugging symbols for QGIS nightly build of the development branch"
+sdesc: "Debugging symbols for QGIS nightly build of the $LABEL branch"
+ldesc: "Debugging symbols for QGIS nightly build of the $LABEL branch"
 maintainer: $MAINTAINER
 category: Desktop
 requires: $P
@@ -263,8 +288,8 @@ EOF
 	appendversions $R/$P-pdb/setup.hint
 
 	cat <<EOF >$R/$P-full/setup.hint
-sdesc: "QGIS nightly build of the development branch (metapackage with additional dependencies)"
-ldesc: "QGIS nightly build of the development branch (metapackage with additional dependencies)"
+sdesc: "QGIS nightly build of the $LABEL branch (metapackage with additional dependencies)"
+ldesc: "QGIS nightly build of the $LABEL branch (metapackage with additional dependencies)"
 maintainer: $MAINTAINER
 category: Desktop
 requires: $P python3-pyparsing python3-simplejson python3-shapely python3-matplotlib gdal-hdf5 gdal-ecw gdal-mrsid gdal-oracle gdal-sosi python3-pygments qt5-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-pillow python3-pandas python3-geographiclib grass saga-ltr
