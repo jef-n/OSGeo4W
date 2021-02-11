@@ -243,16 +243,17 @@ fetchdeps() {
 
 	local cmd="cygstart --action=runas"
 	cmd="$cmd $OSGEO4W_SCRIPTS/osgeo4w-setup.exe"
-	cmd="$cmd --root $(cygpath -aw $OSGEO4W_PWD/osgeo4w)"
+	cmd="$cmd --root $(cygpath -am $OSGEO4W_PWD/osgeo4w)"
 	cmd="$cmd --autoaccept"
 	cmd="$cmd --advanced"
 	cmd="$cmd --arch x86_64"
 	[ -n "$OSGEO4W_INTERACTIVE" ] || cmd="$cmd --quiet-mode"
 	cmd="$cmd --upgrade-also"
 	cmd="$cmd --only-site"
+	cmd="$cmd --safe"
 	cmd="$cmd -s $(cygpath -am $OSGEO4W_REP)"
 	# cmd="$cmd -s $MASTER_REPO"    # FIXME
-	cmd="$cmd -l $(cygpath -aw $OSGEO4W_REP/package-cache)"
+	cmd="$cmd -l $(cygpath -am $OSGEO4W_REP/package-cache)"
 
 	for p in "$@"; do
 		cmd="$cmd -P $p"
@@ -266,6 +267,7 @@ fetchdeps() {
 	done
 
 	log "osgeo4w-setup started [$pid]"
+	[ -n "$pid" ]
 
 	local cpid=
 	while cpid=$(setuppid) && (( pid == cpid )); do

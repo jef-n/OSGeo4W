@@ -8,10 +8,12 @@ use File::Temp;
 use File::Path qw/make_path remove_tree/;
 use Data::Dumper;
 
+die "OSGEO4W_REP not set" unless -d $ENV{'OSGEO4W_REP'};
+chdir $ENV{OSGEO4W_REP};
+
 die "MASTER_SCP not set" unless exists $ENV{"MASTER_SCP"};
 die "MASTER_REGEN_URI not set" unless exists $ENV{"MASTER_REGEN_URI"};
-die "OSGEO4W_REP not set" unless -d $ENV{'OSGEO4W_REP'};
-die "setup.ini not found" unless -f "$ENV{'OSGEO4W_REP'}/x86_64/setup.ini";
+die "setup.ini not found" unless -f "x86_64/setup.ini";
 
 sub parseini {
 	my $ini = shift;
@@ -122,13 +124,13 @@ sub compare_versions {
 	return @a ? 1 : @b ? -1 : 0;
 }
 
-system("rsync $ENV{'MASTER_SCP'}/x86_64/setup.ini /tmp/setup-master.ini") == 0 or die "Could not download setup.ini";
+system("/usr/bin/rsync $ENV{'MASTER_SCP'}/x86_64/setup.ini /tmp/setup-master.ini") == 0 or die "Could not download setup.ini";
 
 my %remote;
 parseini "/tmp/setup-master.ini", \%remote;
 
 my %local;
-parseini $ENV{'OSGEO4W_REP'} . "/x86_64/setup.ini", \%local;
+parseini "x86_64/setup.ini", \%local;
 
 my %packages;
 $packages{$_}=1 foreach keys %local;
@@ -151,7 +153,7 @@ print F Dumper(\%remote);
 close F;
 }
 
-open H, "find x86_64/release -name setup.hint |";
+open H, "/usr/bin/find x86_64/release -name setup.hint |";
 while(<H>) {
 	chomp;
 	my($dir, $p) = m#^(\S+)/(\S+)/setup.hint$#;
@@ -251,14 +253,14 @@ unless(keys %files) {
 
 my($host,$path) = $ENV{MASTER_SCP} =~ /^(.*):(.*)$/;
 
-open F, "| rsync --files-from=- '$ENV{OSGEO4W_REP}' '$ENV{MASTER_SCP}'";
+open F, "| /usr/bin/rsync --files-from=- '$ENV{OSGEO4W_REP}' '$ENV{MASTER_SCP}'";
 for my $file (sort keys %files) {
 	print F "$file\n";
 }
 close F or die "Update of files failed: $!";
 
-if( system("rsync -r '$tdir/' '$ENV{MASTER_SCP}/'") != 0 ) {
+if( system("/usr/bin/rsync -r '$tdir/' '$ENV{MASTER_SCP}/'") != 0 ) {
 	die "Update of hints failed: $!";
 }
 
-system "wget -v -O - '$ENV{MASTER_REGEN_URI}'";
+system "/usr/bin/wget -v -O - '$ENV{MASTER_REGEN_URI}'";
