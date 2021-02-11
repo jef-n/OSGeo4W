@@ -41,7 +41,7 @@ cat <<EOF >$R/setup.hint
 sdesc: "The Libgeotiff library, commandline tools and supporting tables (Runtime)"
 ldesc: "The Libgeotiff library, commandline tools and supporting tables (Runtime)"
 category: Libs Commandline_Utilities
-requires: msvcrt2019
+requires: msvcrt2019 $RUNTIMEDEPENDS libtiff
 maintainer: $MAINTAINER
 EOF
 
