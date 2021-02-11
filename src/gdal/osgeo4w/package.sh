@@ -183,7 +183,7 @@ sdesc: "The GDAL/OGR $V runtime library"
 ldesc: "The GDAL/OGR $V runtime library"
 maintainer: $MAINTAINER
 category: Libs Commandline_Utilities
-requires: msvcrt2019 libtiff libpng curl geos libmysql sqlite3 netcdf libpq expat xerces-c hdf4 ogdi libiconv openjpeg libspatialite freexl xz zstd poppler libgeotiff $RUNTIMEDEPENDS
+requires: msvcrt2019 libtiff libpng curl geos libmysql sqlite3 netcdf libpq expat xerces-c hdf4 ogdi libiconv openjpeg libspatialite freexl xz zstd poppler libgeotiff msodbcsql $RUNTIMEDEPENDS
 external-source: $P
 EOF
 
@@ -255,7 +255,7 @@ cat <<EOF >$R/$P-mss/setup.hint
 sdesc: "OGR plugin with SQL Native Client support for MSSQL Bulk Copy"
 ldesc: "OGR plugin with SQL Native Client support for MSSQL Bulk Copy"
 category: Libs
-requires: $P$abi-runtime msodbcsql
+requires: $P$abi-runtime
 maintainer: $MAINTAINER
 external-source: $P
 EOF
@@ -277,8 +277,8 @@ cp ../LICENSE.TXT $R/$P-mss/$P-mss-$V-$B.txt
 cp ../LICENSE.TXT $R/$P-sosi/$P-sosi-$V-$B.txt
 cp ../LICENSE.TXT $R/python3-$P/python3-$P-$V-$B.txt
 cp $FGDB_SDK/license/userestrictions.txt $R/$P-filegdb/$P-filegdb-$V-$B.txt
-cp $ECW_SDK/ERDAS_ECW_JPEG2000_SDK.pdf $R/$P-ecw/$P-ecw-$V-$B.rtf
-cp $MRSID_SDK/LICENSE.pdf $R/$P-mrsid/$P-mrsid-$V-$B.pdf
+pdftotext -layout -enc ASCII7 $ECW_SDK/ERDAS_ECW_JPEG2000_SDK.pdf - >$R/$P-ecw/$P-ecw-$V-$B.txt
+pdftotext -layout -enc ASCII7 $MRSID_SDK/LICENSE.pdf - >$R/$P-mrsid/$P-mrsid-$V-$B.txt
 
 cp $FGDB_SDK/bin64/FileGDBAPI.dll $DESTDIR/bin
 cp $ECW_SDK/bin/vc141/x64/NCSEcw.dll $DESTDIR/bin
