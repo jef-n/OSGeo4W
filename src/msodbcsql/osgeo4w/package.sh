@@ -42,15 +42,9 @@ external-source: $P
 maintainer: $MAINTAINER
 EOF
 
-cat <<EOF >postinstall.bat
-msiexec /i %OSGEO4W_ROOT%\\bin\\$P.msi /qn IACCEPTMSOLEDBSQLLICENSETERMS=YES
-EOF
-
 tar -cjf $R/$P-$V-$B.tar.bz2 \
-	--xform "s,postinstall.bat,etc/postinstall/$P.bat," \
-	--xform "s,$P.msi,bin/$P.msi," \
-	postinstall.bat \
-	$P.msi
+	--xform "s,extract/Windows/System32,bin," \
+	extract/Windows/System32
 
 tar -C "extract/Program Files/Microsoft SQL Server/Client SDK/ODBC/$v/SDK" -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	--xform "s,Lib/x64,lib," \
