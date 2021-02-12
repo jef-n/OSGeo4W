@@ -1,0 +1,45 @@
+#include "resource.h"
+#include "windows.h"
+#include "richedit.h"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Manifest
+//
+
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "setup.exe.manifest"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_OSGEO4W             ICON    DISCARDABLE     "osgeo.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// FILE
+//
+
+OSGEO4W.ICON            FILE    DISCARDABLE     "osgeo.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_SPIN                BITMAP  DISCARDABLE     "choose-spin.bmp"
+IDB_CHECK_YES           BITMAP  DISCARDABLE     "check-yes.bmp"
+IDB_CHECK_NO            BITMAP  DISCARDABLE     "check-no.bmp"
+IDB_CHECK_NA            BITMAP  DISCARDABLE     "check-na.bmp"
+IDB_TREE_PLUS           BITMAP  DISCARDABLE     "tree-plus.bmp"
+IDB_TREE_MINUS          BITMAP  DISCARDABLE     "tree-minus.bmp"
+
+#include "res_en.rc"
+#include "res_de.rc"
+#include "res_ru.rc"
+#include "res_ua.rc"
+#include "res_ja.rc"
+#include "res_es.rc"

@@ -1,0 +1,4 @@
+sdesc: "OSGeo4W Installer/Updater"
+ldesc: "OSGeo4W Installer/Updater"
+category: Commandline_Utilities
+requires: msvcrt2019 base

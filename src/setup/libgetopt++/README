@@ -1,0 +1,72 @@
+This is the README for libgetopt++. Libgetopt++ is a C++ library for command 
+line parsing. 
+
+It has/allows:
+
+1) Minimal footprint in main.cc, and no header or source changes outside the
+   user of an option when the option is altered/a new option added. 
+2) Multiple option sets can co-exist safely. The default option set is a 
+   singleton, but additional static sets can be created and used.
+3) Easy to use. Adding a new option is simply a case of adding a static 
+   variable (can be a class member for instance) for the option, in the scope
+   that the option needs to be visible - be that class scope or translation 
+   unit scope. 
+4) There are (will be when feature complete) multiple concrete Option classes
+   provided (currently BoolOption is the only one implemented).
+5) Extensible. Simply create a new subclass of Option to implement a new 
+   Option type, and use it in your program.
+
+Libgetopt++ is licenced under the GPL. 
+
+The primary mailing list for discussion of libgetopt++ is 
+cygwin-apps@cygwin.com (unless/until traffic on libgetopt++ becomes worthy
+of a dedicated list). Use this list for all bug reports, development discussion
+and help requests.
+
+Getting libgetopt++:
+Currently there are no user distributions that I know of. Libgetopt++ source is 
+available via anonymous cvs from
+:pserver:sources.redhat.com:/cvs/cygwin-apps/libgetopt++.
+
+Building libgetopt++:
+For libgetopt++ developers:
+You need autoconf 2.52 or better, automake 1.5 or better, and a recent libtool.
+Depending on your platform static and or shared libraries will be built by
+default. You will also need a C++ compiler, a linker and other such usual tools.
+
+Once you have the source, and the required tools, run ./bootstrap.sh in the
+top of the source tree. This should succeed - if it doesn't check you have all
+the tools available and working before seeking help from the mailing list.
+
+After successfully running the bootstrap.sh script, you can follow the user 
+building instructions below. As a developer you will likely want to build in
+a separate directory to the source code, and to add --enable-maintainer-mode
+and --enable-dependency-tracking to the configure line.
+
+For libgetopt++ users:
+You only need a C++ compiler toolchain. The user distributions include a
+pregenerated configure script.
+
+Once you have that, 
+  1) unpack the source somewhere. 
+  2) (optional) make a separate build directory - ie $(path to source)/build
+  3) cd to wherever you plan to build from - either a dedicated directory
+     or the top level source directory.
+  4) run $(path to source)/configure
+  5) run make.
+
+Installing libgetopt++:
+Run make install in the build tree. If you are using shared libraries you need
+to ensure that the library load path on your system includes the appropriate 
+location for the libraries. The default behaviour is to install the libraries 
+to /usr/local/lib (or for cygwin /usr/local/bin). If you are not sure whether 
+this has been done, check your system manual for more information.
+
+Using libgetopt++:
+
+To be written. Essentially include <GetOpt++/GetOption.h> in main.cc, and
+<GetOpt++/_foo_Option.h> where you need to declare a command line option.
+
+All options must be static variables or static members.
+
+

@@ -1,0 +1,27 @@
+#!/bin/bash
+set -e
+
+DIR=`dirname "$0"`
+
+# Autotool Bootstrap
+if [ ! -f "$DIR/configure" ]; then
+  echo -e "\033[32;1mRunning $DIR/bootstrap.sh\033[0m"
+  ( cd "$DIR" && ./bootstrap.sh )
+fi
+
+# Configure
+cmd="\"$DIR/configure\""
+cmd=$cmd' -C --disable-shared --enable-maintainer-mode'
+cmd=$cmd' --host=i686-pc-mingw32 --build=i686-pc-cygwin'
+cmd=$cmd' CC="gcc -mno-cygwin" CXX="g++ -mno-cygwin"'
+
+for i in "$@"; do
+  case $i in
+    maint) cmd=$cmd' CPPFLAGS=-DMAINTAINER_FEATURES' ;;
+    debug) cmd=$cmd' CFLAGS="-g -O0" CXXFLAGS="-g -O0"' ;;
+    *) echo "Unexpected argument: '$i'" >&2; exit 1 ;;
+  esac
+done
+
+echo -e "\033[32;1mRunning $DIR/configure\033[0m"
+eval "$cmd"

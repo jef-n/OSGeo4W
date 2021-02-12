@@ -1,0 +1,15 @@
+This directory contains libmd5-rfc-20020413
+Website: http://sourceforge.net/projects/libmd5-rfc
+
+The libmd5-rfc package consists of the three files:
+  - md5.c
+  - md5.h
+  - md5main.c
+
+This README is specific to Cygwin setup.
+
+The md5main.c file is not used, but is present so that this directory 
+corresponds exactly (with the exception of this README) to the upstream
+distribution tarball.
+
+There are no local modifications to this code.

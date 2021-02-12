@@ -1,0 +1,508 @@
+LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
+#pragma code_page(65001)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+// Throughout, we use the font "MS Shell Dlg". This seems to be necessary to
+// work around some not-fully-understood issues with PropertySheets. Hopefully,
+// using this font will cause things to 'just work'. Further information on
+// this topic is at:
+//   http://sources.redhat.com/ml/cygwin-apps/2003-05/msg00177.html
+
+IDD_SOURCE DIALOG DISCARDABLE  0, 0, 339, 179
+STYLE DS_MODALFRAME | DS_CENTER | WS_CHILD | WS_CAPTION | WS_SYSMENU
+CAPTION "OSGeo4Wセットアップ－インストールタイプの選択"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL         "インターネットからインストール(&I)\n（ダウンロードされたファイルは再利用のために保存されます）",
+                    IDC_SOURCE_NETINST, "Button",
+		    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP | BS_MULTILINE | BS_TOP, 71, 60, 200, 20
+
+    CONTROL         "インストールせずにダウンロード(&D)",
+                    IDC_SOURCE_DOWNLOAD, "Button", BS_AUTORADIOBUTTON | WS_TABSTOP, 71, 90, 200, 10
+
+    CONTROL         "ローカルディレクトリからインストール(&L)",
+		    IDC_SOURCE_CWD,"Button", BS_AUTORADIOBUTTON | WS_TABSTOP, 71,120,200,10
+
+    ICON            IDI_OSGEO4W, IDC_HEADICON, 312, 0, 21, 20
+    CONTROL         "", IDC_HEADSEPARATOR, "Static", SS_BLACKFRAME | SS_SUNKEN, 0, 28, 339, 1
+    LTEXT           "ダウンロードソースを選ぶ",
+		    IDC_STATIC_HEADER_TITLE, 7, 0, 258, 8, NOT WS_GROUP
+    LTEXT           "インターネットからインストール/ダウンロードする、あるいはローカルディレクトリからインストールするを選んでください。",
+                    IDC_STATIC, 21, 9, 239, 16, NOT WS_GROUP
+END
+
+IDD_VIRUS DIALOG DISCARDABLE  0, 0, 339, 179
+STYLE DS_MODALFRAME | DS_CENTER | WS_CHILD | WS_CAPTION | WS_SYSMENU
+CAPTION "OSGeo4Wセットアップ－ウイルススキャンを無効にする？"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL         "ウイルススキャンを無効にする(&D)",
+		    IDC_DISABLE_AV,"Button", BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,101,69,115,10
+    CONTROL         "ウイルススキャンのみを実行する(&L)",
+		    IDC_LEAVE_AV,"Button", BS_AUTORADIOBUTTON | WS_TABSTOP,101,84,115,10
+    ICON            IDI_OSGEO4W,IDC_HEADICON,312,0,21,20
+    CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,339,1
+    LTEXT           "インストール中ウイルススキャンを無効にするかを選択する",
+		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
+    LTEXT           "アンチウイルスプログラム（特にMcAfee）はOSGeo4Wのインストール中、Windows NT/ 2000/ XPにブルースクリーンを発生させる原因となります。",
+		    IDC_STATIC,21,9,239,16,NOT WS_GROUP
+    LTEXT	    "問題が検出されました。OSGeo4Wセットアップはインストール中これを無効にできます。インストールが完了したら有効になります。",
+                    IDC_STATIC,21,32,239,24,NOT WS_GROUP
+END
+
+IDD_LOCAL_DIR DIALOG DISCARDABLE  0, 0, 339, 179
+STYLE DS_MODALFRAME | DS_CENTER | WS_CHILD | WS_CAPTION | WS_SYSMENU
+CAPTION "OSGeo4Wセットアップ－ローカルパッケージディレクトリを選択"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "ローカルパッケージディレクトリを選ぶ",
+		    IDC_STATIC_HEADER_TITLE, 7,0,258,8,NOT WS_GROUP
+    LTEXT           "ダウンロードするインストールファイルを保存するディレクトリを選んでください。ディレクトリがない場合は作成されます。",
+		    IDC_STATIC,21,9,248,16,NOT WS_GROUP
+    ICON            IDI_OSGEO4W,IDC_HEADICON,312,0,21,20
+    CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,312,1
+    GROUPBOX        "ローカルパッケージディレクトリ",
+		    IDC_LOCALDIR_GRP,5,72,305,35
+    EDITTEXT        IDC_LOCAL_DIR,13,85,245,14,ES_AUTOHSCROLL | WS_GROUP
+    PUSHBUTTON      "ブラウズ...(&r)",
+		    IDC_LOCAL_DIR_BROWSE,260,85,44,14
+    GROUPBOX        "スタートメニューのフォルダ名",
+		    IDC_MENUNAME_GRP,5,112,305,35
+    EDITTEXT        IDC_MENUNAME_TEXT,13,125,235,14,ES_AUTOHSCROLL | WS_GROUP
+END
+
+IDD_ROOT DIALOG DISCARDABLE  0, 0, 339, 179
+STYLE DS_MODALFRAME | DS_CENTER | WS_CHILD | WS_CAPTION | WS_SYSMENU
+CAPTION "OSGeo4Wセットアップ－インストールディレクトリの選択"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "ルートインストールディレクトリを選ぶ",
+		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
+    LTEXT           "OSGeo4Wをインストールするディレクトリを選んでください。インストールパラメータも選んでください。",
+                    IDC_STATIC,21,9,239,16,NOT WS_GROUP
+    ICON            IDI_OSGEO4W,IDC_HEADICON,312,0,21,20
+    CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,339,1
+
+    GROUPBOX        "ルートディレクトリ",
+		    IDC_ROOTDIR_GRP,5,35,305,35
+    EDITTEXT        IDC_ROOT_DIR,13,47,245,14,ES_AUTOHSCROLL | WS_TABSTOP
+    PUSHBUTTON      "ブラウズ...(&r)",
+		    IDC_ROOT_BROWSE,260,47,44,14,WS_TABSTOP
+
+    GROUPBOX        "インストール",
+		    IDC_INSTALLFOR_GRP,5,76,150,101
+    CONTROL         "すべてのユーザー（推奨）(&A)",
+		    IDC_ROOT_SYSTEM,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP | WS_GROUP,13,89,130,8
+    CONTROL         "このユーザーのみ(&M)",
+		    IDC_ROOT_USER,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,13,130,130,8
+    LTEXT           "OSGeo4Wはシステムのすべてのユーザーが利用できます。",
+                    IDC_ALLUSERS_TEXT,25,101,125,28
+    LTEXT           "OSGeo4Wはこのユーザーしか利用できません。管理者の権限がない、あるいは特定のニーズがあるときのみ選択できます。",
+		    IDC_JUSTME_TEXT,25,140,125,32
+    CONTROL         "デスクトップにアイコンを作成する(&D)",
+		    IDC_ROOT_DESKTOP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,170,110,150,8
+    CONTROL         "スタートメニューに追加(&S)",
+		    IDC_ROOT_MENU,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,170,130,150,8
+END
+
+IDD_SITE DIALOG DISCARDABLE  0, 0, 339, 179
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE |
+    WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_CONTROLPARENT
+CAPTION "OSGeo4Wセットアップ－ダウンロードサイトを選ぶ"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    ICON            IDI_OSGEO4W,IDC_HEADICON,312,0,21,20
+    LISTBOX         IDC_URL_LIST,66,45,185,110,LBS_NOINTEGRALHEIGHT |
+                    LBS_EXTENDEDSEL | WS_VSCROLL | WS_HSCROLL | WS_GROUP | WS_TABSTOP
+    LTEXT           "利用できるダウンロードサイト：",
+		    IDC_STATIC,66,34,183,8,NOT WS_GROUP
+    CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,339,1
+    LTEXT           "このリストからサイトを選ぶ、あるいは独自のサイトをリストに加えてください。",
+                    IDC_STATIC,21,9,239,16,NOT WS_GROUP
+    LTEXT           "ダウンロードサイトを選ぶ",
+		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
+    EDITTEXT        IDC_EDIT_USER_URL,65,160,185,14,ES_AUTOHSCROLL | WS_GROUP
+    LTEXT           "ユーザーURL：",
+		    IDC_SITE_USERURL,15,162,45,8,NOT WS_GROUP
+    PUSHBUTTON      "追加",
+		    IDC_BUTTON_ADD_URL,255,160,50,14
+END
+
+IDD_NET DIALOG DISCARDABLE  0, 0, 339, 179
+STYLE DS_MODALFRAME | DS_CENTER | WS_CHILD | WS_CAPTION | WS_SYSMENU
+CAPTION "OSGeo4Wセットアップ－接続タイプの選択"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL         "直接接続する(&D)",
+		    IDC_NET_DIRECT,"Button", BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,60,55,173,10
+    CONTROL         "IE設定を利用する(&I)",
+		    IDC_NET_IE5,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,60,70,169,10
+    CONTROL         "HTTP/FTPプロキシを利用する(&P):",
+		    IDC_NET_PROXY,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,60,85,188,10
+    EDITTEXT        IDC_PROXY_HOST,120,105,120,12,ES_AUTOHSCROLL | WS_DISABLED | WS_GROUP
+    EDITTEXT        IDC_PROXY_PORT,120,125,30,12,ES_AUTOHSCROLL | WS_DISABLED
+    GROUPBOX        "",IDC_STATIC,60,95,185,50
+    RTEXT           "プロキシホスト(&H)",
+		    IDC_STATIC,65,105,50,12,SS_CENTERIMAGE | NOT WS_GROUP
+    RTEXT           "ポート(&t)",
+		    IDC_STATIC,85,125,30,12,SS_CENTERIMAGE | NOT WS_GROUP
+    ICON            IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
+    CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,339,1
+    LTEXT           "インターネットに接続する方法を指定します。下記から適当な設定を選んでください。",
+                    IDC_STATIC,21,9,239,16,NOT WS_GROUP
+    LTEXT           "インターネット接続を選んでください",
+                    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
+END
+
+IDD_INSTATUS DIALOG DISCARDABLE  0, 0, 339, 179
+STYLE DS_MODALFRAME | DS_CENTER | WS_CHILD | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "OSGeo4Wセットアップ"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "インストール...",
+		    IDC_INS_ACTION,45,55,205,8,SS_ENDELLIPSIS
+    LTEXT           "（パッケージ）",
+		    IDC_INS_PKG,45,70,205,8,SS_ENDELLIPSIS
+    LTEXT           "（ファイル）",
+		    IDC_INS_FILE,45,85,205,8,SS_ENDELLIPSIS
+    CONTROL         "Progress1",IDC_INS_DISKFULL,"msctls_progress32",
+                    PBS_SMOOTH | WS_BORDER,95,130,155,10
+    CONTROL         "Progress1",IDC_INS_IPROGRESS,"msctls_progress32",
+                    PBS_SMOOTH | WS_BORDER,95,115,155,10
+    CONTROL         "Progress1",IDC_INS_PPROGRESS,"msctls_progress32",
+                    PBS_SMOOTH | WS_BORDER,95,100,155,10
+    LTEXT           "パッケージ:",
+		    IDC_INS_BL_PACKAGE,45,100,47,8,NOT WS_GROUP
+    LTEXT           "全体:",
+		    IDC_INS_BL_TOTAL,45,115,48,8,NOT WS_GROUP
+    LTEXT           "ディスク:",
+		    IDC_INS_BL_DISK,45,130,47,8,NOT WS_GROUP
+    ICON            IDI_OSGEO4W,IDC_HEADICON,312,0,21,20
+    CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,339,1
+    LTEXT           "このページはダウンロード、あるいはインストールの進行状況を表示しています。",
+                    IDC_STATIC,21,9,239,16,NOT WS_GROUP
+    LTEXT           "進行状況",
+		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
+END
+
+IDD_PROXY_AUTH DIALOG DISCARDABLE  0, 0, 215, 95
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "要求されたプロキシの認証"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    ICON            IDI_OSGEO4W,IDC_HEADICON,5,5,21,20
+    LTEXT           "プロキシユーザーID(&U)",
+		    IDC_STATIC,5,28,55,15,SS_CENTERIMAGE, WS_EX_RIGHT
+    EDITTEXT        IDC_NET_USER,65,28,145,12,ES_AUTOHSCROLL
+    LTEXT           "パスワード(&P)",
+		    IDC_STATIC,10,43,50,15,SS_CENTERIMAGE, WS_EX_RIGHT
+    EDITTEXT        IDC_NET_PASSWD,65,43,145,12,ES_PASSWORD | ES_AUTOHSCROLL
+    LTEXT           "要求されたプロキシの認証",
+		    IDC_STATIC,65,10,145,10
+    DEFPUSHBUTTON   "&OK",
+		    IDOK,100,75,45,15,WS_DISABLED
+    PUSHBUTTON      "キャンセル",
+		    IDCANCEL,165,75,45,15
+END
+
+IDD_NET_AUTH DIALOG DISCARDABLE  0, 0, 215, 95
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "要求されたサーバーの認証"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    ICON            IDI_OSGEO4W,IDC_HEADICON,5,5,21,20
+    LTEXT           "プロキシユーザーID(&U)",
+		    IDC_STATIC,5,28,55,15,SS_CENTERIMAGE, WS_EX_RIGHT
+    EDITTEXT        IDC_NET_USER,65,28,145,12,ES_AUTOHSCROLL
+    LTEXT           "パスワード(&P)",
+		    IDC_STATIC,10,43,50,15,SS_CENTERIMAGE, WS_EX_RIGHT
+    EDITTEXT        IDC_NET_PASSWD,65,43,145,12,ES_PASSWORD | ES_AUTOHSCROLL
+    LTEXT           "要求されたサーバーの認証",
+		    IDC_STATIC,65,10,145,10
+    DEFPUSHBUTTON   "&OK",
+		    IDOK,100,75,45,15,WS_DISABLED
+    PUSHBUTTON      "キャンセル",
+		    IDCANCEL,165,75,45,15
+END
+
+IDD_SPLASH DIALOG DISCARDABLE  0, 0, 339, 179
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE |
+    WS_CAPTION | WS_SYSMENU
+CAPTION "OSGeo4Wセットアップ"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "OSGeo4Wのネットリリースされているセットアップ\r\nプログラム",
+                    IDC_STATIC_WELCOME_TITLE,35,1,225,34
+    LTEXT           "このセットアッププログラムは後に続くアップデートと同じように、OSGeo4W環境の初期のインストールに使用されます。保存場所を忘れないようにしてください。\r\n\r\nこのページ以降は、インストールのガイドをします。OSGeo4Wは多目的のパッケージから構成されています。初期設定では、パッケージの基本設定のみインストールできます。必要に応じて、追加、削除、パッケージのアップグレードのため、いつでもこのプログラムを実行することができます。",
+                    IDC_SPLASH_TEXT,35,35,265,90
+    CONTROL         "エクスプレス デスクトップインストール",
+		    IDC_EXPRESS_D,"Button", BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,60,104,100,10
+    CONTROL         "エクスプレス Web-GISインストール",
+		    IDC_EXPRESS_I,"Button", BS_AUTORADIOBUTTON | WS_TABSTOP,60,124,100,10
+    CONTROL         "アドバンスインストール",
+		    IDC_ADVANCED,"Button", BS_AUTORADIOBUTTON | WS_TABSTOP,60,144,100,10
+    ICON         IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
+END
+
+IDD_DESKTOP DIALOG DISCARDABLE  0, 0, 339, 179
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "OSGeo4Wセットアップ－インストールステータスとアイコンの作成"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    ICON            IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
+    CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,339,1
+    LTEXT           "OSGeo4Wのインストールは正常に完了しました。",
+                    IDC_STATIC_HEADER,21,9,239,16,NOT WS_GROUP
+    LTEXT           "インストールステータス",
+		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
+    CONTROL         "",IDC_DESKTOP_SEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,155,339,1
+    LTEXT           "",IDC_STATUS_HEADER,7,160,258,8,NOT WS_GROUP
+    LTEXT           "OSGeo4Wのインストールは正常に完了しました。",IDC_STATUS,
+                    21,169,239,16,NOT WS_GROUP
+END
+
+IDD_FTP_AUTH DIALOG DISCARDABLE  0, 0, 215, 95
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "要求されたFTPの認証"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    ICON            IDI_OSGEO4W,IDC_HEADICON,5,5,21,20
+    LTEXT           "ユーザーID(&U)",
+		    IDC_STATIC,5,28,55,15,SS_CENTERIMAGE, WS_EX_RIGHT
+    EDITTEXT        IDC_NET_USER,65,28,145,12,ES_AUTOHSCROLL
+    LTEXT           "パスワード(&P)",
+		    IDC_STATIC,10,43,50,15,SS_CENTERIMAGE, WS_EX_RIGHT
+    EDITTEXT        IDC_NET_PASSWD,65,43,145,12,ES_PASSWORD | ES_AUTOHSCROLL
+    LTEXT           "要求されたFTPの認証",
+		    IDC_STATIC,65,10,145,10
+    DEFPUSHBUTTON   "&OK",
+		    IDOK,100,75,45,15,WS_DISABLED
+    PUSHBUTTON      "キャンセル",
+		    IDCANCEL,165,75,45,15
+END
+
+IDD_CHOOSE DIALOG DISCARDABLE  0, 0, 339, 179
+STYLE DS_MODALFRAME | DS_3DLOOK | WS_CHILD | WS_VISIBLE | WS_CAPTION |
+    WS_SYSMENU
+CAPTION "OSGeo4Wセットアップ－パッケージの選択"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    RTEXT           "&Search",
+		    IDC_STATIC, 0, 30, 32, 12, SS_CENTERIMAGE, WS_EX_RIGHT
+    EDITTEXT        IDC_CHOOSE_SEARCH_EDIT, 34, 30, 60, 12
+    PUSHBUTTON      "&Clear",
+		    IDC_CHOOSE_CLEAR_SEARCH, 96, 30, 22, 12
+    CONTROL         "変更なし(&K)",
+		    IDC_CHOOSE_KEEP,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,40,30,45,14
+    CONTROL         "前回(&P)",
+		    IDC_CHOOSE_PREV,"Button",BS_AUTORADIOBUTTON , 90,30,37,14
+    CONTROL         "現在(&C)",
+		    IDC_CHOOSE_CURR,"Button",BS_AUTORADIOBUTTON , 130,30,35,14
+    CONTROL         "開発版(&x)",
+		    IDC_CHOOSE_EXP,"Button",BS_AUTORADIOBUTTON , 174,30,40,14
+    PUSHBUTTON      "表示(&V)",
+		    IDC_CHOOSE_VIEW,219,30,36,14,WS_GROUP
+    CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,339,1
+    CONTROL         "",IDC_LISTVIEW_POS,"Static",SS_BLACKFRAME | NOT WS_VISIBLE,7,45,303,122
+    CONTROL         "廃止されたパッケージを隠す(&H)",
+		    IDC_CHOOSE_HIDE, "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,167,160,14
+    ICON            IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
+    LTEXT           "インストールするパッケージを選んでください。",
+                    IDC_CHOOSE_INST_TEXT,21,9,239,16,NOT WS_GROUP
+    LTEXT           "パッケージの選択",
+		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
+    LTEXT           "",IDC_CHOOSE_VIEWCAPTION,270,33,50,10
+END
+
+IDD_PREREQ DIALOG DISCARDABLE  0, 0, 339, 179
+STYLE DS_MODALFRAME | DS_3DLOOK | WS_CHILD | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "OSGeo4Wセットアップ－依存関係の解決"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,339,1
+    ICON            IDI_OSGEO4W,IDC_HEADICON,312,0,21,20
+    LTEXT           "警告！依存関係の不整合",
+		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
+    LTEXT           "下記のパッケージを要求していますが、選択されていません",
+		    IDC_STATIC,21,9,239,16,NOT WS_GROUP
+    CONTROL         "依存関係に対応するパッケージをインストール（推奨）(&I)" ,
+		    IDC_PREREQ_CHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,167,225,14
+    EDITTEXT        IDC_PREREQ_EDIT,7,41,303,124,WS_VSCROLL | WS_HSCROLL |
+                    ES_LEFT | ES_MULTILINE | ES_READONLY | ES_AUTOHSCROLL |
+                    ES_AUTOVSCROLL
+END
+
+IDD_DROPPED DIALOG DISCARDABLE  0, 0, 339, 142
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "OSGeo4Wセットアップ－隠しミラーサイトを使用する？"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "警告:",
+		    IDC_STATIC,7,8,40,8
+    LTEXT           "選択したミラーサイトは公式のOSGeo4Wミラーサイトのリストにありません。有効期限が切れているか、紛失しています。\nこれは次のミラーサイトに影響を及ぼします:",
+                    IDC_STATIC,47,8,263,32
+    EDITTEXT        IDC_DROP_MIRRORS,7,40,303,40,WS_VSCROLL | WS_HSCROLL |
+                    ES_LEFT | ES_MULTILINE | ES_READONLY | ES_AUTOHSCROLL |
+                    ES_AUTOVSCROLL
+    LTEXT           "インストールに問題があると思われたら、公式のミラーサイトのみを使用してみてください。\n\nこのミラーサイトの使用を続けますか？",
+                    IDC_STATIC,7,88,303,24
+    CONTROL         "このミラーサイトの警告を表示しない(&D)",
+                    IDC_DROP_NOWARN,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,120,213,15
+    PUSHBUTTON      "はい(&Y)",
+		    IDYES,220,120,45,15
+    DEFPUSHBUTTON   "いいえ(&N)",
+		    IDNO,265,120,45,15
+END
+
+IDD_POSTINSTALL DIALOG DISCARDABLE  0, 0, 339, 142
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE |
+    WS_CAPTION | WS_SYSMENU
+CAPTION "OSGeo4Wセットアップ－インストール後のスクリプトの実行"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL         "",
+		    IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,339,1
+    ICON            IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
+    LTEXT           "インストール後のスクリプトのエラー",
+		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
+    LTEXT           "これらは必ずしも影響を受けたパッケージが正しく機能しないという意味ではありません。/var/log/setup.log.fullを調べて問題を報告してください。",
+                    IDC_POSTINSTALL_HEADER,21,9,250,16,NOT WS_GROUP
+    EDITTEXT        IDC_POSTINSTALL_EDIT,7,41,303,92,WS_VSCROLL | WS_HSCROLL |
+                    ES_LEFT | ES_MULTILINE | ES_READONLY | ES_AUTOHSCROLL |
+                    ES_AUTOVSCROLL
+
+END
+
+IDD_EXP_PACKAGES DIALOG DISCARDABLE  0, 0, 339, 179
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE |
+    WS_CAPTION | WS_SYSMENU
+CAPTION "OSGeo4Wセットアップ－エクスプレスパッケージの選択"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL         "MapServer",IDC_PKG_MAPSERVER,"Button",
+                    BS_AUTOCHECKBOX,108,48,100,8
+    CONTROL         "QGIS",IDC_PKG_QGIS,"Button",
+                    BS_AUTOCHECKBOX,108,63,100,8
+    CONTROL         "GDAL",IDC_PKG_GDAL,"Button",
+                    BS_AUTOCHECKBOX,108,78,100,8
+    CONTROL         "Apache",IDC_PKG_APACHE,"Button",
+                    BS_AUTOCHECKBOX,108,93,45,8
+    CONTROL         "uDig",IDC_PKG_UDIG,"Button",
+                    BS_AUTOCHECKBOX,108,108,100,8
+    CONTROL         "OpenEV",IDC_PKG_OPENEV,"Button",
+                    BS_AUTOCHECKBOX,108,123,100,8
+    CONTROL         "GRASS GIS",IDC_PKG_GRASS,"Button",
+                    BS_AUTOCHECKBOX,108,138,100,8
+    ICON            IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
+    LTEXT           "ポート番号:",
+		    IDC_APACHE_PORT_LABEL,154,90,40,15,SS_CENTERIMAGE, WS_EX_RIGHT
+    EDITTEXT        IDC_APACHE_PORT,210,90,25,12,ES_AUTOHSCROLL
+    LTEXT           "パッケージを選択してください",
+		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
+END
+
+IDD_LICENSE DIALOG DISCARDABLE  0, 0, 339, 179
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE |
+    WS_CAPTION | WS_SYSMENU
+CAPTION "OSGeo4Wセットアップ－制限のあるパッケージの契約"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "非オープンソースライセンス契約",
+                    IDC_STATIC_LICENSE_TITLE,35,1,195,24
+    LTEXT           "OSGeo4Wをインストールする前にパッケージのライセンス条項をよく読んでください",
+                    IDC_STATIC_LICENSE_TEXT,35,25,265,40
+    CONTROL         "ライセンス", IDC_LICENSE_FILE, RICHEDIT_CLASS, ES_MULTILINE | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | WS_HSCROLL | WS_VSCROLL | ES_LEFT | ES_READONLY,
+		    35,80,260,75
+    CONTROL         "上記のライセンス条項に同意しました",IDC_CHK_AGREED,"Button",
+                    BS_AUTOCHECKBOX,35,160,200,12
+    PUSHBUTTON      "印刷", IDC_PRINT_BUTTON,261,161,35,14
+    ICON            IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
+END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE
+BEGIN
+    IDS_ROOT_SLASH          "警告：あなたのハードドライブのルートをOSGeo4Wのルートとして使用しないことをおすすめします。続行しますか？"
+    IDS_ROOT_SPACE          "ディレクトリ名にスペース含んだルートパスを選択するべきではありません。続行しますか？"
+    IDS_ERR_OPEN_WRITE      "書き込み用の %s が開けません。: %s"
+    IDS_SETUPINI_MISSING    "%s を取得できません。 <%s> から"
+    IDS_OLD_SETUPINI        "このsetup.iniは前にインストールしたOSGeo4Wより古いバージョンです。続行しますか？"
+    IDS_NOTHING_INSTALLED   "インストールされるのに何も必要ありません。"
+    IDS_INSTALL_COMPLETE    "インストール完了"
+    IDS_REBOOT_REQUIRED     "使用中のファイルは置き換えられています。新しいバージョンを有効にするには今すぐに再起動する必要があります。再起動するまでOSGeo4Wは正しく機能しないかもしれません。"
+    IDS_ERR_OPEN_READ       "読み取り用の %s が開けません。: %s"
+    IDS_ROOT_ABSOLUTE       "このインストールディレクトリはC:\\OSGeo4Wのように、ドライブ名とスラッシュからなる完全なものでなくてはなりません。"
+    IDS_DOWNLOAD_COMPLETE   "ダウンロード完了"
+    IDS_NOLOGFILE           "書き込み用のログファイル %s が開けません。"
+    IDS_UNINSTALL_COMPLETE  "アンインストール完了"
+    IDS_WININET             "Internet Explorer 5 DLLsが見つかりません、あるいはロードできません。"
+    IDS_ERR_CHDIR           "ディレクトリを %s に変更できません。 : %s [%.8x]"
+    IDS_OLD_SETUP_VERSION   "このセットアップはバージョン %sですが、setup.iniはバージョン %sを要求しています。\n最新の機能やバグの修正を得るためにアップグレードすることをお勧めします。"
+    IDS_DOWNLOAD_INCOMPLETE "ダウンロードに失敗しました。再試行しますか？"
+    IDS_INSTALL_ERROR	    "インストールエラー (%s)、他のパッケージで続行しますか？"
+    IDS_INSTALL_INCOMPLETE  "インストールに失敗しました。詳細は %s を見てください。"
+    IDS_CORRUPT_PACKAGE     "パッケージファイル %s は破損したローカルコピーです。削除してリトライしてください。"
+    IDS_SKIP_PACKAGE	    "%s\nこのパッケージをスキップしますか？"
+    IDS_WINDOW_INIT_BADMSG  "重大なエラー：ウィンドウ初期化時に次の予想外のメッセージ ％u を受け取りました。"
+    IDS_UNCAUGHT_EXCEPTION  "重大なエラー：捕捉されなかった例外\nスレッド： %s\nタイプ： %s\nメッセージ： %s"
+    IDS_UNCAUGHT_EXCEPTION_WITH_ERRNO  "重大なエラー：捕捉されなかった例外\nスレッド： %s\nタイプ： %s\nメッセージ： %s\nアプリケーションエラー番号： %d"
+    IDS_TRUSTKEEP_TOOLTIP   "全てのパッケージを現在インストールされているバージョンに設定します。 これはどのパッケージにも変更を行わないようセットアップに指示しているのと同じです。"
+
+    IDS_TRUSTPREV_TOOLTIP   "現在の安定しているバージョン以前に安定しているとされていたバージョンを意味する '以前の' と記されているバージョンを選択してください。."
+
+
+    IDS_TRUSTCURR_TOOLTIP   "現在最も安定しているとされるバージョンを選択してください。（推奨）"
+
+    IDS_TRUSTEXP_TOOLTIP    "バージョンが維持者によって開発版または試用版とされている場合であっても最新のバージョンを選択してください。"
+
+    IDS_VIEWBUTTON_TOOLTIP  "パッケージビューをサイクルします。これは以下のチューザーにおいて表示されるパッケージを決定します。\r\n\r\nカテゴリー：パッケージカテゴリーによって分類します。'＋'　をクリックして拡張してください。\r\n\r\n全て：　全てのパッケージを表示します。\r\n\r\n一部：　インストール、削除、またはアップグレードされるパッケージのみ表示します。\r\nこれは“次へ”をクリックしたときにセットアップが行う全ての変更を示します。\r\n\r\n最新版：　既に設定するバージョンであるため操作を必要としないインストールされているパッケージを表示します。\r\n\r\nインストールされていない：　現在インストールされておらずインストールに選択されていないパッケージを表示します。"
+
+    IDS_HIDEOBS_TOOLTIP     " 選択されると、セットアップは '_' で始まる名前のカテゴリーにあるパッケージに隠れます。通常このようなパッケージは削除もしくは名前が変更されたパッケージであり、または自動的に処理されたインフラストラクチャーパッケージの空のプレースホルダです。"
+
+
+    IDS_SEARCH_TOOLTIP		"この文字列でパッケージ名を検索する。"
+    IDS_LOCAL_DIR_DOWNLOAD	"ダウンロードするインストールファイルを保存するディレクトリを選んでください。ディレクトリがない場合は作成されます。"
+    IDS_LOCAL_DIR_INSTALL	"セットアップがダウンロードされたインストールファイルを検索するディレクトリを選んでください。"
+    IDS_MAYBE_MKDIR		"ディレクトリ %s は存在しません。作成しますか?"
+    IDS_CANT_MKDIR		"ディレクトリ %s を作成できませんでした。(ドライブがいっぱいになっているか読み取り専用です)"
+    IDS_NO_CWD			"ローカルパッケージディレクトリ %s が見つかりません。\nインストールされたパッケージを削除するためにsetup-%s.exeを使うことができますがインストールすることはできません。\n\nそれでよい場合はOKを、別のディレクトリを選択する場合はCancelを押してください。"
+    IDS_SELPKG_DOWNLOAD		"ダウンロードするパッケージを選択してください。 "
+    IDS_SELPKG_INSTALL		"インストールするパッケージを選択してください。"
+    IDS_UNINSTALL		"Uninstall"
+    IDS_SKIP			"Skip"
+    IDS_REINSTALL		"Reinstall"
+    IDS_RETRIEVE		"Retrieve"
+    IDS_SOURCE			"Source"
+    IDS_KEEP			"Keep"
+    IDS_SEL_DOWNLOAD_DIR	"ダウンロードディレクトリを選択してください"
+    IDS_SEL_LOCAL_DIR		"ローカルディレクトリを選択してください"
+    IDS_UNKNOWN_ERR		"原因不明のエラー"
+    IDS_LIST_CURRENT		"最新"
+    IDS_LIST_NEW		"新規"
+    IDS_LIST_BIN		"実行形式?"
+    IDS_LIST_SRC		"ソース?"
+    IDS_LIST_CATEGORIES		"カテゴリ"
+    IDS_LIST_CATEGORY		"カテゴリ"
+    IDS_LIST_SIZE		"サイズ"
+    IDS_LIST_PACKAGE		"パッケージ"
+    IDS_CAPTION_FULL		"全て"
+    IDS_CAPTION_PENDING		"一部"
+    IDS_CAPTION_UPTODATE	"アップデート"
+    IDS_CAPTION_NOTINSTALLED	"未インストール"
+    IDS_CAPTION_CATEGORY	"カテゴリ"
+    IDS_CAPTION_LIC_PACKAGE	"以下のパッケージのライセンス条項を確認し、その条項の承諾を示してください:\r\n%s"
+    IDS_LICENSE_MISSING		"ライセンスファイル %s を<%s>から取得できません"
+    IDS_LICENSE_NOLOAD		"インストーラは %s のライセンスファイルを読み込むことができませんでした。それがディスク上にダウンロードされたことを確認してください"
+    IDS_LICENSE_EMPTYPATH	"ライセンスファイル %s がサーバにありません"
+    IDS_NOTHING_TO_INSTALL_OR_UPGRADE "インストール/アップグレードするものはありません"
+    IDS_NOTHING_TO_DOWNLOAD	"ダウンロードするものはありません"
+END

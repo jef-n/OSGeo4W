@@ -1,0 +1,173 @@
+Note: For easier maintenance try to keep items in reverse chronological
+      order of when they were committed.  -- briand
+
+Version HEAD
+
+ - Alert user when encountering a .tar file of unsupported format rather than
+   silently failing to extract.  Also be more accepting of non-GNU tar formats,
+   such as those created by libtar/cmake.
+
+ - If running on 9x/ME versions of Windows, look for setup_legacy.ini/.bz2
+   instead of setup.ini/.bz2, in support for future dropping of non-NT support
+   and forking of the distro.
+
+Version 2.573.2.2
+
+ - Fix crash when trying to MD5 a non-existant package file that failed to
+   download.
+
+Version 2.573.2.1
+
+ - Don't append a trailing slash to local package directory location if it
+   already has one, or it ends in a backslash.
+
+ - Be more robust in falling back to setup.ini if setup.bz2 doesn't exist
+   or appears to be corrupt.
+
+ - Fix crashes and improve specificity of error messages when encountering
+   an .ini file parse error.  Make progress meter active during parsing of a
+   bz2-compressed .ini file.
+
+ - At the last install step, inform the user of success/failure at the bottom
+   of the main panel instead of with an annoying message box popup.
+
+ - Fix bug that caused a wrong version of a source package to be selected
+   in some cases due to erroniously comparing versions as text instead of
+   numerically.
+
+ - Gracefully handle the case where two packages contain a postinstall script
+   of the same name.
+
+ - Allow interactively retrying to replace open files.
+
+ - Create Cygwin.bat with upper-case C to make filename TAB completion of
+   /cygdrive more convenient.
+
+ - Fix unreadable chooser page due to bad background colour problem.
+
+ - Make categories named with an initial "." default to expanded display.
+
+ - Fix a class of crashes due to poor string handling.  Remove use of custom
+   String class in favor of std::string.
+
+ - Update DNS names to preferred forms: cygwin.com and sources.redhat.com.
+
+ - Handle dropped mirrors elegantly.
+
+ - Fix incorrect logging of postinstall script success/failure.
+
+ - Provide indication of site that a file is being downloaded from.
+
+ - Fix command line options to override cached selections.
+
+ - Sort the mirrors list by logical structure of DNS names.
+
+ - Do not attempt to reopen a missing package database on initial install.
+
+ - Cache mirror list and use local copy if server unavailable.
+
+ - Slightly improve logged error messages.
+
+ - Run postinstall scripts in dependency order.
+
+ - Fix problem of FTP connections timing out and not being retried.
+
+ - Change checkbox label to "Hide obsolete packages" and add tooltip that
+   explains in more detail what it does.
+
+ - Set tooltip timeout delay to 30 seconds.
+
+ - Fix problem of text and icons using white background instead of user's
+   selected color.
+
+Version 2.510.2.2
+
+ - Recompile with gcc 3.3.3 as workaround until the STL crashes are
+   investigated.
+
+Version 2.510.2.1
+
+ - Retrieve exit status of preremove/postinstall scripts.  Log abnormal exits.
+
+ - Use /bin/bash rather than /bin/sh when running preremove/postinstall scripts
+   to facilitate upgrading /bin/sh.
+
+ - Remove support for undocumented and dangerous postremove scripts.
+
+ - Add new "Size" column to package chooser.
+
+ - Perform explicit dependency checking when the user finishes with the
+   package selection step, and if any missing dependencies are found prompt
+   to resolve the conflicts.
+
+ - Checkbox option to hide packages in category ZZZRemovedPackages or any
+   category that begins with '_'.  (Note: ZZZRemovedPackages has now been
+   renamed to _obsolete on the mirrors.)  Packages in these categories are
+   either empty placeholder packages that have been renamed/removed, or are
+   infrastructure packages like 'update-info-dir' and are not generally useful
+   to the end user.
+
+ - Support mouse wheel scrolling in the package chooser.
+
+ - Use graphical "+" and "-" symbols in category mode of the package chooser.
+
+ - Improve painting method for the package chooser to improve redraw speed and
+   prevent sluggish scrolling.
+
+ - Fix unpacking of hardlinks in source packages.
+
+ - Change ordering of uninstall actions so that all preremove scripts are
+   executed prior to deleting files.  Fixes problem with "cannot find DLL"
+   popup error messages during preremove scripts when lots of packages are
+   upgraded at once.
+
+ - Remove the --no-md5 (-5) command line option - the cache is now never
+   fully MD5-ed, as to do so takes far too long, and packages will be checked
+   before installation anyway.
+
+ - Make the MD5 checks immediately prior to installing packages actually
+   display notification in the GUI.
+
+ - Add support for tooltips that appear when the mouse pointer hovers
+   over controls.
+
+ - Add text to dialogs recommending Binary mode and "All users".  Add clickable
+   hyperlinks to the appropriate sections of the online Users Guide.
+
+ - Fix some dialog elements that were not resized properly when the window was
+   resized.
+
+ - Include manifest, resulting in support for XP themes.
+
+ - Remember proxy port setting.
+
+ - Fix dependency calculation bug when switching between Curr/Prev/Exp radio
+   buttons.
+
+ - Fix crash on encountering a postinstall script with a name of 4
+   characters or less.
+
+ - Display only valid URL schemes in the mirrors list.
+
+Version 2.457.2.2
+
+ - Set CYGWIN=nontsec, for postinstall scripts.
+
+ - Fix corrupt display of ini parse percentage in log file.
+
+ - Filter the mirrors list to only URL schemes that setup can use.
+
+Version 2.457.2.1
+
+ - Fix setup keeping open handles to every tarball it installs during a run.
+   (Which appears to have been indirectly responsible for the weird hangs
+   people have been experiencing.)
+
+ - Fix a miscellany of error-reporting deficiencies.
+
+ - Close stdin, to protect against rogue postinstall scripts attempting to
+   wait for user input.
+
+Version 2.427
+
+ - Last release before CHANGES file begun.

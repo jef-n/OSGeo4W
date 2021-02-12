@@ -1,0 +1,500 @@
+LANGUAGE  LANG_RUSSIAN, SUBLANG_DEFAULT
+#pragma code_page(65001)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+// Throughout, we use the font "MS Shell Dlg". This seems to be necessary to
+// work around some not-fully-understood issues with PropertySheets. Hopefully,
+// using this font will cause things to 'just work'. Further information on
+// this topic is at:
+//   http://sources.redhat.com/ml/cygwin-apps/2003-05/msg00177.html
+
+IDD_SOURCE DIALOG DISCARDABLE  0, 0, 339, 179
+STYLE DS_MODALFRAME | DS_CENTER | WS_CHILD | WS_CAPTION | WS_SYSMENU
+CAPTION "Установка OSGeo4W - Выберите режим установки"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL         "Установить из &интернет\n(загруженные файлы можно использовать повторно)",
+                    IDC_SOURCE_NETINST, "Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP | BS_MULTILINE | BS_TOP, 71, 60, 200, 20
+
+    CONTROL         "&Загрузить без установки",
+                    IDC_SOURCE_DOWNLOAD, "Button", BS_AUTORADIOBUTTON | WS_TABSTOP, 71, 90, 200, 10
+
+    CONTROL         "Установить из &локального каталога",
+		    IDC_SOURCE_CWD,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP, 71,120,200,10
+
+    ICON            IDI_OSGEO4W, IDC_HEADICON, 312, 0, 21, 20
+    CONTROL         "", IDC_HEADSEPARATOR, "Static", SS_BLACKFRAME | SS_SUNKEN, 0, 28, 339, 1
+    LTEXT           "Выберите источник загружаемых файлов",
+		    IDC_STATIC_HEADER_TITLE, 7, 0, 258, 8, NOT WS_GROUP
+    LTEXT           "Выберите режим установки: через интернет или из локального каталога",
+                    IDC_STATIC, 21, 9, 239, 16, NOT WS_GROUP
+END
+
+IDD_VIRUS DIALOG DISCARDABLE  0, 0, 339, 179
+STYLE DS_MODALFRAME | DS_CENTER | WS_CHILD | WS_CAPTION | WS_SYSMENU
+CAPTION "Установка OSGeo4W - Отключить антивирусное сканирование?"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL         "&Отключить антивирусное сканирование",
+		    IDC_DISABLE_AV,"Button", BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,101,69,192,10
+    CONTROL         "&Игнорировать антивирусное сканирование",
+		    IDC_LEAVE_AV,"Button", BS_AUTORADIOBUTTON | WS_TABSTOP,101,84,175,10
+    ICON            IDI_OSGEO4W,IDC_HEADICON,312,0,21,20
+    CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,339,1
+    LTEXT           "Выберите соответствующий режим антивирусного сканирования.",
+		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
+    LTEXT           "Некоторые антивирусные программы, особенно McAfee, могут вызвать синий экран смерти Windows NT/2000/XP во время установки OSGeo4W.",
+		    IDC_STATIC,21,9,239,16,NOT WS_GROUP
+    LTEXT	    "Эта проблема может быть локализована. Установщик OSGeo4W может отключить сканирование во время установки, а затем снова включить его, когда установка будет завершена.",
+                    IDC_STATIC,21,32,239,24,NOT WS_GROUP
+END
+
+IDD_LOCAL_DIR DIALOG DISCARDABLE  0, 0, 339, 179
+STYLE DS_MODALFRAME | DS_CENTER | WS_CHILD | WS_CAPTION | WS_SYSMENU
+CAPTION "Установка OSGeo4W - Выберите локальный каталог пакетов"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Выберите локальный каталог пакетов",
+		    IDC_STATIC_HEADER_TITLE, 7,0,258,8,NOT WS_GROUP
+    LTEXT           "Выберите каталог, в который будут сохранены загруженные для установки пакеты. Если каталог не существует, то он будет создан.",
+		    IDC_STATIC,21,9,256,16,NOT WS_GROUP
+    ICON            IDI_OSGEO4W,IDC_HEADICON,312,0,21,20
+    CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,339,1
+    GROUPBOX        "Параметры локального каталога пакетов",
+		    IDC_LOCALDIR_GRP,5,72,305,35
+    EDITTEXT        IDC_LOCAL_DIR,13,85,245,14,ES_AUTOHSCROLL | WS_GROUP
+    PUSHBUTTON      "&Обзор...",
+		    IDC_LOCAL_DIR_BROWSE,260,85,44,14
+    GROUPBOX        "Название группы в меню Пуск",
+		    IDC_MENUNAME_GRP,5,112,305,35
+    EDITTEXT        IDC_MENUNAME_TEXT,13,125,235,14,ES_AUTOHSCROLL | WS_GROUP
+END
+
+IDD_ROOT DIALOG DISCARDABLE  0, 0, 339, 179
+STYLE DS_MODALFRAME | DS_CENTER | WS_CHILD | WS_CAPTION | WS_SYSMENU
+CAPTION "Установка OSGeo4W - Выберите целевой каталог установки"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Выберите корневой каталог установки",
+		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
+    LTEXT           "Выберите каталог, в который Вы желаете установить OSGeo4W. А также выберите соответствующие параметры установки.",
+                    IDC_STATIC,21,9,239,16,NOT WS_GROUP
+    ICON            IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
+    CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,317,1
+
+    GROUPBOX        "Параметры корневого каталога",
+		    IDC_ROOTDIR_GRP,5,35,305,35
+    EDITTEXT        IDC_ROOT_DIR,13,47,245,14,ES_AUTOHSCROLL | WS_TABSTOP
+    PUSHBUTTON      "&Обзор...",
+		    IDC_ROOT_BROWSE,260,47,44,14,WS_TABSTOP
+
+    GROUPBOX        "Установить для",
+		    IDC_INSTALLFOR_GRP,5,76,160,101
+    CONTROL         "&Всех пользователей (РЕКОМЕНДУЕТСЯ)",
+		    IDC_ROOT_SYSTEM,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP | WS_GROUP,13,89,150,8
+    CONTROL         "&Текущего пользователя",
+		    IDC_ROOT_USER,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,13,130,120,8
+    LTEXT           "OSGeo4W будет доступен для всех пользователей этой системы. ",
+                    IDC_ALLUSERS_TEXT,25,101,130,28
+    LTEXT           "OSGeo4W будет доступен только для текущего пользователя. Рекомендуется выбирать эту опцию, если текущий пользователь имеет привилегии администратора.",
+		    IDC_JUSTME_TEXT,25,140,130,32
+    CONTROL         "Создать ярлык на &Рабочем Столе",
+		    IDC_ROOT_DESKTOP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,170,110,150,8
+    CONTROL         "Добавить ярлык в меню &Пуск",
+		    IDC_ROOT_MENU,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,170,130,150,8
+END
+
+IDD_SITE DIALOG DISCARDABLE  0, 0, 339, 179
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE |
+    WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_CONTROLPARENT
+CAPTION "Установка OSGeo4W - Выберите источник загружаемых пакетов"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    ICON            IDI_OSGEO4W,IDC_HEADICON,312,0,21,20
+    LISTBOX         IDC_URL_LIST,66,45,185,110,LBS_NOINTEGRALHEIGHT |
+                    LBS_EXTENDEDSEL | WS_VSCROLL | WS_HSCROLL | WS_GROUP | WS_TABSTOP
+    LTEXT           "Все доступные источники:",
+		    IDC_STATIC,66,34,183,8,NOT WS_GROUP
+    CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,339,1
+    LTEXT           "Выберите один из доступных источников или добавьте пользовательский.",
+                    IDC_STATIC,21,9,239,16,NOT WS_GROUP
+    LTEXT           "Выберите источник:",
+		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
+    EDITTEXT        IDC_EDIT_USER_URL,65,160,185,14,ES_AUTOHSCROLL | WS_GROUP
+    LTEXT           "Пользовательский источник:",
+		    IDC_SITE_USERURL,15,162,45,8,NOT WS_GROUP
+    PUSHBUTTON      "&Добавить",
+		    IDC_BUTTON_ADD_URL,255,160,145,14
+END
+
+IDD_NET DIALOG DISCARDABLE  0, 0, 317, 179
+STYLE DS_MODALFRAME | DS_CENTER | WS_CHILD | WS_CAPTION | WS_SYSMENU
+CAPTION "Установка OSGeo4W - Выберите тип интернет-соединения"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL         "&Прямое соединение",
+		    IDC_NET_DIRECT,"Button", BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,60,55,88,10
+    CONTROL         "Используются настройки &IE 5.0:",
+		    IDC_NET_IE5,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,60,70,132,10
+    CONTROL         "Используются настройки прокси &HTTP/FTP:",
+		    IDC_NET_PROXY,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,60,85,168,10
+    EDITTEXT        IDC_PROXY_HOST,120,105,120,12,ES_AUTOHSCROLL | WS_DISABLED | WS_GROUP
+    EDITTEXT        IDC_PROXY_PORT,120,125,30,12,ES_AUTOHSCROLL | WS_DISABLED
+    GROUPBOX        "",IDC_STATIC,60,95,185,50
+    RTEXT           "&Имя прокси",
+		    IDC_STATIC,65,105,50,12,SS_CENTERIMAGE | NOT WS_GROUP
+    RTEXT           "&Порт",
+		    IDC_STATIC,85,125,30,12,SS_CENTERIMAGE | NOT WS_GROUP
+    ICON            IDI_OSGEO4W,IDC_HEADICON,312,0,21,20
+    CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,339,1
+    LTEXT           "Требуется указать, каким образом необходимо установить интернет-соединение. Выберите соответствующие настройки.",
+                    IDC_STATIC,21,9,239,16,NOT WS_GROUP
+    LTEXT           "Выберите интернет-соединение.",
+                    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
+END
+
+IDD_INSTATUS DIALOG DISCARDABLE  0, 0, 339, 179
+STYLE DS_MODALFRAME | DS_CENTER | WS_CHILD | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "установка OSGeo4W"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Выполняется установка...",
+		    IDC_INS_ACTION,45,55,205,8,SS_ENDELLIPSIS
+    LTEXT           "(PKG)",
+		    IDC_INS_PKG,45,70,205,8,SS_ENDELLIPSIS
+    LTEXT           "(FILE)",
+		    IDC_INS_FILE,45,85,205,8,SS_ENDELLIPSIS
+    CONTROL         "Progress1",IDC_INS_DISKFULL,"msctls_progress32",
+                    PBS_SMOOTH | WS_BORDER,95,130,155,10
+    CONTROL         "Progress1",IDC_INS_IPROGRESS,"msctls_progress32",
+                    PBS_SMOOTH | WS_BORDER,95,115,155,10
+    CONTROL         "Progress1",IDC_INS_PPROGRESS,"msctls_progress32",
+                    PBS_SMOOTH | WS_BORDER,95,100,155,10
+    LTEXT           "Пакет:",
+		    IDC_INS_BL_PACKAGE,45,100,47,8,NOT WS_GROUP
+    LTEXT           "Всего:",
+		    IDC_INS_BL_TOTAL,45,115,48,8,NOT WS_GROUP
+    LTEXT           "На диске:",
+		    IDC_INS_BL_DISK,45,130,47,8,NOT WS_GROUP
+    ICON            IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
+    CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,339,1
+    LTEXT           "Эта страница показывает процесс загрузки или установки OSGeo4W.",
+                    IDC_STATIC,21,9,239,16,NOT WS_GROUP
+    LTEXT           "Прогресс",
+		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
+END
+
+IDD_PROXY_AUTH DIALOG DISCARDABLE  0, 0, 215, 95
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Требуется авторизация прокси"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    ICON            IDI_OSGEO4W,IDC_HEADICON,5,5,21,20
+    LTEXT           "&Имя пользователя",
+		    IDC_STATIC,5,28,67,15,SS_CENTERIMAGE, WS_EX_RIGHT
+    EDITTEXT        IDC_NET_USER,65,28,145,12,ES_AUTOHSCROLL
+    LTEXT           "&Пароль",
+		    IDC_STATIC,10,43,50,15,SS_CENTERIMAGE, WS_EX_RIGHT
+    EDITTEXT        IDC_NET_PASSWD,65,43,145,12,ES_PASSWORD | ES_AUTOHSCROLL
+    LTEXT           "Прокси запрашивает авторизацию",
+		    IDC_STATIC,65,10,150,10
+    DEFPUSHBUTTON   "&OK",
+		    IDOK,100,75,45,15,WS_DISABLED
+    PUSHBUTTON      "Отмена",
+		    IDCANCEL,165,75,45,15
+END
+
+IDD_NET_AUTH DIALOG DISCARDABLE  0, 0, 215, 95
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Требуется авторизация сервера"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    ICON            IDI_OSGEO4W,IDC_HEADICON,5,5,21,20
+    LTEXT           "&Имя пользователя",
+		    IDC_STATIC,5,28,67,15,SS_CENTERIMAGE, WS_EX_RIGHT
+    EDITTEXT        IDC_NET_USER,65,28,145,12,ES_AUTOHSCROLL
+    LTEXT           "&Пароль",
+		    IDC_STATIC,10,43,50,15,SS_CENTERIMAGE, WS_EX_RIGHT
+    EDITTEXT        IDC_NET_PASSWD,65,43,145,12,ES_PASSWORD | ES_AUTOHSCROLL
+    LTEXT           "Сервер запрашивает авторизацию",
+		    IDC_STATIC,65,10,150,10
+    DEFPUSHBUTTON   "&OK",
+		    IDOK,100,75,45,15,WS_DISABLED
+    PUSHBUTTON      "Отмена",
+		    IDCANCEL,165,75,45,15
+END
+
+IDD_SPLASH DIALOG DISCARDABLE  0, 0, 339, 179
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE |
+    WS_CAPTION | WS_SYSMENU
+CAPTION "Установка OSGeo4W"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Программа установки и обновления OSGeo4W",
+                    IDC_STATIC_WELCOME_TITLE,35,1,195,24
+    LTEXT           "Данная программа установки необходима для первичной инсталляции рабочей среды OSGeo4W и необходима для всех последующих обновлений. Постарайтесь запомнить куда вы ее сохраняете.\r\n\r\nНа следующих страницах содержится информация по установке. Необходимо заметить что OSGeo4W содержит большое число пакетов, решающих широкий круг задач. По умолчанию устанавливается только базовый пакет. Вы можете использовать данную программу в дальнейшем для добавления, удаления или изменения содержимого пакетов при необходимости.",
+		    IDC_SPLASH_TEXT,35,25,265,90
+    CONTROL         "Стандартная Desktop установка",
+		    IDC_EXPRESS_D,"Button", BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,60,104,172,10
+    CONTROL         "Стандартная Web-GIS установка",
+		    IDC_EXPRESS_I,"Button", BS_AUTORADIOBUTTON | WS_TABSTOP,60,124,172,10
+    CONTROL         "Расширенная установка",
+		    IDC_ADVANCED,"Button", BS_AUTORADIOBUTTON | WS_TABSTOP,60,144,97,10
+    ICON         IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
+END
+
+IDD_DESKTOP DIALOG DISCARDABLE  0, 0, 339, 179
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Установка OSGeo4W - Состояние установки и создание ярлыков"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    ICON            IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
+    CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,339,1
+    LTEXT           "Установка OSGeo4W успешно завершена.",
+                    IDC_STATIC_HEADER,21,9,239,16,NOT WS_GROUP
+    LTEXT           "Состояние установки",
+		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
+    CONTROL         "",IDC_DESKTOP_SEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,155,339,1
+    LTEXT           "",IDC_STATUS_HEADER,7,160,258,8,NOT WS_GROUP
+    LTEXT           "",
+		    IDC_STATUS,21,169,239,16,NOT WS_GROUP
+END
+
+IDD_FTP_AUTH DIALOG DISCARDABLE  0, 0, 215, 95
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Требуется авторизация FTP"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    ICON            IDI_OSGEO4W,IDC_HEADICON,5,5,21,20
+    LTEXT           "&Имя пользователя",
+		    IDC_STATIC,5,28,67,15,SS_CENTERIMAGE, WS_EX_RIGHT
+    EDITTEXT        IDC_NET_USER,65,28,145,12,ES_AUTOHSCROLL
+    LTEXT           "&Пароль",
+		    IDC_STATIC,10,43,50,15,SS_CENTERIMAGE, WS_EX_RIGHT
+    EDITTEXT        IDC_NET_PASSWD,65,43,145,12,ES_PASSWORD | ES_AUTOHSCROLL
+    LTEXT           "FTP запрашивает авторизацию.",
+		    IDC_STATIC,65,10,150,10
+    DEFPUSHBUTTON   "&OK",
+		    IDOK,100,75,45,15,WS_DISABLED
+    PUSHBUTTON      "Отмена",
+		    IDCANCEL,165,75,45,15
+END
+
+IDD_CHOOSE DIALOG DISCARDABLE  0, 0, 339, 179
+STYLE DS_MODALFRAME | DS_3DLOOK | WS_CHILD | WS_VISIBLE | WS_CAPTION |
+    WS_SYSMENU
+CAPTION "Установка OSGeo4W - Выберите пакеты"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    RTEXT           "&Search",
+		    IDC_STATIC, 0, 30, 32, 12, SS_CENTERIMAGE, WS_EX_RIGHT
+    EDITTEXT        IDC_CHOOSE_SEARCH_EDIT, 34, 30, 60, 12
+    PUSHBUTTON      "&Clear",
+		    IDC_CHOOSE_CLEAR_SEARCH, 96, 30, 22, 12
+    CONTROL         "&Keep",
+		    IDC_CHOOSE_KEEP,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,99,30,30,14
+    CONTROL         "&Prev",
+		    IDC_CHOOSE_PREV,"Button",BS_AUTORADIOBUTTON, 134,30,27,14
+    CONTROL         "&Curr",
+		    IDC_CHOOSE_CURR,"Button",BS_AUTORADIOBUTTON, 169,30,25,14
+    CONTROL         "E&xp",
+		    IDC_CHOOSE_EXP,"Button",BS_AUTORADIOBUTTON, 204,30,25,14
+    PUSHBUTTON      "&Вид",
+		    IDC_CHOOSE_VIEW,239,30,26,14,WS_GROUP
+    CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,339,1
+    CONTROL         "",IDC_LISTVIEW_POS,"Static",SS_BLACKFRAME | NOT WS_VISIBLE,7,45,303,122
+    CONTROL         "&Скрыть устаревшие пакеты",
+		    IDC_CHOOSE_HIDE, "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,167,160,14
+    ICON            IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
+    LTEXT           "Выберите пакеты, которые нужно установить.",
+                    IDC_CHOOSE_INST_TEXT,21,9,239,16,NOT WS_GROUP
+    LTEXT           "Выберите пакеты",
+		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
+    LTEXT           "",IDC_CHOOSE_VIEWCAPTION,270,33,40,10
+END
+
+IDD_PREREQ DIALOG DISCARDABLE  0, 0, 339, 179
+STYLE DS_MODALFRAME | DS_3DLOOK | WS_CHILD | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Установка OSGeo4W - Решение проблем с зависимостями"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,339,1
+    ICON            IDI_OSGEO4W,IDC_HEADICON,312,0,21,20
+    LTEXT           "Внимание! Обнаружены отсутствующие зависимости",
+		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
+    LTEXT           "Следующие пакеты необходимы, но не были выбраны во время установки.",
+		    IDC_STATIC,21,9,239,16,NOT WS_GROUP
+    CONTROL         "&Установить эти пакеты для зависимостей (РЕКОМЕНДУЕТСЯ).",
+		    IDC_PREREQ_CHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP, 7,167,225,14
+    EDITTEXT        IDC_PREREQ_EDIT,7,41,303,124,WS_VSCROLL | WS_HSCROLL |
+                    ES_LEFT | ES_MULTILINE | ES_READONLY | ES_AUTOHSCROLL |
+                    ES_AUTOVSCROLL
+END
+
+IDD_DROPPED DIALOG DISCARDABLE  0, 0, 339, 142
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Установка OSGeo4W - Использовать старые зеркала?"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Внимание:",
+		    IDC_STATIC,7,8,40,8
+    LTEXT           "Одно или более из выбранных зеркал исключено из официального списка зеркал OSGeo4W.Это (эти) зеркала могут содержать не самые свежие пакеты и\nК ним относятся следующие зеркала:",
+                    IDC_STATIC,47,8,263,32
+    EDITTEXT        IDC_DROP_MIRRORS,7,40,303,40,WS_VSCROLL | WS_HSCROLL |
+                    ES_LEFT | ES_MULTILINE | ES_READONLY | ES_AUTOHSCROLL |
+                    ES_AUTOVSCROLL
+    LTEXT           "Если у возникают проблемы при установке попробуйте официальное зеркало.\n\nПродолжить с использованием неофициального зеркала?",
+                    IDC_STATIC,7,88,303,24
+    CONTROL         "&Не напоминать в дальнейшем об этих зеркалах",
+                    IDC_DROP_NOWARN,"Button",BS_AUTOCHECKBOX | WS_TABSTOP, 7,120,213,15
+    PUSHBUTTON      "&Да",
+		    IDYES,220,120,45,15
+    DEFPUSHBUTTON   "&Нет",
+		    IDNO,265,120,45,15
+END
+
+IDD_POSTINSTALL DIALOG DISCARDABLE  0, 0, 339, 142
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE |
+    WS_CAPTION | WS_SYSMENU
+CAPTION "OSGeo4W Setup - Running postinstall scripts"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL         "",
+		    IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN, 0,28, 210, 95,1
+    ICON            IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
+    LTEXT           "Postinstall script errors",
+		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
+    LTEXT           "These do not necessarily mean that affected packages will fail to function properly, but please check /var/log/setup.log.full and report any problems.",
+                    IDC_POSTINSTALL_HEADER,21,9,239,16,NOT WS_GROUP
+    EDITTEXT        IDC_POSTINSTALL_EDIT,7,41,303,112,WS_VSCROLL | WS_HSCROLL |
+                    ES_LEFT | ES_MULTILINE | ES_READONLY | ES_AUTOHSCROLL |
+                    ES_AUTOVSCROLL
+
+END
+
+IDD_EXP_PACKAGES DIALOG DISCARDABLE  0, 0, 339, 179
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE |
+    WS_CAPTION | WS_SYSMENU
+CAPTION "Установка OSGeo4W - Экспресс-установка пакетов"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL         "MapServer",IDC_PKG_MAPSERVER,"Button",
+                    BS_AUTOCHECKBOX,108,48,100,8
+    CONTROL         "QGIS",IDC_PKG_QGIS,"Button",
+                    BS_AUTOCHECKBOX,108,63,100,8
+    CONTROL         "GDAL",IDC_PKG_GDAL,"Button",
+                    BS_AUTOCHECKBOX,108,78,100,8
+    CONTROL         "Apache",IDC_PKG_APACHE,"Button",
+                    BS_AUTOCHECKBOX,108,93,100,8
+    CONTROL         "uDig",IDC_PKG_UDIG,"Button",
+                    BS_AUTOCHECKBOX,108,108,100,8
+    CONTROL         "OpenEV",IDC_PKG_OPENEV,"Button",
+                    BS_AUTOCHECKBOX,108,123,100,8
+    CONTROL         "GRASS GIS",IDC_PKG_GRASS,"Button",
+                    BS_AUTOCHECKBOX,108,138,100,8
+    ICON            IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
+    LTEXT           "Порт:",
+		    IDC_APACHE_PORT_LABEL,154,90,50,15,SS_CENTERIMAGE, WS_EX_RIGHT
+    EDITTEXT        IDC_APACHE_PORT,210,90,25,12,ES_AUTOHSCROLL
+    LTEXT           "Выберите пакет",
+		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
+END
+
+IDD_LICENSE DIALOG DISCARDABLE  0, 0, 339, 179
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE |
+    WS_CAPTION | WS_SYSMENU
+CAPTION "Установка OSGeo4W - Agreement of Restrictive Package"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Лицензионные соглашения проприетарных компонент",
+                    IDC_STATIC_LICENSE_TITLE,35,1,195,24
+    LTEXT           "Пожалуйста ознакомьтесь с лицензией пакета перед установкой OSGeo4W",
+                    IDC_STATIC_LICENSE_TEXT,35,25,265,40
+    CONTROL         "Лицензия", IDC_LICENSE_FILE, RICHEDIT_CLASS, ES_MULTILINE | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | WS_HSCROLL | WS_VSCROLL | ES_LEFT | ES_READONLY,
+		    35,80,260,75
+    CONTROL         "Я согласен с условиями перечисленных лицензий",IDC_CHK_AGREED,"Button",
+                    BS_AUTOCHECKBOX,35,160,200,8
+    PUSHBUTTON      "Печать", IDC_PRINT_BUTTON,261,161,35,14
+    ICON            IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
+END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE
+BEGIN
+    IDS_ROOT_SLASH          "Внимание: Мы не рекомендуем использовать корневой каталог жесткого диска как корневой каталог OSGeo4W. Продолжить?"
+    IDS_ROOT_SPACE          "Не рекомендуется использовать пути включающие пробелы в названиях папок. Продолжить?"
+    IDS_ERR_OPEN_WRITE      "Невозможно открыть %s для записи: %s"
+    IDS_SETUPINI_MISSING    "Невозможно получить %s из <%s>"
+    IDS_OLD_SETUPINI        "Файл setup.ini старее чем тот, который был использован при последней установке OSGeo4W. Продолжить?"
+    IDS_NOTHING_INSTALLED   "Установка не нужна"
+    IDS_INSTALL_COMPLETE    "Установка завершена"
+    IDS_REBOOT_REQUIRED     "Все файлы обновлены. Необходимо выполнить перезагрузку как только это  возможно, чтобы активизировать обновления. До перезагрузки OSGeo4W может работать некорректно."
+    IDS_ERR_OPEN_READ       "Невозможно открыть %s для чтения: %s"
+    IDS_ROOT_ABSOLUTE       "Папка установки должна быть абсолютной, с символом имени диска и обратного слэша, например C:\\OSGeo4W."
+    IDS_DOWNLOAD_COMPLETE   "Загрузка завершена"
+    IDS_NOLOGFILE           "Невозможно открыть файл лога %s для записи"
+    IDS_UNINSTALL_COMPLETE  "Удаление завершено"
+    IDS_WININET             "Невозможно найти или загрузить DLL файлы Internet Explorer 5.0."
+    IDS_ERR_CHDIR           "Невозможно заменить папку на %s: %s [%.8x]"
+    IDS_OLD_SETUP_VERSION   "Установленная версия %s, но setup.ini сообщает, что доступна версия %s.\nМожно обновить дистрибутив до новой версии."
+    IDS_DOWNLOAD_INCOMPLETE "Загрузка не завершена. Повторить?"
+    IDS_INSTALL_ERROR       "Ошибка установки (%s), продолжить со следующего пакета?"
+    IDS_INSTALL_INCOMPLETE  "Установка не завершена. Смотрите %s для получения подробной информации."
+    IDS_CORRUPT_PACKAGE     "Файл пакета %s поврежден. Пожалуйста, удалите файл и повторите загрузку."
+    IDS_SKIP_PACKAGE        "%s\nУдалить данный пакет?"
+    IDS_WINDOW_INIT_BADMSG  "Фатальная ошибка: Cообщение Windows %u получено до инициализации диалогового окна."
+    IDS_UNCAUGHT_EXCEPTION  "Фатальная ошибка: Исключение\nПроцесс: %s\nТип: %s\nСообщение: %s"
+    IDS_UNCAUGHT_EXCEPTION_WITH_ERRNO  "Фатальная ошибка: Исключение\nПроцесс: %s\nТип: %s\nСообщение: %s\nНомер: %d"
+    IDS_TRUSTKEEP_TOOLTIP   "Выбрать все пакеты с версиями, аналогичными установленным. Другими словами, программа установки не заменит ни один из пакетов."
+    IDS_TRUSTPREV_TOOLTIP   "Выбрать все версии пакетов помеченных как 'Prev', предыдущие стабильные версии пакетов, до текущих версий."
+    IDS_TRUSTCURR_TOOLTIP   "Выбрать наиболее стабильные на настоящий момент версии пакетов (РЕКОМЕНДУЕТСЯ)"
+    IDS_TRUSTEXP_TOOLTIP    "Выбрать все наиболее новые версии пакетов, даже если они определяются разработчиком как тестируемые или экспериментальные."
+    IDS_VIEWBUTTON_TOOLTIP  "Изменяет вид списка пакетов. Определяет, в каком виде необходимо сортировать список пакетов.\r\n\r\nПо категории: Сгруппировать пакеты по категориям. Нажмите '+', чтобы раскрыть.\r\n\r\nВсе: Показать все пакеты.\r\n\r\nЧастично: Показать только те пакеты, которые были установлены, удалены или обновлены.Показывает какие пакеты будут заменены на новые когда Вы нажмете 'Далее'.\r\n\r\nОбновленные: Показать установленные пакеты не требующие обновления поскольку текущие версии совпадают с новыми.\r\n\r\nНе установленные: Показать пакеты, которые не были установлены или не были выбраны для установки."
+    IDS_HIDEOBS_TOOLTIP     "Если выбрана, из списка пакетов в каждой категории будут исключены пакеты с названиями, начинающиеся с '_'. Обычно такие пакеты используются как пустышки для переименованных или удаленных, возможно что их содержимое включено в другие пакеты автоматически."
+    IDS_SEARCH_TOOLTIP          "Search for this string in package names."
+    IDS_LOCAL_DIR_DOWNLOAD	"Select a directory where you want Setup to store the installation files it downloads.  The directory will be created if it does not already exist."
+    IDS_LOCAL_DIR_INSTALL	"Select a directory where Setup should look for downloaded installation files."
+    IDS_MAYBE_MKDIR		"Directory %s does not exist, would you like me to create it?"
+    IDS_CANT_MKDIR		"Couldn't create directory %s, sorry.  (Is drive full or read-only?)"
+    IDS_NO_CWD			"Local package directory %s not found.\nYou can still use setup-%s.exe to remove installed\npackages, but there will be nothing to install.\n\nPress OK if that's what you wanted\nor Cancel to choose a different directory."
+    IDS_SELPKG_DOWNLOAD		"Выберите пакеты для загрузки "
+    IDS_SELPKG_INSTALL		"Выберите пакеты для установки "
+    IDS_UNINSTALL		"IDS_UNINSTALL"
+    IDS_SKIP			"IDS_SKIP"
+    IDS_REINSTALL		"IDS_REINSTALL"
+    IDS_RETRIEVE		"IDS_RETRIEVE"
+    IDS_SOURCE			"IDS_SOURCE"
+    IDS_KEEP			"IDS_KEEP"
+    IDS_SEL_DOWNLOAD_DIR	"IDS_SEL_DOWNLOAD_DIR"
+    IDS_SEL_LOCAL_DIR		"IDS_SEL_LOCAL_DIR"
+    IDS_UNKNOWN_ERR		"IDS_UNKNOWN_ERR"
+    IDS_LIST_CURRENT		"Текущий"
+    IDS_LIST_NEW		"Новый"
+    IDS_LIST_BIN		"Bin?"
+    IDS_LIST_SRC		"Src?"
+    IDS_LIST_CATEGORIES		"Категории"
+    IDS_LIST_CATEGORY		"Category"
+    IDS_LIST_SIZE		"Размер"
+    IDS_LIST_PACKAGE		"Пакет"
+    IDS_CAPTION_FULL		"Все"
+    IDS_CAPTION_PENDING		"Частично"
+    IDS_CAPTION_UPTODATE	"Обновленніе"
+    IDS_CAPTION_NOTINSTALLED	"Не установленные"
+    IDS_CAPTION_CATEGORY	"Категория"
+    IDS_CAPTION_LIC_PACKAGE	"Пожалуйста, ознакомьтесь с лицензионными соглашениями следующих пакетов и обозначьте свое согласие с ними:\r\n%s"
+    IDS_LICENSE_MISSING		"Не удалось получить файл лицензии %s из <%s>"
+    IDS_LICENSE_NOLOAD		"Установщик не может загрузить файл лицензии пакета %s, пожалуйста убедитесь, что пакет загружен"
+    IDS_LICENSE_EMPTYPATH	"Файл лицензии %s отсутствует на удаленном сервере"
+    IDS_NOTHING_TO_INSTALL_OR_UPGRADE "Ничего не выбрано для установки/обновления"
+    IDS_NOTHING_TO_DOWNLOAD	"Nothing to Download"
+END

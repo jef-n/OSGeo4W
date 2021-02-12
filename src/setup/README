@@ -1,0 +1,40 @@
+This directory contains the source code for the Setup program
+for the OSGeo4W net releases.
+
+
+HOW TO BUILD:
+-------------
+Setup should build out-of-the-box on any Cygwin environment that has all the
+required packages installed:
+  - bison
+  - flex
+  - mingw-gcc-g++
+  - make
+  - libiconv
+  - libbz2-devel
+  - mingw-zlib
+  - mingw-bzip2
+  - and all packages that are dependencies of the above, i.e. gcc-core,
+    gcc-mingw-core, mingw-runtime, mingw-binutils, mingw-w32api, etc.  These
+    should all be automatically added by setup.
+
+The following additional packages are required if building from SVN, not from
+a source tarball, or if you want to make changes to the build system.
+  - recent autoconf
+  - recent automake
+  - recent libtool
+
+Build commands:
+1) Skip this step if you are building from a source tarball.
+   $ ./bootstrap.sh --enable-mirror=path_to_mirror
+    * You should choose a mirror with x32 release from: http://download.osgeo.org/osgeo4w/testing_license
+    * If you want to use a mirror with x64 testing version you should choose:  http://download.osgeo.org/osgeo4w/testing64
+ 
+2) $ make
+
+3) Wondering why your binary is so much bigger than the official releases?
+   Remove debugging symbols:
+   $ strip -s osgeo4w-setup-x86.exe
+   Compress using UPX(please install it before):
+   $ upx -9 osgeo4w-setup-x86.exe
+
