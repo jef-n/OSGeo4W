@@ -188,7 +188,7 @@ nextbinary
 		fi
 	)
 
-	cmake --build $(cygpath -am $BUILDDIR) --target ${TARGET}Submit --config $BUILDCONF
+	cmake --build $(cygpath -am $BUILDDIR) --target ${TARGET}Submit --config $BUILDCONF || echo SUBMISSION FAILED
 
 	rm -rf $INSTDIR
 	mkdir -p $INSTDIR
