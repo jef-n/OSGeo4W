@@ -65,8 +65,10 @@ endlog() {
 			diff -u x86_64/setup.ini.prev x86_64/setup.ini || true
 		)
 
-		log "Uploading to master repo:"
-		perl $OSGEO4W_SCRIPTS/upload.pl
+		if [ -z "$OSGEO4W_SKIP_UPLOAD" ]; then
+			log "Uploading to master repo:"
+			perl $OSGEO4W_SCRIPTS/upload.pl
+		fi
 	fi
 	trap "" EXIT
 	finishlog
@@ -321,13 +323,10 @@ higherversion() {
 	fi
 
 	if [ "$a" == "$b" ]; then
-		echo "V: $a == $b" >&2
 		return 1	# equal
 	elif [ "$a" == "$(sort -V <(echo $a; echo $b) | head -1)" ]; then
-		echo "V: $a < $b" >&2
 		return 1	# lower
 	else
-		echo "V: $a > $b!" >&2
 		return 0	# higher
 	fi
 }
