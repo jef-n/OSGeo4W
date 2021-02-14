@@ -230,7 +230,7 @@ fetchdeps() {
 	fi
 
 	if ! [ -x "$OSGEO4W_SCRIPTS/osgeo4w-setup.exe" ]; then
-		wget -O "$OSGEO4W_SCRIPTS/osgeo4w-setup.exe" $MASTER_REPO/osgeo4w-setup-x86_64.exe
+		wget -O "$OSGEO4W_SCRIPTS/osgeo4w-setup.exe" $MASTER_REPO/osgeo4w-setup.exe
 	fi
 
 	if ! regen; then
@@ -253,8 +253,10 @@ fetchdeps() {
 	cmd="$cmd --upgrade-also"
 	cmd="$cmd --only-site"
 	cmd="$cmd --safe"
+	cmd="$cmd --no-shortcuts"
+	cmd="$cmd --no-startmenu"
+	cmd="$cmd --no-desktop"
 	cmd="$cmd -s $(cygpath -am $OSGEO4W_REP)"
-	# cmd="$cmd -s $MASTER_REPO"    # FIXME
 	cmd="$cmd -l $(cygpath -am $OSGEO4W_REP/package-cache)"
 
 	for p in "$@"; do
