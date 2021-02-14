@@ -27,6 +27,8 @@ CONF=MinSizeRel
 
 cmake -G Ninja \
 	-D CMAKE_BUILD_TYPE=$CONF \
+	-D CMAKE_EXE_LINKER_FLAGS="/MANIFEST:NO" \
+	-D CMAKE_CXX_FLAGS_${CONF^^}="/O1 /Ob1 /D NDEBUG" \
 	-D CMAKE_INSTALL_PREFIX=../install \
 	-D ZLIB_SRC=$(cygpath -am ../zlib-${ZLIB_VER}) \
 	-D BZIP2_SRC=$(cygpath -am ../bzip2-${BZIP2_VER}) \

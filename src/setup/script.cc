@@ -78,7 +78,7 @@ init_run_script ()
   SetEnvironmentVariable ("OSGEO4W_STARTMENU", startmenu.c_str());
 
   std::string desktop;
-  get_startmenu(desktop);
+  get_desktop(desktop);
   SetEnvironmentVariable ("OSGEO4W_DESKTOP", desktop.c_str());
 
   SetEnvironmentVariable ("OSGEO4W_MENU_LINKS", root_menu ? "1" : "0" );

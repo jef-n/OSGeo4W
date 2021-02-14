@@ -1,0 +1,146 @@
+diff --git a/cmake/PyQtMacros.cmake b/cmake/PyQtMacros.cmake
+index 918d5c13..d6ac2be0 100644
+--- a/cmake/PyQtMacros.cmake
++++ b/cmake/PyQtMacros.cmake
+@@ -9,15 +9,7 @@ SET(PYUIC_PROG_NAMES pyuic5)
+ SET(PYRCC_PROG_NAME pyrcc5)
+ 
+ IF(NOT PYUIC_PROGRAM)
+-  IF (MSVC)
+-    FIND_PROGRAM(PYUIC_PROGRAM
+-      NAMES ${PYUIC_PROG_NAME}.bat
+-      PATHS $ENV{LIB_DIR}/bin
+-    )
+-  ELSE(MSVC)
+-    FIND_PROGRAM(PYUIC_PROGRAM NAMES ${PYUIC_PROG_NAMES} PATHS $ENV{LIB_DIR}/bin)
+-  ENDIF (MSVC)
+-
++  FIND_PROGRAM(PYUIC_PROGRAM NAMES ${PYUIC_PROG_NAMES} PATHS $ENV{LIB_DIR}/bin)
+   IF (NOT PYUIC_PROGRAM)
+     MESSAGE(FATAL_ERROR "pyuic5 not found - aborting")
+   ENDIF (NOT PYUIC_PROGRAM)
+@@ -53,15 +45,7 @@ MACRO(PYQT_WRAP_UI outfiles )
+ ENDMACRO(PYQT_WRAP_UI)
+ 
+ IF(NOT PYRCC_PROGRAM)
+-  IF (MSVC)
+-    FIND_PROGRAM(PYRCC_PROGRAM
+-      NAMES ${PYRCC_PROG_NAME}.bat
+-      PATHS $ENV{LIB_DIR}/bin
+-    )
+-  ELSE(MSVC)
+-    FIND_PROGRAM(PYRCC_PROGRAM ${PYRCC_PROG_NAME} PATHS $ENV{LIB_DIR}/bin)
+-  ENDIF (MSVC)
+-
++  FIND_PROGRAM(PYRCC_PROGRAM NAMES ${PYRCC_PROG_NAME} PATHS $ENV{LIB_DIR}/bin)
+   IF (NOT PYRCC_PROGRAM)
+     MESSAGE(FATAL_ERROR "pyrcc5 not found - aborting")
+   ENDIF (NOT PYRCC_PROGRAM)
+diff --git a/python/core/auto_generated/auth/qgsauthmanager.sip.in b/python/core/auto_generated/auth/qgsauthmanager.sip.in
+index 81b1d328..149377b3 100644
+--- a/python/core/auto_generated/auth/qgsauthmanager.sip.in
++++ b/python/core/auto_generated/auth/qgsauthmanager.sip.in
+@@ -818,6 +818,7 @@ Clear an authentication config from its associated authentication method cache
+   protected:
+ 
+ 
++    explicit QgsAuthManager();
+ 
+ };
+ 
+diff --git a/src/core/auth/qgsauthmanager.h b/src/core/auth/qgsauthmanager.h
+index 0d90ee3a..bf59b37a 100644
+--- a/src/core/auth/qgsauthmanager.h
++++ b/src/core/auth/qgsauthmanager.h
+@@ -752,7 +752,7 @@ class CORE_EXPORT QgsAuthManager : public QObject
+      */
+     static QgsAuthManager *instance() SIP_SKIP;
+ 
+-    explicit QgsAuthManager() SIP_SKIP;
++    explicit QgsAuthManager();
+ 
+   private:
+ 
+diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
+index 7593d848..3e68fc4c 100644
+--- a/src/core/CMakeLists.txt
++++ b/src/core/CMakeLists.txt
+@@ -1530,9 +1530,7 @@ endif()
+ protobuf_generate_cpp(VECTOR_TILE_PROTO_SRCS VECTOR_TILE_PROTO_HDRS vectortile/vector_tile.proto)
+ set(QGIS_CORE_SRCS ${QGIS_CORE_SRCS} ${VECTOR_TILE_PROTO_SRCS})
+ set(QGIS_CORE_HDRS ${QGIS_CORE_HDRS} ${VECTOR_TILE_PROTO_HDRS})
+-if (MSVC)
+-  set_source_files_properties(${VECTOR_TILE_PROTO_SRCS} vectortile/qgsvectortilemvtdecoder.cpp vectortile/qgsvectortilemvtencoder.cpp PROPERTIES COMPILE_DEFINITIONS PROTOBUF_USE_DLLS)
+-else()
++if (NOT MSVC)
+   # automatically generated file produces warnings (unused-parameter, unused-variable, misleading-indentation)
+   set_source_files_properties(${VECTOR_TILE_PROTO_SRCS} PROPERTIES COMPILE_FLAGS -w)
+ endif()
+diff --git a/external/wintoast/src/wintoastlib.cpp b/external/wintoast/src/wintoastlib.cpp
+index 1efe3922f8..1efceeb5a8 100644
+--- a/external/wintoast/src/wintoastlib.cpp
++++ b/external/wintoast/src/wintoastlib.cpp
+@@ -442,22 +442,23 @@ bool WinToast::initialize(_Out_ WinToastError* error) {
+         return false;
+     }
+ 
+-
+     if (_aumi.empty() || _appName.empty()) {
+         setError(error, WinToastError::InvalidParameters);
+         DEBUG_MSG(L"Error while initializing, did you set up a valid AUMI and App name?");
+         return false;
+     }
+ 
++#if 0
+     if (createShortcut() < 0) {
+         setError(error, WinToastError::ShellLinkNotCreated);
+-        DEBUG_MSG(L"Error while attaching the AUMI to the current proccess =(");
++        DEBUG_MSG(L"Error while attaching the AUMI to the current process =(");
+         return false;
+     }
++#endif
+ 
+     if (FAILED(DllImporter::SetCurrentProcessExplicitAppUserModelID(_aumi.c_str()))) {
+         setError(error, WinToastError::InvalidAppUserModelID);
+-        DEBUG_MSG(L"Error while attaching the AUMI to the current proccess =(");
++        DEBUG_MSG(L"Error while attaching the AUMI to the current process =(");
+         return false;
+     }
+ 
+@@ -512,6 +513,7 @@ HRESULT	WinToast::validateShellLinkHelper(_Out_ bool& wasChanged) {
+                         hr = DllImporter::PropVariantToString(appIdPropVar, AUMI, MAX_PATH);
+                         wasChanged = false;
+                         if (FAILED(hr) || _aumi != AUMI) {
++#if 0
+                             // AUMI Changed for the same app, let's update the current value! =)
+                             wasChanged = true;
+                             PropVariantClear(&appIdPropVar);
+@@ -525,6 +527,10 @@ HRESULT	WinToast::validateShellLinkHelper(_Out_ bool& wasChanged) {
+                                     }
+                                 }
+                             }
++#else
++                            // Not allowed to touch the shortcut to fix the AUMI
++                            hr = E_FAIL;
++#endif
+                         }
+                         PropVariantClear(&appIdPropVar);
+                     }
+@@ -538,8 +544,8 @@ HRESULT	WinToast::validateShellLinkHelper(_Out_ bool& wasChanged) {
+ 
+ 
+ HRESULT	WinToast::createShellLinkHelper() {
+-	WCHAR   exePath[MAX_PATH]{L'\0'};
+-	WCHAR	slPath[MAX_PATH]{L'\0'};
++    WCHAR exePath[MAX_PATH]{L'\0'};
++    WCHAR slPath[MAX_PATH]{L'\0'};
+     Util::defaultShellLinkPath(_appName, slPath);
+     Util::defaultExecutablePath(exePath);
+     ComPtr<IShellLinkW> shellLink;
+@@ -1032,4 +1038,4 @@ WinToastTemplate::AudioOption WinToastTemplate::audioOption() const {
+ 
+ WinToastTemplate::Duration WinToastTemplate::duration() const {
+     return _duration;
+-}
+\ No newline at end of file
++}

@@ -4,12 +4,6 @@ PROJECT(osgeo4w-setup)
 
 SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
-SET(CMAKE_CXX_FLAGS_MINSIZEREL "/MT /O1 /Ob1 /D NDEBUG")
-SET(CMAKE_CXX_FLAGS_RELEASE "/MT /O2 /Ob2 /D NDEBUG")
-SET(CMAKE_CXX_FLAGS_RELWITHDEBINFO "/MD /ZI /Od /D NDEBUG")
-SET(CMAKE_SHARED_LINKER_FLAGS /MANIFEST:NO)
-SET(CMAKE_EXE_LINKER_FLAGS /MANIFEST:NO)
-
 # TODO: retrieve from ChangeLog
 FILE(WRITE ${CMAKE_BINARY_DIR}/setup_version.c "#define VERSION_PREFIX \"%%% setup-version\"\nstatic const char version_store[] = VERSION_PREFIX \" 2.579\";\nconst char *setup_version = version_store + sizeof (VERSION_PREFIX);\n")
 
@@ -174,5 +168,6 @@ ADD_BISON_FILES(SRCS iniparse.yy)
 ADD_FLEX_FILES(SRCS inilex.ll)
 
 ADD_EXECUTABLE(osgeo4w-setup WIN32 ${SRCS})
+SET_PROPERTY(TARGET osgeo4w-setup PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded")
 
 TARGET_LINK_LIBRARIES(osgeo4w-setup wsock32 shlwapi comctl32 ole32 wsock32 wininet comdlg32 gdi32)

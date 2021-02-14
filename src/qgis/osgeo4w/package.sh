@@ -1,4 +1,4 @@
-export P=qgis-ltr
+export P=qgis
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
@@ -22,22 +22,14 @@ startlog
 RELBRANCH=$(git ls-remote --heads $REPO "refs/heads/release-*_*" | sed -e '/\^{}$/d' -ne 's#^.*refs/heads/release-#release-#p' | sort -V | tail -1)
 RELBRANCH=${RELBRANCH#*/}
 
-LTRTAG=$(git ls-remote --tags $REPO | sed -e '/\^{}$/d' -ne 's#^.*refs/tags/ltr-#ltr-#p' | sort -V | tail -1)
-LTRBRANCH=release-${LTRTAG#ltr-}
-
-if [ "$RELBRANCH" = "$LTRBRANCH" ]; then
-        LTRTAG=$(git ls-remote --tags $REPO | sed -e '/\^{}$/d' -ne 's#^.*refs/tags/ltr-#ltr-#p' | sort -V | tail -2 | head -1)
-	LTRBRANCH=release-${LTRTAG#ltr-}
-fi
-
-RELTAG=$(git ls-remote --tags $REPO "refs/tags/final-${LTRBRANCH#release-}_*" | sed -e '/\^{}$/d' -ne 's#^.*refs/tags/final-#final-#p' | sort -V | tail -1)
+RELTAG=$(git ls-remote --tags $REPO "refs/tags/final-${RELBRANCH#release-}_*" | sed -e '/\^{}$/d' -ne 's#^.*refs/tags/final-#final-#p' | sort -V | tail -1)
 
 cd ..
 
 if [ -d qgis ]; then
 	cd qgis
 
-	if [ $(git branch --show-current) != $LTRBRANCH ]; then
+	if [ $(git branch --show-current) != $RELBRANCH ]; then
 		cd ..
 		rm -rf qgis
 	else
@@ -48,7 +40,7 @@ if [ -d qgis ]; then
 fi
 
 if ! [ -d qgis ]; then
-	git clone $REPO --branch $LTRBRANCH --single-branch --depth 1 qgis
+	git clone $REPO --branch $RELTAG --single-branch --depth 1 qgis
 fi
 
 cd qgis
@@ -136,6 +128,8 @@ nextbinary
 		-D WITH_GRASS=TRUE \
 		-D WITH_3D=TRUE \
 		-D WITH_GRASS7=TRUE \
+		-D WITH_PDAL=TRUE \
+		-D WITH_HANA=TRUE \
 		-D GRASS_PREFIX7="$(cygpath -m $GRASS_PREFIX)" \
 		-D WITH_ORACLE=TRUE \
 		-D WITH_CUSTOM_WIDGETS=TRUE \
@@ -222,6 +216,7 @@ nextbinary
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" preremove-server.bat    >install/etc/preremove/$P-server.bat
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" qgis.bat                >install/bin/$P.bat
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" python.bat              >install/bin/python-$P.bat
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" process.bat             >install/bin/qgis_process-$P.bat
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" designer.bat            >install/bin/$P-designer.bat
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" httpd.conf.tmpl         >install/httpd.d/httpd_$P.conf.tmpl
 
@@ -247,8 +242,8 @@ nextbinary
 	touch exclude
 
 	cat <<EOF >$R/$P-common/setup.hint
-sdesc: "QGIS (common; long term release)"
-ldesc: "QGIS (common; long term release)"
+sdesc: "QGIS (common)"
+ldesc: "QGIS (common)"
 maintainer: $MAINTAINER
 category: Libs
 requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl gdal libspatialite zlib libiconv libspatialindex qt5-libs qt5-qml qt5-tools qtwebkit-libs qca qwt-libs python3-sip python3-core python3-pyqt5 python3-psycopg2-binary python3-qscintilla python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-gdal python3-requests python3-plotly python3-pyproj python3-owslib qtkeychain-libs libzip opencl exiv2 hdf5
@@ -264,6 +259,7 @@ EOF
 		apps/$P/bin/qgis_core.dll \
 		apps/$P/bin/qgis_gui.dll \
 		apps/$P/bin/qgis_native.dll \
+		apps/$P/bin/qgis_process.exe \
 		apps/$P/doc/ \
 		apps/$P/plugins/basicauthmethod.dll \
 		apps/$P/plugins/delimitedtextprovider.dll \
@@ -277,6 +273,7 @@ EOF
 		apps/$P/plugins/pkcs12authmethod.dll \
 		apps/$P/plugins/pkipathsauthmethod.dll \
 		apps/$P/plugins/postgresprovider.dll \
+		apps/$P/plugins/postgresrasterprovider.dll \
 		apps/$P/plugins/spatialiteprovider.dll \
 		apps/$P/plugins/virtuallayerprovider.dll \
 		apps/$P/plugins/wcsprovider.dll \
@@ -296,8 +293,8 @@ EOF
 		etc/postinstall/$P-common.bat
 
 	cat <<EOF >$R/$P-server/setup.hint
-sdesc: "QGIS Server (long term release)"
-ldesc: "QGIS Server (long term release)"
+sdesc: "QGIS Server"
+ldesc: "QGIS Server"
 maintainer: $MAINTAINER
 category: Web
 requires: $P-common fcgi
@@ -320,8 +317,8 @@ EOF
 		etc/preremove/$P-server.bat
 
 	cat <<EOF >$R/setup.hint
-sdesc: "QGIS Desktop (long term release)"
-ldesc: "QGIS Desktop (long term release)"
+sdesc: "QGIS Desktop"
+ldesc: "QGIS Desktop"
 maintainer: $MAINTAINER
 category: Desktop
 requires: $P-common
@@ -369,8 +366,8 @@ EOF
 		etc/preremove/$P.bat
 
 	cat <<EOF >$R/$P-pdb/setup.hint
-sdesc: "Debugging symbols for the QGIS long term release"
-ldesc: "Debugging symbols for the QGIS long term release"
+sdesc: "Debugging symbols for QGIS"
+ldesc: "Debugging symbols for QGIS"
 maintainer: $MAINTAINER
 category: Desktop
 requires: $P
@@ -381,8 +378,8 @@ EOF
 		apps/$P/pdb
 
 	cat <<EOF >$R/$P-grass-plugin/setup.hint
-sdesc: "GRASS plugin for QGIS (long term release)"
-ldesc: "GRASS plugin for QGIS (long term release)"
+sdesc: "GRASS plugin for QGIS"
+ldesc: "GRASS plugin for QGIS"
 maintainer: $MAINTAINER
 category: Libs
 requires: $P grass
@@ -402,8 +399,8 @@ EOF
 		etc/preremove/$P-grass-plugin.bat
 
 	cat <<EOF >$R/$P-oracle-provider/setup.hint
-sdesc: "Oracle provider plugin for QGIS (long term release)"
-ldesc: "Oracle provider plugin for QGIS (long term release)"
+sdesc: "Oracle provider plugin for QGIS"
+ldesc: "Oracle provider plugin for QGIS"
 maintainer: $MAINTAINER
 category: Libs
 requires: $P oci
@@ -415,8 +412,8 @@ EOF
 		apps/$P/qtplugins/sqldrivers/qsqlocispatial.dll
 
 	cat <<EOF >$R/$P-devel/setup.hint
-sdesc: "QGIS development files (long term release)"
-ldesc: "QGIS development files (long term release)"
+sdesc: "QGIS development files"
+ldesc: "QGIS development files"
 maintainer: $MAINTAINER
 category: Libs
 requires: $P-common oci
@@ -431,8 +428,8 @@ EOF
 		apps/$P/lib/
 
 	cat <<EOF >$R/$P-full/setup.hint
-sdesc: "QGIS Full Desktop (meta package; long term release)"
-ldesc: "QGIS Full Desktop (meta package; long term release)"
+sdesc: "QGIS Full Desktop (meta package)"
+ldesc: "QGIS Full Desktop (meta package)"
 maintainer: $MAINTAINER
 category: Desktop
 requires: $P $P-grass-plugin $P-oracle-provider python3-pyparsing python3-simplejson python3-shapely python3-matplotlib gdal-hdf5 gdal-ecw gdal-mrsid gdal-oracle gdal-sosi python3-pygments qt5-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-pillow python3-pandas python3-geographiclib saga-ltr
@@ -456,6 +453,7 @@ EOF
 		osgeo4w/package.sh \
 		osgeo4w/patch \
 		osgeo4w/msvc-env.bat \
+		osgeo4w/process.bat \
 		osgeo4w/designer.bat \
 		osgeo4w/python.bat \
 		osgeo4w/qgis.bat \

@@ -196,6 +196,7 @@ RootPage::OnMessageCmd (int id, HWND hwndctl, UINT code)
 RootPage::RootPage ()
 {
   sizeProcessor.AddControlInfo (RootControlsInfo);
+  root_scope = is_admin() ? IDC_ROOT_SYSTEM : IDC_ROOT_USER;
 }
 
 bool
