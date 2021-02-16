@@ -8,6 +8,6 @@ source ../../../scripts/build-helpers
 
 startlog
 
-wheel=https://download.lfd.uci.edu/pythonlibs/x2tqcw5k/scipy-1.5.3-cp39-cp39-win_amd64.whl packagewheel
+wheel=https://download.lfd.uci.edu/pythonlibs/w4tscw6k/scipy-1.6.0-cp39-cp39-win_amd64.whl packagewheel
 
 endlog
