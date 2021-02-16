@@ -334,9 +334,6 @@ EOF
 	        apps/$P/i18n/ \
 	        apps/$P/icons/ \
 	        apps/$P/images/ \
-	        apps/$P/plugins/coordinatecaptureplugin.dll \
-	        apps/$P/plugins/evis.dll \
-	        apps/$P/plugins/georefplugin.dll \
 	        apps/$P/plugins/gpsimporterplugin.dll \
 	        apps/$P/plugins/offlineeditingplugin.dll \
 	        apps/$P/plugins/topolplugin.dll \

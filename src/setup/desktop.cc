@@ -174,57 +174,8 @@ desktop_icon (const std::string& title, const std::string& target,
 }
 
 static void
-make_osgeo4w_bat ()
-{
-  batname = backslash (cygpath ("/OSGeo4W.bat"));
-
-  /* if the batch file exists, don't overwrite it */
-  if (_access (batname.c_str(), 0) == 0)
-    return;
-
-  FILE *bat = fopen (batname.c_str(), "wt");
-  if (!bat)
-    return;
-
-  fprintf (bat, "@echo off\n");
-  fprintf (bat, "set OSGEO4W_ROOT=%s\n", get_root_dir().c_str() );
-  fprintf (bat, "PATH=%%OSGEO4W_ROOT%%\\bin;%%PATH%%\n" );
-  fprintf (bat, "for %%%%f in (%%OSGEO4W_ROOT%%\\etc\\ini\\*.bat) do call %%%%f\n" );
-  fprintf (bat, "@echo on\n\n");
-  fprintf (bat, "@cmd.exe\n\n");
-
-  fclose (bat);
-}
-
-static void
-save_icon ()
-{
-  iconname = backslash (cygpath ("/OSGeo4W.ico"));
-
-  HRSRC rsrc = FindResource (NULL, "OSGEO4W.ICON", "FILE");
-  if (rsrc == NULL)
-    {
-      fatal ("FindResource failed");
-    }
-  HGLOBAL res = LoadResource (NULL, rsrc);
-  char *data = (char *) LockResource (res);
-  int len = SizeofResource (NULL, rsrc);
-
-  FILE *f = fopen (iconname.c_str(), "wb");
-  if (f)
-    {
-      fwrite (data, 1, len, f);
-      fclose (f);
-    }
-}
-
-static void
 do_desktop_setup ()
 {
-  save_icon ();
-
-  make_osgeo4w_bat ();
-
   if (root_menu)
     {
       start_menu (OSGEO4W_SHELL, batname);
