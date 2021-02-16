@@ -33,6 +33,7 @@ tar -cjf $R/$P-$V-$B.tar.bz2 \
 	--xform "s,^textreplace.exe,bin/textreplace.exe," \
 	--xform "s,^o4w_env.bat,bin/o4w_env.bat," \
 	--xform "s,^ini-base.bat,etc/ini/base.bat," \
+	--xform "s,^o-help.bat,bin/o-help.bat," \
 	bgspawn.exe \
 	dllupdate.exe \
 	getspecialfolder.exe \
@@ -40,7 +41,9 @@ tar -cjf $R/$P-$V-$B.tar.bz2 \
 	xxmklink.exe \
 	ini-base.bat \
 	o4w_env.bat \
-	OSGeo4W.ico
+	OSGeo4W.bat \
+	OSGeo4W.ico \
+	o-help.bat
 
 tar -cjf $R/$P-$V-$B-src.tar.bz2 \
 	osgeo4w/package.sh \
@@ -50,7 +53,9 @@ tar -cjf $R/$P-$V-$B-src.tar.bz2 \
 	textreplace.c \
 	makefile.vc \
 	o4w_env.bat \
+	OSGeo4W.bat \
 	OSGeo4W.ico \
-	ini-base.bat
+	ini-base.bat \
+	o-help.bat
 
 endlog
