@@ -1,6 +1,6 @@
 CFLAGS=-DMBCS
 
-all: dllupdate.exe textreplace.exe bgspawn.exe getspecialfolder.exe
+all: dllupdate.exe textreplace.exe bgspawn.exe getspecialfolder.exe elevate.exe
 
 dllupdate.exe: dllupdate.cpp
 	cl /nologo dllupdate.cpp version.lib advapi32.lib
@@ -10,6 +10,10 @@ textreplace.exe: textreplace.c
 
 bgspawn.exe: bgspawn.c
 	cl /nologo bgspawn.c shell32.lib
+
+elevate.exe: elevate.c elevate.exe.manifest
+	cl /nologo elevate.c shell32.lib
+	mt -manifest elevate.exe.manifest -outputresource:"elevate.exe;#1"
 
 getspecialfolder.exe: getspecialfolder.c
 	cl /nologo getspecialfolder.c shell32.lib ole32.lib
