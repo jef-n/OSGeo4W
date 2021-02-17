@@ -87,14 +87,14 @@ EOF
 
 tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
 	--exclude "*.dll" \
-	etc/ini \
 	share/man \
-	share/proj \
 	bin
 
 tar -C install -cjf $R/$P$abi-runtime/$P$abi-runtime-$V-$B.tar.bz2 \
 	--exclude "*.exe" \
-	bin
+	bin \
+	etc/ini \
+	share/proj
 
 tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	etc/abi/$P-devel \
