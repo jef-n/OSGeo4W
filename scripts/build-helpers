@@ -173,7 +173,7 @@ ninjaenv() {
 	if ! [ -x "$OSGEO4W_SCRIPTS/ninja.exe" ]; then
 		(
 			cd $OSGEO4W_SCRIPTS
-			wget -O /tmp/ninja.zip https://github.com/ninja-build/ninja/releases/download/v1.10.1/ninja-win.zip
+			curl --output /tmp/ninja.zip https://github.com/ninja-build/ninja/releases/download/v1.10.1/ninja-win.zip
 			unzip /tmp/ninja.zip
 
 			chmod a+rx ninja.exe
@@ -230,7 +230,7 @@ fetchdeps() {
 	fi
 
 	if ! [ -x "$OSGEO4W_SCRIPTS/osgeo4w-setup.exe" ]; then
-		wget -O "$OSGEO4W_SCRIPTS/osgeo4w-setup.exe" $MASTER_REPO/osgeo4w-setup.exe
+		curl --output "$OSGEO4W_SCRIPTS/osgeo4w-setup.exe" $MASTER_REPO/osgeo4w-setup.exe
 	fi
 
 	if ! regen; then
@@ -302,16 +302,6 @@ fetchdeps() {
 }
 declare -x fetchdeps
 
-getpackages() {
-	# wget -c -q -O /tmp/setup-master.ini $MASTER_REPO/x86_64/setup.ini 1>&2
-
-	(
-		# sed -ne 's/^@ //p' /tmp/setup-master.ini
-		sed -ne 's/^@ //p' /tmp/setup.ini
-	) | sort -u
-}
-declare -x getpackages
-
 # determine whether first version argument is higher than seconds
 higherversion() {
 	local a=$1
@@ -341,7 +331,7 @@ availablepackageversions() {
 		return 1
 	fi
 
-	wget -c -q -O /tmp/setup-master.ini $MASTER_REPO/x86_64/setup.ini 1>&2
+	curl --output /tmp/setup-master.ini $MASTER_REPO/x86_64/setup.ini
 
 	regen 1>&2
 
