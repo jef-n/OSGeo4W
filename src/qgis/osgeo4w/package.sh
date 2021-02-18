@@ -208,17 +208,22 @@ nextbinary
 	mkdir -p $INSTDIR/{etc/{postinstall,preremove},bin,httpd.d}
 
 	v=$MAJOR.$MINOR.$PATCH
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" qgis.reg.tmpl           >install/apps/$P/bin/qgis.reg.tmpl
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" postinstall-common.bat  >install/etc/postinstall/$P-common.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" postinstall-server.bat  >install/etc/postinstall/$P-server.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" postinstall-desktop.bat >install/etc/postinstall/$P.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" preremove-desktop.bat   >install/etc/preremove/$P.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" preremove-server.bat    >install/etc/preremove/$P-server.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" qgis.bat                >install/bin/$P.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" python.bat              >install/bin/python-$P.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" process.bat             >install/bin/qgis_process-$P.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" designer.bat            >install/bin/$P-designer.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" httpd.conf.tmpl         >install/httpd.d/httpd_$P.conf.tmpl
+
+	sagadef=$(sed -rne "s/^REQUIRED_VERSION *= *('.*')$/\\1/p" install/apps/$P/python/plugins/processing/algs/saga/SagaAlgorithmProvider.py)
+	sed -e "s/^REQUIRED_VERSION *= *'.*'$/REQUIRED_VERSION = @saga@/" install/apps/$P/python/plugins/processing/algs/saga/SagaAlgorithmProvider.py >install/apps/$P/python/plugins/processing/algs/saga/SagaAlgorithmProvider.py.tmpl
+
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"       qgis.reg.tmpl           >install/apps/$P/bin/qgis.reg.tmpl
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"       postinstall-common.bat  >install/etc/postinstall/$P-common.bat
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"       postinstall-server.bat  >install/etc/postinstall/$P-server.bat
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"       postinstall-desktop.bat >install/etc/postinstall/$P.bat
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"       preremove-desktop.bat   >install/etc/preremove/$P.bat
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"       preremove-server.bat    >install/etc/preremove/$P-server.bat
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"       qgis.bat                >install/bin/$P.bat
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"       python.bat              >install/bin/python-$P.bat
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"       process.bat             >install/bin/qgis_process-$P.bat
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"       designer.bat            >install/bin/$P-designer.bat
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"       httpd.conf.tmpl         >install/httpd.d/httpd_$P.conf.tmpl
+	sed -e "s/@package@/$P/g" -e "s/@sagadef@/$sagadef/g" saga-refresh.bat        >install/apps/$P/saga-refresh.bat
 
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                postinstall-grass.bat >install/etc/postinstall/$P-grass-plugin.bat
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                preremove-grass.bat   >install/etc/preremove/$P-grass-plugin.bat
@@ -331,6 +336,7 @@ EOF
 		--exclude apps/$P/python/qgis/_server.lib \
 		--exclude apps/$P/python/qgis/server \
 		--exclude apps/$P/server/ \
+		--exclude apps/$P/python/plugins/processing/algs/saga/SagaAlgorithmProvider.py \
 	        apps/$P/i18n/ \
 	        apps/$P/icons/ \
 	        apps/$P/images/ \

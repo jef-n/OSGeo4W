@@ -228,14 +228,19 @@ nextbinary
 	mkdir -p $INSTDIR/{etc/{postinstall,preremove},bin}
 
 	v=$MAJOR.$MINOR.$PATCH
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       qgis.reg.tmpl   >install/bin/qgis.reg.tmpl
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                postinstall.bat >install/etc/postinstall/$P.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                preremove.bat   >install/etc/preremove/$P.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g" -e "s/@grasspath@/$(basename $GRASS_PREFIX)/g" qgis-grass.bat  >install/bin/$P-grass.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       designer.bat    >install/bin/$P-designer.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       process.bat     >install/bin/qgis_process-$P.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       qgis.bat        >install/bin/$P.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       python.bat      >install/bin/python-$P.bat
+
+	sagadef=$(sed -rne "s/^REQUIRED_VERSION *= *('.*')$/\\1/p" install/apps/$P/python/plugins/processing/algs/saga/SagaAlgorithmProvider.py)
+	sed -e "s/^REQUIRED_VERSION *= *'.*'$/REQUIRED_VERSION = @saga@/" install/apps/$P/python/plugins/processing/algs/saga/SagaAlgorithmProvider.py >install/apps/$P/python/plugins/processing/algs/saga/SagaAlgorithmProvider.py.tmpl
+
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       qgis.reg.tmpl    >install/bin/qgis.reg.tmpl
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                postinstall.bat  >install/etc/postinstall/$P.bat
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                preremove.bat    >install/etc/preremove/$P.bat
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g" -e "s/@grasspath@/$(basename $GRASS_PREFIX)/g" qgis-grass.bat   >install/bin/$P-grass.bat
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       designer.bat     >install/bin/$P-designer.bat
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       process.bat      >install/bin/qgis_process-$P.bat
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       qgis.bat         >install/bin/$P.bat
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       python.bat       >install/bin/python-$P.bat
+	sed -e "s/@package@/$P/g" -e "s/@sagadef@/$sagadef/g"                                                                                 saga-refresh.bat >install/apps/$P/saga-refresh.bat
 
 	cp "$DBGHLP_PATH"/{dbghelp.dll,symsrv.dll} install/apps/$P
 
@@ -249,10 +254,12 @@ nextbinary
 	/bin/tar -cjf $R/$P-$V-$B.tar.bz2 \
 		--exclude-from exclude \
 		--exclude "*.pyc" \
+		--exclude "install/apps/$P/python/plugins/processing/algs/saga/SagaAlgorithmProvider.py" \
 		--xform "s,^qgis.vars,bin/$P-bin.vars," \
 		--xform "s,^osgeo4w/apps/qt5/plugins/,apps/$P/qtplugins/," \
 		--xform "s,^install/apps/$P/bin/qgis.exe,bin/$P-bin.exe," \
 		--xform "s,^install/,," \
+		--xform "s,^install$,.," \
 		qgis.vars \
 		osgeo4w/apps/qt5/plugins/sqldrivers/qsqlocispatial.dll \
 		osgeo4w/apps/qt5/plugins/sqldrivers/qsqlspatialite.dll \
