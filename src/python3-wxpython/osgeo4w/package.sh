@@ -30,7 +30,7 @@ startlog
 
 	python3 build.py bdist_wheel
 
-	wheel=$(cygpath -aw dist/*.whl) addsrcfiles=osgeo4w/wx.diff packagewheel
+	wheel=$(cygpath -aw dist/*.whl) addsrcfiles=osgeo4w/wx.diff adddepends=wxwidgets packagewheel
 )
 
 endlog
