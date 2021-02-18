@@ -296,7 +296,7 @@ DesktopSetupPage::OnInit ()
 {
   SetDlgItemFont(IDC_STATUS_HEADER, "MS Shell Dlg", 8, FW_BOLD);
 
-  EnableWindow ( GetDlgItem (IDC_ROOT_SYSTEM), is_admin() );
+  EnableWindow ( GetDlgItem (IDC_ROOT_SYSTEM), is_elevated() );
 }
 
 void

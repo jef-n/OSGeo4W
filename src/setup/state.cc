@@ -35,6 +35,6 @@ int apache_port_number=80;
 std::string local_dir;
 std::string menu_name;
 
-int root_scope = IDC_ROOT_SYSTEM;
+int root_scope = 0;
 int root_menu = 1;
 int root_desktop = 0;

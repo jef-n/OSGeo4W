@@ -90,7 +90,14 @@ static bool loading = true;
 static void
 load_dialog (HWND h)
 {
+  int elevated = is_elevated();
+
+  if( !elevated && root_scope == IDC_ROOT_SYSTEM )
+      root_scope = IDC_ROOT_USER;
+
   rbset (h, su, root_scope);
+
+  EnableWindow( GetDlgItem( h, IDC_ROOT_SYSTEM ), elevated );
 
   CheckDlgButton (h, IDC_ROOT_DESKTOP, root_desktop ? BST_CHECKED : BST_UNCHECKED );
   CheckDlgButton (h, IDC_ROOT_MENU, root_menu ? BST_CHECKED : BST_UNCHECKED );
@@ -98,6 +105,7 @@ load_dialog (HWND h)
   loading = true;
   eset (h, IDC_ROOT_DIR, root_dir );
   loading = false;
+
 
   check_if_enable_next (h);
 }
@@ -196,7 +204,7 @@ RootPage::OnMessageCmd (int id, HWND hwndctl, UINT code)
 RootPage::RootPage ()
 {
   sizeProcessor.AddControlInfo (RootControlsInfo);
-  root_scope = is_admin() ? IDC_ROOT_SYSTEM : IDC_ROOT_USER;
+  root_scope = is_elevated() ? IDC_ROOT_SYSTEM : IDC_ROOT_USER;
 }
 
 bool

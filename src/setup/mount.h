@@ -22,9 +22,7 @@
 
 #include <string>
 
-#define SETUP_KEY_WOW64 (is_64bit ? KEY_WOW64_64KEY : KEY_WOW64_32KEY)
-
-int is_admin();
+int is_elevated();
 std::string cygpath (const std::string& );
 void set_root_dir (const std::string);
 const std::string get_root_dir ();

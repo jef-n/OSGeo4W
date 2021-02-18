@@ -33,58 +33,25 @@ static const char *cvsid = "\n%%% $Id: mount.cc,v 2.38 2013/06/30 22:26:41 cgf E
 #include "msg.h"
 
 /*
- * is_admin () determines whether or not the current user is a member of the
- * Administrators group.
+ * is_elevated () determines whether the process is running elevated
  */
 
 int
-is_admin ()
+is_elevated ()
 {
   // Get the process token for the current process
   HANDLE token;
   if (!OpenProcessToken (GetCurrentProcess (), TOKEN_QUERY, &token))
     return 0;
 
-  // Get the group token information
   DWORD size;
-  GetTokenInformation (token, TokenGroups, NULL, 0, &size);
-  if (GetLastError () != ERROR_INSUFFICIENT_BUFFER)
-    {
-      CloseHandle (token);
-      return 0;
-    }
-
-  std::vector<char> buf(size);
-  PTOKEN_GROUPS groups = (PTOKEN_GROUPS) buf.data();
-  DWORD status = GetTokenInformation (token, TokenGroups, buf.data(), size, &size);
+  TOKEN_ELEVATION tokenElevation;
+  DWORD status = GetTokenInformation (token, TokenElevation, &tokenElevation, sizeof tokenElevation, &size);
   CloseHandle (token);
   if (!status)
     return 0;
 
-  // Create the Administrators group SID
-  PSID admin_sid;
-  SID_IDENTIFIER_AUTHORITY authority = { SECURITY_NT_AUTHORITY };
-  if (!AllocateAndInitializeSid (&authority, 2, SECURITY_BUILTIN_DOMAIN_RID,
-                                 DOMAIN_ALIAS_RID_ADMINS, 0, 0, 0, 0, 0, 0,
-                                 &admin_sid))
-    return 0;
-
-  // Check to see if the user is a member of the Administrators group
-  int ret = 0;
-  for (UINT i = 0; i < groups->GroupCount; i++)
-    {
-      if (EqualSid (groups->Groups[i].Sid, admin_sid))
-	{
-	  ret = 1;
-	  break;
-	}
-    }
-
-  // Destroy the Administrators group SID
-  FreeSid (admin_sid);
-
-  // Return whether or not the user is a member of the Administrators group
-  return ret;
+  return tokenElevation.TokenIsElevated != 0;
 }
 
 

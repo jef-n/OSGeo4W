@@ -94,7 +94,7 @@ if [ -f OSGeo_DigiCert_Signing_Cert.p12 -a -f OSGeo_DigiCert_Signing_Cert.pass ]
 		-in build/osgeo4w-setup.exe \
 		install/bin/osgeo4w-setup.exe
 
-	rsync -v install/bin/osgeo4w-setup.exe $MASTER_SCP
+	[ -n "$OSGEO4W_SKIP_UPLOAD" ] || rsync -v install/bin/osgeo4w-setup.exe $MASTER_SCP
 else
 	cp build/osgeo4w-setup.exe install/bin/osgeo4w-setup.exe
 fi
