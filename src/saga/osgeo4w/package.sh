@@ -1,5 +1,5 @@
 export P=saga
-export V=7.8.1
+export V=7.8.2
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="wxwidgets-devel libharu-devel gdal-devel proj-devel libpq-devel curl-devel libpng-devel libtiff-devel libjpeg-devel zlib-devel expat-devel pdal-devel"
@@ -14,6 +14,11 @@ p=${P%$M}
 
 [ -f $p-$V.zip ] || wget -O $p-$V.zip "https://sourceforge.net/projects/$p-gis/files/${p^^}%20-%20$M/${p^^}%20-%20$V/saga-${V}_src.zip/download"
 [ -d ../saga-${V}_src ] || unzip -q -d .. $p-$V.zip
+[ -f ../saga-${V}_src/patched ] || {
+	patch -d ../saga-${V}_src -p1 --dry-run <patch
+	patch -d ../saga-${V}_src -p1 <patch
+	touch ../saga-${V}_src/patched
+}
 
 (
 	fetchenv osgeo4w/bin/o4w_env.bat
@@ -27,15 +32,13 @@ p=${P%$M}
 
 	cd ../saga-${V}_src/saga-gis/src
 
-	grep -Zlr "libcurl_imp.lib" . | xargs -r0 sed -i "s/libcurl_imp.lib/libcurl.lib/"
-	grep -Zlr "libpqdll.lib" . | xargs -r0 sed -i "s/libpqdll.lib/libpq.lib/"
-	grep -Zlr "proj_6_1.lib" . | xargs -r0 sed -i "s/proj_6_1.lib/proj.lib/"
-	grep -Zlr "wxpng.lib" . | xargs -r0 sed -i "s/;wxpng.lib;/;/"
-	grep -Zlr "wxzlib.lib" . | xargs -r0 sed -i "s/;wxzlib.lib;/;/"
-
 	rm -f $OSGEO4W_PWD/build.log
 
+	devenv saga.vc14.sln /UseEnv /Build "Release|x64" /Out $(cygpath -aw $OSGEO4W_PWD/build.log) ||
 	devenv saga.vc14.sln /UseEnv /Build "Release|x64" /Out $(cygpath -aw $OSGEO4W_PWD/build.log)
+
+	cd dev_tools
+	devenv dev_tools.vc14.sln /UseEnv /Build "Release|x64" /Out $(cygpath -aw $OSGEO4W_PWD/build-dev.log)
 )
 
 mkdir -p install/{bin,etc/{postinstall,preremove},apps/$P}
@@ -81,6 +84,7 @@ tar -cjf $R/$P-$V-$B.tar.bz2 \
 	-T <(find osgeo4w/install saga-${V}_src/saga-gis/bin/saga_vc_x64 -type f)
 
 tar -cjf $R/$P-$V-$B-src.tar.bz2 \
-	osgeo4w/package.sh
+	osgeo4w/package.sh \
+	osgeo4w/patch
 
 endlog
