@@ -302,8 +302,6 @@ WinMain (HINSTANCE h, HINSTANCE hPrevInstance, LPSTR cmdline, int cmd_show)
 	      root = "C:";
 
         root += "\\OSGeo4W" ;
-        if( is_64bit )
-          root += "64";
       }
     else
       {
