@@ -253,14 +253,14 @@ unless(keys %files) {
 
 my($host,$path) = $ENV{MASTER_SCP} =~ /^(.*):(.*)$/;
 
-open F, "| /usr/bin/rsync --files-from=- '$ENV{OSGEO4W_REP}' '$ENV{MASTER_SCP}'";
+open F, "| /usr/bin/rsync --chmod=D775,F664 --files-from=- '$ENV{OSGEO4W_REP}' '$ENV{MASTER_SCP}'";
 for my $file (sort keys %files) {
 	print F "$file\n";
 }
 close F or die "Update of files failed: $!";
 
-if( system("/usr/bin/rsync -r '$tdir/' '$ENV{MASTER_SCP}/'") != 0 ) {
+if( system("/usr/bin/rsync --chmod=D775,F664 -r '$tdir/' '$ENV{MASTER_SCP}/'") != 0 ) {
 	die "Update of hints failed: $!";
 }
 
-system "/usr/bin/wget -v -O - '$ENV{MASTER_REGEN_URI}'";
+system "/usr/bin/curl -v '$ENV{MASTER_REGEN_URI}'";
