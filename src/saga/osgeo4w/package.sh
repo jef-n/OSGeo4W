@@ -66,6 +66,7 @@ if not defined OSGEO4W_DESKTOP for /F "tokens=* USEBACKQ" %%F IN (\`getspecialfo
 del "%OSGEO4W_STARTMENU%\\SAGA GIS $V.lnk"
 del "%OSGEO4W_DESKTOP%\\SAGA GIS $V.lnk"
 
+del "%OSGEO4W_ROOT%\\apps\\saga\\tools\\dev_tools.dll"
 for /f "tokens=* usebackq" %%f in (\`dir /s /b "%OSGEO4W_ROOT%\\apps\\saga-refresh.bat"\`) do call "%%f"
 EOF
 
