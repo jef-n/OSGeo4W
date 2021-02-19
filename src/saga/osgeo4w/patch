@@ -1,6 +1,6 @@
-diff -ur saga-7.8.1_src/saga-gis/src/saga.vc14.sln ../saga-7.8.1_src/saga-gis/src/saga.vc14.sln
---- saga-7.8.1_src/saga-gis/src/saga.vc14.sln	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/saga.vc14.sln	2021-02-17 01:10:11.680241900 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/saga.vc14.sln ../saga-7.8.2_src/saga-gis/src/saga.vc14.sln
+--- saga-7.8.2_src/saga-gis/src/saga.vc14.sln	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/saga.vc14.sln	2021-02-19 12:48:56.529847600 +0100
 @@ -1,7 +1,7 @@
  ﻿
  Microsoft Visual Studio Solution File, Format Version 12.00
@@ -11,7 +11,7 @@ diff -ur saga-7.8.1_src/saga-gis/src/saga.vc14.sln ../saga-7.8.1_src/saga-gis/sr
  MinimumVisualStudioVersion = 10.0.40219.1
  Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "saga_api", "saga_core\saga_api\saga_api.vcxproj", "{2FECD6E9-B83B-4BC3-BE78-9DA2698E456B}"
  EndProject
-@@ -10,398 +10,152 @@
+@@ -10,398 +10,154 @@
  Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "saga_cmd", "saga_core\saga_cmd\saga_cmd.vcxproj", "{2C30DA1F-994C-4358-91C1-217C38BB375F}"
  EndProject
  Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "saga_gui", "saga_core\saga_gui\saga_gui.vcxproj", "{160C7E9B-CD3D-44D7-A20B-AABA043CE290}"
@@ -211,8 +211,8 @@ diff -ur saga-7.8.1_src/saga-gis/src/saga.vc14.sln ../saga-7.8.1_src/saga-gis/sr
 -	ProjectSection(ProjectDependencies) = postProject
 -		{2FECD6E9-B83B-4BC3-BE78-9DA2698E456B} = {2FECD6E9-B83B-4BC3-BE78-9DA2698E456B}
 -	EndProjectSection
--EndProject
--Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "io_gdal", "tools\io\io_gdal\io_gdal.vcxproj", "{17711E60-C0C9-424F-A8DA-4B0AC4C45C16}"
+ EndProject
+ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "io_gdal", "tools\io\io_gdal\io_gdal.vcxproj", "{17711E60-C0C9-424F-A8DA-4B0AC4C45C16}"
 -	ProjectSection(ProjectDependencies) = postProject
 -		{2FECD6E9-B83B-4BC3-BE78-9DA2698E456B} = {2FECD6E9-B83B-4BC3-BE78-9DA2698E456B}
 -	EndProjectSection
@@ -410,7 +410,7 @@ diff -ur saga-7.8.1_src/saga-gis/src/saga.vc14.sln ../saga-7.8.1_src/saga-gis/sr
  EndProject
  Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ta_cliffmetrics", "tools\terrain_analysis\ta_cliffmetrics\ta_cliffmetrics.vcxproj", "{304E7FD6-0DFF-4418-970A-2649956C01CB}"
  EndProject
-@@ -707,14 +461,6 @@
+@@ -707,14 +463,6 @@
  		{FD8BD809-88DE-4855-9CC6-5FE7E6AB78F4}.Release|Win32.Build.0 = Release|Win32
  		{FD8BD809-88DE-4855-9CC6-5FE7E6AB78F4}.Release|x64.ActiveCfg = Release|x64
  		{FD8BD809-88DE-4855-9CC6-5FE7E6AB78F4}.Release|x64.Build.0 = Release|x64
@@ -425,7 +425,7 @@ diff -ur saga-7.8.1_src/saga-gis/src/saga.vc14.sln ../saga-7.8.1_src/saga-gis/sr
  		{0DAF1789-55BC-46D5-BA4E-B964DB4A360B}.Debug|Win32.ActiveCfg = Debug|Win32
  		{0DAF1789-55BC-46D5-BA4E-B964DB4A360B}.Debug|Win32.Build.0 = Debug|Win32
  		{0DAF1789-55BC-46D5-BA4E-B964DB4A360B}.Debug|x64.ActiveCfg = Debug|x64
-@@ -739,14 +485,6 @@
+@@ -739,14 +487,6 @@
  		{D77087AD-99F6-48F6-8485-060207FDDD87}.Release|Win32.Build.0 = Release|Win32
  		{D77087AD-99F6-48F6-8485-060207FDDD87}.Release|x64.ActiveCfg = Release|x64
  		{D77087AD-99F6-48F6-8485-060207FDDD87}.Release|x64.Build.0 = Release|x64
@@ -440,22 +440,7 @@ diff -ur saga-7.8.1_src/saga-gis/src/saga.vc14.sln ../saga-7.8.1_src/saga-gis/sr
  		{953ED9E4-1771-4F8A-A9C9-31436B122D0A}.Debug|Win32.ActiveCfg = Debug|Win32
  		{953ED9E4-1771-4F8A-A9C9-31436B122D0A}.Debug|Win32.Build.0 = Debug|Win32
  		{953ED9E4-1771-4F8A-A9C9-31436B122D0A}.Debug|x64.ActiveCfg = Debug|x64
-@@ -755,14 +493,6 @@
- 		{953ED9E4-1771-4F8A-A9C9-31436B122D0A}.Release|Win32.Build.0 = Release|Win32
- 		{953ED9E4-1771-4F8A-A9C9-31436B122D0A}.Release|x64.ActiveCfg = Release|x64
- 		{953ED9E4-1771-4F8A-A9C9-31436B122D0A}.Release|x64.Build.0 = Release|x64
--		{17711E60-C0C9-424F-A8DA-4B0AC4C45C16}.Debug|Win32.ActiveCfg = Debug|Win32
--		{17711E60-C0C9-424F-A8DA-4B0AC4C45C16}.Debug|Win32.Build.0 = Debug|Win32
--		{17711E60-C0C9-424F-A8DA-4B0AC4C45C16}.Debug|x64.ActiveCfg = Debug|x64
--		{17711E60-C0C9-424F-A8DA-4B0AC4C45C16}.Debug|x64.Build.0 = Debug|x64
--		{17711E60-C0C9-424F-A8DA-4B0AC4C45C16}.Release|Win32.ActiveCfg = Release|Win32
--		{17711E60-C0C9-424F-A8DA-4B0AC4C45C16}.Release|Win32.Build.0 = Release|Win32
--		{17711E60-C0C9-424F-A8DA-4B0AC4C45C16}.Release|x64.ActiveCfg = Release|x64
--		{17711E60-C0C9-424F-A8DA-4B0AC4C45C16}.Release|x64.Build.0 = Release|x64
- 		{F6EFEF27-14B2-4630-8F74-8DFF323AA814}.Debug|Win32.ActiveCfg = Debug|Win32
- 		{F6EFEF27-14B2-4630-8F74-8DFF323AA814}.Debug|Win32.Build.0 = Debug|Win32
- 		{F6EFEF27-14B2-4630-8F74-8DFF323AA814}.Debug|x64.ActiveCfg = Debug|x64
-@@ -803,12 +533,6 @@
+@@ -803,12 +543,6 @@
  		{75BFD0D8-116F-461E-8A86-C8DD97ECBC00}.Release|Win32.Build.0 = Release|Win32
  		{75BFD0D8-116F-461E-8A86-C8DD97ECBC00}.Release|x64.ActiveCfg = Release|x64
  		{75BFD0D8-116F-461E-8A86-C8DD97ECBC00}.Release|x64.Build.0 = Release|x64
@@ -468,7 +453,7 @@ diff -ur saga-7.8.1_src/saga-gis/src/saga.vc14.sln ../saga-7.8.1_src/saga-gis/sr
  		{099E5D86-25B7-4346-9D45-8E3C193E391D}.Debug|Win32.ActiveCfg = Debug|Win32
  		{099E5D86-25B7-4346-9D45-8E3C193E391D}.Debug|Win32.Build.0 = Debug|Win32
  		{099E5D86-25B7-4346-9D45-8E3C193E391D}.Debug|x64.ActiveCfg = Debug|x64
-@@ -1095,4 +819,7 @@
+@@ -1095,4 +829,7 @@
  	GlobalSection(SolutionProperties) = preSolution
  		HideSolutionNode = FALSE
  	EndGlobalSection
@@ -476,9 +461,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/saga.vc14.sln ../saga-7.8.1_src/saga-gis/sr
 +		SolutionGuid = {198CD516-B8F5-4460-8800-2CE8218DE2B2}
 +	EndGlobalSection
  EndGlobal
-diff -ur saga-7.8.1_src/saga-gis/src/saga_core/saga_api/saga_api.vcxproj ../saga-7.8.1_src/saga-gis/src/saga_core/saga_api/saga_api.vcxproj
---- saga-7.8.1_src/saga-gis/src/saga_core/saga_api/saga_api.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/saga_core/saga_api/saga_api.vcxproj	2021-02-17 00:47:52.170753500 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/saga_core/saga_api/saga_api.vcxproj ../saga-7.8.2_src/saga-gis/src/saga_core/saga_api/saga_api.vcxproj
+--- saga-7.8.2_src/saga-gis/src/saga_core/saga_api/saga_api.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/saga_core/saga_api/saga_api.vcxproj	2021-02-18 14:03:30.754201600 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -509,9 +494,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/saga_core/saga_api/saga_api.vcxproj ../saga
    </PropertyGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
    <ImportGroup Label="ExtensionSettings">
-diff -ur saga-7.8.1_src/saga-gis/src/saga_core/saga_cmd/saga_cmd.vcxproj ../saga-7.8.1_src/saga-gis/src/saga_core/saga_cmd/saga_cmd.vcxproj
---- saga-7.8.1_src/saga-gis/src/saga_core/saga_cmd/saga_cmd.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/saga_core/saga_cmd/saga_cmd.vcxproj	2021-02-17 00:47:52.822764000 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/saga_core/saga_cmd/saga_cmd.vcxproj ../saga-7.8.2_src/saga-gis/src/saga_core/saga_cmd/saga_cmd.vcxproj
+--- saga-7.8.2_src/saga-gis/src/saga_core/saga_cmd/saga_cmd.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/saga_core/saga_cmd/saga_cmd.vcxproj	2021-02-18 14:03:30.755200600 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>Application</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -542,9 +527,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/saga_core/saga_cmd/saga_cmd.vcxproj ../saga
    </PropertyGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
    <ImportGroup Label="ExtensionSettings">
-diff -ur saga-7.8.1_src/saga-gis/src/saga_core/saga_gdi/saga_gdi.vcxproj ../saga-7.8.1_src/saga-gis/src/saga_core/saga_gdi/saga_gdi.vcxproj
---- saga-7.8.1_src/saga-gis/src/saga_core/saga_gdi/saga_gdi.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/saga_core/saga_gdi/saga_gdi.vcxproj	2021-02-17 00:47:52.486757400 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/saga_core/saga_gdi/saga_gdi.vcxproj ../saga-7.8.2_src/saga-gis/src/saga_core/saga_gdi/saga_gdi.vcxproj
+--- saga-7.8.2_src/saga-gis/src/saga_core/saga_gdi/saga_gdi.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/saga_core/saga_gdi/saga_gdi.vcxproj	2021-02-18 14:03:30.757200200 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -575,9 +560,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/saga_core/saga_gdi/saga_gdi.vcxproj ../saga
    </PropertyGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
    <ImportGroup Label="ExtensionSettings">
-diff -ur saga-7.8.1_src/saga-gis/src/saga_core/saga_gdi/sgdi_helper.cpp ../saga-7.8.1_src/saga-gis/src/saga_core/saga_gdi/sgdi_helper.cpp
---- saga-7.8.1_src/saga-gis/src/saga_core/saga_gdi/sgdi_helper.cpp	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/saga_core/saga_gdi/sgdi_helper.cpp	2021-02-17 01:06:59.248582900 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/saga_core/saga_gdi/sgdi_helper.cpp ../saga-7.8.2_src/saga-gis/src/saga_core/saga_gdi/sgdi_helper.cpp
+--- saga-7.8.2_src/saga-gis/src/saga_core/saga_gdi/sgdi_helper.cpp	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/saga_core/saga_gdi/sgdi_helper.cpp	2021-02-18 14:03:30.759200500 +0100
 @@ -419,7 +419,7 @@
  	}
  
@@ -587,9 +572,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/saga_core/saga_gdi/sgdi_helper.cpp ../saga-
  	{
  		if( Tick == SCALE_TICK_NONE || z >= zMin )
  		{
-diff -ur saga-7.8.1_src/saga-gis/src/saga_core/saga_gui/saga_gui.vcxproj ../saga-7.8.1_src/saga-gis/src/saga_core/saga_gui/saga_gui.vcxproj
---- saga-7.8.1_src/saga-gis/src/saga_core/saga_gui/saga_gui.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/saga_core/saga_gui/saga_gui.vcxproj	2021-02-17 00:48:12.555738800 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/saga_core/saga_gui/saga_gui.vcxproj ../saga-7.8.2_src/saga-gis/src/saga_core/saga_gui/saga_gui.vcxproj
+--- saga-7.8.2_src/saga-gis/src/saga_core/saga_gui/saga_gui.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/saga_core/saga_gui/saga_gui.vcxproj	2021-02-18 14:03:30.760200400 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>Application</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -631,9 +616,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/saga_core/saga_gui/saga_gui.vcxproj ../saga
    </ItemGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
-diff -ur saga-7.8.1_src/saga-gis/src/tools/climate/climate_tools/climate_tools.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/climate/climate_tools/climate_tools.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/climate/climate_tools/climate_tools.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/climate/climate_tools/climate_tools.vcxproj	2021-02-17 00:48:15.453901900 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/climate/climate_tools/climate_tools.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/climate/climate_tools/climate_tools.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/climate/climate_tools/climate_tools.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/climate/climate_tools/climate_tools.vcxproj	2021-02-18 14:03:30.762200100 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -677,9 +662,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/climate/climate_tools/climate_tools.v
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/contrib/contrib_perego/contrib_perego.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/contrib/contrib_perego/contrib_perego.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/contrib/contrib_perego/contrib_perego.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/contrib/contrib_perego/contrib_perego.vcxproj	2021-02-17 00:48:15.570902100 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/contrib/contrib_perego/contrib_perego.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/contrib/contrib_perego/contrib_perego.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/contrib/contrib_perego/contrib_perego.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/contrib/contrib_perego/contrib_perego.vcxproj	2021-02-18 14:03:30.764201000 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -723,9 +708,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/contrib/contrib_perego/contrib_perego
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/db/db_odbc/db_odbc.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/db/db_odbc/db_odbc.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/db/db_odbc/db_odbc.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/db/db_odbc/db_odbc.vcxproj	2021-02-17 00:48:15.689920400 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/db/db_odbc/db_odbc.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/db/db_odbc/db_odbc.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/db/db_odbc/db_odbc.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/db/db_odbc/db_odbc.vcxproj	2021-02-18 14:03:30.765200400 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -769,9 +754,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/db/db_odbc/db_odbc.vcxproj ../saga-7.
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/db/db_pgsql/db_pgsql.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/db/db_pgsql/db_pgsql.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/db/db_pgsql/db_pgsql.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/db/db_pgsql/db_pgsql.vcxproj	2021-02-17 00:52:59.148750600 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/db/db_pgsql/db_pgsql.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/db/db_pgsql/db_pgsql.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/db/db_pgsql/db_pgsql.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/db/db_pgsql/db_pgsql.vcxproj	2021-02-18 14:03:30.767202300 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -851,9 +836,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/db/db_pgsql/db_pgsql.vcxproj ../saga-
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/docs/docs_html/docs_html.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/docs/docs_html/docs_html.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/docs/docs_html/docs_html.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/docs/docs_html/docs_html.vcxproj	2021-02-17 00:48:15.955925300 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/docs/docs_html/docs_html.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/docs/docs_html/docs_html.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/docs/docs_html/docs_html.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/docs/docs_html/docs_html.vcxproj	2021-02-18 14:03:30.769204200 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -897,9 +882,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/docs/docs_html/docs_html.vcxproj ../s
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/docs/docs_pdf/docs_pdf.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/docs/docs_pdf/docs_pdf.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/docs/docs_pdf/docs_pdf.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/docs/docs_pdf/docs_pdf.vcxproj	2021-02-17 00:53:00.827538200 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/docs/docs_pdf/docs_pdf.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/docs/docs_pdf/docs_pdf.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/docs/docs_pdf/docs_pdf.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/docs/docs_pdf/docs_pdf.vcxproj	2021-02-18 14:03:30.771202400 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -961,9 +946,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/docs/docs_pdf/docs_pdf.vcxproj ../sag
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/garden/garden_3d_viewer/garden_3d_viewer.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/garden/garden_3d_viewer/garden_3d_viewer.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/garden/garden_3d_viewer/garden_3d_viewer.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/garden/garden_3d_viewer/garden_3d_viewer.vcxproj	2021-02-17 00:48:16.271346800 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/garden/garden_3d_viewer/garden_3d_viewer.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/garden/garden_3d_viewer/garden_3d_viewer.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/garden/garden_3d_viewer/garden_3d_viewer.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/garden/garden_3d_viewer/garden_3d_viewer.vcxproj	2021-02-18 14:03:30.773203400 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1011,9 +996,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/garden/garden_3d_viewer/garden_3d_vie
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/garden/garden_fractals/garden_fractals.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/garden/garden_fractals/garden_fractals.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/garden/garden_fractals/garden_fractals.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/garden/garden_fractals/garden_fractals.vcxproj	2021-02-17 00:48:16.391346100 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/garden/garden_fractals/garden_fractals.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/garden/garden_fractals/garden_fractals.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/garden/garden_fractals/garden_fractals.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/garden/garden_fractals/garden_fractals.vcxproj	2021-02-18 14:03:30.775200700 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1057,9 +1042,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/garden/garden_fractals/garden_fractal
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/garden/garden_games/garden_games.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/garden/garden_games/garden_games.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/garden/garden_games/garden_games.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/garden/garden_games/garden_games.vcxproj	2021-02-17 00:48:16.532348900 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/garden/garden_games/garden_games.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/garden/garden_games/garden_games.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/garden/garden_games/garden_games.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/garden/garden_games/garden_games.vcxproj	2021-02-18 14:03:30.777200500 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1103,9 +1088,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/garden/garden_games/garden_games.vcxp
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/garden/garden_learn_to_program/garden_learn_to_program.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/garden/garden_learn_to_program/garden_learn_to_program.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/garden/garden_learn_to_program/garden_learn_to_program.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/garden/garden_learn_to_program/garden_learn_to_program.vcxproj	2021-02-17 00:48:16.668349500 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/garden/garden_learn_to_program/garden_learn_to_program.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/garden/garden_learn_to_program/garden_learn_to_program.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/garden/garden_learn_to_program/garden_learn_to_program.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/garden/garden_learn_to_program/garden_learn_to_program.vcxproj	2021-02-18 14:03:30.778201900 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1149,9 +1134,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/garden/garden_learn_to_program/garden
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/garden/garden_webservices/garden_webservices.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/garden/garden_webservices/garden_webservices.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/garden/garden_webservices/garden_webservices.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/garden/garden_webservices/garden_webservices.vcxproj	2021-02-17 00:52:58.216123300 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/garden/garden_webservices/garden_webservices.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/garden/garden_webservices/garden_webservices.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/garden/garden_webservices/garden_webservices.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/garden/garden_webservices/garden_webservices.vcxproj	2021-02-18 14:03:30.780202000 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1231,9 +1216,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/garden/garden_webservices/garden_webs
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/grid/grid_analysis/grid_analysis.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/grid/grid_analysis/grid_analysis.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/grid/grid_analysis/grid_analysis.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/grid/grid_analysis/grid_analysis.vcxproj	2021-02-17 00:48:12.684740800 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/grid/grid_analysis/grid_analysis.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_analysis/grid_analysis.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/grid/grid_analysis/grid_analysis.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_analysis/grid_analysis.vcxproj	2021-02-18 14:03:30.782200600 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1277,9 +1262,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/grid/grid_analysis/grid_analysis.vcxp
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/grid/grid_calculus/grid_calculus.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/grid/grid_calculus/grid_calculus.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/grid/grid_calculus/grid_calculus.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/grid/grid_calculus/grid_calculus.vcxproj	2021-02-17 00:48:12.819745700 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/grid/grid_calculus/grid_calculus.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_calculus/grid_calculus.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/grid/grid_calculus/grid_calculus.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_calculus/grid_calculus.vcxproj	2021-02-18 14:03:30.784200500 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1323,9 +1308,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/grid/grid_calculus/grid_calculus.vcxp
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/grid/grid_calculus_bsl/grid_calculus_bsl.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/grid/grid_calculus_bsl/grid_calculus_bsl.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/grid/grid_calculus_bsl/grid_calculus_bsl.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/grid/grid_calculus_bsl/grid_calculus_bsl.vcxproj	2021-02-17 00:48:12.982748600 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/grid/grid_calculus_bsl/grid_calculus_bsl.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_calculus_bsl/grid_calculus_bsl.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/grid/grid_calculus_bsl/grid_calculus_bsl.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_calculus_bsl/grid_calculus_bsl.vcxproj	2021-02-18 14:03:30.786204200 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1369,9 +1354,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/grid/grid_calculus_bsl/grid_calculus_
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/grid/grid_filter/grid_filter.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/grid/grid_filter/grid_filter.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/grid/grid_filter/grid_filter.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/grid/grid_filter/grid_filter.vcxproj	2021-02-17 00:48:13.121750400 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/grid/grid_filter/grid_filter.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_filter/grid_filter.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/grid/grid_filter/grid_filter.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_filter/grid_filter.vcxproj	2021-02-18 14:03:30.788234300 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1415,9 +1400,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/grid/grid_filter/grid_filter.vcxproj 
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/grid/grid_gridding/grid_gridding.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/grid/grid_gridding/grid_gridding.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/grid/grid_gridding/grid_gridding.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/grid/grid_gridding/grid_gridding.vcxproj	2021-02-17 00:48:13.269752500 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/grid/grid_gridding/grid_gridding.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_gridding/grid_gridding.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/grid/grid_gridding/grid_gridding.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_gridding/grid_gridding.vcxproj	2021-02-18 14:03:30.789232000 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1461,9 +1446,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/grid/grid_gridding/grid_gridding.vcxp
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/grid/grid_spline/grid_spline.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/grid/grid_spline/grid_spline.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/grid/grid_spline/grid_spline.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/grid/grid_spline/grid_spline.vcxproj	2021-02-17 00:48:13.394758500 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/grid/grid_spline/grid_spline.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_spline/grid_spline.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/grid/grid_spline/grid_spline.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_spline/grid_spline.vcxproj	2021-02-18 14:03:30.791231800 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1507,9 +1492,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/grid/grid_spline/grid_spline.vcxproj 
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/grid/grid_tools/grid_tools.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/grid/grid_tools/grid_tools.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/grid/grid_tools/grid_tools.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/grid/grid_tools/grid_tools.vcxproj	2021-02-17 00:48:13.530760800 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/grid/grid_tools/grid_tools.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_tools/grid_tools.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/grid/grid_tools/grid_tools.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_tools/grid_tools.vcxproj	2021-02-18 14:03:30.793222800 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1553,9 +1538,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/grid/grid_tools/grid_tools.vcxproj ..
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/grid/grid_visualisation/grid_visualisation.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/grid/grid_visualisation/grid_visualisation.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/grid/grid_visualisation/grid_visualisation.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/grid/grid_visualisation/grid_visualisation.vcxproj	2021-02-17 00:48:13.656760600 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/grid/grid_visualisation/grid_visualisation.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_visualisation/grid_visualisation.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/grid/grid_visualisation/grid_visualisation.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_visualisation/grid_visualisation.vcxproj	2021-02-18 14:03:30.795229500 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1599,9 +1584,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/grid/grid_visualisation/grid_visualis
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/grid/grids_tools/grids_tools.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/grid/grids_tools/grids_tools.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/grid/grids_tools/grids_tools.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/grid/grids_tools/grids_tools.vcxproj	2021-02-17 00:48:22.934912800 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/grid/grids_tools/grids_tools.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/grid/grids_tools/grids_tools.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/grid/grids_tools/grids_tools.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/grid/grids_tools/grids_tools.vcxproj	2021-02-18 14:03:30.797200900 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1645,9 +1630,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/grid/grids_tools/grids_tools.vcxproj 
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_classification/imagery_classification.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_classification/imagery_classification.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_classification/imagery_classification.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_classification/imagery_classification.vcxproj	2021-02-17 00:48:16.908356000 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_classification/imagery_classification.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_classification/imagery_classification.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_classification/imagery_classification.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_classification/imagery_classification.vcxproj	2021-02-18 14:03:30.798202200 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1691,9 +1676,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_classification/imager
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_isocluster/imagery_isocluster.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_isocluster/imagery_isocluster.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_isocluster/imagery_isocluster.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_isocluster/imagery_isocluster.vcxproj	2021-02-17 00:48:22.542533300 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_isocluster/imagery_isocluster.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_isocluster/imagery_isocluster.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_isocluster/imagery_isocluster.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_isocluster/imagery_isocluster.vcxproj	2021-02-18 14:03:30.800202200 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1737,9 +1722,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_isocluster/imagery_is
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_maxent/imagery_maxent.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_maxent/imagery_maxent.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_maxent/imagery_maxent.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_maxent/imagery_maxent.vcxproj	2021-02-17 00:48:22.159526500 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_maxent/imagery_maxent.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_maxent/imagery_maxent.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_maxent/imagery_maxent.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_maxent/imagery_maxent.vcxproj	2021-02-18 14:03:30.802202600 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1783,9 +1768,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_maxent/imagery_maxent
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_opencv/imagery_opencv.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_opencv/imagery_opencv.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_opencv/imagery_opencv.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_opencv/imagery_opencv.vcxproj	2021-02-17 00:48:17.050357200 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_opencv/imagery_opencv.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_opencv/imagery_opencv.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_opencv/imagery_opencv.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_opencv/imagery_opencv.vcxproj	2021-02-18 14:03:30.804202000 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1829,9 +1814,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_opencv/imagery_opencv
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_photogrammetry/imagery_photogrammetry.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_photogrammetry/imagery_photogrammetry.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_photogrammetry/imagery_photogrammetry.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_photogrammetry/imagery_photogrammetry.vcxproj	2021-02-17 00:48:21.916524500 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_photogrammetry/imagery_photogrammetry.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_photogrammetry/imagery_photogrammetry.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_photogrammetry/imagery_photogrammetry.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_photogrammetry/imagery_photogrammetry.vcxproj	2021-02-18 14:03:30.806202800 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1875,9 +1860,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_photogrammetry/imager
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_segmentation/imagery_segmentation.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_segmentation/imagery_segmentation.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_segmentation/imagery_segmentation.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_segmentation/imagery_segmentation.vcxproj	2021-02-17 00:48:17.198362100 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_segmentation/imagery_segmentation.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_segmentation/imagery_segmentation.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_segmentation/imagery_segmentation.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_segmentation/imagery_segmentation.vcxproj	2021-02-18 14:03:30.808202500 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1921,9 +1906,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_segmentation/imagery_
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_svm/imagery_svm.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_svm/imagery_svm.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_svm/imagery_svm.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_svm/imagery_svm.vcxproj	2021-02-17 00:48:17.366364600 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_svm/imagery_svm.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_svm/imagery_svm.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_svm/imagery_svm.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_svm/imagery_svm.vcxproj	2021-02-18 14:03:30.811205900 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1967,9 +1952,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_svm/imagery_svm.vcxpr
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_tools/imagery_tools.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_tools/imagery_tools.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_tools/imagery_tools.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_tools/imagery_tools.vcxproj	2021-02-17 00:48:17.501369500 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_tools/imagery_tools.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_tools/imagery_tools.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_tools/imagery_tools.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_tools/imagery_tools.vcxproj	2021-02-18 14:03:30.814210500 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2013,9 +1998,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_tools/imagery_tools.v
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_vigra/imagery_vigra.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_vigra/imagery_vigra.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_vigra/imagery_vigra.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_vigra/imagery_vigra.vcxproj	2021-02-17 00:48:17.648933500 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_vigra/imagery_vigra.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_vigra/imagery_vigra.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_vigra/imagery_vigra.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_vigra/imagery_vigra.vcxproj	2021-02-18 14:03:30.816202300 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2059,9 +2044,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/imagery/imagery_vigra/imagery_vigra.v
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/io/io_esri_e00/io_esri_e00.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/io/io_esri_e00/io_esri_e00.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/io/io_esri_e00/io_esri_e00.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/io/io_esri_e00/io_esri_e00.vcxproj	2021-02-17 00:48:17.767930700 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_esri_e00/io_esri_e00.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/io/io_esri_e00/io_esri_e00.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/io/io_esri_e00/io_esri_e00.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_esri_e00/io_esri_e00.vcxproj	2021-02-18 14:03:30.819206200 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2105,9 +2090,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/io/io_esri_e00/io_esri_e00.vcxproj ..
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/io/io_gdal/io_gdal.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/io/io_gdal/io_gdal.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/io/io_gdal/io_gdal.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/io/io_gdal/io_gdal.vcxproj	2021-02-17 00:48:17.918934700 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_gdal/io_gdal.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/io/io_gdal/io_gdal.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/io/io_gdal/io_gdal.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_gdal/io_gdal.vcxproj	2021-02-18 14:03:30.820206100 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2151,9 +2136,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/io/io_gdal/io_gdal.vcxproj ../saga-7.
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/io/io_gps/io_gps.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/io/io_gps/io_gps.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/io/io_gps/io_gps.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/io/io_gps/io_gps.vcxproj	2021-02-17 00:48:18.034940300 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_gps/io_gps.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/io/io_gps/io_gps.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/io/io_gps/io_gps.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_gps/io_gps.vcxproj	2021-02-18 14:03:30.822205800 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2197,9 +2182,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/io/io_gps/io_gps.vcxproj ../saga-7.8.
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/io/io_grid/io_grid.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/io/io_grid/io_grid.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/io/io_grid/io_grid.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/io/io_grid/io_grid.vcxproj	2021-02-17 00:48:18.163966300 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_grid/io_grid.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/io/io_grid/io_grid.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/io/io_grid/io_grid.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_grid/io_grid.vcxproj	2021-02-18 14:03:30.824205800 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2243,9 +2228,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/io/io_grid/io_grid.vcxproj ../saga-7.
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/io/io_grid_image/io_grid_image.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/io/io_grid_image/io_grid_image.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/io/io_grid_image/io_grid_image.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/io/io_grid_image/io_grid_image.vcxproj	2021-02-17 00:48:18.283939700 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_grid_image/io_grid_image.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/io/io_grid_image/io_grid_image.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/io/io_grid_image/io_grid_image.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_grid_image/io_grid_image.vcxproj	2021-02-18 14:03:30.825205800 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2289,9 +2274,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/io/io_grid_image/io_grid_image.vcxpro
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/io/io_pdal/io_pdal.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/io/io_pdal/io_pdal.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/io/io_pdal/io_pdal.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/io/io_pdal/io_pdal.vcxproj	2021-02-17 00:48:11.375433500 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_pdal/io_pdal.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/io/io_pdal/io_pdal.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/io/io_pdal/io_pdal.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_pdal/io_pdal.vcxproj	2021-02-18 14:03:30.827206000 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2322,9 +2307,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/io/io_pdal/io_pdal.vcxproj ../saga-7.
    </PropertyGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
    <ImportGroup Label="ExtensionSettings">
-diff -ur saga-7.8.1_src/saga-gis/src/tools/io/io_shapes/io_shapes.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/io/io_shapes/io_shapes.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/io/io_shapes/io_shapes.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/io/io_shapes/io_shapes.vcxproj	2021-02-17 00:48:18.413943900 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_shapes/io_shapes.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/io/io_shapes/io_shapes.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/io/io_shapes/io_shapes.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_shapes/io_shapes.vcxproj	2021-02-18 14:03:30.829206000 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2368,9 +2353,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/io/io_shapes/io_shapes.vcxproj ../sag
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/io/io_shapes_dxf/io_shapes_dxf.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/io/io_shapes_dxf/io_shapes_dxf.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/io/io_shapes_dxf/io_shapes_dxf.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/io/io_shapes_dxf/io_shapes_dxf.vcxproj	2021-02-17 00:48:18.535946100 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_shapes_dxf/io_shapes_dxf.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/io/io_shapes_dxf/io_shapes_dxf.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/io/io_shapes_dxf/io_shapes_dxf.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_shapes_dxf/io_shapes_dxf.vcxproj	2021-02-18 14:03:30.831207800 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2414,9 +2399,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/io/io_shapes_dxf/io_shapes_dxf.vcxpro
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/io/io_shapes_las/io_shapes_las.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/io/io_shapes_las/io_shapes_las.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/io/io_shapes_las/io_shapes_las.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/io/io_shapes_las/io_shapes_las.vcxproj	2021-02-17 00:48:18.654947400 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_shapes_las/io_shapes_las.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/io/io_shapes_las/io_shapes_las.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/io/io_shapes_las/io_shapes_las.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_shapes_las/io_shapes_las.vcxproj	2021-02-18 14:03:30.833207200 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2460,9 +2445,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/io/io_shapes_las/io_shapes_las.vcxpro
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/io/io_table/io_table.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/io/io_table/io_table.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/io/io_table/io_table.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/io/io_table/io_table.vcxproj	2021-02-17 00:48:18.777953100 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_table/io_table.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/io/io_table/io_table.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/io/io_table/io_table.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_table/io_table.vcxproj	2021-02-18 14:03:30.835203200 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2506,9 +2491,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/io/io_table/io_table.vcxproj ../saga-
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/io/io_virtual/io_virtual.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/io/io_virtual/io_virtual.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/io/io_virtual/io_virtual.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/io/io_virtual/io_virtual.vcxproj	2021-02-17 00:48:22.036525000 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_virtual/io_virtual.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/io/io_virtual/io_virtual.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/io/io_virtual/io_virtual.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_virtual/io_virtual.vcxproj	2021-02-18 14:03:30.837206000 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2552,9 +2537,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/io/io_virtual/io_virtual.vcxproj ../s
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/io/io_webservices/io_webservices.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/io/io_webservices/io_webservices.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/io/io_webservices/io_webservices.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/io/io_webservices/io_webservices.vcxproj	2021-02-17 00:52:58.223120100 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_webservices/io_webservices.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/io/io_webservices/io_webservices.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/io/io_webservices/io_webservices.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_webservices/io_webservices.vcxproj	2021-02-18 14:03:30.838227300 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2621,9 +2606,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/io/io_webservices/io_webservices.vcxp
        <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
        <SuppressStartupBanner>true</SuppressStartupBanner>
        <AdditionalLibraryDirectories>$(GDAL)\lib;$(WXWIN)\lib\vc_x64_dll;..\..\..\..\bin\saga_vc_$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/pointcloud/pointcloud_tools/pointcloud_tools.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/pointcloud/pointcloud_tools/pointcloud_tools.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/pointcloud/pointcloud_tools/pointcloud_tools.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/pointcloud/pointcloud_tools/pointcloud_tools.vcxproj	2021-02-17 00:48:13.772761600 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/pointcloud/pointcloud_tools/pointcloud_tools.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/pointcloud/pointcloud_tools/pointcloud_tools.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/pointcloud/pointcloud_tools/pointcloud_tools.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/pointcloud/pointcloud_tools/pointcloud_tools.vcxproj	2021-02-18 14:03:30.840227000 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2667,9 +2652,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/pointcloud/pointcloud_tools/pointclou
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/pointcloud/pointcloud_viewer/pointcloud_viewer.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/pointcloud/pointcloud_viewer/pointcloud_viewer.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/pointcloud/pointcloud_viewer/pointcloud_viewer.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/pointcloud/pointcloud_viewer/pointcloud_viewer.vcxproj	2021-02-17 00:48:13.994766300 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/pointcloud/pointcloud_viewer/pointcloud_viewer.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/pointcloud/pointcloud_viewer/pointcloud_viewer.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/pointcloud/pointcloud_viewer/pointcloud_viewer.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/pointcloud/pointcloud_viewer/pointcloud_viewer.vcxproj	2021-02-18 14:03:30.842227900 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2717,9 +2702,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/pointcloud/pointcloud_viewer/pointclo
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/projection/pj_georeference/pj_georeference.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/projection/pj_georeference/pj_georeference.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/projection/pj_georeference/pj_georeference.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/projection/pj_georeference/pj_georeference.vcxproj	2021-02-17 00:48:18.911955100 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/projection/pj_georeference/pj_georeference.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/projection/pj_georeference/pj_georeference.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/projection/pj_georeference/pj_georeference.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/projection/pj_georeference/pj_georeference.vcxproj	2021-02-18 14:03:30.843227100 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2763,9 +2748,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/projection/pj_georeference/pj_georefe
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/projection/pj_geotrans/pj_geotrans.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/projection/pj_geotrans/pj_geotrans.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/projection/pj_geotrans/pj_geotrans.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/projection/pj_geotrans/pj_geotrans.vcxproj	2021-02-17 00:48:19.033954300 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/projection/pj_geotrans/pj_geotrans.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/projection/pj_geotrans/pj_geotrans.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/projection/pj_geotrans/pj_geotrans.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/projection/pj_geotrans/pj_geotrans.vcxproj	2021-02-18 14:03:30.845227300 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2809,9 +2794,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/projection/pj_geotrans/pj_geotrans.vc
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/projection/pj_proj4/pj_proj4.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/projection/pj_proj4/pj_proj4.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/projection/pj_proj4/pj_proj4.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/projection/pj_proj4/pj_proj4.vcxproj	2021-02-17 00:53:00.048650400 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/projection/pj_proj4/pj_proj4.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/projection/pj_proj4/pj_proj4.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/projection/pj_proj4/pj_proj4.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/projection/pj_proj4/pj_proj4.vcxproj	2021-02-18 14:03:30.847227200 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2891,9 +2876,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/projection/pj_proj4/pj_proj4.vcxproj 
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/riegl/riegl_io_rdb2_import/riegl_io_rdb2_import.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/riegl/riegl_io_rdb2_import/riegl_io_rdb2_import.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/riegl/riegl_io_rdb2_import/riegl_io_rdb2_import.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/riegl/riegl_io_rdb2_import/riegl_io_rdb2_import.vcxproj	2021-02-17 00:48:22.805908400 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/riegl/riegl_io_rdb2_import/riegl_io_rdb2_import.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/riegl/riegl_io_rdb2_import/riegl_io_rdb2_import.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/riegl/riegl_io_rdb2_import/riegl_io_rdb2_import.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/riegl/riegl_io_rdb2_import/riegl_io_rdb2_import.vcxproj	2021-02-18 14:03:30.848227200 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2937,9 +2922,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/riegl/riegl_io_rdb2_import/riegl_io_r
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_grid/shapes_grid.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_grid/shapes_grid.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_grid/shapes_grid.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_grid/shapes_grid.vcxproj	2021-02-17 00:48:14.109813200 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_grid/shapes_grid.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_grid/shapes_grid.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_grid/shapes_grid.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_grid/shapes_grid.vcxproj	2021-02-18 14:03:30.851202800 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2983,9 +2968,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_grid/shapes_grid.vcxpro
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_lines/shapes_lines.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_lines/shapes_lines.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_lines/shapes_lines.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_lines/shapes_lines.vcxproj	2021-02-17 00:48:14.240804200 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_lines/shapes_lines.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_lines/shapes_lines.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_lines/shapes_lines.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_lines/shapes_lines.vcxproj	2021-02-18 14:03:30.854206600 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3029,9 +3014,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_lines/shapes_lines.vcxp
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_points/shapes_points.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_points/shapes_points.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_points/shapes_points.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_points/shapes_points.vcxproj	2021-02-17 00:48:14.380807200 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_points/shapes_points.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_points/shapes_points.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_points/shapes_points.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_points/shapes_points.vcxproj	2021-02-18 14:03:30.855206000 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3075,9 +3060,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_points/shapes_points.vc
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_polygons/shapes_polygons.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_polygons/shapes_polygons.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_polygons/shapes_polygons.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_polygons/shapes_polygons.vcxproj	2021-02-17 00:48:14.500806700 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_polygons/shapes_polygons.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_polygons/shapes_polygons.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_polygons/shapes_polygons.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_polygons/shapes_polygons.vcxproj	2021-02-18 14:03:30.857206500 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3121,9 +3106,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_polygons/shapes_polygon
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_tools/shapes_tools.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_tools/shapes_tools.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_tools/shapes_tools.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_tools/shapes_tools.vcxproj	2021-02-17 00:48:15.113893700 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_tools/shapes_tools.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_tools/shapes_tools.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_tools/shapes_tools.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_tools/shapes_tools.vcxproj	2021-02-18 14:03:30.859206200 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3167,9 +3152,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_tools/shapes_tools.vcxp
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_transect/shapes_transect.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_transect/shapes_transect.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_transect/shapes_transect.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_transect/shapes_transect.vcxproj	2021-02-17 00:48:14.614846500 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_transect/shapes_transect.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_transect/shapes_transect.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_transect/shapes_transect.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_transect/shapes_transect.vcxproj	2021-02-18 14:03:30.860205800 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3213,9 +3198,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/shapes/shapes_transect/shapes_transec
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/simulation/sim_air_flow/sim_air_flow.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/simulation/sim_air_flow/sim_air_flow.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/simulation/sim_air_flow/sim_air_flow.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/simulation/sim_air_flow/sim_air_flow.vcxproj	2021-02-17 00:48:11.586476600 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_air_flow/sim_air_flow.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_air_flow/sim_air_flow.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/simulation/sim_air_flow/sim_air_flow.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_air_flow/sim_air_flow.vcxproj	2021-02-18 14:03:30.862206000 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3246,9 +3231,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/simulation/sim_air_flow/sim_air_flow.
    </PropertyGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
    <ImportGroup Label="ExtensionSettings">
-diff -ur saga-7.8.1_src/saga-gis/src/tools/simulation/sim_cellular_automata/sim_cellular_automata.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/simulation/sim_cellular_automata/sim_cellular_automata.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/simulation/sim_cellular_automata/sim_cellular_automata.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/simulation/sim_cellular_automata/sim_cellular_automata.vcxproj	2021-02-17 00:48:19.280958700 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_cellular_automata/sim_cellular_automata.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_cellular_automata/sim_cellular_automata.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/simulation/sim_cellular_automata/sim_cellular_automata.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_cellular_automata/sim_cellular_automata.vcxproj	2021-02-18 14:03:30.864206500 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3292,9 +3277,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/simulation/sim_cellular_automata/sim_
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/simulation/sim_ecosystems_hugget/sim_ecosystems_hugget.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/simulation/sim_ecosystems_hugget/sim_ecosystems_hugget.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/simulation/sim_ecosystems_hugget/sim_ecosystems_hugget.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/simulation/sim_ecosystems_hugget/sim_ecosystems_hugget.vcxproj	2021-02-17 00:48:19.402960300 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_ecosystems_hugget/sim_ecosystems_hugget.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_ecosystems_hugget/sim_ecosystems_hugget.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/simulation/sim_ecosystems_hugget/sim_ecosystems_hugget.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_ecosystems_hugget/sim_ecosystems_hugget.vcxproj	2021-02-18 14:03:30.866206700 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3338,9 +3323,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/simulation/sim_ecosystems_hugget/sim_
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/simulation/sim_erosion/sim_erosion.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/simulation/sim_erosion/sim_erosion.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/simulation/sim_erosion/sim_erosion.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/simulation/sim_erosion/sim_erosion.vcxproj	2021-02-17 00:48:19.526977400 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_erosion/sim_erosion.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_erosion/sim_erosion.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/simulation/sim_erosion/sim_erosion.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_erosion/sim_erosion.vcxproj	2021-02-18 14:03:30.867206200 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3384,9 +3369,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/simulation/sim_erosion/sim_erosion.vc
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/simulation/sim_fire_spreading/sim_fire_spreading.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/simulation/sim_fire_spreading/sim_fire_spreading.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/simulation/sim_fire_spreading/sim_fire_spreading.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/simulation/sim_fire_spreading/sim_fire_spreading.vcxproj	2021-02-17 00:48:19.646966600 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_fire_spreading/sim_fire_spreading.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_fire_spreading/sim_fire_spreading.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/simulation/sim_fire_spreading/sim_fire_spreading.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_fire_spreading/sim_fire_spreading.vcxproj	2021-02-18 14:03:30.869207600 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3430,9 +3415,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/simulation/sim_fire_spreading/sim_fir
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/simulation/sim_geomorphology/sim_geomorphology.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/simulation/sim_geomorphology/sim_geomorphology.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/simulation/sim_geomorphology/sim_geomorphology.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/simulation/sim_geomorphology/sim_geomorphology.vcxproj	2021-02-17 00:48:22.669906200 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_geomorphology/sim_geomorphology.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_geomorphology/sim_geomorphology.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/simulation/sim_geomorphology/sim_geomorphology.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_geomorphology/sim_geomorphology.vcxproj	2021-02-18 14:03:30.871206000 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3476,9 +3461,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/simulation/sim_geomorphology/sim_geom
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/simulation/sim_hydrology/sim_hydrology.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/simulation/sim_hydrology/sim_hydrology.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/simulation/sim_hydrology/sim_hydrology.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/simulation/sim_hydrology/sim_hydrology.vcxproj	2021-02-17 00:48:19.770968600 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_hydrology/sim_hydrology.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_hydrology/sim_hydrology.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/simulation/sim_hydrology/sim_hydrology.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_hydrology/sim_hydrology.vcxproj	2021-02-18 14:03:30.872206000 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3522,9 +3507,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/simulation/sim_hydrology/sim_hydrolog
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/simulation/sim_ihacres/sim_ihacres.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/simulation/sim_ihacres/sim_ihacres.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/simulation/sim_ihacres/sim_ihacres.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/simulation/sim_ihacres/sim_ihacres.vcxproj	2021-02-17 00:48:19.896973000 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_ihacres/sim_ihacres.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_ihacres/sim_ihacres.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/simulation/sim_ihacres/sim_ihacres.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_ihacres/sim_ihacres.vcxproj	2021-02-18 14:03:30.874206900 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3568,9 +3553,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/simulation/sim_ihacres/sim_ihacres.vc
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/simulation/sim_landscape_evolution/sim_landscape_evolution.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/simulation/sim_landscape_evolution/sim_landscape_evolution.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/simulation/sim_landscape_evolution/sim_landscape_evolution.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/simulation/sim_landscape_evolution/sim_landscape_evolution.vcxproj	2021-02-17 00:48:23.070945200 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_landscape_evolution/sim_landscape_evolution.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_landscape_evolution/sim_landscape_evolution.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/simulation/sim_landscape_evolution/sim_landscape_evolution.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_landscape_evolution/sim_landscape_evolution.vcxproj	2021-02-18 14:03:30.876204300 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3614,9 +3599,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/simulation/sim_landscape_evolution/si
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/simulation/sim_qm_of_esp/sim_qm_of_esp.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/simulation/sim_qm_of_esp/sim_qm_of_esp.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/simulation/sim_qm_of_esp/sim_qm_of_esp.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/simulation/sim_qm_of_esp/sim_qm_of_esp.vcxproj	2021-02-17 00:48:22.416548000 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_qm_of_esp/sim_qm_of_esp.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_qm_of_esp/sim_qm_of_esp.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/simulation/sim_qm_of_esp/sim_qm_of_esp.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_qm_of_esp/sim_qm_of_esp.vcxproj	2021-02-18 14:03:30.878205400 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3660,9 +3645,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/simulation/sim_qm_of_esp/sim_qm_of_es
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/simulation/sim_rivflow/sim_rivflow.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/simulation/sim_rivflow/sim_rivflow.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/simulation/sim_rivflow/sim_rivflow.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/simulation/sim_rivflow/sim_rivflow.vcxproj	2021-02-17 00:48:22.288533200 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_rivflow/sim_rivflow.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_rivflow/sim_rivflow.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/simulation/sim_rivflow/sim_rivflow.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_rivflow/sim_rivflow.vcxproj	2021-02-18 14:03:30.879204100 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3706,9 +3691,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/simulation/sim_rivflow/sim_rivflow.vc
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/statistics/statistics_grid/statistics_grid.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/statistics/statistics_grid/statistics_grid.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/statistics/statistics_grid/statistics_grid.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/statistics/statistics_grid/statistics_grid.vcxproj	2021-02-17 00:48:20.021978500 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_grid/statistics_grid.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_grid/statistics_grid.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_grid/statistics_grid.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_grid/statistics_grid.vcxproj	2021-02-18 14:03:30.881202700 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3752,9 +3737,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/statistics/statistics_grid/statistics
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/statistics/statistics_kriging/statistics_kriging.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/statistics/statistics_kriging/statistics_kriging.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/statistics/statistics_kriging/statistics_kriging.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/statistics/statistics_kriging/statistics_kriging.vcxproj	2021-02-17 00:48:20.225978800 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_kriging/statistics_kriging.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_kriging/statistics_kriging.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_kriging/statistics_kriging.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_kriging/statistics_kriging.vcxproj	2021-02-18 14:03:30.883204100 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3802,9 +3787,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/statistics/statistics_kriging/statist
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/statistics/statistics_points/statistics_points.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/statistics/statistics_points/statistics_points.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/statistics/statistics_points/statistics_points.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/statistics/statistics_points/statistics_points.vcxproj	2021-02-17 00:48:20.351977400 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_points/statistics_points.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_points/statistics_points.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_points/statistics_points.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_points/statistics_points.vcxproj	2021-02-18 14:03:30.885202600 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3848,9 +3833,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/statistics/statistics_points/statisti
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/statistics/statistics_regression/statistics_regression.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/statistics/statistics_regression/statistics_regression.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/statistics/statistics_regression/statistics_regression.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/statistics/statistics_regression/statistics_regression.vcxproj	2021-02-17 00:48:20.480981600 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_regression/statistics_regression.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_regression/statistics_regression.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_regression/statistics_regression.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_regression/statistics_regression.vcxproj	2021-02-18 14:03:30.887202900 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3894,9 +3879,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/statistics/statistics_regression/stat
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/table/table_calculus/table_calculus.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/table/table_calculus/table_calculus.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/table/table_calculus/table_calculus.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/table/table_calculus/table_calculus.vcxproj	2021-02-17 00:48:14.739847900 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/table/table_calculus/table_calculus.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/table/table_calculus/table_calculus.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/table/table_calculus/table_calculus.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/table/table_calculus/table_calculus.vcxproj	2021-02-18 14:03:30.889203800 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3940,9 +3925,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/table/table_calculus/table_calculus.v
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/table/table_tools/table_tools.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/table/table_tools/table_tools.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/table/table_tools/table_tools.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/table/table_tools/table_tools.vcxproj	2021-02-17 00:48:14.874849600 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/table/table_tools/table_tools.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/table/table_tools/table_tools.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/table/table_tools/table_tools.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/table/table_tools/table_tools.vcxproj	2021-02-18 14:03:30.891202700 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3986,9 +3971,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/table/table_tools/table_tools.vcxproj
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_channels/ta_channels.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_channels/ta_channels.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_channels/ta_channels.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_channels/ta_channels.vcxproj	2021-02-17 00:48:20.609984500 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_channels/ta_channels.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_channels/ta_channels.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_channels/ta_channels.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_channels/ta_channels.vcxproj	2021-02-18 14:03:30.893205300 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -4032,9 +4017,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_channels/ta_chann
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_cliffmetrics/ta_cliffmetrics.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_cliffmetrics/ta_cliffmetrics.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_cliffmetrics/ta_cliffmetrics.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_cliffmetrics/ta_cliffmetrics.vcxproj	2021-02-17 00:48:10.931410900 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_cliffmetrics/ta_cliffmetrics.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_cliffmetrics/ta_cliffmetrics.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_cliffmetrics/ta_cliffmetrics.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_cliffmetrics/ta_cliffmetrics.vcxproj	2021-02-18 14:03:30.894203800 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -4065,9 +4050,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_cliffmetrics/ta_c
    </PropertyGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
    <ImportGroup Label="ExtensionSettings">
-diff -ur saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_compound/ta_compound.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_compound/ta_compound.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_compound/ta_compound.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_compound/ta_compound.vcxproj	2021-02-17 00:48:20.884989200 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_compound/ta_compound.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_compound/ta_compound.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_compound/ta_compound.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_compound/ta_compound.vcxproj	2021-02-18 14:03:30.896203900 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -4109,9 +4094,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_compound/ta_compo
      <ProjectReference Include="..\ta_channels\ta_channels.vcxproj">
        <Project>{87413146-7080-434b-b515-09e51dd32453}</Project>
      </ProjectReference>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_hydrology/ta_hydrology.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_hydrology/ta_hydrology.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_hydrology/ta_hydrology.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_hydrology/ta_hydrology.vcxproj	2021-02-17 00:48:21.008990800 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_hydrology/ta_hydrology.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_hydrology/ta_hydrology.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_hydrology/ta_hydrology.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_hydrology/ta_hydrology.vcxproj	2021-02-18 14:03:30.898203500 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -4155,9 +4140,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_hydrology/ta_hydr
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_lighting/ta_lighting.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_lighting/ta_lighting.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_lighting/ta_lighting.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_lighting/ta_lighting.vcxproj	2021-02-17 00:48:21.134992400 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_lighting/ta_lighting.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_lighting/ta_lighting.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_lighting/ta_lighting.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_lighting/ta_lighting.vcxproj	2021-02-18 14:03:30.900203800 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -4201,9 +4186,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_lighting/ta_light
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_morphometry/ta_morphometry.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_morphometry/ta_morphometry.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_morphometry/ta_morphometry.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_morphometry/ta_morphometry.vcxproj	2021-02-17 00:48:21.268509700 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_morphometry/ta_morphometry.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_morphometry/ta_morphometry.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_morphometry/ta_morphometry.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_morphometry/ta_morphometry.vcxproj	2021-02-18 14:03:30.901204100 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -4247,9 +4232,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_morphometry/ta_mo
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_preprocessor/ta_preprocessor.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_preprocessor/ta_preprocessor.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_preprocessor/ta_preprocessor.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_preprocessor/ta_preprocessor.vcxproj	2021-02-17 00:48:21.393520900 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_preprocessor/ta_preprocessor.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_preprocessor/ta_preprocessor.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_preprocessor/ta_preprocessor.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_preprocessor/ta_preprocessor.vcxproj	2021-02-18 14:03:30.903204000 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -4293,9 +4278,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_preprocessor/ta_p
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_profiles/ta_profiles.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_profiles/ta_profiles.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_profiles/ta_profiles.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_profiles/ta_profiles.vcxproj	2021-02-17 00:48:21.526553000 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_profiles/ta_profiles.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_profiles/ta_profiles.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_profiles/ta_profiles.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_profiles/ta_profiles.vcxproj	2021-02-18 14:03:30.905203500 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -4339,9 +4324,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_profiles/ta_profi
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_slope_stability/ta_slope_stability.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_slope_stability/ta_slope_stability.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_slope_stability/ta_slope_stability.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_slope_stability/ta_slope_stability.vcxproj	2021-02-17 00:48:21.778518800 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_slope_stability/ta_slope_stability.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_slope_stability/ta_slope_stability.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_slope_stability/ta_slope_stability.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_slope_stability/ta_slope_stability.vcxproj	2021-02-18 14:03:30.907204800 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -4383,9 +4368,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/terrain_analysis/ta_slope_stability/t
      <ProjectReference Include="..\ta_channels\ta_channels.vcxproj">
        <Project>{87413146-7080-434b-b515-09e51dd32453}</Project>
      </ProjectReference>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/tin/tin_tools/tin_tools.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/tin/tin_tools/tin_tools.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/tin/tin_tools/tin_tools.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/tin/tin_tools/tin_tools.vcxproj	2021-02-17 00:48:14.993851500 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/tin/tin_tools/tin_tools.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/tin/tin_tools/tin_tools.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/tin/tin_tools/tin_tools.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/tin/tin_tools/tin_tools.vcxproj	2021-02-18 14:03:30.909203900 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -4429,9 +4414,9 @@ diff -ur saga-7.8.1_src/saga-gis/src/tools/tin/tin_tools/tin_tools.vcxproj ../sa
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
-diff -ur saga-7.8.1_src/saga-gis/src/tools/tin/tin_viewer/tin_viewer.vcxproj ../saga-7.8.1_src/saga-gis/src/tools/tin/tin_viewer/tin_viewer.vcxproj
---- saga-7.8.1_src/saga-gis/src/tools/tin/tin_viewer/tin_viewer.vcxproj	2020-10-29 09:46:38.000000000 +0100
-+++ ../saga-7.8.1_src/saga-gis/src/tools/tin/tin_viewer/tin_viewer.vcxproj	2021-02-17 00:48:15.329910600 +0100
+diff -ur saga-7.8.2_src/saga-gis/src/tools/tin/tin_viewer/tin_viewer.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/tin/tin_viewer/tin_viewer.vcxproj
+--- saga-7.8.2_src/saga-gis/src/tools/tin/tin_viewer/tin_viewer.vcxproj	2020-11-26 18:06:36.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/tin/tin_viewer/tin_viewer.vcxproj	2021-02-18 14:03:30.910203000 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
