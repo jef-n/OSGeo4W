@@ -11,6 +11,12 @@ use Data::Dumper;
 die "OSGEO4W_REP not set" unless -d $ENV{'OSGEO4W_REP'};
 chdir $ENV{OSGEO4W_REP};
 
+die "still uploading" if -f ".uploading";
+
+open F, ">.uploading";
+print F "$$\n";
+close F;
+
 die "MASTER_SCP not set" unless exists $ENV{"MASTER_SCP"};
 die "MASTER_REGEN_URI not set" unless exists $ENV{"MASTER_REGEN_URI"};
 die "setup.ini not found" unless -f "x86_64/setup.ini";
@@ -264,3 +270,5 @@ if( system("/usr/bin/rsync -v --chmod=D775,F664 -r '$tdir/' '$ENV{MASTER_SCP}/'"
 }
 
 system "/usr/bin/curl -v '$ENV{MASTER_REGEN_URI}'";
+
+unlink ".uploading";
