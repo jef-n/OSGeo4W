@@ -38,10 +38,11 @@ cd ..
 if [ -d qgis ]; then
 	cd qgis
 
-	if [ $(git branch --show-current) != $LTRBRANCH ]; then
+	if [ "$(git branch --show-current)" != $LTRBRANCH ]; then
 		cd ..
 		rm -rf qgis
 	else
+		git clean -f
 		git reset --hard
 		git pull
 		cd ..

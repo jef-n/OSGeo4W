@@ -18,11 +18,15 @@ source ../../../scripts/build-helpers
 
 startlog
 
-if cd ../qgis; then
+cd ..
+
+if [ -d qgis ]; then
+	cd qgis
+
+	git clean -f
 	git reset --hard
 	git pull
 else
-	cd ..
 	git clone --depth 120 $REPO qgis
 	cd qgis
 fi

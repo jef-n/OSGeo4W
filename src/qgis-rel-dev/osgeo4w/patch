@@ -1,3 +1,16 @@
+diff --git a/cmake/FindPDAL.cmake b/cmake/FindPDAL.cmake
+index 34a4ae5d7..1899d26de 100644
+--- a/cmake/FindPDAL.cmake
++++ b/cmake/FindPDAL.cmake
+@@ -26,7 +26,7 @@ FIND_PATH(PDAL_INCLUDE_DIR pdal/pdal.hpp
+   )
+ FIND_PATH(PDAL_INCLUDE_DIR pdal/pdal.hpp)
+ 
+-FIND_LIBRARY(PDAL_CPP_LIBRARY NAMES pdalccpp libpdalcpp PATHS
++FIND_LIBRARY(PDAL_CPP_LIBRARY NAMES pdalcpp libpdalcpp PATHS
+   "$ENV{LIB_DIR}/lib"
+   c:/msys/local/lib
+   NO_DEFAULT_PATH
 diff --git a/cmake/PyQtMacros.cmake b/cmake/PyQtMacros.cmake
 index 774d04278..ece1b3e7f 100644
 --- a/cmake/PyQtMacros.cmake
@@ -36,6 +49,35 @@ index 774d04278..ece1b3e7f 100644
    IF (NOT PYRCC_PROGRAM)
      MESSAGE(FATAL_ERROR "pyrcc5 not found - aborting")
    ENDIF (NOT PYRCC_PROGRAM)
+diff --git a/external/untwine/epf/FileProcessor.cpp b/external/untwine/epf/FileProcessor.cpp
+index 07e498bd9..0b4e49c49 100644
+--- a/external/untwine/epf/FileProcessor.cpp
++++ b/external/untwine/epf/FileProcessor.cpp
+@@ -50,7 +50,7 @@ void FileProcessor::run()
+     // This is some random cell that ultimately won't get used, but it contains a buffer
+     // into which we can write data.
+     Cell *cell = m_cellMgr.get(VoxelKey());
+-    f.setCallback([this, &count, &limit, &cell](pdal::PointRef& point)
++    f.setCallback([this, &CountIncrement, &count, &limit, &cell](pdal::PointRef& point)
+         {
+             // Write the data into the point buffer in the cell.  This is the *last*
+             // cell buffer that we used. We're hoping that it's the right one.
+diff --git a/external/untwine/untwine/MapFile.cpp b/external/untwine/untwine/MapFile.cpp
+index ba205b38a..9d520a882 100644
+--- a/external/untwine/untwine/MapFile.cpp
++++ b/external/untwine/untwine/MapFile.cpp
+@@ -30,6 +30,11 @@
+ 
+ #include "MapFile.hpp"
+ 
++#ifdef _MSC_VER
++#include <io.h>
++#include <fcntl.h>
++#endif
++
+ namespace untwine
+ {
+ 
 diff --git a/python/core/auto_generated/auth/qgsauthmanager.sip.in b/python/core/auto_generated/auth/qgsauthmanager.sip.in
 index 16d2d73fc..264292b79 100644
 --- a/python/core/auto_generated/auth/qgsauthmanager.sip.in
@@ -48,21 +90,48 @@ index 16d2d73fc..264292b79 100644
  
  };
  
-diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
-index e0588340e..7b21bf7eb 100644
---- a/src/core/CMakeLists.txt
-+++ b/src/core/CMakeLists.txt
-@@ -1630,9 +1630,7 @@ endif()
- protobuf_generate_cpp(VECTOR_TILE_PROTO_SRCS VECTOR_TILE_PROTO_HDRS vectortile/vector_tile.proto)
- set(QGIS_CORE_SRCS ${QGIS_CORE_SRCS} ${VECTOR_TILE_PROTO_SRCS})
- set(QGIS_CORE_HDRS ${QGIS_CORE_HDRS} ${VECTOR_TILE_PROTO_HDRS})
--if (MSVC)
--  set_source_files_properties(${VECTOR_TILE_PROTO_SRCS} vectortile/qgsvectortilemvtdecoder.cpp vectortile/qgsvectortilemvtencoder.cpp vectortile/qgsvectortilewriter.cpp PROPERTIES COMPILE_DEFINITIONS PROTOBUF_USE_DLLS)
--else()
-+if (NOT MSVC)
-   # automatically generated file produces warnings (unused-parameter, unused-variable, misleading-indentation)
-   set_source_files_properties(${VECTOR_TILE_PROTO_SRCS} PROPERTIES COMPILE_FLAGS -w)
+diff --git a/src/app/CMakeLists.txt b/src/app/CMakeLists.txt
+index 072e40a9b..e3168a784 100644
+--- a/src/app/CMakeLists.txt
++++ b/src/app/CMakeLists.txt
+@@ -419,9 +419,10 @@ if(HAVE_OPENCL)
  endif()
+ 
+ if (HAVE_PDAL)
+-  include_directories(SYSTEM
+-    ${PDAL_INCLUDE_DIR}
+-  )
++  include_directories(SYSTEM ${PDAL_INCLUDE_DIR})
++  if(MSVC)
++    add_definitions(-DWIN32_LEAN_AND_MEAN)
++  endif()
+ endif()
+ 
+ if(ENABLE_MODELTEST)
+@@ -592,9 +593,7 @@ if (POSTGRES_FOUND)
+ endif()
+ 
+ if (HAVE_PDAL)
+-  target_link_libraries(qgis_app
+-    ${PDAL_LIBRARIES}
+-  )
++  target_link_libraries(qgis_app ${PDAL_LIBRARIES})
+ endif()
+ 
+ if(MSVC)
+diff --git a/src/app/qgisapp.cpp b/src/app/qgisapp.cpp
+index 7a2fb4a42..0a698f773 100644
+--- a/src/app/qgisapp.cpp
++++ b/src/app/qgisapp.cpp
+@@ -527,7 +527,7 @@ extern "C"
+ #ifndef Q_OS_WIN
+ #include <dlfcn.h>
+ #else
+-#include <windows.h>
++#include <shellapi.h>
+ #include <dbghelp.h>
+ #endif
+ 
 diff --git a/src/core/auth/qgsauthmanager.h b/src/core/auth/qgsauthmanager.h
 index 0d90ee3a4..bf59b37a1 100644
 --- a/src/core/auth/qgsauthmanager.h
@@ -76,3 +145,100 @@ index 0d90ee3a4..bf59b37a1 100644
  
    private:
  
+diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
+index 7593d848..3e68fc4c 100644
+--- a/src/core/CMakeLists.txt
++++ b/src/core/CMakeLists.txt
+@@ -1530,9 +1530,7 @@ endif()
+ protobuf_generate_cpp(VECTOR_TILE_PROTO_SRCS VECTOR_TILE_PROTO_HDRS vectortile/vector_tile.proto)
+ set(QGIS_CORE_SRCS ${QGIS_CORE_SRCS} ${VECTOR_TILE_PROTO_SRCS})
+ set(QGIS_CORE_HDRS ${QGIS_CORE_HDRS} ${VECTOR_TILE_PROTO_HDRS})
+-if (MSVC)
+-  set_source_files_properties(${VECTOR_TILE_PROTO_SRCS} vectortile/qgsvectortilemvtdecoder.cpp vectortile/qgsvectortilemvtencoder.cpp vectortile/qgsvectortilewriter.cpp PROPERTIES COMPILE_DEFINITIONS PROTOBUF_USE_DLLS)
+-else()
++if (NOT MSVC)
+   # automatically generated file produces warnings (unused-parameter, unused-variable, misleading-indentation)
+   set_source_files_properties(${VECTOR_TILE_PROTO_SRCS} PROPERTIES COMPILE_FLAGS -w)
+ endif()
+diff --git a/external/wintoast/src/wintoastlib.cpp b/external/wintoast/src/wintoastlib.cpp
+index 1efe3922f8..1efceeb5a8 100644
+--- a/external/wintoast/src/wintoastlib.cpp
++++ b/external/wintoast/src/wintoastlib.cpp
+@@ -442,22 +442,23 @@ bool WinToast::initialize(_Out_ WinToastError* error) {
+         return false;
+     }
+ 
+-
+     if (_aumi.empty() || _appName.empty()) {
+         setError(error, WinToastError::InvalidParameters);
+         DEBUG_MSG(L"Error while initializing, did you set up a valid AUMI and App name?");
+         return false;
+     }
+ 
++#if 0
+     if (createShortcut() < 0) {
+         setError(error, WinToastError::ShellLinkNotCreated);
+-        DEBUG_MSG(L"Error while attaching the AUMI to the current proccess =(");
++        DEBUG_MSG(L"Error while attaching the AUMI to the current process =(");
+         return false;
+     }
++#endif
+ 
+     if (FAILED(DllImporter::SetCurrentProcessExplicitAppUserModelID(_aumi.c_str()))) {
+         setError(error, WinToastError::InvalidAppUserModelID);
+-        DEBUG_MSG(L"Error while attaching the AUMI to the current proccess =(");
++        DEBUG_MSG(L"Error while attaching the AUMI to the current process =(");
+         return false;
+     }
+ 
+@@ -512,6 +513,7 @@ HRESULT	WinToast::validateShellLinkHelper(_Out_ bool& wasChanged) {
+                         hr = DllImporter::PropVariantToString(appIdPropVar, AUMI, MAX_PATH);
+                         wasChanged = false;
+                         if (FAILED(hr) || _aumi != AUMI) {
++#if 0
+                             // AUMI Changed for the same app, let's update the current value! =)
+                             wasChanged = true;
+                             PropVariantClear(&appIdPropVar);
+@@ -525,6 +527,10 @@ HRESULT	WinToast::validateShellLinkHelper(_Out_ bool& wasChanged) {
+                                     }
+                                 }
+                             }
++#else
++                            // Not allowed to touch the shortcut to fix the AUMI
++                            hr = E_FAIL;
++#endif
+                         }
+                         PropVariantClear(&appIdPropVar);
+                     }
+@@ -538,8 +544,8 @@ HRESULT	WinToast::validateShellLinkHelper(_Out_ bool& wasChanged) {
+ 
+ 
+ HRESULT	WinToast::createShellLinkHelper() {
+-	WCHAR   exePath[MAX_PATH]{L'\0'};
+-	WCHAR	slPath[MAX_PATH]{L'\0'};
++    WCHAR exePath[MAX_PATH]{L'\0'};
++    WCHAR slPath[MAX_PATH]{L'\0'};
+     Util::defaultShellLinkPath(_appName, slPath);
+     Util::defaultExecutablePath(exePath);
+     ComPtr<IShellLinkW> shellLink;
+@@ -1032,4 +1038,4 @@ WinToastTemplate::AudioOption WinToastTemplate::audioOption() const {
+ 
+ WinToastTemplate::Duration WinToastTemplate::duration() const {
+     return _duration;
+-}
+\ No newline at end of file
++}
+diff --git a/src/providers/pdal/CMakeLists.txt b/src/providers/pdal/CMakeLists.txt
+index 2d4dbf982..a6141c3c4 100644
+--- a/src/providers/pdal/CMakeLists.txt
++++ b/src/providers/pdal/CMakeLists.txt
+@@ -1,6 +1,9 @@
+ ########################################################
+ # Files
+ 
++if(MSVC)
++  add_definitions(-DWIN32_LEAN_AND_MEAN)
++endif(MSVC)
+ 
+ set(THREADS_PREFER_PTHREAD_FLAG ON)
+ find_package(Threads REQUIRED)

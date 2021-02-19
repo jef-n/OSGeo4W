@@ -37,10 +37,11 @@ cd ..
 if [ -d qgis ]; then
 	cd qgis
 
-	if [ $(git branch --show-current) != $LTRBRANCH ]; then
+	if [ "$(git branch --show-current)" != $LTRBRANCH ]; then
 		cd ..
 		rm -rf qgis
 	else
+		git clean -f
 		git reset --hard
 		git pull
 		cd ..
@@ -53,7 +54,8 @@ fi
 
 cd qgis
 
-git checkout $RELTAG
+git checkout $LTRBRANCH || git fetch origin $LTRBRANCH:$LTRBRANCH || git checkout $LTRBRANCH
+git checkout $RELTAG || git fetch origin refs/tags/$RELTAG:refs/tags/$RELTAG || git checkout $RELTAG
 
 patch -p1 --dry-run <../osgeo4w/patch
 patch -p1 <../osgeo4w/patch
@@ -226,6 +228,7 @@ nextbinary
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"       preremove-server.bat    >install/etc/preremove/$P-server.bat
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"       qgis.bat                >install/bin/$P.bat
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"       python.bat              >install/bin/python-$P.bat
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"       process.bat             >install/bin/qgis_process-$P.bat
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"       designer.bat            >install/bin/$P-designer.bat
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"       httpd.conf.tmpl         >install/httpd.d/httpd_$P.conf.tmpl
 	sed -e "s/@package@/$P/g" -e "s/@sagadef@/$sagadef/g" saga-refresh.bat        >install/apps/$P/saga-refresh.bat
@@ -269,6 +272,7 @@ EOF
 		apps/$P/bin/qgis_core.dll \
 		apps/$P/bin/qgis_gui.dll \
 		apps/$P/bin/qgis_native.dll \
+		apps/$P/bin/qgis_process.exe \
 		apps/$P/doc/ \
 		apps/$P/plugins/basicauthmethod.dll \
 		apps/$P/plugins/delimitedtextprovider.dll \
@@ -282,6 +286,7 @@ EOF
 		apps/$P/plugins/pkcs12authmethod.dll \
 		apps/$P/plugins/pkipathsauthmethod.dll \
 		apps/$P/plugins/postgresprovider.dll \
+		apps/$P/plugins/postgresrasterprovider.dll \
 		apps/$P/plugins/spatialiteprovider.dll \
 		apps/$P/plugins/virtuallayerprovider.dll \
 		apps/$P/plugins/wcsprovider.dll \
@@ -339,12 +344,10 @@ EOF
 		--exclude apps/$P/python/qgis/_server.lib \
 		--exclude apps/$P/python/qgis/server \
 		--exclude apps/$P/server/ \
+		--exclude apps/$P/python/plugins/processing/algs/saga/SagaAlgorithmProvider.py \
 	        apps/$P/i18n/ \
 	        apps/$P/icons/ \
 	        apps/$P/images/ \
-	        apps/$P/plugins/coordinatecaptureplugin.dll \
-	        apps/$P/plugins/evis.dll \
-	        apps/$P/plugins/georefplugin.dll \
 	        apps/$P/plugins/gpsimporterplugin.dll \
 	        apps/$P/plugins/offlineeditingplugin.dll \
 	        apps/$P/plugins/topolplugin.dll \
@@ -461,6 +464,7 @@ EOF
 		osgeo4w/package.sh \
 		osgeo4w/patch \
 		osgeo4w/msvc-env.bat \
+		osgeo4w/process.bat \
 		osgeo4w/designer.bat \
 		osgeo4w/python.bat \
 		osgeo4w/qgis.bat \

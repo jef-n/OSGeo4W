@@ -2,7 +2,7 @@ export P=qgis
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-devel grass qt5-oci qt5-oci-debug sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pyqt5 python3-sip python3-devel python3-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-devel qscintilla-devel qt5-devel qwt-devel libspatialite-devel oci-devel qtkeychain-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel oci-devel qtwebkit-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel"
+export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-devel grass qt5-oci qt5-oci-debug sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pyqt5 python3-sip python3-devel python3-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-devel qscintilla-devel qt5-devel qwt-devel libspatialite-devel oci-devel qtkeychain-devel zlib-devel opencl-devel exiv2-devel protobuf-devel pdal pdal-devel python3-setuptools zstd-devel oci-devel qtwebkit-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel"
 
 : ${SITE:=qgis.org}
 : ${TARGET:=Release}
@@ -29,10 +29,11 @@ cd ..
 if [ -d qgis ]; then
 	cd qgis
 
-	if [ $(git branch --show-current) != $RELBRANCH ]; then
+	if [ "$(git branch --show-current)" != $RELBRANCH ]; then
 		cd ..
 		rm -rf qgis
 	else
+		git clean -f
 		git reset --hard
 		git pull
 		cd ..
@@ -45,7 +46,8 @@ fi
 
 cd qgis
 
-git checkout $RELTAG
+git checkout $RELBRANCH || git fetch origin $RELBRANCH:$RELBRANCH || git checkout $RELBRANCH
+git checkout $RELTAG || git fetch origin refs/tags/$RELTAG:refs/tags/$RELTAG || git checkout $RELTAG
 
 patch -p1 --dry-run <../osgeo4w/patch
 patch -p1 <../osgeo4w/patch
@@ -287,6 +289,7 @@ EOF
 		apps/$P/plugins/arcgismapserverprovider.dll \
 		apps/$P/plugins/arcgisfeatureserverprovider.dll \
 		apps/$P/plugins/mdalprovider.dll \
+		apps/$P/plugins/hanaprovider.dll \
 		apps/$P/plugins/oauth2authmethod.dll \
 		apps/$P/resources/qgis.db \
 		apps/$P/resources/spatialite.db \

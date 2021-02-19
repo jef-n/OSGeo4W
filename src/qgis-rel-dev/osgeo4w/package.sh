@@ -36,10 +36,11 @@ cd ..
 if [ -d qgis ]; then
 	cd qgis
 
-	if [ $(git branch --show-current) != $RELBRANCH ]; then
+	if [ "$(git branch --show-current)" != $RELBRANCH ]; then
 		cd ..
 		rm -rf qgis
 	else
+		git clean -f
 		git reset --hard
 		git pull
 		cd ..
