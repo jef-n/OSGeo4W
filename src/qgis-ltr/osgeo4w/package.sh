@@ -266,6 +266,12 @@ EOF
 	/bin/tar -C install -cjf $R/$P-common/$P-common-$V-$B.tar.bz2 \
 		--exclude-from exclude \
 		--exclude "*.pyc" \
+		--exclude apps/$P/python/qgis/_server.pyd \
+		--exclude apps/$P/python/qgis/_server.lib \
+		--exclude apps/$P/python/qgis/server \
+		--exclude apps/$P/server/ \
+		--exclude apps/$P/python/plugins/processing/algs/saga/SagaAlgorithmProvider.py \
+	        apps/$P/python/ \
 		apps/$P/bin/qgispython.dll \
 		apps/$P/bin/qgis_analysis.dll \
 		apps/$P/bin/qgis_3d.dll \
@@ -303,6 +309,8 @@ EOF
 		apps/$P/resources/cpt-city-qgis-min/ \
 		apps/$P/svg/ \
 		apps/$P/crssync.exe \
+		apps/$P/saga-refresh.bat \
+		bin/qgis_process-$P.bat \
 		etc/postinstall/$P-common.bat
 
 	cat <<EOF >$R/$P-server/setup.hint
@@ -339,12 +347,6 @@ EOF
 
 	/bin/tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
 		--exclude-from exclude \
-		--exclude "*.pyc" \
-		--exclude apps/$P/python/qgis/_server.pyd \
-		--exclude apps/$P/python/qgis/_server.lib \
-		--exclude apps/$P/python/qgis/server \
-		--exclude apps/$P/server/ \
-		--exclude apps/$P/python/plugins/processing/algs/saga/SagaAlgorithmProvider.py \
 	        apps/$P/i18n/ \
 	        apps/$P/icons/ \
 	        apps/$P/images/ \
@@ -354,7 +356,6 @@ EOF
 	        apps/$P/plugins/geometrycheckerplugin.dll \
 	        apps/$P/qtplugins/sqldrivers/qsqlspatialite.dll \
 	        apps/$P/qtplugins/designer/ \
-	        apps/$P/python/ \
 	        apps/$P/resources/customization.xml \
 	        apps/$P/resources/themes/ \
 	        apps/$P/resources/data/ \

@@ -13,8 +13,6 @@ if not %OSGEO4W_DESKTOP_LINKS%==0 xxmklink "%OSGEO4W_DESKTOP%\QGIS Desktop @vers
 if not %OSGEO4W_MENU_LINKS%==0 xxmklink "%OSGEO4W_STARTMENU%\Qt Designer with QGIS @version@ custom widgets.lnk" "%OSGEO4W_ROOT%\bin\bgspawn.exe" "\"%OSGEO4W_ROOT%\bin\@package@-designer.bat\"" "%DOCUMENTS%" "" 1 "%OSGEO4W_ROOT%\apps\@package@\icons\QGIS.ico"
 if not %OSGEO4W_DESKTOP_LINKS%==0 xxmklink "%OSGEO4W_DESKTOP%\Qt Designer with QGIS @version@ custom widgets.lnk" "%OSGEO4W_ROOT%\bin\bgspawn.exe" "\"%OSGEO4W_ROOT%\bin\@package@-designer.bat\"" "%DOCUMENTS%" "" 1 "%OSGEO4W_ROOT%\apps\@package@\icons\QGIS.ico"
 
-call "%OSGEO4W_ROOT%\apps\@package@\saga-refresh.bat"
-
 set O4W_ROOT=%OSGEO4W_ROOT%
 set OSGEO4W_ROOT=%OSGEO4W_ROOT:\=\\%
 textreplace -std -t "%O4W_ROOT%\apps\@package@\bin\qgis.reg"
