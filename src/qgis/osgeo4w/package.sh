@@ -304,6 +304,7 @@ EOF
 		apps/$P/resources/cpt-city-qgis-min/ \
 		apps/$P/svg/ \
 		apps/$P/crssync.exe \
+		apps/$P/untwine.exe \
 		apps/$P/saga-refresh.bat \
 		bin/qgis_process-$P.bat \
 		etc/postinstall/$P-common.bat
