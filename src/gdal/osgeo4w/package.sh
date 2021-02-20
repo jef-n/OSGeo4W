@@ -96,7 +96,7 @@ rm -rf $DESTDIR $PYDESTDIR
 
 mkdir -p $DESTDIR/etc/ini
 mkdir -p $DESTDIR/share/gdal
-mkdir -p $PYDESTDIR/etc/preremove
+mkdir -p $PYDESTDIR/etc/{postinstall,preremove}
 
 cd ..
 
@@ -144,15 +144,30 @@ cd ..
 
 cd swig/python
 
-mkdir -p $PYDESTDIR/bin
+>$PYDESTDIR/etc/postinstall/python3-$P.bat
+>$PYDESTDIR/etc/preremove/python3-$P.bat
+
+expytmpl=
 for i in scripts/*.py; do
 	b=$(basename "$i" .py)
+
 	cat <<EOF >$PYDESTDIR/apps/$PYTHON/Scripts/$b.bat
 @echo off
 call "%OSGEO4W_ROOT%\\bin\\o4w_env.bat"
-python "%OSGEO4W_ROOT%\\apps\\$PYTHON\\$(cygpath -w "$i")" %%*
+python "%OSGEO4W_ROOT%\\apps\\$PYTHON\\$(cygpath -w "$i")" %*
 EOF
+	(
+		echo "#! @osgeo4w@\\apps\\$PYTHON\\python3.exe"
+		tail -n +2 $PYDESTDIR/apps/$PYTHON/Scripts/$b.py
+	) >$PYDESTDIR/apps/$PYTHON/Scripts/$b.py.tmpl
+
+	echo -e "textreplace -std -t apps\\$PYTHON\\Scripts\\\\$b.py\r" >>$PYDESTDIR/etc/postinstall/python3-$P.bat
+	echo -e "del apps\\$PYTHON\\Scripts\\\\$b.py\r" >>$PYDESTDIR/etc/preremove/python3-$P.bat
+
+	expytmpl="$expytmpl --exclude apps/$PYTHON/Scripts/$b.py"
 done
+
+echo -e "python -B %PYTHONHOME%\\Scripts\\preremove-cached.py python3-$P\r" >>$PYDESTDIR/etc/preremove/python3-$P.bat
 
 cd ../../osgeo4w
 
@@ -166,9 +181,6 @@ SET GDAL_DATA=%OSGEO4W_ROOT%\\share\\gdal
 SET GDAL_DRIVER_PATH=%OSGEO4W_ROOT%\\bin\\gdalplugins
 EOF
 
-cat <<EOF >$PYDESTDIR/etc/preremove/python3-gdal.bat
-python -B %PYTHONHOME%\\Scripts\\preremove-cached.py python3-gdal
-EOF
 
 cat <<EOF >$R/setup.hint
 sdesc: "The GDAL/OGR library and commandline tools"
@@ -287,8 +299,13 @@ cp $MRSID_SDK/Raster_DSDK/lib/tbb.dll $DESTDIR/bin
 cp $MRSID_SDK/Raster_DSDK/lib/lti_dsdk_9.5.dll $DESTDIR/bin
 cp $MRSID_SDK/Lidar_DSDK/lib/lti_lidar_dsdk_1.1.dll $DESTDIR/bin
 
-tar -C $PYDESTDIR --exclude="*.pyc" --exclude __pycache__ -cjvf $R/python3-$P/python3-$P-$V-$B.tar.bz2 \
-	apps/$PYTHON
+tar -C $PYDESTDIR -cjvf $R/python3-$P/python3-$P-$V-$B.tar.bz2 \
+	--exclude="*.pyc" \
+	--exclude __pycache__ \
+	$expytmpl \
+	apps/$PYTHON \
+	etc/postinstall/python3-$P.bat \
+	etc/preremove/python3-$P.bat
 
 tar -C install -cjvf $R/$P-filegdb/$P-filegdb-$V-$B.tar.bz2 \
 	bin/gdalplugins/ogr_FileGDB.dll \
