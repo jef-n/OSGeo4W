@@ -227,7 +227,7 @@ nextbinary
 	cp "$PYTHONHOME/Lib/site-packages/PyQt5/uic/widget-plugins/qgis_customwidgets.py" install/apps/$P/python
 
 	export R=$OSGEO4W_REP/x86_64/release/qgis/$P
-	mkdir -p $R/$P-{pdb,full}
+	mkdir -p $R/$P-{pdb,full,deps}
 
 	touch exclude
 	/bin/tar -cjf $R/$P-$V-$B.tar.bz2 \
@@ -245,11 +245,12 @@ nextbinary
 		osgeo4w/apps/qt5/plugins/designer/qgis_customwidgets.dll \
 		install/
 
-	/bin/tar -C $BUILDDIR -cjf $R/$P-pdb/$P-pdb-$V-$B.tar.bz2 \
+	/bin/tar -C $BUILDDIR --remove-files -cjf $R/$P-pdb/$P-pdb-$V-$B.tar.bz2 \
 		apps/$P/pdb
 
 	d=$(mktemp -d)
 	/bin/tar -C $d -cjf $R/$P-full/$P-full-$V-$B.tar.bz2 .
+	/bin/tar -C $d -cjf $R/$P-deps/$P-deps-$V-$B.tar.bz2 .
 	rmdir $d
 
 	cat <<EOF >$R/setup.hint
@@ -281,6 +282,19 @@ category: Desktop
 requires: $P proj python3-pyparsing python3-simplejson python3-shapely python3-matplotlib gdal-hdf5 gdal-ecw gdal-mrsid gdal-oracle gdal-sosi python3-pygments qt5-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-pillow python3-pandas python3-geographiclib grass saga
 external-source: $P
 EOF
+
+	appendversions $R/$P-full/setup.hint
+
+	cat <<EOF >$R/$P-deps/setup.hint
+sdesc: "QGIS nightly build dependencies of the development branch (meta package)"
+ldesc: "QGIS nightly build dependencies of the development branch (meta package)"
+maintainer: $MAINTAINER
+category: Libs
+requires: $BUILDDEPENDS
+external-source: $P
+EOF
+
+	appendversions $R/$P-deps/setup.hint
 
 	/bin/tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 \
 		osgeo4w/package.sh \

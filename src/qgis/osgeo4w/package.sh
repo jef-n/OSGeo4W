@@ -244,7 +244,7 @@ nextbinary
 	mv osgeo4w/apps/Python*/Lib/site-packages/PyQt5/uic/widget-plugins/qgis_customwidgets.py install/apps/$P/python/PyQt5/uic/widget-plugins
 
 	export R=$OSGEO4W_REP/x86_64/release/qgis/$P
-	mkdir -p $R/$P-{pdb,full,common,server,grass-plugin,oracle-provider,devel}
+	mkdir -p $R/$P-{pdb,full,deps,common,server,grass-plugin,oracle-provider,devel}
 
 	touch exclude
 
@@ -444,8 +444,18 @@ requires: $P proj $P-grass-plugin $P-oracle-provider python3-pyparsing python3-s
 external-source: $P
 EOF
 
+	cat <<EOF >$R/$P-deps/setup.hint
+sdesc: "QGIS build dependencies (meta package)"
+ldesc: "QGIS build dependencies (meta package)"
+maintainer: $MAINTAINER
+category: Libs
+requires: $BUILDDEPENDS
+external-source: $P
+EOF
+
 	d=$(mktemp -d)
 	/bin/tar -C $d -cjf $R/$P-full/$P-full-$V-$B.tar.bz2 .
+	/bin/tar -C $d -cjf $R/$P-deps/$P-deps-$V-$B.tar.bz2 .
 	rmdir $d
 
 	appendversions $R/setup.hint
@@ -453,6 +463,7 @@ EOF
 	appendversions $R/$P-common/setup.hint
 	appendversions $R/$P-server/setup.hint
 	appendversions $R/$P-full/setup.hint
+	appendversions $R/$P-deps/setup.hint
 	appendversions $R/$P-grass-plugin/setup.hint
 	appendversions $R/$P-oracle-provider/setup.hint
 	appendversions $R/$P-devel/setup.hint
