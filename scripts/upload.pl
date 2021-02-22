@@ -256,6 +256,6 @@ if( system("/usr/bin/rsync -vtuO --chmod=D775,F664 -r '$tdir/' '$ENV{MASTER_SCP}
 	die "Update of hints failed: $!";
 }
 
-system "/usr/bin/curl -v '$ENV{MASTER_REGEN_URI}'";
+system "/usr/bin/curl '$ENV{MASTER_REGEN_URI}'";
 
 unlink ".uploading";
