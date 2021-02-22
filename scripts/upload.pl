@@ -146,19 +146,6 @@ my %files;
 my %shints;
 my %hints;
 
-if(0) {
-undef %packages;
-$packages{"geos"} = 1;
-
-open F, ">/tmp/local.pm";
-print F Dumper(\%local);
-close F;
-
-open F, ">/tmp/remote.pm";
-print F Dumper(\%remote);
-close F;
-}
-
 open H, "/usr/bin/find x86_64/release -name setup.hint |";
 while(<H>) {
 	chomp;
@@ -259,13 +246,13 @@ unless(keys %files) {
 
 my($host,$path) = $ENV{MASTER_SCP} =~ /^(.*):(.*)$/;
 
-open F, "| /usr/bin/rsync -vtu --chmod=D775,F664 --files-from=- '$ENV{OSGEO4W_REP}' '$ENV{MASTER_SCP}'";
+open F, "| /usr/bin/rsync -vtuO --chmod=D775,F664 --files-from=- '$ENV{OSGEO4W_REP}' '$ENV{MASTER_SCP}'";
 for my $file (sort keys %files) {
 	print F "$file\n";
 }
 close F or die "Update of files failed: $!";
 
-if( system("/usr/bin/rsync -vtu --chmod=D775,F664 -r '$tdir/' '$ENV{MASTER_SCP}/'") != 0 ) {
+if( system("/usr/bin/rsync -vtuO --chmod=D775,F664 -r '$tdir/' '$ENV{MASTER_SCP}/'") != 0 ) {
 	die "Update of hints failed: $!";
 }
 
