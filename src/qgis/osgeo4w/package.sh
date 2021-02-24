@@ -296,6 +296,7 @@ EOF
 		apps/$P/plugins/arcgisfeatureserverprovider.dll \
 		apps/$P/plugins/mdalprovider.dll \
 		apps/$P/plugins/hanaprovider.dll \
+		apps/$P/plugins/pdalprovider.dll \
 		apps/$P/plugins/oauth2authmethod.dll \
 		apps/$P/resources/qgis.db \
 		apps/$P/resources/spatialite.db \
