@@ -18,6 +18,9 @@ source ../../../scripts/build-helpers
 
 startlog
 
+
+LABEL="development"
+
 cd ..
 
 if [ -d qgis ]; then
@@ -52,6 +55,14 @@ if [ -n "$version_curr" ]; then
 	v=${v#*-}
 
 	build=${v%%-*}
+	v=${v#*-}
+	sha=${v%%-*}
+
+	if [ "$SHA" = "$sha" -a -z "$OSGEO4W_FORCE_REBUILD" ]; then
+		echo "$SHA already built"
+		endlog
+		exit 0
+	fi
 
 	if [ "$V" = "$version" ]; then
 		(( build++ )) || true
@@ -254,8 +265,8 @@ nextbinary
 	rmdir $d
 
 	cat <<EOF >$R/setup.hint
-sdesc: "QGIS nightly build of the development branch"
-ldesc: "QGIS nightly build of the development branch"
+sdesc: "QGIS nightly build of the $LABEL branch"
+ldesc: "QGIS nightly build of the $LABEL branch"
 maintainer: $MAINTAINER
 category: Desktop
 requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl gdal libspatialite zlib libiconv fcgi libspatialindex oci qt5-libs qt5-qml qt5-tools qtwebkit-libs qca qwt-libs python3-sip python3-core python3-pyqt5 python3-psycopg2-binary python3-qscintilla python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-gdal python3-requests python3-plotly python3-pyproj python3-owslib qtkeychain-libs libzip opencl exiv2 hdf5 pdal pdal-libs
@@ -264,8 +275,8 @@ EOF
 	appendversions $R/setup.hint
 
 	cat <<EOF >$R/$P-pdb/setup.hint
-sdesc: "Debugging symbols for QGIS nightly build of the development branch"
-ldesc: "Debugging symbols for QGIS nightly build of the development branch"
+sdesc: "Debugging symbols for QGIS nightly build of the $LABEL branch"
+ldesc: "Debugging symbols for QGIS nightly build of the $LABEL branch"
 maintainer: $MAINTAINER
 category: Desktop
 requires: $P
@@ -275,8 +286,8 @@ EOF
 	appendversions $R/$P-pdb/setup.hint
 
 	cat <<EOF >$R/$P-full/setup.hint
-sdesc: "QGIS nightly build of the development branch (metapackage with additional dependencies)"
-ldesc: "QGIS nightly build of the development branch (metapackage with additional dependencies)"
+sdesc: "QGIS nightly build of the $LABEL branch (metapackage with additional dependencies)"
+ldesc: "QGIS nightly build of the $LABEL branch (metapackage with additional dependencies)"
 maintainer: $MAINTAINER
 category: Desktop
 requires: $P proj python3-pyparsing python3-simplejson python3-shapely python3-matplotlib gdal-hdf5 gdal-ecw gdal-mrsid gdal-oracle gdal-sosi python3-pygments qt5-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-pillow python3-pandas python3-geographiclib grass saga
@@ -286,8 +297,8 @@ EOF
 	appendversions $R/$P-full/setup.hint
 
 	cat <<EOF >$R/$P-deps/setup.hint
-sdesc: "QGIS nightly build dependencies of the development branch (meta package)"
-ldesc: "QGIS nightly build dependencies of the development branch (meta package)"
+sdesc: "QGIS build dependencies of nightly build of $LABEL branch (meta package)"
+ldesc: "QGIS build dependencies of nightly build of $LABEL branch (meta package)"
 maintainer: $MAINTAINER
 category: Libs
 requires: $BUILDDEPENDS

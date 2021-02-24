@@ -243,8 +243,8 @@ fetchdeps() {
 		false
 	fi
 
-	local cmd="cygstart --action=runas"
-	cmd="$cmd $OSGEO4W_SCRIPTS/osgeo4w-setup.exe"
+	local cmd
+	cmd="$OSGEO4W_SCRIPTS/osgeo4w-setup.exe"
 	cmd="$cmd --root $(cygpath -am $OSGEO4W_PWD/osgeo4w)"
 	cmd="$cmd --autoaccept"
 	cmd="$cmd --advanced"
@@ -265,21 +265,6 @@ fetchdeps() {
 
 	log "OSGEO4W:$cmd"
 	$cmd
-
-	until pid=$(setuppid); do
-		:
-	done
-
-	log "osgeo4w-setup started [$pid]"
-	[ -n "$pid" ]
-
-	local cpid=
-	while cpid=$(setuppid) && (( pid == cpid )); do
-		log "osgeo4w-setup $pid still running"
-		sleep 1
-	done
-
-	log "osgeo4w-setup ended"
 
 	missing=
 	for p in "$@"; do

@@ -74,6 +74,14 @@ if [ -n "$version_curr" ]; then
 	v=${v#*-}
 
 	build=${v%%-*}
+	v=${v#*-}
+	sha=${v%%-*}
+
+	if [ "$SHA" = "$sha" -a -z "$OSGEO4W_FORCE_REBUILD" ]; then
+		echo "$SHA already built."
+		endlog
+		exit 0
+	fi
 
 	if [ "$V" = "$version" ]; then
 		(( build++ )) || true
@@ -267,7 +275,7 @@ nextbinary
 		osgeo4w/apps/qt5/plugins/designer/qgis_customwidgets.dll \
 		install/
 
-	/bin/tar -C $BUILDDIR -cjf $R/$P-pdb/$P-pdb-$V-$B.tar.bz2 \
+	/bin/tar -C $BUILDDIR --remove-files -cjf $R/$P-pdb/$P-pdb-$V-$B.tar.bz2 \
 		apps/$P/pdb
 
 	d=$(mktemp -d)
