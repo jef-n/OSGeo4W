@@ -31,9 +31,8 @@ my $releasename;
 my $shortname = "qgis";
 my $version;
 my $binary;
-my $root = "http://download.osgeo.org/osgeo4w";
+my $root = "http://download.osgeo.org/osgeo4w/testing";
 my $ininame = "setup.ini";
-my $arch = "x86_64";
 my $signwith;
 my $signpass;
 my $help;
@@ -52,7 +51,6 @@ my $result = GetOptions(
 		"shortname=s" => \$shortname,
 		"ininame=s" => \$ininame,
 		"mirror=s" => \$root,
-		"arch=s" => \$arch,
 		"help" => \$help
 	);
 
@@ -62,13 +60,8 @@ pod2usage(1) if $help;
 
 my $wgetopt = $verbose ? "" : "-nv";
 
-my $archpath    = $arch eq "" ? "" : "/$arch";
-my $archpostfix = $arch eq "" ? "" : "-$arch";
-my $unpacked    = "unpacked" . ($arch eq "" ? "" : "-$arch");
-my $packages    = "packages" . ($arch eq "" ? "" : "-$arch");
-
-mkdir $packages, 0755 unless -d $packages;
-chdir $packages;
+mkdir "packages", 0755 unless -d "packages";
+chdir "packages";
 
 unless(-d "wix") {
 	system "wget $wgetopt -c https://github.com/wixtoolset/wix3/releases/download/wix3111rtm/wix311-binaries.zip";
@@ -76,7 +69,7 @@ unless(-d "wix") {
 
 	mkdir "wix", 0755;
 	chdir "wix";
-	system "unzip ../wix311-binaries.zip";
+	system "unzip ../wix311-binaries.zip; chmod a+rx *.dll *.exe";
 	die "unzip of wix failed" if $?;
 	chdir "..";
 }
@@ -93,11 +86,12 @@ if($^O ne "cygwin") {
 my %dep;
 my %file;
 my %lic;
+my %version;
 my %sdesc;
 my %md5;
 my $package;
 
-system "wget $wgetopt -O setup.ini $root$archpath/$ininame";
+system "wget $wgetopt -O setup.ini $root/x86_64/$ininame";
 die "download of setup.ini failed" if $?;
 open F, "setup.ini" || die "setup.ini not found";
 while(<F>) {
@@ -107,6 +101,8 @@ while(<F>) {
 	chop;
 	if(/^@ (\S+)/) {
 		$package = $1;
+	} elsif( /^version: (.*)$/ ) {
+		$version{$package} = $1 unless exists $version{$package};
 	} elsif( /^requires: (.*)$/ ) {
 		@{$dep{$package}} = split / /, $1;
 	} elsif( ($file,$md5) = /^install:\s+(\S+)\s+.*\s+(\S+)$/) {
@@ -122,6 +118,7 @@ while(<F>) {
 	}
 }
 close F;
+
 
 my %pkgs;
 
@@ -169,6 +166,11 @@ unless(@ARGV) {
 	print "Defaulting to qgis-full package...\n" if $verbose;
 	push @ARGV, "qgis-full";
 }
+
+($version) = $version{$ARGV[0]} =~ /^(.*)-\d+$/ unless defined $version;
+
+die "no version specified" unless defined $version;
+die "invalid version $version" unless $version =~ /^\d+\.\d+\.\d+$/;
 
 getDeps($_) for @ARGV;
 
@@ -231,21 +233,21 @@ chdir "..";
 # Add addons
 #
 
-if( -d $unpacked ) {
+if( -d "unpacked" ) {
 	unless( $keep ) {
-		print "Removing $unpacked directory\n" if $verbose;
-		system "rm -rf $unpacked";
-		die "removal of $unpacked failed" if $?;
+		print "Removing unpacked directory\n" if $verbose;
+		system "rm -rf unpacked";
+		die "removal of unpacked failed" if $?;
 	} else {
-		print "Keeping $unpacked directory\n" if $verbose;
+		print "Keeping unpacked directory\n" if $verbose;
 	}
 }
 
-if( -f "$packages/files.wxs") {
+if( -f "packages/files.wxs") {
 	unless( $keep ) {
 		print "Removing files.wxs\n" if $verbose;
-		system "rm -f $packages/files.wxs";
-		die "removal of $packages/files failed" if $?;
+		system "rm -f packages/files.wxs";
+		die "removal of packages/files failed" if $?;
 	} else {
 		print "Keeping files.wxs\n" if $verbose;
 	}
@@ -253,14 +255,14 @@ if( -f "$packages/files.wxs") {
 
 my $taropt = "v" x $verbose;
 
-unless(-d $unpacked ) {
-	mkdir "$unpacked", 0755;
-	mkdir "$unpacked/bin", 0755;
-	mkdir "$unpacked/etc", 0755;
-	mkdir "$unpacked/etc/setup", 0755;
+unless(-d "unpacked" ) {
+	mkdir "unpacked", 0755;
+	mkdir "unpacked/bin", 0755;
+	mkdir "unpacked/etc", 0755;
+	mkdir "unpacked/etc/setup", 0755;
 
 	# Create package database
-	open O, ">$unpacked/etc/setup/installed.db";
+	open O, ">unpacked/etc/setup/installed.db";
 	print O "INSTALLED.DB 2\n";
 
 	foreach my $pn ( keys %pkgs ) {
@@ -270,7 +272,7 @@ unless(-d $unpacked ) {
 			next;
 		}
 
-		$p =~ s#^.*/#$packages/#;
+		$p =~ s#^.*/#packages/#;
 
 		unless( -r $p ) {
 			print "Package $p not found.\n" if $verbose;
@@ -280,53 +282,24 @@ unless(-d $unpacked ) {
 		print O "$pn $p 0\n";
 
 		print "Unpacking $p...\n" if $verbose;
-		system "bash -c 'tar $taropt -C $unpacked -xjvf $p | gzip -c >$unpacked/etc/setup/$pn.lst.gz && [ \${PIPESTATUS[0]} == 0 -a \${PIPESTATUS[1]} == 0 ]'";
+		system "bash -c 'tar $taropt -C unpacked -xjvf $p | gzip -c >unpacked/etc/setup/$pn.lst.gz && [ \${PIPESTATUS[0]} == 0 -a \${PIPESTATUS[1]} == 0 ]'";
 		die "unpacking of $p failed" if $?;
 	}
 
 	close O;
 
 	if( -d "addons" ) {
-		chdir $unpacked;
+		chdir "unpacked";
 		print " Including addons...\n" if $verbose;
 		system "tar -C ../addons -cf - . | tar $taropt -xf -";
 		die "copying of addons failed" if $?;
 		chdir "..";
 	}
-
-	if( -d "addons-$arch" ) {
-		chdir $unpacked;
-		print " Including $arch addons...\n" if $verbose;
-		system "tar -C ../addons-$arch -cf - . | tar $taropt -xf -";
-		die "copying of $arch addons failed" if $?;
-		chdir "..";
-	}
 }
-
-my($major, $minor, $patch);
-
-open F, "../../CMakeLists.txt";
-while(<F>) {
-	if(/SET\(CPACK_PACKAGE_VERSION_MAJOR "(\d+)"\)/) {
-		$major = $1;
-	} elsif(/SET\(CPACK_PACKAGE_VERSION_MINOR "(\d+)"\)/) {
-		$minor = $1;
-	} elsif(/SET\(CPACK_PACKAGE_VERSION_PATCH "(\d+)"\)/) {
-		$patch = $1;
-	} elsif(/SET\(RELEASE_NAME "(.+)"\)/) {
-		$releasename = $1 unless defined $releasename;
-	}
-}
-close F;
-
-$version = "$major.$minor.$patch" unless defined $version;
-
-my($pmajor,$pminor,$ppatch) = $version =~ /^(\d+)\.(\d+)\.(\d+)$/;
-die "Invalid version $version" unless defined $ppatch;
 
 unless( defined $binary ) {
-	if( -f "binary$archpostfix-$version" ) {
-		open P, "binary$archpostfix-$version";
+	if( -f "binary-$version" ) {
+		open P, "binary-$version";
 		$binary = <P>;
 		close P;
 		$binary++;
@@ -339,7 +312,7 @@ unless( defined $binary ) {
 # Create postinstall.bat
 #
 
-open F, ">$packages/postinstall.bat";
+open F, ">packages/postinstall.bat";
 
 my $l = "\"%OSGEO4W_ROOT%\\var\\log\\postinstall.log\"";
 my $r = ">>$l 2>&1";
@@ -388,7 +361,7 @@ PATH %OSGEO4W_ROOT%\\bin;%PATH%$r
 cd /d %OSGEO4W_ROOT%$r
 EOF
 
-chdir $unpacked;
+chdir "unpacked";
 for my $p (<etc/postinstall/*.bat>) {
 	$p =~ s/\//\\/g;
 	my($dir,$file) = $p =~ /^(.+)\\([^\\]+)$/;
@@ -414,7 +387,7 @@ close F;
 
 $r = ">>\"%TEMP%\\$packagename-OSGeo4W-$version-$binary-preremove.log\" 2>&1\r\n";
 
-open F, ">$packages/preremove.bat";
+open F, ">packages/preremove.bat";
 print F <<EOF;
 \@echo off
 echo %DATE% %TIME%: Running preremove...$r
@@ -428,7 +401,7 @@ PATH %OSGEO4W_ROOT%\\bin;%PATH%$r
 cd /d \"%OSGEO4W_ROOT%\"$r
 EOF
 
-chdir $unpacked;
+chdir "unpacked";
 for my $p (<etc/preremove/*.bat>) {
 	$p =~ s/\//\\/g;
 	my($dir,$file) = $p =~ /^(.+)\\([^\\]+)$/;
@@ -460,7 +433,7 @@ close F;
 print "Creating license file\n" if $verbose;
 
 my $lic;
-for my $l ( ( "$unpacked/apps/$shortname/doc/LICENSE", "../COPYING", "./Installer-Files/LICENSE.txt" ) ) {
+for my $l ( ( "unpacked/apps/$shortname/doc/LICENSE", "../COPYING", "./Installer-Files/LICENSE.txt" ) ) {
 	next unless -f $l;
 	$lic = $l;
 	last;
@@ -468,8 +441,8 @@ for my $l ( ( "$unpacked/apps/$shortname/doc/LICENSE", "../COPYING", "./Installe
 
 warn "no QGIS license found" unless defined $lic;
 
-my $rtf = RTF::Writer->new_to_file("$packages/license.temp");
-open O, ">$packages/license.txt";
+my $rtf = RTF::Writer->new_to_file("packages/license.temp");
+open O, ">packages/license.txt";
 
 sub out {
 	my $m = shift;
@@ -505,7 +478,7 @@ if(defined $lic) {
 for my $l (@lic) {
 	print " Including license $l\n" if $verbose;
 
-	open I, "$packages/$l" or die "License $l not found.";
+	open I, "packages/$l" or die "License $l not found.";
 	out("\n\n----------\n\n" . ++$i . ". License of '" . shift(@desc) . "'\n\n");
 	while(<I>) {
 		s/\s*$/\n/;
@@ -516,23 +489,23 @@ for my $l (@lic) {
 
 $rtf->close();
 undef $rtf;
-system "cp $packages/license.temp $packages/license.rtf";
+system "cp packages/license.temp packages/license.rtf";
 close O;
 
-my $license = "$packages/license.txt";
-if( -f "$unpacked/apps/$shortname/doc/LICENSE" ) {
-	open O, ">$unpacked/apps/$shortname/doc/LICENSE";
-	open I, "$packages/license.txt";
+my $license = "packages/license.txt";
+if( -f "unpacked/apps/$shortname/doc/LICENSE" ) {
+	open O, ">unpacked/apps/$shortname/doc/LICENSE";
+	open I, "packages/license.txt";
 	while(<I>) {
 		print O;
 	}
 	close O;
 	close I;
 
-	$license = "$unpacked/apps/$shortname/doc/LICENSE";
+	$license = "unpacked/apps/$shortname/doc/LICENSE";
 }
 
-my $installer = "$packagename-OSGeo4W-$version-$binary$archpostfix";
+my $installer = "$packagename-OSGeo4W-$version-$binary";
 
 my $run = $^O eq "cygwin" ? "" : "wine";
 
@@ -541,15 +514,13 @@ my $upgradeuuid        = getuuid(".$shortname.$version.upgrade");
 my $postinstalluuid    = getuuid(".$shortname.$version.postinstall");
 my $preremoveuuid      = getuuid(".$shortname.$version.preremove");
 my $linkfolders        = getuuid(".$shortname.$version.linkfolders");
-my $programfilesfolder = $arch eq "x86_64" ? "ProgramFiles64Folder" : "ProgramFiles";
-my $WixQuietExec       = $arch eq "x86_64" ? "WixQuietExec64" : "WixQuietExec";
 
 my $fn = 0;
-unless($keep && -f "$packages/files1.wxs") {
+unless($keep && -f "packages/files1.wxs") {
 	print "Harvesting files...\n" if $verbose;
 
 	# Harvest ourselves - candle/light doesn't cope well with huge wxses (light doesn't handle symlinks either, so also resolve those)
-	# system "$run $packages/wix/heat.exe dir $unpacked -nologo -var env.UNPACKEDDIR -sw HEAT5150 -cg INSTALLDIR -dr INSTALLDIR -gg -sfrag -srd -template fragment -out $packages\\\\files.wxs";
+	# system "$run packages/wix/heat.exe dir unpacked -nologo -var env.UNPACKEDDIR -sw HEAT5150 -cg INSTALLDIR -dr INSTALLDIR -gg -sfrag -srd -template fragment -out packages\\\\files.wxs";
 	# die "harvesting failed" if $?;
 
 	my $f;
@@ -590,14 +561,14 @@ EOF
 
 	}
 
-	chdir $unpacked;
+	chdir "unpacked";
 
 	open F, "find . -print|";
 	while(<F>) {
 		#	print;
 		if($fi++ % 5000 == 0) {
 			wclose($f) if defined $f;
-			open $f, ">../$packages/files" . ++$fn . ".wxs";
+			open $f, ">../packages/files" . ++$fn . ".wxs";
 
 			print $f <<EOF;
 <?xml version="1.0" encoding="utf-8"?>
@@ -664,13 +635,16 @@ EOF
 	chdir "..";
 } else {
 	$fn = 1;
-	while(-f "$packages/files$fn.wxs") {
+	while(-f "packages/files$fn.wxs") {
 		$fn++;
 	}
 	$fn--;
 }
 
-open F, ">$packages/installer.wxs";
+# WixUIBannerBmp: Top banner							493 × 58
+# WixUIDialogBmp: Background bitmap used on the welcome and completion dialogs	493 × 312
+
+open F, ">packages/installer.wxs";
 print F <<EOF;
 <?xml version="1.0" encoding="windows-1252"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
@@ -698,11 +672,11 @@ print F <<EOF;
     <UIRef Id="WixUI_ErrorProgressText" />
 
     <WixVariable Id="WixUILicenseRtf" Value="license.rtf"/>
-    <WixVariable Id="WixUIBannerBmp" Value="..\\..\\Installer-Files\\WelcomeFinishPage.bmp" />
-    <WixVariable Id="WixUIDialogBmp" Value="..\\..\\Installer-Files\\WelcomeFinishPage.bmp" />
+    <!-- <WixVariable Id="WixUIBannerBmp" Value="..\\..\\Installer-Files\\WelcomeFinishPage.bmp" /> -->
+    <!-- <WixVariable Id="WixUIDialogBmp" Value="..\\..\\Installer-Files\\WelcomeFinishPage.bmp" /> -->
 
     <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="$programfilesfolder">
+      <Directory Id="ProgramFiles64Folder">
         <Directory Id="INSTALLDIR" Name="$packagename $version">
 	  <Directory Id="ETC" Name="etc">
             <Component Id="postinstall.bat" Guid="$postinstalluuid">
@@ -735,10 +709,10 @@ print F <<EOF;
     </Feature>
 
     <SetProperty Id="postinstall" Value="&quot;[#postinstall.bat]&quot; &quot;[ApplicationProgramMenuFolder]&quot; &quot;[ApplicationDesktopFolder]&quot; &quot;[INSTALLDESKTOPSHORTCUTS]&quot; &quot;[INSTALLMENUSHORTCUTS]&quot;" Before="postinstall" Sequence='execute' />
-    <CustomAction Id="postinstall" BinaryKey="WixCA" DllEntry="$WixQuietExec" Execute="deferred" Return="ignore" Impersonate="no" />
+    <CustomAction Id="postinstall" BinaryKey="WixCA" DllEntry="WixQuietExec64" Execute="deferred" Return="ignore" Impersonate="no" />
 
     <SetProperty Id="preremove" Value="&quot;[#preremove.bat]&quot;" Before="preremove" Sequence='execute' />
-    <CustomAction Id="preremove" BinaryKey="WixCA" DllEntry="$WixQuietExec" Execute="deferred" Return="ignore" Impersonate="no" />
+    <CustomAction Id="preremove" BinaryKey="WixCA" DllEntry="WixQuietExec64" Execute="deferred" Return="ignore" Impersonate="no" />
 
     <InstallExecuteSequence>
       <Custom Action="postinstall" After="InstallFiles">(NOT Installed) AND (NOT REMOVE)</Custom>
@@ -749,11 +723,9 @@ print F <<EOF;
 EOF
 close F;
 
-chdir $packages;
+chdir "packages";
 
-$ENV{'UNPACKEDDIR'} = "..\\$unpacked";
-
-my $msiarch = "-arch " . ($arch eq "x86" ? "x86" : "x64");
+$ENV{'UNPACKEDDIR'} = "..\\unpacked";
 
 my @wxs;
 
@@ -764,7 +736,7 @@ push @wxs, "files$_.wxs" foreach 1..$fn;
 
 my @wixobj;
 foreach (@wxs) {
-	system "$run wix/candle.exe -nologo $msiarch $_";
+	system "$run ./wix/candle.exe -nologo -arch x64 $_";
 	die "candle failed" if $?;
 	s/\.wxs$/.wixobj/;
 	s#^.*/##;
@@ -782,7 +754,7 @@ print "Running light...\n" if $verbose;
 # warning LGHT1076 : ICE60: The file filXXX is not a Font, and its version is not a companion file reference. It should have a language specified in the Language column.
 #
 # ICE64: complains about the desktop and start menu folder
-my $cmd = "$run wix/light.exe -nologo -ext WixUIExtension -ext WixUtilExtension -out $installer.msi -sice:ICE09 -sice:ICE32 -sice:ICE60 -sice:ICE61 -sice:ICE64 -b ../$unpacked " . join(" ", @wixobj);
+my $cmd = "$run ./wix/light.exe -nologo -ext WixUIExtension -ext WixUtilExtension -out $installer.msi -sice:ICE09 -sice:ICE32 -sice:ICE60 -sice:ICE61 -sice:ICE64 -b ../unpacked " . join(" ", @wixobj);
 print "EXEC: $cmd\n" if $verbose;
 system $cmd;
 die "light failed" if $?;
@@ -790,10 +762,13 @@ die "light failed" if $?;
 sub sign {
 	my $base = shift;
 
+	my $name = "$packagename $version";
+	$name .= " '$releasename'" if defined $releasename;
+
 	my $cmd = "osslsigncode sign";
 	$cmd .= " -pkcs12 \"$signwith\"";
 	$cmd .= " -pass \"$signpass\"" if defined $signpass;
-	$cmd .= " -n \"$packagename $version '$releasename'\"";
+	$cmd .= " -n \"$name\"";
 	$cmd .= " -h sha256";
 	$cmd .= " -i \"https://qgis.org\"";
 	$cmd .= " -t \"http://timestamp.digicert.com\"";
@@ -807,7 +782,7 @@ sub sign {
 
 sign "$installer" if $signwith;
 
-open P, ">../binary$archpostfix-$version";
+open P, ">../binary-$version";
 print P $binary;
 close P;
 
@@ -825,18 +800,17 @@ createmsi.pl [options] [packages...]
 
   Options:
     -verbose		increase verbosity
-    -releasename=name	name of release (defaults to CMakeLists.txt setting)
+    -releasename=name	name of release (optional)
     -keep		don't start with a fresh unpacked directory
     -signwith=cert.p12	optionally sign package with certificate (requires osslsigncode)
     -signpass=password	password of certificate
-    -version=m.m.p	package version (defaults to CMakeLists.txt setting)
+    -version=m.m.p	package version
     -binary=b		binary version of package
     -ininame=filename	name of the setup.ini (defaults to setup.ini)
     -packagename=s	name of package (defaults to 'QGIS')
     -manufacturer=s     name of manufacturer (defaults to 'QGIS.org')
     -shortname=s	shortname used for batch file (defaults to 'qgis')
     -mirror=s		default mirror (defaults to 'http://download.osgeo.org/osgeo4w')
-    -arch=s		architecture (x86 or x86_64; defaults to 'x86_64')
     -help		this help
 
   If no packages are given 'qgis-full' and it's dependencies will be retrieved
