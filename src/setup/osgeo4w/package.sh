@@ -56,31 +56,21 @@ for /F "tokens=* USEBACKQ" %%F IN (\`getspecialfolder Documents\`) do set DOCUME
 
 if not %OSGEO4W_MENU_LINKS%==0 if not exist "%OSGEO4W_STARTMENU%" mkdir "%OSGEO4W_STARTMENU%"
 if not %OSGEO4W_MENU_LINKS%==0 xxmklink "%OSGEO4W_STARTMENU%\Setup.lnk" "%OSGEO4W_ROOT%\bin\bgspawn.exe" "\"%OSGEO4W_ROOT%\bin\setup.bat\"" "%DOCUMENTS%" "" 1 "%OSGEO4W_ROOT%\osgeo4w.ico"
-if not %OSGEO4W_MENU_LINKS%==0 xxmklink "%OSGEO4W_STARTMENU%\Setup (Test).lnk" "%OSGEO4W_ROOT%\bin\bgspawn.exe" "\"%OSGEO4W_ROOT%\bin\setup-test.bat\"" "%DOCUMENTS%" "" 1 "%OSGEO4W_ROOT%\osgeo4w.ico"
 
 if not %OSGEO4W_DESKTOP_LINKS%==0 if not exist "%OSGEO4W_DESKTOP%" mkdir "%OSGEO4W_DESKTOP%"
 if not %OSGEO4W_DESKTOP_LINKS%==0 xxmklink "%OSGEO4W_DESKTOP%\OSGeo4W Setup.lnk" "%OSGEO4W_ROOT%\bin\bgspawn.exe" "\"%OSGEO4W_ROOT%\bin\setup.bat\"" "%DOCUMENTS%" "" 1 "%OSGEO4W_ROOT%\osgeo4w.ico"
-if not %OSGEO4W_DESKTOP_LINKS%==0 xxmklink "%OSGEO4W_DESKTOP%\OSGeo4W Setup (Test).lnk" "%OSGEO4W_ROOT%\bin\bgspawn.exe" "\"%OSGEO4W_ROOT%\bin\setup-test.bat\"" "%DOCUMENTS%" "" 1 "%OSGEO4W_ROOT%\osgeo4w.ico"
 
 textreplace -std -t bin\setup.bat
-textreplace -std -t bin\setup-test.bat
 EOF
 
 cat <<EOF >install/etc/preremove/$P.bat
 del "%OSGEO4W_STARTMENU%\Setup.lnk"
-del "%OSGEO4W_STARTMENU%\Setup (Test).lnk"
 del "%OSGEO4W_DESKTOP%\Setup.lnk"
-del "%OSGEO4W_DESKTOP%\Setup (Test).lnk"
 EOF
 
 cat <<EOF >install/bin/setup.bat.tmpl
 @copy "@osgeo4w@\bin\osgeo4w-setup.exe" "@osgeo4w@\bin\osgeo4w-setup-work.exe"
 @start /B "Running Setup" "@osgeo4w@\bin\osgeo4w-setup-work.exe" -R "@osgeo4w@" %*
-EOF
-
-cat <<EOF >install/bin/setup-test.bat.tmpl
-@copy "@osgeo4w@\bin\osgeo4w-setup.exe" "@osgeo4w@\bin\osgeo4w-setup-work.exe"
-@start /b "Running with setup_test.ini" "@osgeo4w@\bin\osgeo4w-setup-work.exe" -R "@osgeo4w@" -t %*
 EOF
 
 if [ -f OSGeo_DigiCert_Signing_Cert.p12 -a -f OSGeo_DigiCert_Signing_Cert.pass ]; then

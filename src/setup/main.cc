@@ -176,9 +176,9 @@ main_display (void)
   if (res)
     {
       std::string buf = Window::sprintf ("CoCreateInstance failed with error 0x%x.\n"
-		    "Setup will not be able to create Cygwin Icons\n"
+		    "Setup will not be able to create OSGeo4W Icons\n"
 		    "in the Start Menu or on the Desktop.", (int) res);
-      MessageBox (NULL, buf.c_str(), "Cygwin Setup", MB_OK);
+      MessageBox (NULL, buf.c_str(), "OSGeo4W Setup", MB_OK);
     }
 
   // Init window class lib
