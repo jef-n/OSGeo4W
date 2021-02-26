@@ -20,6 +20,8 @@ use Pod::Usage;
 use Data::UUID;
 use RTF::Writer;
 use File::Copy;
+use File::Basename;
+use Cwd qw/abs_path/;
 
 my $ug = Data::UUID->new;
 
@@ -37,6 +39,12 @@ my $signwith;
 my $signpass;
 my $help;
 my $manufacturer = "QGIS.org";
+my $background;
+my $banner;
+
+my $BASEDIR = dirname(__FILE__);
+$BASEDIR = `cygpath -am '$BASEDIR'`;
+chomp $BASEDIR;
 
 my $result = GetOptions(
 		"verbose+" => \$verbose,
@@ -51,17 +59,39 @@ my $result = GetOptions(
 		"shortname=s" => \$shortname,
 		"ininame=s" => \$ininame,
 		"mirror=s" => \$root,
+		"banner=s" => \$banner,
+		"background=s" => \$background,
+		"mirror=s" => \$root,
 		"help" => \$help
 	);
 
 die "certificate not found" if defined $signwith && ! -f $signwith;
 
+if(defined $banner) {
+	die "banner $banner not found" unless -r $banner;
+	$banner = `cygpath -am '$banner'`;
+	chomp $banner;
+	$banner = '<WixVariable Id="WixUIBannerBmp" Value="' . $banner . '" />';
+} else {
+	$banner = "";
+}
+
+if(defined $background) {
+	die "background $background not found" unless -r $background;
+	$background = `cygpath -am '$background'`;
+	chomp $background;
+	$background = '<WixVariable Id="WixUIDialogBmp" Value="' . $background . '" />';
+} else {
+	$background = "";
+}
+
 pod2usage(1) if $help;
 
 my $wgetopt = $verbose ? "" : "-nv";
 
-mkdir "packages", 0755 unless -d "packages";
-chdir "packages";
+mkdir "tmp", 0755 unless -d "tmp";
+mkdir "tmp/packages", 0755 unless -d "tmp/packages";
+chdir "tmp/packages";
 
 unless(-d "wix") {
 	system "wget $wgetopt -c https://github.com/wixtoolset/wix3/releases/download/wix3111rtm/wix311-binaries.zip";
@@ -641,6 +671,7 @@ EOF
 	$fn--;
 }
 
+
 # WixUIBannerBmp: Top banner							493 × 58
 # WixUIDialogBmp: Background bitmap used on the welcome and completion dialogs	493 × 312
 
@@ -672,8 +703,8 @@ print F <<EOF;
     <UIRef Id="WixUI_ErrorProgressText" />
 
     <WixVariable Id="WixUILicenseRtf" Value="license.rtf"/>
-    <!-- <WixVariable Id="WixUIBannerBmp" Value="..\\..\\Installer-Files\\WelcomeFinishPage.bmp" /> -->
-    <!-- <WixVariable Id="WixUIDialogBmp" Value="..\\..\\Installer-Files\\WelcomeFinishPage.bmp" /> -->
+    $banner
+    $background
 
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFiles64Folder">
@@ -730,8 +761,8 @@ $ENV{'UNPACKEDDIR'} = "..\\unpacked";
 my @wxs;
 
 push @wxs, "installer.wxs";
-push @wxs, "../QGISInstallDirDlg.wxs";
-push @wxs, "../QGISUI_InstallDir.wxs";
+push @wxs, "$BASEDIR/QGISInstallDirDlg.wxs";
+push @wxs, "$BASEDIR/QGISUI_InstallDir.wxs";
 push @wxs, "files$_.wxs" foreach 1..$fn;
 
 my @wixobj;
@@ -801,6 +832,8 @@ createmsi.pl [options] [packages...]
   Options:
     -verbose		increase verbosity
     -releasename=name	name of release (optional)
+    -banner=img		name of the top banner (493×58)
+    -background=img	background bitmap used on the welcome and completion dialogs (493×312)
     -keep		don't start with a fresh unpacked directory
     -signwith=cert.p12	optionally sign package with certificate (requires osslsigncode)
     -signpass=password	password of certificate
