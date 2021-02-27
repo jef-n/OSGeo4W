@@ -10,13 +10,6 @@ if not %OSGEO4W_DESKTOP_LINKS%==0 if not exist "%OSGEO4W_DESKTOP%" mkdir "%OSGEO
 if not %OSGEO4W_MENU_LINKS%==0 xxmklink "%OSGEO4W_STARTMENU%\QGIS Desktop @version@ (Nightly).lnk" "%OSGEO4W_ROOT%\bin\@package@-bin.exe" "" "%DOCUMENTS%"
 if not %OSGEO4W_DESKTOP_LINKS%==0 xxmklink "%OSGEO4W_DESKTOP%\QGIS Desktop @version@ (Nightly).lnk" "%OSGEO4W_ROOT%\bin\@package@-bin.exe" "" "%DOCUMENTS%"
 
-copy "%OSGEO4W_ROOT%\bin\@package@-bin.exe" "%OSGEO4W_ROOT%\bin\@package@-bin-grass.exe"
-copy "%OSGEO4W_ROOT%\bin\@package@-bin.vars" "%OSGEO4W_ROOT%\bin\@package@-bin-grass.vars"
-call "%OSGEO4W_ROOT%\bin\@package@-grass.bat" --postinstall
-
-if not %OSGEO4W_MENU_LINKS%==0 xxmklink "%OSGEO4W_STARTMENU%\QGIS Desktop @version@ with GRASS @grassversion@ (Nightly).lnk" "%OSGEO4W_ROOT%\bin\@package@-bin-grass.exe" "" "%DOCUMENTS%"
-if not %OSGEO4W_DESKTOP_LINKS%==0 xxmklink "%OSGEO4W_DESKTOP%\QGIS Desktop @version@ with GRASS @grassversion@ (Nightly).lnk" "%OSGEO4W_ROOT%\bin\@package@-bin-grass.exe" "" "%DOCUMENTS%"
-
 if not %OSGEO4W_MENU_LINKS%==0 xxmklink "%OSGEO4W_STARTMENU%\Qt Designer with QGIS @version@ custom widgets (Nightly).lnk" "%OSGEO4W_ROOT%\bin\bgspawn.exe" "\"%OSGEO4W_ROOT%\bin\@package@-designer.bat\"" "%DOCUMENTS%" "" 1 "%OSGEO4W_ROOT%\apps\@package@\icons\QGIS.ico"
 if not %OSGEO4W_DESKTOP_LINKS%==0 xxmklink "%OSGEO4W_DESKTOP%\Qt Designer with QGIS @version@ custom widgets (Nightly).lnk" "%OSGEO4W_ROOT%\bin\bgspawn.exe" "\"%OSGEO4W_ROOT%\bin\@package@-designer.bat\"" "%DOCUMENTS%" "" 1 "%OSGEO4W_ROOT%\apps\@package@\icons\QGIS.ico"
 

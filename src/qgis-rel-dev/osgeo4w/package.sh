@@ -244,10 +244,9 @@ nextbinary
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       qgis.reg.tmpl    >install/bin/qgis.reg.tmpl
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                postinstall.bat  >install/etc/postinstall/$P.bat
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                preremove.bat    >install/etc/preremove/$P.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g" -e "s/@grasspath@/$(basename $GRASS_PREFIX)/g" qgis-grass.bat   >install/bin/$P-grass.bat
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g" -e "s/@grasspath@/$(basename $GRASS_PREFIX)/g" qgis.bat         >install/bin/$P.bat
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       designer.bat     >install/bin/$P-designer.bat
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       process.bat      >install/bin/qgis_process-$P.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       qgis.bat         >install/bin/$P.bat
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       python.bat       >install/bin/python-$P.bat
 	sed -e "s/@package@/$P/g" -e "s/@sagadef@/$sagadef/g"                                                                                 saga-refresh.bat >install/apps/$P/saga-refresh.bat
 
@@ -337,8 +336,7 @@ EOF
 		osgeo4w/python.bat \
 		osgeo4w/qgis.bat \
 		osgeo4w/qgis.reg.tmpl \
-		osgeo4w/qgis.vars \
-		osgeo4w/qgis-grass.bat
+		osgeo4w/qgis.vars
 )
 
 endlog

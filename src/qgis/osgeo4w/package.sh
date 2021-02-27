@@ -220,16 +220,16 @@ nextbinary
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"       postinstall-desktop.bat >install/etc/postinstall/$P.bat
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"       preremove-desktop.bat   >install/etc/preremove/$P.bat
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"       preremove-server.bat    >install/etc/preremove/$P-server.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"       qgis.bat                >install/bin/$P.bat
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"       python.bat              >install/bin/python-$P.bat
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"       process.bat             >install/bin/qgis_process-$P.bat
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"       designer.bat            >install/bin/$P-designer.bat
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"       httpd.conf.tmpl         >install/httpd.d/httpd_$P.conf.tmpl
 	sed -e "s/@package@/$P/g" -e "s/@sagadef@/$sagadef/g" saga-refresh.bat        >install/apps/$P/saga-refresh.bat
 
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g" -e "s/@grasspath@/$(basename $GRASS_PREFIX)/g" qgis.bat              >install/bin/$P.bat
+
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                postinstall-grass.bat >install/etc/postinstall/$P-grass-plugin.bat
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                preremove-grass.bat   >install/etc/preremove/$P-grass-plugin.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g" -e "s/@grasspath@/$(basename $GRASS_PREFIX)/g" qgis-grass.bat        >install/bin/$P-grass.bat
 
 	cp "$DBGHLP_PATH"/{dbghelp.dll,symsrv.dll} install/apps/$P
 
@@ -403,7 +403,6 @@ EOF
 		apps/$P/plugins/grassplugin7.dll \
 		apps/$P/plugins/grassprovider7.dll \
 		apps/$P/plugins/grassrasterprovider7.dll \
-		bin/$P-grass.bat \
 		etc/postinstall/$P-grass-plugin.bat \
 		etc/preremove/$P-grass-plugin.bat
 
@@ -478,7 +477,6 @@ EOF
 		osgeo4w/python.bat \
 		osgeo4w/qgis.bat \
 		osgeo4w/qgis.vars \
-		osgeo4w/qgis-grass.bat \
 		osgeo4w/httpd.conf.tmpl \
 		osgeo4w/qgis.reg.tmpl \
 		osgeo4w/postinstall-common.bat \
