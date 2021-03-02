@@ -1,5 +1,5 @@
 diff --git a/cmake/PyQtMacros.cmake b/cmake/PyQtMacros.cmake
-index 918d5c13..d6ac2be0 100644
+index 774d0427..ece1b3e7 100644
 --- a/cmake/PyQtMacros.cmake
 +++ b/cmake/PyQtMacros.cmake
 @@ -9,15 +9,7 @@ SET(PYUIC_PROG_NAMES pyuic5)
@@ -36,48 +36,8 @@ index 918d5c13..d6ac2be0 100644
    IF (NOT PYRCC_PROGRAM)
      MESSAGE(FATAL_ERROR "pyrcc5 not found - aborting")
    ENDIF (NOT PYRCC_PROGRAM)
-diff --git a/python/core/auto_generated/auth/qgsauthmanager.sip.in b/python/core/auto_generated/auth/qgsauthmanager.sip.in
-index 81b1d328..149377b3 100644
---- a/python/core/auto_generated/auth/qgsauthmanager.sip.in
-+++ b/python/core/auto_generated/auth/qgsauthmanager.sip.in
-@@ -818,6 +818,7 @@ Clear an authentication config from its associated authentication method cache
-   protected:
- 
- 
-+    explicit QgsAuthManager();
- 
- };
- 
-diff --git a/src/core/auth/qgsauthmanager.h b/src/core/auth/qgsauthmanager.h
-index 0d90ee3a..bf59b37a 100644
---- a/src/core/auth/qgsauthmanager.h
-+++ b/src/core/auth/qgsauthmanager.h
-@@ -752,7 +752,7 @@ class CORE_EXPORT QgsAuthManager : public QObject
-      */
-     static QgsAuthManager *instance() SIP_SKIP;
- 
--    explicit QgsAuthManager() SIP_SKIP;
-+    explicit QgsAuthManager();
- 
-   private:
- 
-diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
-index e0588340e..7b21bf7eb 100644
---- a/src/core/CMakeLists.txt
-+++ b/src/core/CMakeLists.txt
-@@ -1630,9 +1630,7 @@ endif()
- protobuf_generate_cpp(VECTOR_TILE_PROTO_SRCS VECTOR_TILE_PROTO_HDRS vectortile/vector_tile.proto)
- set(QGIS_CORE_SRCS ${QGIS_CORE_SRCS} ${VECTOR_TILE_PROTO_SRCS})
- set(QGIS_CORE_HDRS ${QGIS_CORE_HDRS} ${VECTOR_TILE_PROTO_HDRS})
--if (MSVC)
--  set_source_files_properties(${VECTOR_TILE_PROTO_SRCS} vectortile/qgsvectortilemvtdecoder.cpp vectortile/qgsvectortilemvtencoder.cpp vectortile/qgsvectortilewriter.cpp PROPERTIES COMPILE_DEFINITIONS PROTOBUF_USE_DLLS)
--else()
-+if (NOT MSVC)
-   # automatically generated file produces warnings (unused-parameter, unused-variable, misleading-indentation)
-   set_source_files_properties(${VECTOR_TILE_PROTO_SRCS} PROPERTIES COMPILE_FLAGS -w)
- endif()
 diff --git a/external/wintoast/src/wintoastlib.cpp b/external/wintoast/src/wintoastlib.cpp
-index 1efe3922f8..1efceeb5a8 100644
+index 1efe3922..1efceeb5 100644
 --- a/external/wintoast/src/wintoastlib.cpp
 +++ b/external/wintoast/src/wintoastlib.cpp
 @@ -442,22 +442,23 @@ bool WinToast::initialize(_Out_ WinToastError* error) {
@@ -144,3 +104,43 @@ index 1efe3922f8..1efceeb5a8 100644
 -}
 \ No newline at end of file
 +}
+diff --git a/python/core/auto_generated/auth/qgsauthmanager.sip.in b/python/core/auto_generated/auth/qgsauthmanager.sip.in
+index a0a02f71..a3a2b3cf 100644
+--- a/python/core/auto_generated/auth/qgsauthmanager.sip.in
++++ b/python/core/auto_generated/auth/qgsauthmanager.sip.in
+@@ -817,6 +817,7 @@ Clear an authentication config from its associated authentication method cache
+ 
+   protected:
+ 
++    explicit QgsAuthManager();
+ 
+   public:
+   protected:
+diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
+index 512e936a..3e68fc4c 100644
+--- a/src/core/CMakeLists.txt
++++ b/src/core/CMakeLists.txt
+@@ -1530,9 +1530,7 @@ endif()
+ protobuf_generate_cpp(VECTOR_TILE_PROTO_SRCS VECTOR_TILE_PROTO_HDRS vectortile/vector_tile.proto)
+ set(QGIS_CORE_SRCS ${QGIS_CORE_SRCS} ${VECTOR_TILE_PROTO_SRCS})
+ set(QGIS_CORE_HDRS ${QGIS_CORE_HDRS} ${VECTOR_TILE_PROTO_HDRS})
+-if (MSVC)
+-  set_source_files_properties(${VECTOR_TILE_PROTO_SRCS} vectortile/qgsvectortilemvtdecoder.cpp vectortile/qgsvectortilemvtencoder.cpp vectortile/qgsvectortilewriter.cpp PROPERTIES COMPILE_DEFINITIONS PROTOBUF_USE_DLLS)
+-else()
++if (NOT MSVC)
+   # automatically generated file produces warnings (unused-parameter, unused-variable, misleading-indentation)
+   set_source_files_properties(${VECTOR_TILE_PROTO_SRCS} PROPERTIES COMPILE_FLAGS -w)
+ endif()
+diff --git a/src/core/auth/qgsauthmanager.h b/src/core/auth/qgsauthmanager.h
+index bf913d88..34b9587c 100644
+--- a/src/core/auth/qgsauthmanager.h
++++ b/src/core/auth/qgsauthmanager.h
+@@ -757,7 +757,7 @@ class CORE_EXPORT QgsAuthManager : public QObject
+     explicit QgsAuthManager() SIP_SKIP;
+ #else
+   protected:
+-    explicit QgsAuthManager() SIP_SKIP;
++    explicit QgsAuthManager();
+ #endif
+ 
+   private:

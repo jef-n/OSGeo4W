@@ -14,10 +14,10 @@ MM=${V%.*}
 MM=${MM//./}
 
 [ -f $P-$V.tar.gz ] || wget http://download.osgeo.org/$P/${P}$MM/source/$P-$V.tar.gz
-[ -f ../configure ] || tar -C .. -xzf  $P-$V.tar.gz --xform "s,^$P-$V,.,"
+[ -f ../$P-$V/configure ] || tar -C .. -xzf $P-$V.tar.gz
 [ -f patched ] || {
-	patch -l -d .. -p1 --dry-run <patch
-	patch -l -d .. -p1 <patch
+	patch -l -d ../$P-$V -p1 --dry-run <patch
+	patch -l -d ../$P-$V -p1 <patch
 	touch patched
 }
 
@@ -67,7 +67,7 @@ msysarch=msys2-base-x86_64-20200903.tar.xz
 		mingw-w64-x86_64-pcre \
 		mingw-w64-x86_64-fftw
 
-	cd ..
+	cd ../$P-$V
 
 	cmd.exe /c $(cygpath -aw $OSGEO4W_PWD/msys64/usr/bin/bash) $xtrace mswindows/osgeo4w/package.sh
 )
@@ -75,8 +75,8 @@ msysarch=msys2-base-x86_64-20200903.tar.xz
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R
 
-cp ../mswindows/osgeo4w/package/$P-$V-1.tar.bz2 $R/$P-$V-$B.tar.bz2
-cp ../COPYING $R/$P-$V-$B.txt
+cp ../$P-$V/mswindows/osgeo4w/package/$P-$V-1.tar.bz2 $R/$P-$V-$B.tar.bz2
+cp ../$P-$V/COPYING $R/$P-$V-$B.txt
 
 cat <<EOF >$R/setup.hint
 sdesc: "GRASS GIS"

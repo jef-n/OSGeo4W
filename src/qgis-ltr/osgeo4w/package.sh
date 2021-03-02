@@ -37,25 +37,15 @@ cd ..
 if [ -d qgis ]; then
 	cd qgis
 
-	if [ "$(git branch --show-current)" != $LTRBRANCH ]; then
-		cd ..
-		rm -rf qgis
-	else
-		git clean -f
-		git reset --hard
-		git pull
-		cd ..
-	fi
+	git fetch origin +refs/tags/$RELTAG:refs/tags/$RELTAG
+	git clean -f
+	git reset --hard
+
+	git checkout $RELTAG
+else
+	git clone $REPO --branch $RELTAG --single-branch --depth 1 qgis
+	cd qgis
 fi
-
-if ! [ -d qgis ]; then
-	git clone $REPO --branch $LTRBRANCH --single-branch --depth 1 qgis
-fi
-
-cd qgis
-
-git checkout $LTRBRANCH || git fetch origin $LTRBRANCH:$LTRBRANCH || git checkout $LTRBRANCH
-git checkout $RELTAG || git fetch origin refs/tags/$RELTAG:refs/tags/$RELTAG || git checkout $RELTAG
 
 patch -p1 --dry-run <../osgeo4w/patch
 patch -p1 <../osgeo4w/patch
@@ -406,7 +396,6 @@ EOF
 		apps/$P/plugins/grassplugin7.dll \
 		apps/$P/plugins/grassprovider7.dll \
 		apps/$P/plugins/grassrasterprovider7.dll \
-		bin/$P-grass.bat \
 		etc/postinstall/$P-grass-plugin.bat \
 		etc/preremove/$P-grass-plugin.bat
 

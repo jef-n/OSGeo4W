@@ -9,7 +9,7 @@ source ../../../scripts/build-helpers
 startlog
 
 [ -f $P-$V.tar.gz ] || wget http://download.osgeo.org/geotiff/$P/$P-$V.tar.gz
-[ -f ../CMakeLists.txt ] || tar -C .. -xzf  $P-$V.tar.gz --xform "s,^$P-$V,.,"
+[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz
 
 vs2019env
 cmakeenv
@@ -28,7 +28,7 @@ cmake -G Ninja \
 	-D TIFF_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D OPENSSL_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/openssl) \
 	-D OPENSSL_CRYPTO_LIBRARY=$(cygpath -am ../osgeo4w/lib/libcrypto.lib) \
-	../..
+	../../$P-$V
 ninja
 ninja install
 
@@ -54,7 +54,7 @@ external-source: $P
 maintainer: $MAINTAINER
 EOF
 
-cp ../COPYING $R/$P-$V-$B.txt
+cp ../$P-$V/COPYING $R/$P-$V-$B.txt
 
 tar -C install -cjf $R/$P-$V-$B.tar.bz2 bin
 tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 include lib

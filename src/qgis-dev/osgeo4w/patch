@@ -78,90 +78,8 @@ index ba205b38a..9d520a882 100644
  namespace untwine
  {
  
-diff --git a/python/core/auto_generated/auth/qgsauthmanager.sip.in b/python/core/auto_generated/auth/qgsauthmanager.sip.in
-index 16d2d73fc..264292b79 100644
---- a/python/core/auto_generated/auth/qgsauthmanager.sip.in
-+++ b/python/core/auto_generated/auth/qgsauthmanager.sip.in
-@@ -818,6 +818,7 @@ Clear an authentication config from its associated authentication method cache
-   protected:
- 
- 
-+    explicit QgsAuthManager();
- 
- };
- 
-diff --git a/src/app/CMakeLists.txt b/src/app/CMakeLists.txt
-index 072e40a9b..e3168a784 100644
---- a/src/app/CMakeLists.txt
-+++ b/src/app/CMakeLists.txt
-@@ -419,9 +419,10 @@ if(HAVE_OPENCL)
- endif()
- 
- if (HAVE_PDAL)
--  include_directories(SYSTEM
--    ${PDAL_INCLUDE_DIR}
--  )
-+  include_directories(SYSTEM ${PDAL_INCLUDE_DIR})
-+  if(MSVC)
-+    add_definitions(-DWIN32_LEAN_AND_MEAN)
-+  endif()
- endif()
- 
- if(ENABLE_MODELTEST)
-@@ -592,9 +593,7 @@ if (POSTGRES_FOUND)
- endif()
- 
- if (HAVE_PDAL)
--  target_link_libraries(qgis_app
--    ${PDAL_LIBRARIES}
--  )
-+  target_link_libraries(qgis_app ${PDAL_LIBRARIES})
- endif()
- 
- if(MSVC)
-diff --git a/src/app/qgisapp.cpp b/src/app/qgisapp.cpp
-index 7a2fb4a42..0a698f773 100644
---- a/src/app/qgisapp.cpp
-+++ b/src/app/qgisapp.cpp
-@@ -527,7 +527,7 @@ extern "C"
- #ifndef Q_OS_WIN
- #include <dlfcn.h>
- #else
--#include <windows.h>
-+#include <shellapi.h>
- #include <dbghelp.h>
- #endif
- 
-diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
-index e0588340e..7b21bf7eb 100644
---- a/src/core/CMakeLists.txt
-+++ b/src/core/CMakeLists.txt
-@@ -1630,9 +1630,7 @@ endif()
- protobuf_generate_cpp(VECTOR_TILE_PROTO_SRCS VECTOR_TILE_PROTO_HDRS vectortile/vector_tile.proto)
- set(QGIS_CORE_SRCS ${QGIS_CORE_SRCS} ${VECTOR_TILE_PROTO_SRCS})
- set(QGIS_CORE_HDRS ${QGIS_CORE_HDRS} ${VECTOR_TILE_PROTO_HDRS})
--if (MSVC)
--  set_source_files_properties(${VECTOR_TILE_PROTO_SRCS} vectortile/qgsvectortilemvtdecoder.cpp vectortile/qgsvectortilemvtencoder.cpp vectortile/qgsvectortilewriter.cpp PROPERTIES COMPILE_DEFINITIONS PROTOBUF_USE_DLLS)
--else()
-+if (NOT MSVC)
-   # automatically generated file produces warnings (unused-parameter, unused-variable, misleading-indentation)
-   set_source_files_properties(${VECTOR_TILE_PROTO_SRCS} PROPERTIES COMPILE_FLAGS -w)
- endif()
-diff --git a/src/core/auth/qgsauthmanager.h b/src/core/auth/qgsauthmanager.h
-index 4d365431a..6484f47d4 100644
---- a/src/core/auth/qgsauthmanager.h
-+++ b/src/core/auth/qgsauthmanager.h
-@@ -758,7 +758,7 @@ class CORE_EXPORT QgsAuthManager : public QObject
-     explicit QgsAuthManager() SIP_SKIP;
- #else
-   protected:
--    explicit QgsAuthManager() SIP_SKIP;
-+    explicit QgsAuthManager();
- #endif
-
-   private:
 diff --git a/external/wintoast/src/wintoastlib.cpp b/external/wintoast/src/wintoastlib.cpp
-index 1efe3922f8..1efceeb5a8 100644
+index 1efe3922f..1efceeb5a 100644
 --- a/external/wintoast/src/wintoastlib.cpp
 +++ b/external/wintoast/src/wintoastlib.cpp
 @@ -442,22 +442,23 @@ bool WinToast::initialize(_Out_ WinToastError* error) {
@@ -228,8 +146,104 @@ index 1efe3922f8..1efceeb5a8 100644
 -}
 \ No newline at end of file
 +}
+diff --git a/python/core/auto_generated/auth/qgsauthmanager.sip.in b/python/core/auto_generated/auth/qgsauthmanager.sip.in
+index bb5498201..42c0305bb 100644
+--- a/python/core/auto_generated/auth/qgsauthmanager.sip.in
++++ b/python/core/auto_generated/auth/qgsauthmanager.sip.in
+@@ -818,6 +818,7 @@ Clear an authentication config from its associated authentication method cache
+   protected:
+ 
+ 
++    explicit QgsAuthManager();
+ 
+   public:
+   protected:
+diff --git a/src/analysis/CMakeLists.txt b/src/analysis/CMakeLists.txt
+index 35495da0d..7498712e1 100644
+--- a/src/analysis/CMakeLists.txt
++++ b/src/analysis/CMakeLists.txt
+@@ -450,6 +450,9 @@ target_compile_features(qgis_analysis PRIVATE cxx_std_17)
+ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+   target_compile_definitions(qgis_analysis PUBLIC _LIBCPP_ENABLE_CXX17_REMOVED_AUTO_PTR)
+ endif()
++if (MSVC)
++  target_compile_definitions(qgis_analysis PUBLIC _HAS_AUTO_PTR_ETC=1)
++endif()
+ 
+ target_include_directories(qgis_analysis PUBLIC
+   ${CMAKE_SOURCE_DIR}/src/analysis
+diff --git a/src/app/CMakeLists.txt b/src/app/CMakeLists.txt
+index 47c64a124..6ad267cf6 100644
+--- a/src/app/CMakeLists.txt
++++ b/src/app/CMakeLists.txt
+@@ -418,9 +418,10 @@ if(HAVE_OPENCL)
+ endif()
+ 
+ if (HAVE_PDAL)
+-  include_directories(SYSTEM
+-    ${PDAL_INCLUDE_DIR}
+-  )
++  include_directories(SYSTEM ${PDAL_INCLUDE_DIR})
++  if(MSVC)
++    add_definitions(-DWIN32_LEAN_AND_MEAN)
++  endif()
+ endif()
+ 
+ if(ENABLE_MODELTEST)
+@@ -600,9 +601,7 @@ if (POSTGRES_FOUND)
+ endif()
+ 
+ if (HAVE_PDAL)
+-  target_link_libraries(qgis_app
+-    ${PDAL_LIBRARIES}
+-  )
++  target_link_libraries(qgis_app ${PDAL_LIBRARIES})
+ endif()
+ 
+ if(MSVC)
+diff --git a/src/app/qgisapp.cpp b/src/app/qgisapp.cpp
+index 8a2ee5f1c..fe46fddd2 100644
+--- a/src/app/qgisapp.cpp
++++ b/src/app/qgisapp.cpp
+@@ -523,7 +523,7 @@ extern "C"
+ #ifndef Q_OS_WIN
+ #include <dlfcn.h>
+ #else
+-#include <windows.h>
++#include <shellapi.h>
+ #include <dbghelp.h>
+ #endif
+ 
+diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
+index a875ee570..d33f05614 100644
+--- a/src/core/CMakeLists.txt
++++ b/src/core/CMakeLists.txt
+@@ -1637,9 +1637,7 @@ endif()
+ protobuf_generate_cpp(VECTOR_TILE_PROTO_SRCS VECTOR_TILE_PROTO_HDRS vectortile/vector_tile.proto)
+ set(QGIS_CORE_SRCS ${QGIS_CORE_SRCS} ${VECTOR_TILE_PROTO_SRCS})
+ set(QGIS_CORE_HDRS ${QGIS_CORE_HDRS} ${VECTOR_TILE_PROTO_HDRS})
+-if (MSVC)
+-  set_source_files_properties(${VECTOR_TILE_PROTO_SRCS} vectortile/qgsvectortilemvtdecoder.cpp vectortile/qgsvectortilemvtencoder.cpp vectortile/qgsvectortilewriter.cpp PROPERTIES COMPILE_DEFINITIONS PROTOBUF_USE_DLLS)
+-else()
++if (NOT MSVC)
+   # automatically generated file produces warnings (unused-parameter, unused-variable, misleading-indentation)
+   set_source_files_properties(${VECTOR_TILE_PROTO_SRCS} PROPERTIES COMPILE_FLAGS -w)
+ endif()
+diff --git a/src/core/auth/qgsauthmanager.h b/src/core/auth/qgsauthmanager.h
+index 4d365431a..6484f47d4 100644
+--- a/src/core/auth/qgsauthmanager.h
++++ b/src/core/auth/qgsauthmanager.h
+@@ -758,7 +758,7 @@ class CORE_EXPORT QgsAuthManager : public QObject
+     explicit QgsAuthManager() SIP_SKIP;
+ #else
+   protected:
+-    explicit QgsAuthManager() SIP_SKIP;
++    explicit QgsAuthManager();
+ #endif
+ 
+   private:
 diff --git a/src/providers/pdal/CMakeLists.txt b/src/providers/pdal/CMakeLists.txt
-index 2d4dbf982..a6141c3c4 100644
+index d3457a9a6..0792803ad 100644
 --- a/src/providers/pdal/CMakeLists.txt
 +++ b/src/providers/pdal/CMakeLists.txt
 @@ -1,6 +1,9 @@

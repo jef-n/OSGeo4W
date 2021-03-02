@@ -2,7 +2,7 @@ export P=gdal
 export V=3.2.1
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libtiff-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libgeotiff-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-devel libjpeg12-devel"
+export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-devel libjpeg12-devel"
 
 source ../../../scripts/build-helpers
 
@@ -13,10 +13,10 @@ export PYTHON=Python39
 startlog
 
 [ -f $P-$V.tar.gz ] || wget -q http://download.osgeo.org/gdal/${V%rc*}/$P-$V.tar.gz
-[ -f ../makefile.vc ] || tar -C .. -xzf $P-$V.tar.gz --xform "s,^$P-${V%rc*},.,"
+[ -f ../$P-$V/makefile.vc ] || tar -C .. -xzf $P-$V.tar.gz
 [ -f patched ] || {
-	patch -p1 --dry-run -d.. <patch
-	patch -p1 -d.. <patch
+	patch -p1 --dry-run -d../$P-$V <patch
+	patch -p1 -d../$P-$V <patch
 	touch patched
 }
 
@@ -98,20 +98,20 @@ mkdir -p $DESTDIR/etc/ini
 mkdir -p $DESTDIR/share/gdal
 mkdir -p $PYDESTDIR/etc/{postinstall,preremove}
 
-cd ..
+cd ../$P-$V
 
 (
-	fetchenv osgeo4w/osgeo4w/bin/o4w_env.bat
+	fetchenv ../osgeo4w/osgeo4w/bin/o4w_env.bat
 	vs2019env
 	export PATH=$PATH:/bin
 
 	for i in clean default install devinstall; do
-		[ -f osgeo4w/no$i ] && continue
+		[ -f ../osgeo4w/no$i ] && continue
 
 
 		nmake /f makefile.vc \
-			OSGEO4W=$(cygpath -aw osgeo4w/osgeo4w) \
-			EXT_NMAKE_OPT=$(cygpath -aw osgeo4w/nmake.opt) \
+			OSGEO4W=$(cygpath -aw ../osgeo4w/osgeo4w) \
+			EXT_NMAKE_OPT=$(cygpath -aw ../osgeo4w/nmake.opt) \
 			GDAL_HOME=$(cygpath -aw $DESTDIR) \
 			ECWDIR=$(cygpath -aw $ECW_SDK) \
 			FGDB_SDK=$(cygpath -aw $FGDB_SDK) \
@@ -120,15 +120,15 @@ cd ..
 			$i
 	done
 
-	[ -f osgeo4w/nopackage ] && exit
+	[ -f ../osgeo4w/nopackage ] && exit
 
 	cd swig
 
 	unset INCLUDE LIB
 	nmake /f makefile.vc \
-		PYDIR=$(cygpath -aw ../osgeo4w/osgeo4w/apps/$PYTHON) \
-		SWIG=$(cygpath -aw ../osgeo4w/osgeo4w/bin/swig.bat) \
-		EXT_NMAKE_OPT=$(cygpath -aw ../osgeo4w/nmake.opt) \
+		PYDIR=$(cygpath -aw ../../osgeo4w/osgeo4w/apps/$PYTHON) \
+		SWIG=$(cygpath -aw ../../osgeo4w/osgeo4w/bin/swig.bat) \
+		EXT_NMAKE_OPT=$(cygpath -aw ../../osgeo4w/nmake.opt) \
 		clean python
 
 	cd python
@@ -169,7 +169,7 @@ done
 
 echo -e "python -B %PYTHONHOME%\\Scripts\\preremove-cached.py python3-$P\r" >>$PYDESTDIR/etc/preremove/python3-$P.bat
 
-cd ../../osgeo4w
+cd ../../../osgeo4w
 
 mkdir -p $DESTDIR/etc/abi
 cat <<EOF >$DESTDIR/etc/abi/$P-devel
@@ -195,7 +195,7 @@ sdesc: "The GDAL/OGR $V runtime library"
 ldesc: "The GDAL/OGR $V runtime library"
 maintainer: $MAINTAINER
 category: Libs Commandline_Utilities
-requires: msvcrt2019 libtiff libpng curl geos libmysql sqlite3 netcdf libpq expat xerces-c hdf4 ogdi libiconv openjpeg libspatialite freexl xz zstd poppler libgeotiff msodbcsql $RUNTIMEDEPENDS
+requires: msvcrt2019 libpng curl geos libmysql sqlite3 netcdf libpq expat xerces-c hdf4 ogdi libiconv openjpeg libspatialite freexl xz zstd poppler msodbcsql $RUNTIMEDEPENDS
 external-source: $P
 EOF
 
@@ -281,13 +281,13 @@ requires: $P$abi-runtime hdf5
 external-source: $P
 EOF
 
-cp ../LICENSE.TXT $R/$P-$V-$B.txt
-cp ../LICENSE.TXT $R/$P-oracle/$P-oracle-$V-$B.txt
-cp ../LICENSE.TXT $R/$P$abi-runtime/$P$abi-runtime-$V-$B.txt
-cp ../LICENSE.TXT $R/$P-devel/$P-devel-$V-$B.txt
-cp ../LICENSE.TXT $R/$P-mss/$P-mss-$V-$B.txt
-cp ../LICENSE.TXT $R/$P-sosi/$P-sosi-$V-$B.txt
-cp ../LICENSE.TXT $R/python3-$P/python3-$P-$V-$B.txt
+cp ../$P-$V/LICENSE.TXT $R/$P-$V-$B.txt
+cp ../$P-$V/LICENSE.TXT $R/$P-oracle/$P-oracle-$V-$B.txt
+cp ../$P-$V/LICENSE.TXT $R/$P$abi-runtime/$P$abi-runtime-$V-$B.txt
+cp ../$P-$V/LICENSE.TXT $R/$P-devel/$P-devel-$V-$B.txt
+cp ../$P-$V/LICENSE.TXT $R/$P-mss/$P-mss-$V-$B.txt
+cp ../$P-$V/LICENSE.TXT $R/$P-sosi/$P-sosi-$V-$B.txt
+cp ../$P-$V/LICENSE.TXT $R/python3-$P/python3-$P-$V-$B.txt
 cp $FGDB_SDK/license/userestrictions.txt $R/$P-filegdb/$P-filegdb-$V-$B.txt
 pdftotext -layout -enc ASCII7 $ECW_SDK/ERDAS_ECW_JPEG2000_SDK.pdf - >$R/$P-ecw/$P-ecw-$V-$B.txt
 pdftotext -layout -enc ASCII7 $MRSID_SDK/LICENSE.pdf - >$R/$P-mrsid/$P-mrsid-$V-$B.txt

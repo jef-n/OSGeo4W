@@ -1,3 +1,4 @@
+call "%OSGEO4W_ROOT%\bin\o4w_env.bat"
 textreplace -std ^
 	-map @windir@ "%WINDIR%" ^
 	-map @temp@ "%TEMP%" ^

@@ -36,22 +36,16 @@ cd ..
 if [ -d qgis ]; then
 	cd qgis
 
-	if [ "$(git branch --show-current)" != $RELBRANCH ]; then
-		cd ..
-		rm -rf qgis
-	else
-		git clean -f
-		git reset --hard
-		git pull
-		cd ..
-	fi
-fi
+	git fetch origin $RELBRANCH
+	git clean -f
+	git reset --hard
 
-if ! [ -d qgis ]; then
+	git checkout $RELBRANCH
+	git pull
+else
 	git clone $REPO --branch $RELBRANCH --single-branch --depth 1 qgis
+	cd qgis
 fi
-
-cd qgis
 
 patch -p1 --dry-run <../osgeo4w/patch
 patch -p1 <../osgeo4w/patch

@@ -1,5 +1,5 @@
 diff --git a/cmake/PyQtMacros.cmake b/cmake/PyQtMacros.cmake
-index 918d5c13..d6ac2be0 100644
+index 774d0427..ece1b3e7 100644
 --- a/cmake/PyQtMacros.cmake
 +++ b/cmake/PyQtMacros.cmake
 @@ -9,15 +9,7 @@ SET(PYUIC_PROG_NAMES pyuic5)
@@ -36,48 +36,8 @@ index 918d5c13..d6ac2be0 100644
    IF (NOT PYRCC_PROGRAM)
      MESSAGE(FATAL_ERROR "pyrcc5 not found - aborting")
    ENDIF (NOT PYRCC_PROGRAM)
-diff --git a/python/core/auto_generated/auth/qgsauthmanager.sip.in b/python/core/auto_generated/auth/qgsauthmanager.sip.in
-index 81b1d328..149377b3 100644
---- a/python/core/auto_generated/auth/qgsauthmanager.sip.in
-+++ b/python/core/auto_generated/auth/qgsauthmanager.sip.in
-@@ -818,6 +818,7 @@ Clear an authentication config from its associated authentication method cache
-   protected:
- 
- 
-+    explicit QgsAuthManager();
- 
- };
- 
-diff --git a/src/core/auth/qgsauthmanager.h b/src/core/auth/qgsauthmanager.h
-index 0d90ee3a..bf59b37a 100644
---- a/src/core/auth/qgsauthmanager.h
-+++ b/src/core/auth/qgsauthmanager.h
-@@ -752,7 +752,7 @@ class CORE_EXPORT QgsAuthManager : public QObject
-      */
-     static QgsAuthManager *instance() SIP_SKIP;
- 
--    explicit QgsAuthManager() SIP_SKIP;
-+    explicit QgsAuthManager();
- 
-   private:
- 
-diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
-index e0588340e..7b21bf7eb 100644
---- a/src/core/CMakeLists.txt
-+++ b/src/core/CMakeLists.txt
-@@ -1630,9 +1630,7 @@ endif()
- protobuf_generate_cpp(VECTOR_TILE_PROTO_SRCS VECTOR_TILE_PROTO_HDRS vectortile/vector_tile.proto)
- set(QGIS_CORE_SRCS ${QGIS_CORE_SRCS} ${VECTOR_TILE_PROTO_SRCS})
- set(QGIS_CORE_HDRS ${QGIS_CORE_HDRS} ${VECTOR_TILE_PROTO_HDRS})
--if (MSVC)
--  set_source_files_properties(${VECTOR_TILE_PROTO_SRCS} vectortile/qgsvectortilemvtdecoder.cpp vectortile/qgsvectortilemvtencoder.cpp vectortile/qgsvectortilewriter.cpp PROPERTIES COMPILE_DEFINITIONS PROTOBUF_USE_DLLS)
--else()
-+if (NOT MSVC)
-   # automatically generated file produces warnings (unused-parameter, unused-variable, misleading-indentation)
-   set_source_files_properties(${VECTOR_TILE_PROTO_SRCS} PROPERTIES COMPILE_FLAGS -w)
- endif()
 diff --git a/external/wintoast/src/wintoastlib.cpp b/external/wintoast/src/wintoastlib.cpp
-index 1efe3922f8..1efceeb5a8 100644
+index 1efe3922..1efceeb5 100644
 --- a/external/wintoast/src/wintoastlib.cpp
 +++ b/external/wintoast/src/wintoastlib.cpp
 @@ -442,22 +442,23 @@ bool WinToast::initialize(_Out_ WinToastError* error) {
@@ -144,22 +104,25 @@ index 1efe3922f8..1efceeb5a8 100644
 -}
 \ No newline at end of file
 +}
+diff --git a/python/core/auto_generated/auth/qgsauthmanager.sip.in b/python/core/auto_generated/auth/qgsauthmanager.sip.in
+index 16d2d73f..264292b7 100644
+--- a/python/core/auto_generated/auth/qgsauthmanager.sip.in
++++ b/python/core/auto_generated/auth/qgsauthmanager.sip.in
+@@ -818,6 +818,7 @@ Clear an authentication config from its associated authentication method cache
+   protected:
+ 
+ 
++    explicit QgsAuthManager();
+ 
+ };
+ 
 diff --git a/python/plugins/processing/algs/gdal/AssignProjection.py b/python/plugins/processing/algs/gdal/AssignProjection.py
-index 35d32476bf..bbb3663b7c 100644
+index ce639399..8262ef93 100644
 --- a/python/plugins/processing/algs/gdal/AssignProjection.py
 +++ b/python/plugins/processing/algs/gdal/AssignProjection.py
-@@ -71,7 +71,7 @@ class AssignProjection(GdalAlgorithm):
-         return 'rasterprojections'
+@@ -88,16 +88,9 @@ class AssignProjection(GdalAlgorithm):
  
-     def commandName(self):
--        return 'gdal_edit'
-+        return 'gdal_edit.bat' if isWindows() else 'gdal_edit.py'
- 
-     def getConsoleCommands(self, parameters, context, feedback, executing=True):
-         inLayer = self.parameterAsRasterLayer(parameters, self.INPUT, context)
-@@ -89,16 +89,9 @@ class AssignProjection(GdalAlgorithm):
-             fileName
-         ]
+         arguments.append(fileName)
  
 -        if isWindows():
 -            commands = ["python3", "-m", self.commandName()]
@@ -171,24 +134,15 @@ index 35d32476bf..bbb3663b7c 100644
          self.setOutputValue(self.OUTPUT, fileName)
  
 -        return commands
-+        return [self.commandName(), GdalUtils.escapeAndJoin(arguments)]
++        return [self.commandName() + ('.bat' if isWindows() else '.py'), GdalUtils.escapeAndJoin(arguments)]
  
      def postProcessAlgorithm(self, context, feedback):
          # get output value
 diff --git a/python/plugins/processing/algs/gdal/fillnodata.py b/python/plugins/processing/algs/gdal/fillnodata.py
-index 0ce559e8e4..f6d8c0a056 100644
+index af3e9756..22e402c4 100644
 --- a/python/plugins/processing/algs/gdal/fillnodata.py
 +++ b/python/plugins/processing/algs/gdal/fillnodata.py
-@@ -109,7 +109,7 @@ class fillnodata(GdalAlgorithm):
-         return 'rasteranalysis'
- 
-     def commandName(self):
--        return 'gdal_fillnodata'
-+        return 'gdal_fillnodata.bat' if isWindows() else 'gdal_fillnodata.py'
- 
-     def flags(self):
-         return super().flags() | QgsProcessingAlgorithm.FlagDisplayNameIsLiteral
-@@ -156,11 +156,4 @@ class fillnodata(GdalAlgorithm):
+@@ -155,11 +155,4 @@ class fillnodata(GdalAlgorithm):
          arguments.append(raster.source())
          arguments.append(out)
  
@@ -200,21 +154,12 @@ index 0ce559e8e4..f6d8c0a056 100644
 -        commands.append(GdalUtils.escapeAndJoin(arguments))
 -
 -        return commands
-+        return [self.commandName(), GdalUtils.escapeAndJoin(arguments)]
++        return [self.commandName() + ('.bat' if isWindows() else '.py'), GdalUtils.escapeAndJoin(arguments)]
 diff --git a/python/plugins/processing/algs/gdal/gdal2tiles.py b/python/plugins/processing/algs/gdal/gdal2tiles.py
-index afb2e410f2..8ef2c45833 100644
+index 9b3065fb..c0231c7e 100644
 --- a/python/plugins/processing/algs/gdal/gdal2tiles.py
 +++ b/python/plugins/processing/algs/gdal/gdal2tiles.py
-@@ -151,7 +151,7 @@ class gdal2tiles(GdalAlgorithm):
-         return 'rastermiscellaneous'
- 
-     def commandName(self):
--        return 'gdal2tiles'
-+        return 'gdal2tiles.bat' if isWindows() else 'gdal2tiles.py'
- 
-     def flags(self):
-         return super().flags() | QgsProcessingAlgorithm.FlagDisplayNameIsLiteral
-@@ -224,11 +224,4 @@ class gdal2tiles(GdalAlgorithm):
+@@ -223,11 +223,4 @@ class gdal2tiles(GdalAlgorithm):
          arguments.append(inLayer.source())
          arguments.append(self.parameterAsString(parameters, self.OUTPUT, context))
  
@@ -226,20 +171,11 @@ index afb2e410f2..8ef2c45833 100644
 -        commands.append(GdalUtils.escapeAndJoin(arguments))
 -
 -        return commands
-+        return [self.commandName(), GdalUtils.escapeAndJoin(arguments)]
++        return [self.commandName() + ('.bat' if isWindows() else '.py'), GdalUtils.escapeAndJoin(arguments)]
 diff --git a/python/plugins/processing/algs/gdal/gdal2xyz.py b/python/plugins/processing/algs/gdal/gdal2xyz.py
-index 1f69747a8b..627aa86b59 100644
+index abfe155c..82b5fb5f 100644
 --- a/python/plugins/processing/algs/gdal/gdal2xyz.py
 +++ b/python/plugins/processing/algs/gdal/gdal2xyz.py
-@@ -69,7 +69,7 @@ class gdal2xyz(GdalAlgorithm):
-         return 'rasterconversion'
- 
-     def commandName(self):
--        return 'gdal2xyz'
-+        return 'gdal2xyz.bat' if isWindows() else 'gdal2xyz.py'
- 
-     def flags(self):
-         return super().flags() | QgsProcessingAlgorithm.FlagDisplayNameIsLiteral
 @@ -89,11 +89,4 @@ class gdal2xyz(GdalAlgorithm):
          arguments.append(raster.source())
          arguments.append(self.parameterAsFileOutput(parameters, self.OUTPUT, context))
@@ -252,9 +188,9 @@ index 1f69747a8b..627aa86b59 100644
 -        commands.append(GdalUtils.escapeAndJoin(arguments))
 -
 -        return commands
-+        return [self.commandName(), GdalUtils.escapeAndJoin(arguments)]
++        return [self.commandName() + ('.bat' if isWindows() else '.py'), GdalUtils.escapeAndJoin(arguments)]
 diff --git a/python/plugins/processing/algs/gdal/gdalcalc.py b/python/plugins/processing/algs/gdal/gdalcalc.py
-index 8b534e9c1e..c0737b925e 100644
+index 804c9369..b7a19be8 100644
 --- a/python/plugins/processing/algs/gdal/gdalcalc.py
 +++ b/python/plugins/processing/algs/gdal/gdalcalc.py
 @@ -179,7 +179,7 @@ class gdalcalc(GdalAlgorithm):
@@ -262,23 +198,20 @@ index 8b534e9c1e..c0737b925e 100644
  
      def commandName(self):
 -        return 'gdal_calc' if isWindows() else 'gdal_calc.py'
-+        return 'gdal_calc.bat' if isWindows() else 'gdal_calc'
++        return 'gdal_calc'
  
      def getConsoleCommands(self, parameters, context, feedback, executing=True):
          out = self.parameterAsOutputLayer(parameters, self.OUTPUT, context)
+@@ -265,4 +265,4 @@ class gdalcalc(GdalAlgorithm):
+         arguments.append('--outfile')
+         arguments.append(out)
+ 
+-        return [self.commandName(), GdalUtils.escapeAndJoin(arguments)]
++        return [self.commandName() + ('.bat' if isWindows() else '.py'), GdalUtils.escapeAndJoin(arguments)]
 diff --git a/python/plugins/processing/algs/gdal/merge.py b/python/plugins/processing/algs/gdal/merge.py
-index 1d6c9e2119..92ab0b53b7 100644
+index 1d6c9e21..b2955ae1 100644
 --- a/python/plugins/processing/algs/gdal/merge.py
 +++ b/python/plugins/processing/algs/gdal/merge.py
-@@ -127,7 +127,7 @@ class merge(GdalAlgorithm):
-         return QIcon(os.path.join(pluginPath, 'images', 'gdaltools', 'merge.png'))
- 
-     def commandName(self):
--        return 'gdal_merge'
-+        return 'gdal_merge.bat' if isWindows() else 'gdal_merge.py'
- 
-     def getConsoleCommands(self, parameters, context, feedback, executing=True):
-         out = self.parameterAsOutputLayer(parameters, self.OUTPUT, context)
 @@ -173,11 +173,4 @@ class merge(GdalAlgorithm):
          arguments.append('--optfile')
          arguments.append(list_file)
@@ -291,20 +224,11 @@ index 1d6c9e2119..92ab0b53b7 100644
 -        commands.append(GdalUtils.escapeAndJoin(arguments))
 -
 -        return commands
-+        return [self.commandName(), GdalUtils.escapeAndJoin(arguments)]
++        return [self.commandName() + ('.bat' if isWindows() else '.py'), GdalUtils.escapeAndJoin(arguments)]
 diff --git a/python/plugins/processing/algs/gdal/pansharp.py b/python/plugins/processing/algs/gdal/pansharp.py
-index c3136d46a1..e615930688 100644
+index 1590b0c0..1f07c7a2 100644
 --- a/python/plugins/processing/algs/gdal/pansharp.py
 +++ b/python/plugins/processing/algs/gdal/pansharp.py
-@@ -104,7 +104,7 @@ class pansharp(GdalAlgorithm):
-         return 'rastermiscellaneous'
- 
-     def commandName(self):
--        return 'gdal_pansharpen'
-+        return 'gdal_pansharpen.bat' if isWindows() else 'gdal_pansharpen.py'
- 
-     def getConsoleCommands(self, parameters, context, feedback, executing=True):
-         spectral = self.parameterAsRasterLayer(parameters, self.SPECTRAL, context)
 @@ -136,11 +136,4 @@ class pansharp(GdalAlgorithm):
              extra = self.parameterAsString(parameters, self.EXTRA, context)
              arguments.append(extra)
@@ -317,21 +241,12 @@ index c3136d46a1..e615930688 100644
 -        commands.append(GdalUtils.escapeAndJoin(arguments))
 -
 -        return commands
-+        return [self.commandName(), GdalUtils.escapeAndJoin(arguments)]
++        return [self.commandName() + ('.bat' if isWindows() else '.py'), GdalUtils.escapeAndJoin(arguments)]
 diff --git a/python/plugins/processing/algs/gdal/pct2rgb.py b/python/plugins/processing/algs/gdal/pct2rgb.py
-index 34ee857280..8a8442d82d 100644
+index cbdd3dc5..3f4f7160 100644
 --- a/python/plugins/processing/algs/gdal/pct2rgb.py
 +++ b/python/plugins/processing/algs/gdal/pct2rgb.py
-@@ -74,7 +74,7 @@ class pct2rgb(GdalAlgorithm):
-         return QIcon(os.path.join(pluginPath, 'images', 'gdaltools', '8-to-24-bits.png'))
- 
-     def commandName(self):
--        return 'pct2rgb'
-+        return 'pct2rgb.bat' if isWindows() else 'pct2rgb.py'
- 
-     def getConsoleCommands(self, parameters, context, feedback, executing=True):
-         inLayer = self.parameterAsRasterLayer(parameters, self.INPUT, context)
-@@ -96,11 +96,4 @@ class pct2rgb(GdalAlgorithm):
+@@ -97,11 +97,4 @@ class pct2rgb(GdalAlgorithm):
          if self.parameterAsBoolean(parameters, self.RGBA, context):
              arguments.append('-rgba')
  
@@ -343,20 +258,11 @@ index 34ee857280..8a8442d82d 100644
 -        commands.append(GdalUtils.escapeAndJoin(arguments))
 -
 -        return commands
-+        return [self.commandName(), GdalUtils.escapeAndJoin(arguments)]
++        return [self.commandName() + ('.bat' if isWindows() else '.py'), GdalUtils.escapeAndJoin(arguments)]
 diff --git a/python/plugins/processing/algs/gdal/polygonize.py b/python/plugins/processing/algs/gdal/polygonize.py
-index 886e5a4948..b0d4488a77 100644
+index 886e5a49..fe1fb2ca 100644
 --- a/python/plugins/processing/algs/gdal/polygonize.py
 +++ b/python/plugins/processing/algs/gdal/polygonize.py
-@@ -91,7 +91,7 @@ class polygonize(GdalAlgorithm):
-         return QIcon(os.path.join(pluginPath, 'images', 'gdaltools', 'polygonize.png'))
- 
-     def commandName(self):
--        return 'gdal_polygonize'
-+        return 'gdal_polygonize.bat' if isWindows() else 'gdal_polygonize.py'
- 
-     def getConsoleCommands(self, parameters, context, feedback, executing=True):
-         arguments = []
 @@ -124,11 +124,4 @@ class polygonize(GdalAlgorithm):
              arguments.append(layerName)
          arguments.append(self.parameterAsString(parameters, self.FIELD, context))
@@ -369,21 +275,12 @@ index 886e5a4948..b0d4488a77 100644
 -        commands.append(GdalUtils.escapeAndJoin(arguments))
 -
 -        return commands
-+        return [self.commandName(), GdalUtils.escapeAndJoin(arguments)]
++        return [self.commandName() + ('.bat' if isWindows() else '.py'), GdalUtils.escapeAndJoin(arguments)]
 diff --git a/python/plugins/processing/algs/gdal/proximity.py b/python/plugins/processing/algs/gdal/proximity.py
-index 6d3bc1139c..a2f643105f 100644
+index db2e8cf9..1a6f37bb 100644
 --- a/python/plugins/processing/algs/gdal/proximity.py
 +++ b/python/plugins/processing/algs/gdal/proximity.py
-@@ -139,7 +139,7 @@ class proximity(GdalAlgorithm):
-         return 'rasteranalysis'
- 
-     def commandName(self):
--        return 'gdal_proximity'
-+        return 'gdal_proximity.bat' if isWindows() else 'gdal_proximity.py'
- 
-     def getConsoleCommands(self, parameters, context, feedback, executing=True):
-         inLayer = self.parameterAsRasterLayer(parameters, self.INPUT, context)
-@@ -197,11 +197,4 @@ class proximity(GdalAlgorithm):
+@@ -196,11 +196,4 @@ class proximity(GdalAlgorithm):
          arguments.append(inLayer.source())
          arguments.append(out)
  
@@ -395,21 +292,12 @@ index 6d3bc1139c..a2f643105f 100644
 -        commands.append(GdalUtils.escapeAndJoin(arguments))
 -
 -        return commands
-+        return [self.commandName(), GdalUtils.escapeAndJoin(arguments)]
++        return [self.commandName() + ('.bat' if isWindows() else '.py'), GdalUtils.escapeAndJoin(arguments)]
 diff --git a/python/plugins/processing/algs/gdal/retile.py b/python/plugins/processing/algs/gdal/retile.py
-index 532a18a2e3..9c00417bc8 100644
+index 2ea33839..b58fc018 100644
 --- a/python/plugins/processing/algs/gdal/retile.py
 +++ b/python/plugins/processing/algs/gdal/retile.py
-@@ -161,7 +161,7 @@ class retile(GdalAlgorithm):
-         return 'rastermiscellaneous'
- 
-     def commandName(self):
--        return "gdal_retile"
-+        return "gdal_retile.bat" if isWindows() else "gdal_retile.py"
- 
-     def getConsoleCommands(self, parameters, context, feedback, executing=True):
-         arguments = [
-@@ -216,11 +216,4 @@ class retile(GdalAlgorithm):
+@@ -214,11 +214,4 @@ class retile(GdalAlgorithm):
          layers = [l.source() for l in self.parameterAsLayerList(parameters, self.INPUT, context)]
          arguments.extend(layers)
  
@@ -421,47 +309,12 @@ index 532a18a2e3..9c00417bc8 100644
 -        commands.append(GdalUtils.escapeAndJoin(arguments))
 -
 -        return commands
-+        return [self.commandName(), GdalUtils.escapeAndJoin(arguments)]
++        return [self.commandName() + ('.bat' if isWindows() else '.py'), GdalUtils.escapeAndJoin(arguments)]
 diff --git a/python/plugins/processing/algs/gdal/rgb2pct.py b/python/plugins/processing/algs/gdal/rgb2pct.py
-index 68078c78ff..8d4a70434b 100644
+index 47d2265e..233ace19 100644
 --- a/python/plugins/processing/algs/gdal/rgb2pct.py
 +++ b/python/plugins/processing/algs/gdal/rgb2pct.py
-@@ -72,7 +72,7 @@ class rgb2pct(GdalAlgorithm):
-         return QIcon(os.path.join(pluginPath, 'images', 'gdaltools', '24-to-8-bits.png'))
- 
-     def commandName(self):
--        return 'rgb2pct'
-+        return 'rgb2pct.bat' if isWindows() else 'rgb2pct.py'
- 
-     def getConsoleCommands(self, parameters, context, feedback, executing=True):
-         out = self.parameterAsOutputLayer(parameters, self.OUTPUT, context)
-@@ -91,11 +91,4 @@ class rgb2pct(GdalAlgorithm):
-             out
-         ]
- 
--        if isWindows():
--            commands = ["python3", "-m", self.commandName()]
--        else:
--            commands = [self.commandName() + '.py']
--
--        commands.append(GdalUtils.escapeAndJoin(arguments))
--
--        return commands
-+        return [self.commandName(), GdalUtils.escapeAndJoin(arguments)]
-diff --git a/python/plugins/processing/algs/gdal/sieve.py b/python/plugins/processing/algs/gdal/sieve.py
-index b23f017cb8..d56ebaf709 100644
---- a/python/plugins/processing/algs/gdal/sieve.py
-+++ b/python/plugins/processing/algs/gdal/sieve.py
-@@ -94,7 +94,7 @@ class sieve(GdalAlgorithm):
-         return QIcon(os.path.join(pluginPath, 'images', 'gdaltools', 'sieve.png'))
- 
-     def commandName(self):
--        return 'gdal_sieve'
-+        return 'gdal_sieve.bat' if isWindows() else 'gdal_sieve.py'
- 
-     def getConsoleCommands(self, parameters, context, feedback, executing=True):
-         arguments = [
-@@ -131,11 +131,4 @@ class sieve(GdalAlgorithm):
+@@ -90,11 +90,4 @@ class rgb2pct(GdalAlgorithm):
          arguments.append(raster.source())
          arguments.append(out)
  
@@ -473,4 +326,153 @@ index b23f017cb8..d56ebaf709 100644
 -        commands.append(GdalUtils.escapeAndJoin(arguments))
 -
 -        return commands
-+        return [self.commandName(), GdalUtils.escapeAndJoin(arguments)]
++        return [self.commandName() + ('.bat' if isWindows() else '.py'), GdalUtils.escapeAndJoin(arguments)]
+diff --git a/python/plugins/processing/algs/gdal/sieve.py b/python/plugins/processing/algs/gdal/sieve.py
+index 2f0a6042..c51cf00e 100644
+--- a/python/plugins/processing/algs/gdal/sieve.py
++++ b/python/plugins/processing/algs/gdal/sieve.py
+@@ -130,11 +130,4 @@ class sieve(GdalAlgorithm):
+         arguments.append(raster.source())
+         arguments.append(out)
+ 
+-        if isWindows():
+-            commands = ["python3", "-m", self.commandName()]
+-        else:
+-            commands = [self.commandName() + '.py']
+-
+-        commands.append(GdalUtils.escapeAndJoin(arguments))
+-
+-        return commands
++        return [self.commandName() + ('.bat' if isWindows() else '.py'), GdalUtils.escapeAndJoin(arguments)]
+diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
+index 512e936a..3e68fc4c 100644
+--- a/src/core/CMakeLists.txt
++++ b/src/core/CMakeLists.txt
+@@ -1530,9 +1530,7 @@ endif()
+ protobuf_generate_cpp(VECTOR_TILE_PROTO_SRCS VECTOR_TILE_PROTO_HDRS vectortile/vector_tile.proto)
+ set(QGIS_CORE_SRCS ${QGIS_CORE_SRCS} ${VECTOR_TILE_PROTO_SRCS})
+ set(QGIS_CORE_HDRS ${QGIS_CORE_HDRS} ${VECTOR_TILE_PROTO_HDRS})
+-if (MSVC)
+-  set_source_files_properties(${VECTOR_TILE_PROTO_SRCS} vectortile/qgsvectortilemvtdecoder.cpp vectortile/qgsvectortilemvtencoder.cpp vectortile/qgsvectortilewriter.cpp PROPERTIES COMPILE_DEFINITIONS PROTOBUF_USE_DLLS)
+-else()
++if (NOT MSVC)
+   # automatically generated file produces warnings (unused-parameter, unused-variable, misleading-indentation)
+   set_source_files_properties(${VECTOR_TILE_PROTO_SRCS} PROPERTIES COMPILE_FLAGS -w)
+ endif()
+diff --git a/src/core/auth/qgsauthmanager.h b/src/core/auth/qgsauthmanager.h
+index 3758a1c8..f10e2ce8 100644
+--- a/src/core/auth/qgsauthmanager.h
++++ b/src/core/auth/qgsauthmanager.h
+@@ -752,7 +752,7 @@ class CORE_EXPORT QgsAuthManager : public QObject
+      */
+     static QgsAuthManager *instance() SIP_SKIP;
+ 
+-    explicit QgsAuthManager() SIP_SKIP;
++    explicit QgsAuthManager();
+ 
+   private:
+ 
+diff --git a/src/plugins/grass/qgsgrassnewmapset.cpp b/src/plugins/grass/qgsgrassnewmapset.cpp
+index 3c3e84c0..5d467a2f 100644
+--- a/src/plugins/grass/qgsgrassnewmapset.cpp
++++ b/src/plugins/grass/qgsgrassnewmapset.cpp
+@@ -46,7 +46,7 @@ extern "C"
+ #if defined(_MSC_VER) && defined(M_PI_4)
+ #undef M_PI_4 //avoid redefinition warning
+ #endif
+-#if defined(PROJ_VERSION_MAJOR) && PROJ_VERSION_MAJOR>=6
++#if defined(PROJ_VERSION_MAJOR) && PROJ_VERSION_MAJOR>=6 && PROJ_VERSION_MAJOR<8
+ #define ACCEPT_USE_OF_DEPRECATED_PROJ_API_H
+ #endif
+ #include <grass/gprojects.h>
+diff --git a/src/providers/grass/qgis.g.info.c b/src/providers/grass/qgis.g.info.c
+index 740ca538..de8f9f99 100644
+--- a/src/providers/grass/qgis.g.info.c
++++ b/src/providers/grass/qgis.g.info.c
+@@ -35,7 +35,7 @@
+ #if defined(_MSC_VER) && defined(M_PI_4)
+ #undef M_PI_4 //avoid redefinition warning
+ #endif
+-#if defined(PROJ_VERSION_MAJOR) && PROJ_VERSION_MAJOR>=6
++#if defined(PROJ_VERSION_MAJOR) && PROJ_VERSION_MAJOR>=6 && PROJ_VERSION_MAJOR<8
+ #define ACCEPT_USE_OF_DEPRECATED_PROJ_API_H
+ #endif
+ #include <grass/gprojects.h>
+diff --git a/src/providers/grass/qgsgrass.cpp b/src/providers/grass/qgsgrass.cpp
+index c8d04eea..09ab766b 100644
+--- a/src/providers/grass/qgsgrass.cpp
++++ b/src/providers/grass/qgsgrass.cpp
+@@ -67,7 +67,7 @@ extern "C"
+ #if defined(_MSC_VER) && defined(M_PI_4)
+ #undef M_PI_4 //avoid redefinition warning
+ #endif
+-#if defined(PROJ_VERSION_MAJOR) && PROJ_VERSION_MAJOR>=6
++#if defined(PROJ_VERSION_MAJOR) && PROJ_VERSION_MAJOR>=6 && PROJ_VERSION_MAJOR<8
+ #define ACCEPT_USE_OF_DEPRECATED_PROJ_API_H
+ #endif
+ #include <grass/gprojects.h>
+diff --git a/src/providers/grass/qgsgrassprovider.cpp b/src/providers/grass/qgsgrassprovider.cpp
+index caa92694..0e061a72 100644
+--- a/src/providers/grass/qgsgrassprovider.cpp
++++ b/src/providers/grass/qgsgrassprovider.cpp
+@@ -61,7 +61,7 @@ extern "C"
+ #if defined(_MSC_VER) && defined(M_PI_4)
+ #undef M_PI_4 //avoid redefinition warning
+ #endif
+-#if defined(PROJ_VERSION_MAJOR) && PROJ_VERSION_MAJOR>=6
++#if defined(PROJ_VERSION_MAJOR) && PROJ_VERSION_MAJOR>=6 && PROJ_VERSION_MAJOR<8
+ #define ACCEPT_USE_OF_DEPRECATED_PROJ_API_H
+ #endif
+ #include <grass/gprojects.h>
+diff --git a/src/providers/grass/qgsgrassvector.cpp b/src/providers/grass/qgsgrassvector.cpp
+index ddc9cf49..1b384bdd 100644
+--- a/src/providers/grass/qgsgrassvector.cpp
++++ b/src/providers/grass/qgsgrassvector.cpp
+@@ -31,7 +31,7 @@ extern "C"
+ #if defined(_MSC_VER) && defined(M_PI_4)
+ #undef M_PI_4 //avoid redefinition warning
+ #endif
+-#if defined(PROJ_VERSION_MAJOR) && PROJ_VERSION_MAJOR>=6
++#if defined(PROJ_VERSION_MAJOR) && PROJ_VERSION_MAJOR>=6 && PROJ_VERSION_MAJOR<8
+ #define ACCEPT_USE_OF_DEPRECATED_PROJ_API_H
+ #endif
+ #include <grass/gprojects.h>
+diff --git a/src/providers/grass/qgsgrassvectormap.cpp b/src/providers/grass/qgsgrassvectormap.cpp
+index 90a9b17a..2daf4da3 100644
+--- a/src/providers/grass/qgsgrassvectormap.cpp
++++ b/src/providers/grass/qgsgrassvectormap.cpp
+@@ -35,7 +35,7 @@ extern "C"
+ #if defined(_MSC_VER) && defined(M_PI_4)
+ #undef M_PI_4 //avoid redefinition warning
+ #endif
+-#if defined(PROJ_VERSION_MAJOR) && PROJ_VERSION_MAJOR>=6
++#if defined(PROJ_VERSION_MAJOR) && PROJ_VERSION_MAJOR>=6 && PROJ_VERSION_MAJOR<8
+ #define ACCEPT_USE_OF_DEPRECATED_PROJ_API_H
+ #endif
+ #include <grass/gprojects.h>
+diff --git a/src/providers/grass/qgsgrassvectormaplayer.cpp b/src/providers/grass/qgsgrassvectormaplayer.cpp
+index 0e594a71..60c3af15 100644
+--- a/src/providers/grass/qgsgrassvectormaplayer.cpp
++++ b/src/providers/grass/qgsgrassvectormaplayer.cpp
+@@ -30,7 +30,7 @@ extern "C"
+ #if defined(_MSC_VER) && defined(M_PI_4)
+ #undef M_PI_4 //avoid redefinition warning
+ #endif
+-#if defined(PROJ_VERSION_MAJOR) && PROJ_VERSION_MAJOR>=6
++#if defined(PROJ_VERSION_MAJOR) && PROJ_VERSION_MAJOR>=6 && PROJ_VERSION_MAJOR<8
+ #define ACCEPT_USE_OF_DEPRECATED_PROJ_API_H
+ #endif
+ #include <grass/gprojects.h>
+diff --git a/src/providers/grass/qgsgrassvectormaplayer.h b/src/providers/grass/qgsgrassvectormaplayer.h
+index 4bf9a486..91874839 100644
+--- a/src/providers/grass/qgsgrassvectormaplayer.h
++++ b/src/providers/grass/qgsgrassvectormaplayer.h
+@@ -32,7 +32,7 @@ extern "C"
+ #if defined(_MSC_VER) && defined(M_PI_4)
+ #undef M_PI_4 //avoid redefinition warning
+ #endif
+-#if defined(PROJ_VERSION_MAJOR) && PROJ_VERSION_MAJOR>=6
++#if defined(PROJ_VERSION_MAJOR) && PROJ_VERSION_MAJOR>=6 && PROJ_VERSION_MAJOR<8
+ #define ACCEPT_USE_OF_DEPRECATED_PROJ_API_H
+ #endif
+ #include <grass/gprojects.h>

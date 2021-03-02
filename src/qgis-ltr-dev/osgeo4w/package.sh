@@ -38,22 +38,16 @@ cd ..
 if [ -d qgis ]; then
 	cd qgis
 
-	if [ "$(git branch --show-current)" != $LTRBRANCH ]; then
-		cd ..
-		rm -rf qgis
-	else
-		git clean -f
-		git reset --hard
-		git pull
-		cd ..
-	fi
-fi
+	git fetch origin $LTRBRANCH
+	git clean -f
+	git reset --hard
 
-if ! [ -d qgis ]; then
+	git checkout $LTRBRANCH
+	git pull
+else
 	git clone $REPO --branch $LTRBRANCH --single-branch --depth 1 qgis
+	cd qgis
 fi
-
-cd qgis
 
 patch -p1 --dry-run <../osgeo4w/patch
 patch -p1 <../osgeo4w/patch

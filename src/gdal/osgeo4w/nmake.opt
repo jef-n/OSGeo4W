@@ -24,12 +24,12 @@ PNG_EXTERNAL_LIB	= 1
 PNGDIR			= $(OSGEO4W)/include
 PNG_LIB			= $(OSGEO4W)/lib/libpng16.lib
 
-TIFF_INC		= -I$(OSGEO4W)\include
-TIFF_LIB		= $(OSGEO4W)\lib\tiff.lib
-TIFF_OPTS		= -DBIGTIFF_SUPPORT
+# TIFF_INC		= -I$(OSGEO4W)\include
+# TIFF_LIB		= $(OSGEO4W)\lib\tiff.lib
+# TIFF_OPTS		= -DBIGTIFF_SUPPORT
 
-GEOTIFF_INC		= -I$(OSGEO4W)/include
-GEOTIFF_LIB		= $(OSGEO4W)/lib/geotiff_i.lib
+# GEOTIFF_INC		= -I$(OSGEO4W)/include
+# GEOTIFF_LIB		= $(OSGEO4W)/lib/geotiff_i.lib
 
 EXPAT_DIR		= $(OSGEO4W)
 EXPAT_INCLUDE		= -I$(OSGEO4W)\include

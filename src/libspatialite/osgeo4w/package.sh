@@ -9,20 +9,20 @@ source ../../../scripts/build-helpers
 startlog
 
 [ -f $P-$V.tar.gz ] || wget http://www.gaia-gis.it/gaia-sins/$P-$V.tar.gz
-[ -f ../makefile.vc ] || tar -C .. -xzf  $P-$V.tar.gz --xform "s,^$P-$V,.,"
+[ -f ../makefile.vc ] || tar -C .. -xzf $P-$V.tar.gz
 
 vs2019env
 
 mkdir -p install
 
-cp makefile.vc ..
+cp makefile.vc ../$P-$V
 
-cd ..
+cd ../$P-$V
 
-nmake /f makefile.vc OSGEO4W_ROOT=$(cygpath -aw osgeo4w/osgeo4w)
-nmake /f makefile.vc OSGEO4W_ROOT=$(cygpath -aw osgeo4w/osgeo4w) INSTDIR=$(cygpath -aw osgeo4w/install) install
+nmake /f makefile.vc OSGEO4W_ROOT=$(cygpath -aw ../osgeo4w/osgeo4w)
+nmake /f makefile.vc OSGEO4W_ROOT=$(cygpath -aw ../osgeo4w/osgeo4w) INSTDIR=$(cygpath -aw ../osgeo4w/install) install
 
-cd osgeo4w
+cd ../osgeo4w
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R/$P-devel
@@ -53,7 +53,7 @@ tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/makefile.vc
 
-cp ../COPYING $R//$P-$V-$B.txt
-cp ../COPYING $R/$P-devel/$P-devel-$V-$B.txt
+cp ../$P-$V/COPYING $R//$P-$V-$B.txt
+cp ../$P-$V/COPYING $R/$P-devel/$P-devel-$V-$B.txt
 
 endlog

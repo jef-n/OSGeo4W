@@ -363,3 +363,13 @@ diff -ur grass-7.8.5/mswindows/osgeo4w/postinstall.bat ../mswindows/osgeo4w/post
  
  rem run g.mkfontcap outside a GRASS session during
  rem an OSGeo4W installation for updating paths to fonts
+diff -ur grass-7.8.5/mswindows/osgeo4w/config.h.vc ../mswindows/osgeo4w/config.h.vc
+--- grass-7.8.5/mswindows/osgeo4w/config.h.vc	2020-12-21 19:40:15.000000000 +0100
++++ ../mswindows/osgeo4w/config.h.vc	2021-03-01 12:52:05.809216000 +0100
+@@ -298,4 +298,6 @@
+ /* define if langinfo.h exists */
+ /* #undef HAVE_LANGINFO_H */
+ 
++#define HAVE_PROJ_H 1
++
+ #endif /* _config_h */

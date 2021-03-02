@@ -1,5 +1,5 @@
 export P=proj
-export V=7.2.1
+export V=8.0.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="sqlite3-devel libtiff-devel curl-devel"
@@ -9,7 +9,7 @@ source ../../../scripts/build-helpers
 startlog
 
 [ -f $P-$V.tar.gz ] || wget https://download.osgeo.org/$P/$P-$V.tar.gz
-[ -f ../CMakeLists.txt ] || tar -C .. -xzf  $P-$V.tar.gz --xform "s,^$P-${V%RC*},.,"
+[ -f ../$P-${V%RC*}/CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz
 
 vs2019env
 cmakeenv
@@ -36,7 +36,7 @@ cmake -G Ninja \
 	-D CURL_INCLUDE_DIR=$(cygpath -aw ../osgeo4w/include) \
 	-D BUILD_TESTING=OFF \
 	-D BUILD_SHARED_LIBS=ON \
-	../..
+	../../$P-${V%RC*}
 ninja
 ninja install
 
@@ -78,7 +78,7 @@ maintainer: $MAINTAINER
 external-source: $P
 EOF
 
-cp ../COPYING $R/$P-$V-$B.txt
+cp ../$P-${V%RC*}/COPYING $R/$P-$V-$B.txt
 
 mkdir -p install/etc/ini
 cat <<EOF >install/etc/ini/$P.bat

@@ -28,9 +28,10 @@ if [ -d qgis ]; then
 
 	git clean -f
 	git reset --hard
+
 	git pull
 else
-	git clone --depth 120 $REPO qgis
+	git clone $REPO --branch master --single-branch qgis
 	cd qgis
 fi
 
