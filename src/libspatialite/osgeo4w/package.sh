@@ -9,7 +9,7 @@ source ../../../scripts/build-helpers
 startlog
 
 [ -f $P-$V.tar.gz ] || wget http://www.gaia-gis.it/gaia-sins/$P-$V.tar.gz
-[ -f ../makefile.vc ] || tar -C .. -xzf $P-$V.tar.gz
+[ -f ../$P-$V/makefile.vc ] || tar -C .. -xzf $P-$V.tar.gz
 
 vs2019env
 
