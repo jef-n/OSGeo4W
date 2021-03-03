@@ -1,16 +1,18 @@
 export P=wxwidgets
-export V=3.1.4
+export WXPYTHON_SHA=0df1d81acd6f1be8624022f8eecb51679008ca40
+export V=3.1.5-$WXPYTHON_SHA
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="zlib-devel expat-devel libjpeg-devel libpng-devel libtiff-devel xz-devel"
+
 
 source ../../../scripts/build-helpers
 
 startlog
 
 p=wxWidgets
-[ -f $p-$V.tar.bz2 ] || wget https://github.com/wxWidgets/wxWidgets/releases/download/v$V/$p-$V.tar.bz2
-[ -f ../CMakeLists.txt ] || tar -C .. -xjf  $p-$V.tar.bz2 --xform "s,^$p-$V,.,"
+[ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://github.com/wxWidgets/wxWidgets/archive/$WXPYTHON_SHA.tar.gz
+[ -d ../$P-$V ] || tar -C .. -xzf $P-$V.tar.gz --xform "s,$p-$WXPYTHON_SHA/,$P-$V/,"
 
 vs2019env
 cmakeenv
@@ -29,7 +31,7 @@ cmake -G Ninja \
 	-D wxUSE_LIBPNG=sys  -D     PNG_LIBRARY=$(cygpath -am ../osgeo4w/lib/libpng16.lib) -D PNG_PNG_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D wxUSE_LIBTIFF=sys -D    TIFF_LIBRARY=$(cygpath -am ../osgeo4w/lib/tiff.lib)     -D    TIFF_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D wxUSE_LIBLZMA=sys -D LIBLZMA_LIBRARY=$(cygpath -am ../osgeo4w/lib/liblzma.lib)  -D LIBLZMA_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
-	../..
+	../../$P-$V
 cmake --build .
 cmake --install .
 
@@ -75,8 +77,8 @@ tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	--exclude "*.dll" \
 	include lib
 
-cp ../docs/licence.txt $R/$P-$V-$B.txt
-cp ../docs/licence.txt $R/$P-devel/$P-devel-$P-$V-$B.txt
+cp ../$P-$V/docs/licence.txt $R/$P-$V-$B.txt
+cp ../$P-$V/docs/licence.txt $R/$P-devel/$P-devel-$P-$V-$B.txt
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 
