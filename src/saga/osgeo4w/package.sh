@@ -13,7 +13,10 @@ M=${V%%.*}
 p=${P%$M}
 
 [ -f $p-$V.zip ] || wget -O $p-$V.zip "https://sourceforge.net/projects/$p-gis/files/${p^^}%20-%20$M/${p^^}%20-%20$V/saga-${V}_src.zip/download"
-[ -d ../saga-${V}_src ] || unzip -q -d .. $p-$V.zip
+[ -d ../saga-${V}_src ] || {
+	unzip -q -d .. $p-$V.zip
+	rm -f ../saga-${V}_src/patched
+}
 [ -f ../saga-${V}_src/patched ] || {
 	patch -d ../saga-${V}_src -p1 --dry-run <patch
 	patch -d ../saga-${V}_src -p1 <patch
@@ -21,6 +24,8 @@ p=${P%$M}
 }
 
 (
+	set -e
+
 	fetchenv osgeo4w/bin/o4w_env.bat
 	vs2019env
 
