@@ -38,7 +38,7 @@ EXPAT_LIB		= $(OSGEO4W)\lib\libexpat.lib
 # to enable ECW support.
 ECW_PLUGIN		= YES
 ECWLIB			= $(ECWDIR)\lib\vc141\x64\NCSEcw.lib $(ECWDIR)\lib\vc141\x64\NCSEcwS.lib
-ECWFLAGS		= -DECWSDK_VERSION=50 -I$(ECWDIR)\include
+ECWFLAGS		= -DECWSDK_VERSION=55 -I$(ECWDIR)\include
 
 OGDIDIR			= $(OSGEO4W)
 OGDI_INCLUDE		= $(OSGEO4W)\include\ogdi -I$(OSGEO4W)\include -D_WINREG_

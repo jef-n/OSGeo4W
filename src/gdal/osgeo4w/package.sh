@@ -29,32 +29,37 @@ mkdir -p gdaldeps
 cd gdaldeps
 
 export MRSID_SDK=MrSID_DSDK-9.5.4.4703-win64-vc14
-export ECW_ZIP=erdas-ecw-sdk-5.4.0-win.zip
-export ECW_EXE=ECWJP2SDKSetup_5.4.0.exe
+export ECW_ZIP=ECWJP2SDKSetup_5.5.0.1882-Update2-Windows.zip
+export ECW_EXE=ECWJP2SDKSetup_5.5.0.1882.exe
 
 for i in \
 	https://raw.githubusercontent.com/Esri/file-geodatabase-api/master/FileGDB_API_1.5/FileGDB_API_1_5_VS2015.zip \
-	http://downloads.hexagongeospatial.com/software/2018/ECW/erdas-ecw-sdk-5.4.0-win.zip \
+	https://downloads.hexagongeospatial.com/software/2020/ECW/$ECW_ZIP \
 	http://bin.lizardtech.com/download/developer/$MRSID_SDK.zip \
 	; do
 	[ -f "${i##*/}" ] || wget -q "$i"
 done
 
 mkdir -p filegdb
-[ -d filegdb/lib64 ] || unzip -q -o -d filegdb FileGDB_API_1_5_VS2015.zip "bin64/*" "lib64/*" "include/*" license/userestrictions.txt
+[ -d filegdb/done ] || {
+	unzip -q -o -d filegdb FileGDB_API_1_5_VS2015.zip "bin64/*" "lib64/*" "include/*" license/userestrictions.txt
+	touch filegdb/done
+}
 
 mkdir -p ecw
-[ -f $ECW_EXE ] || unzip -q $ECW_ZIP $ECW_EXE
-[ -d ecw/lib ] || {
+[ -f $ECW_EXE ] || unzip -q $ECW_ZIP $ECW_EXE ERDAS_ECW_JPEG2000_SDK.pdf
+[ -f ecw/done ] || {
 	7z x -aoa -oecw $ECW_EXE \
 		'$0/include/*' \
-		'lib/vc141/x64/*' \
+		'lib/vc141/x64/NCSEcw.lib' \
+		'lib/vc141/x64/NCSEcwS.lib' \
 		'bin/vc141/x64/*' \
-		'ERDAS_ECW_JPEG2000_SDK.pdf'
+		'\$TEMP/ecwjp2_sdk/Server_Read-Only_EndUser.rtf'
 	mv 'ecw/$0/include' ecw/include
 	rmdir 'ecw/$0'
+	touch ecw/done
 }
-[ -d $MRSID_SDK ] || {
+[ -f $MRSID_SDK/done ] || {
 	unzip -o -q $MRSID_SDK.zip \
 		"$MRSID_SDK/Raster_DSDK/include/*" \
 		"$MRSID_SDK/Raster_DSDK/lib/*" \
@@ -66,6 +71,7 @@ mkdir -p ecw
 	cp "$MRSID_SDK/Raster_DSDK/include/lt_platform.h" "$MRSID_SDK/Raster_DSDK/include/lt_platform.h.orig"
 	sed -i -e 's/#elif defined(_MSC_VER) &&  (1300 <= _MSC_VER && _MSC_VER <= 1910)/#elif defined(_MSC_VER) \&\& (1300 <= _MSC_VER \&\& _MSC_VER < 1930)/' \
 		"$MRSID_SDK/Raster_DSDK/include/lt_platform.h"
+	touch $MRSID_SDK/done
 }
 
 cd ..
@@ -289,7 +295,7 @@ cp ../$P-$V/LICENSE.TXT $R/$P-mss/$P-mss-$V-$B.txt
 cp ../$P-$V/LICENSE.TXT $R/$P-sosi/$P-sosi-$V-$B.txt
 cp ../$P-$V/LICENSE.TXT $R/python3-$P/python3-$P-$V-$B.txt
 cp $FGDB_SDK/license/userestrictions.txt $R/$P-filegdb/$P-filegdb-$V-$B.txt
-pdftotext -layout -enc ASCII7 $ECW_SDK/ERDAS_ECW_JPEG2000_SDK.pdf - >$R/$P-ecw/$P-ecw-$V-$B.txt
+catdoc $ECW_SDK/\$TEMP/ecwjp2_sdk/Server_Read-Only_EndUser.rtf | sed -e "1,/^[^ ]/ { /^$/d }" >$R/$P-ecw/$P-ecw-$V-$B.txt
 pdftotext -layout -enc ASCII7 $MRSID_SDK/LICENSE.pdf - >$R/$P-mrsid/$P-mrsid-$V-$B.txt
 
 cp $FGDB_SDK/bin64/FileGDBAPI.dll $DESTDIR/bin
