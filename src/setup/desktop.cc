@@ -174,20 +174,6 @@ desktop_icon (const std::string& title, const std::string& target,
 }
 
 static void
-do_desktop_setup ()
-{
-  if (root_menu)
-    {
-      start_menu (OSGEO4W_SHELL, batname);
-    }
-
-  if (root_desktop)
-    {
-      desktop_icon (OSGEO4W_SHELL, batname);
-    }
-}
-
-static void
 check_if_enable_next (HWND h)
 {
   EnableWindow (GetDlgItem (h, IDOK), 1);
@@ -342,9 +328,6 @@ DesktopSetupPage::OnBack ()
 bool
 DesktopSetupPage::OnFinish ()
 {
-  if (source != IDC_SOURCE_DOWNLOAD)
-    do_desktop_setup ();
-
   return true;
 }
 

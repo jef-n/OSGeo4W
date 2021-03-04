@@ -32,17 +32,21 @@ tar -cjf $R/$P-$V-$B.tar.bz2 \
 	--xform "s,^xxmklink.exe,bin/xxmklink.exe," \
 	--xform "s,^textreplace.exe,bin/textreplace.exe," \
 	--xform "s,^o4w_env.bat,bin/o4w_env.bat," \
-	--xform "s,^ini-base.bat,etc/ini/base.bat," \
+	--xform "s,^ini.bat,etc/ini/$P.bat," \
+	--xform "s,^postinstall.bat,etc/postinstall/$P.bat," \
+	--xform "s,^preremove.bat,etc/preremove/$P.bat," \
 	--xform "s,^o-help.bat,bin/o-help.bat," \
 	bgspawn.exe \
 	dllupdate.exe \
 	getspecialfolder.exe \
 	textreplace.exe \
 	xxmklink.exe \
-	ini-base.bat \
+	ini.bat \
 	o4w_env.bat \
 	OSGeo4W.bat \
 	OSGeo4W.ico \
+	postinstall.bat \
+	preremove.bat \
 	o-help.bat
 
 tar -cjf $R/$P-$V-$B-src.tar.bz2 \
@@ -55,7 +59,9 @@ tar -cjf $R/$P-$V-$B-src.tar.bz2 \
 	o4w_env.bat \
 	OSGeo4W.bat \
 	OSGeo4W.ico \
-	ini-base.bat \
+	ini.bat \
+	postinstall.bat \
+	preremove.bat \
 	o-help.bat
 
 endlog
