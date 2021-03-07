@@ -75,6 +75,7 @@ if [ -n "$version_curr" ]; then
 
 	if [ "$SHA" = "$sha" -a -z "$OSGEO4W_FORCE_REBUILD" ]; then
 		echo "$SHA already built."
+		export OSGEO4W_SKIP_UPLOAD=1
 		endlog
 		exit 0
 	fi
