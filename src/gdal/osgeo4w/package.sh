@@ -1,5 +1,5 @@
 export P=gdal
-export V=3.2.1
+export V=3.2.2rc1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-devel libjpeg12-devel"
@@ -13,10 +13,10 @@ export PYTHON=Python39
 startlog
 
 [ -f $P-$V.tar.gz ] || wget -q http://download.osgeo.org/gdal/${V%rc*}/$P-$V.tar.gz
-[ -f ../$P-$V/makefile.vc ] || tar -C .. -xzf $P-$V.tar.gz
+[ -f ../$P-${V%rc*}/makefile.vc ] || tar -C .. -xzf $P-$V.tar.gz
 [ -f patched ] || {
-	patch -p1 --dry-run -d../$P-$V <patch
-	patch -p1 -d../$P-$V <patch
+	patch -p1 --dry-run -d../$P-${V%rc*} <patch
+	patch -p1 -d../$P-${V%rc*} <patch
 	touch patched
 }
 
@@ -104,7 +104,7 @@ mkdir -p $DESTDIR/etc/ini
 mkdir -p $DESTDIR/share/gdal
 mkdir -p $PYDESTDIR/etc/{postinstall,preremove}
 
-cd ../$P-$V
+cd ../$P-${V%rc*}
 
 (
 	fetchenv ../osgeo4w/osgeo4w/bin/o4w_env.bat
@@ -287,13 +287,13 @@ requires: $P$abi-runtime hdf5
 external-source: $P
 EOF
 
-cp ../$P-$V/LICENSE.TXT $R/$P-$V-$B.txt
-cp ../$P-$V/LICENSE.TXT $R/$P-oracle/$P-oracle-$V-$B.txt
-cp ../$P-$V/LICENSE.TXT $R/$P$abi-runtime/$P$abi-runtime-$V-$B.txt
-cp ../$P-$V/LICENSE.TXT $R/$P-devel/$P-devel-$V-$B.txt
-cp ../$P-$V/LICENSE.TXT $R/$P-mss/$P-mss-$V-$B.txt
-cp ../$P-$V/LICENSE.TXT $R/$P-sosi/$P-sosi-$V-$B.txt
-cp ../$P-$V/LICENSE.TXT $R/python3-$P/python3-$P-$V-$B.txt
+cp ../$P-${V%rc*}/LICENSE.TXT $R/$P-$V-$B.txt
+cp ../$P-${V%rc*}/LICENSE.TXT $R/$P-oracle/$P-oracle-$V-$B.txt
+cp ../$P-${V%rc*}/LICENSE.TXT $R/$P$abi-runtime/$P$abi-runtime-$V-$B.txt
+cp ../$P-${V%rc*}/LICENSE.TXT $R/$P-devel/$P-devel-$V-$B.txt
+cp ../$P-${V%rc*}/LICENSE.TXT $R/$P-mss/$P-mss-$V-$B.txt
+cp ../$P-${V%rc*}/LICENSE.TXT $R/$P-sosi/$P-sosi-$V-$B.txt
+cp ../$P-${V%rc*}/LICENSE.TXT $R/python3-$P/python3-$P-$V-$B.txt
 cp $FGDB_SDK/license/userestrictions.txt $R/$P-filegdb/$P-filegdb-$V-$B.txt
 catdoc $ECW_SDK/\$TEMP/ecwjp2_sdk/Server_Read-Only_EndUser.rtf | sed -e "1,/^[^ ]/ { /^$/d }" >$R/$P-ecw/$P-ecw-$V-$B.txt
 pdftotext -layout -enc ASCII7 $MRSID_SDK/LICENSE.pdf - >$R/$P-mrsid/$P-mrsid-$V-$B.txt
