@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    name: QGIS nightlies
+    name: qgis-dev
     runs-on: windows-latest
 
     steps:
