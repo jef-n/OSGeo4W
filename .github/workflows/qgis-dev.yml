@@ -13,6 +13,9 @@ jobs:
     name: qgis-dev
     runs-on: windows-latest
 
+    env:
+      BUILDCONF: Release  # see if there's enough room to build w/o symbols
+
     steps:
     - name: keep original line endings
       run: git config --global core.autocrlf false
