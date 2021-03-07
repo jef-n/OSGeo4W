@@ -1,0 +1,49 @@
+name: QGIS nightlies
+
+on:
+#  schedule:
+#  - cron: '2 0 * * * *'
+#
+  push:
+    branches:
+    - workflows
+
+jobs:
+  build:
+    name: QGIS nightlies
+    runs-on: windows-latest
+
+    steps:
+    - name: keep original line endings
+      run: git config --global core.autocrlf false
+
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 120
+
+    # WDF kills MSVC batch's own detection of SDKs…
+    - name: Clean WDF
+      shell: cmd
+      run: |
+        rmdir /s /q "%ProgramFiles(x86)%\Windows Kits\10\lib\wdf"
+        rmdir /s /q "%ProgramFiles(x86)%\Windows Kits\10\include\wdf"
+        rmdir /s /q "%ProgramFiles(x86)%\Windows Kits\10\redist\wdf"
+        rmdir /s /q "%ProgramFiles(x86)%\Windows Kits\10\Tools"
+
+    - name: 'Download cygwin Installer'
+      shell: cmd
+      run: curl --output c:\setup-x86_64.exe https://cygwin.com/setup-x86_64.exe
+
+    - name: 'Installing cygwin'
+      shell: cmd
+      run: c:\setup-x86_64.exe -qnNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/temp/cygwin -P "bison,flex,poppler,doxygen,git,unzip,tar,diffutils,patch,ssh,curl,wget"
+
+    - name: 'Building nightlies'
+      shell: cmd
+      run: |
+        set OSGEO4W_REP=%GITHUB_WORKSPACE%
+        path c:\cygwin\bin;c:\cygwin\usr\bin
+        cd %GITHUB_WORKSPACE%\src\qgis-rel-dev\osgeo4w
+        bash package.sh
+
+# vim: set nowrap :
