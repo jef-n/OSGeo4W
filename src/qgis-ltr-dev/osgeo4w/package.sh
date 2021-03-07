@@ -176,6 +176,7 @@ nextbinary
 		-D QWT_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt5/lib/qwt.lib) \
 		-D QSCINTILLA_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt5/lib/qscintilla2.lib) \
 		-D DART_TESTING_TIMEOUT=60 \
+		-D PUSH_TO_DASH=TRUE \
 		$(cygpath -m $SRCDIR)
 
 	echo CLEAN: $(date)
