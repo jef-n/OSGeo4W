@@ -53,7 +53,7 @@ tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/makefile.vc
 
-cp ../$P-$V/COPYING $R//$P-$V-$B.txt
+cp ../$P-$V/COPYING $R/$P-$V-$B.txt
 cp ../$P-$V/COPYING $R/$P-devel/$P-devel-$V-$B.txt
 
 endlog

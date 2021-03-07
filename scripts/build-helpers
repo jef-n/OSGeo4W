@@ -173,7 +173,7 @@ ninjaenv() {
 	if ! [ -x "$OSGEO4W_SCRIPTS/ninja.exe" ]; then
 		(
 			cd $OSGEO4W_SCRIPTS
-			curl --output /tmp/ninja.zip https://github.com/ninja-build/ninja/releases/download/v1.10.1/ninja-win.zip
+			curl -L --output /tmp/ninja.zip https://github.com/ninja-build/ninja/releases/download/v1.10.1/ninja-win.zip
 			unzip /tmp/ninja.zip
 
 			chmod a+rx ninja.exe
@@ -191,6 +191,7 @@ ninjaenv() {
 regen() {
 	(
 		# update local package repository
+		mkdir -p $OSGEO4W_REP/x86_64/release
 		cd $OSGEO4W_REP
 		! [ -f x86_64/setup.ini ] || cp x86_64/setup.ini x86_64/setup.ini.prev
 		perl $OSGEO4W_SCRIPTS/genini --arch=x86_64 --output=x86_64/setup.ini.tmp --recursive x86_64/release
@@ -231,6 +232,7 @@ fetchdeps() {
 
 	if ! [ -x "$OSGEO4W_SCRIPTS/osgeo4w-setup.exe" ]; then
 		curl --output "$OSGEO4W_SCRIPTS/osgeo4w-setup.exe" $MASTER_REPO/osgeo4w-setup.exe
+		chmod a+rx "$OSGEO4W_SCRIPTS/osgeo4w-setup.exe"
 	fi
 
 	if ! regen; then
@@ -257,6 +259,7 @@ fetchdeps() {
 	cmd="$cmd --no-startmenu"
 	cmd="$cmd --no-desktop"
 	cmd="$cmd -s $(cygpath -am $OSGEO4W_REP)"
+	cmd="$cmd -s $MASTER_REPO"
 	cmd="$cmd -l $(cygpath -am $OSGEO4W_REP/package-cache)"
 
 	for p in "$@"; do
