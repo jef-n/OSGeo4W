@@ -216,18 +216,18 @@ index 101e6e25..30c98309 100644
    set_source_files_properties(${VECTOR_TILE_PROTO_SRCS} PROPERTIES COMPILE_FLAGS -w)
  endif()
 diff --git a/src/core/auth/qgsauthmanager.h b/src/core/auth/qgsauthmanager.h
-index 3758a1c8..f10e2ce8 100644
+index 4d365431a..6484f47d4 100644
 --- a/src/core/auth/qgsauthmanager.h
 +++ b/src/core/auth/qgsauthmanager.h
-@@ -752,7 +752,7 @@ class CORE_EXPORT QgsAuthManager : public QObject
-      */
-     static QgsAuthManager *instance() SIP_SKIP;
- 
+@@ -758,7 +758,7 @@ class CORE_EXPORT QgsAuthManager : public QObject
+     explicit QgsAuthManager() SIP_SKIP;
+ #else
+   protected:
 -    explicit QgsAuthManager() SIP_SKIP;
 +    explicit QgsAuthManager();
+ #endif
  
    private:
- 
 diff --git a/src/providers/pdal/CMakeLists.txt b/src/providers/pdal/CMakeLists.txt
 index dd3cbbd6..7553755b 100644
 --- a/src/providers/pdal/CMakeLists.txt
