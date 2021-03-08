@@ -13,6 +13,10 @@ jobs:
     name: qgis-rel-dev
     runs-on: windows-latest
 
+    env:
+      TEMP: c:\temp
+      BUILDBASE: c:\temp
+
     steps:
     - name: keep original line endings
       run: git config --global core.autocrlf false

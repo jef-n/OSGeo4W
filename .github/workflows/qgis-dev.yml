@@ -14,7 +14,8 @@ jobs:
     runs-on: windows-latest
 
     env:
-      BUILDCONF: Release  # see if there's enough room to build w/o symbols
+      TEMP: c:\temp
+      BUILDBASE: c:\temp
 
     steps:
     - name: keep original line endings

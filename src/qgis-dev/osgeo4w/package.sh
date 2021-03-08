@@ -9,10 +9,11 @@ export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-devel grass qt5-oci 
 : ${CC:=cl.exe}
 : ${CXX:=cl.exe}
 : ${BUILDCONF:=RelWithDebInfo}
+: ${BUILDBASE:=$PWD}
 
 REPO=https://github.com/qgis/QGIS.git
 
-export SITE TARGET CC CXX BUILDCONF
+export SITE TARGET CC CXX BUILDCONF BUILDBASE
 
 source ../../../scripts/build-helpers
 
@@ -86,22 +87,23 @@ nextbinary
 	cmakeenv
 	ninjaenv
 
-	pip install transifex-client
-
 	cd ../qgis
 
+	if [ -n "$TX_TOKEN" ]; then
+		pip install transifex-client
 
-	if [ -n "$TX_TOKEN" ] && ! PATH=/bin:$PATH bash -x scripts/pull_ts.sh; then
-		echo "TSPULL FAILED $?"
-		rm -rf i18n doc/TRANSLATORS
-		git checkout i18n doc/TRANSLATORS
+		if ! PATH=/bin:$PATH bash -x scripts/pull_ts.sh; then
+			echo "TSPULL FAILED $?"
+			rm -rf i18n doc/TRANSLATORS
+			git checkout i18n doc/TRANSLATORS
+		fi
 	fi
 
 	cd ../osgeo4w
 
 	export BUILDNAME=$P-$V-$TARGET-VC16-x86_64
-	export BUILDDIR=$PWD/build
-	export INSTDIR=$PWD/install
+	export BUILDDIR=$BUILDBASE/build
+	export INSTDIR=$BUILDBASE/install
 	export SRCDIR=$(cygpath -am ../qgis)
 	export O4W_ROOT=$(cygpath -am osgeo4w)
 	export LIB_DIR=$(cygpath -aw osgeo4w)
@@ -198,10 +200,10 @@ nextbinary
 		export PATH=$PATH:$(cygpath -au $BUILDDIR/output/plugins)
 		export QT_PLUGIN_PATH="$(cygpath -au $BUILDDIR/output/plugins);$(cygpath -au $O4W_ROOT/apps/qt5/plugins)"
 
-		rm -f ../testfailure
+		rm -f $OSGEO4W_PWD/testfailure
 		if ! cmake --build $(cygpath -am $BUILDDIR) --target ${TARGET}Test --config $BUILDCONF; then
 			echo TESTS FAILED: $(date)
-			touch ../testfailure
+			touch $OSGEO4W_PWD/testfailure
 		fi
 	)
 
@@ -215,28 +217,28 @@ nextbinary
 
 	echo PACKAGE: $(date)
 
-	cd ..
+	cd $OSGEO4W_PWD
 
 	mkdir -p $INSTDIR/{etc/{postinstall,preremove},bin}
 
 	v=$MAJOR.$MINOR.$PATCH
 
-	sagadef=$(sed -rne "s/^REQUIRED_VERSION *= *('.*')$/\\1/p" install/apps/$P/python/plugins/processing/algs/saga/SagaAlgorithmProvider.py)
-	sed -e "s/^REQUIRED_VERSION *= *'.*'$/REQUIRED_VERSION = @saga@/" install/apps/$P/python/plugins/processing/algs/saga/SagaAlgorithmProvider.py >install/apps/$P/python/plugins/processing/algs/saga/SagaAlgorithmProvider.py.tmpl
+	sagadef=$(sed -rne "s/^REQUIRED_VERSION *= *('.*')$/\\1/p" $INSTDIR/apps/$P/python/plugins/processing/algs/saga/SagaAlgorithmProvider.py)
+	sed -e "s/^REQUIRED_VERSION *= *'.*'$/REQUIRED_VERSION = @saga@/" $INSTDIR/apps/$P/python/plugins/processing/algs/saga/SagaAlgorithmProvider.py >$INSTDIR/apps/$P/python/plugins/processing/algs/saga/SagaAlgorithmProvider.py.tmpl
 
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       qgis.reg.tmpl    >install/bin/qgis.reg.tmpl
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                postinstall.bat  >install/etc/postinstall/$P.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                preremove.bat    >install/etc/preremove/$P.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g" -e "s/@grasspath@/$(basename $GRASS_PREFIX)/g" qgis.bat         >install/bin/$P.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       designer.bat     >install/bin/$P-designer.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       process.bat      >install/bin/qgis_process-$P.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       python.bat       >install/bin/python-$P.bat
-	sed -e "s/@package@/$P/g" -e "s/@sagadef@/$sagadef/g"                                                                                 saga-refresh.bat >install/apps/$P/saga-refresh.bat
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       qgis.reg.tmpl    >$INSTDIR/bin/qgis.reg.tmpl
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                postinstall.bat  >$INSTDIR/etc/postinstall/$P.bat
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                preremove.bat    >$INSTDIR/etc/preremove/$P.bat
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g" -e "s/@grasspath@/$(basename $GRASS_PREFIX)/g" qgis.bat         >$INSTDIR/bin/$P.bat
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       designer.bat     >$INSTDIR/bin/$P-designer.bat
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       process.bat      >$INSTDIR/bin/qgis_process-$P.bat
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       python.bat       >$INSTDIR/bin/python-$P.bat
+	sed -e "s/@package@/$P/g" -e "s/@sagadef@/$sagadef/g"                                                                                 saga-refresh.bat >$INSTDIR/apps/$P/saga-refresh.bat
 
-	cp "$DBGHLP_PATH"/{dbghelp.dll,symsrv.dll} install/apps/$P
+	cp "$DBGHLP_PATH"/{dbghelp.dll,symsrv.dll} $INSTDIR/apps/$P
 
-	mkdir -p install/apps/$P/python
-	cp "$PYTHONHOME/Lib/site-packages/PyQt5/uic/widget-plugins/qgis_customwidgets.py" install/apps/$P/python
+	mkdir -p $INSTDIR/apps/$P/python
+	cp "$PYTHONHOME/Lib/site-packages/PyQt5/uic/widget-plugins/qgis_customwidgets.py" $INSTDIR/apps/$P/python
 
 	export R=$OSGEO4W_REP/x86_64/release/qgis/$P
 	mkdir -p $R/$P-{pdb,full,deps}
@@ -245,17 +247,17 @@ nextbinary
 	/bin/tar -cjf $R/$P-$V-$B.tar.bz2 \
 		--exclude-from exclude \
 		--exclude "*.pyc" \
-		--exclude "install/apps/$P/python/plugins/processing/algs/saga/SagaAlgorithmProvider.py" \
+		--exclude "$INSTDIR/apps/$P/python/plugins/processing/algs/saga/SagaAlgorithmProvider.py" \
 		--xform "s,^qgis.vars,bin/$P-bin.vars," \
 		--xform "s,^osgeo4w/apps/qt5/plugins/,apps/$P/qtplugins/," \
-		--xform "s,^install/apps/$P/bin/qgis.exe,bin/$P-bin.exe," \
-		--xform "s,^install/,," \
-		--xform "s,^install$,.," \
+		--xform "s,^$INSTDIR/apps/$P/bin/qgis.exe,bin/$P-bin.exe," \
+		--xform "s,^$INSTDIR/,," \
+		--xform "s,^$INSTDIR$,.," \
 		qgis.vars \
 		osgeo4w/apps/qt5/plugins/sqldrivers/qsqlocispatial.dll \
 		osgeo4w/apps/qt5/plugins/sqldrivers/qsqlspatialite.dll \
 		osgeo4w/apps/qt5/plugins/designer/qgis_customwidgets.dll \
-		install/
+		$INSTDIR/
 
 	/bin/tar -C $BUILDDIR --remove-files -cjf $R/$P-pdb/$P-pdb-$V-$B.tar.bz2 \
 		apps/$P/pdb
