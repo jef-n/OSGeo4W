@@ -41,9 +41,22 @@ jobs:
     - name: 'Building nightlies'
       shell: cmd
       run: |
+        wmic logicaldisk get size, freespace, caption
+        fsutil volume diskfree c:
+        fsutil volume diskfree d:
+        rmdir /s /q "c:/temp/cygwin"
+
+        wmic logicaldisk get size, freespace, caption
+        fsutil volume diskfree c:
+        fsutil volume diskfree d:
+
         set OSGEO4W_REP=%GITHUB_WORKSPACE%
         path c:\cygwin\bin;c:\cygwin\usr\bin
         cd %GITHUB_WORKSPACE%\src\qgis-rel-dev\osgeo4w
         bash package.sh
+
+        wmic logicaldisk get size, freespace, caption
+        fsutil volume diskfree c:
+        fsutil volume diskfree d:
 
 # vim: set nowrap :
