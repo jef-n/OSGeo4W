@@ -256,3 +256,16 @@ index d3457a9a6..0792803ad 100644
  
  set(THREADS_PREFER_PTHREAD_FLAG ON)
  find_package(Threads REQUIRED)
+diff --git a/src/core/auth/qgsauthmanager.h b/src/core/auth/qgsauthmanager.h
+index 4d365431a..f2327d331 100644
+--- a/src/core/auth/qgsauthmanager.h
++++ b/src/core/auth/qgsauthmanager.h
+@@ -753,7 +753,7 @@ class CORE_EXPORT QgsAuthManager : public QObject
+     static QgsAuthManager *instance() SIP_SKIP;
+ 
+ 
+-#ifdef __MINGW32__
++#ifdef Q_OS_WIN
+   public:
+     explicit QgsAuthManager() SIP_SKIP;
+ #else

@@ -215,19 +215,6 @@ index 101e6e25..30c98309 100644
    # automatically generated file produces warnings (unused-parameter, unused-variable, misleading-indentation)
    set_source_files_properties(${VECTOR_TILE_PROTO_SRCS} PROPERTIES COMPILE_FLAGS -w)
  endif()
-diff --git a/src/core/auth/qgsauthmanager.h b/src/core/auth/qgsauthmanager.h
-index 3758a1c8..f10e2ce8 100644
---- a/src/core/auth/qgsauthmanager.h
-+++ b/src/core/auth/qgsauthmanager.h
-@@ -752,7 +752,7 @@ class CORE_EXPORT QgsAuthManager : public QObject
-      */
-     static QgsAuthManager *instance() SIP_SKIP;
- 
--    explicit QgsAuthManager() SIP_SKIP;
-+    explicit QgsAuthManager();
- 
-   private:
- 
 diff --git a/src/providers/pdal/CMakeLists.txt b/src/providers/pdal/CMakeLists.txt
 index dd3cbbd6..7553755b 100644
 --- a/src/providers/pdal/CMakeLists.txt
@@ -242,3 +229,16 @@ index dd3cbbd6..7553755b 100644
  
  set(THREADS_PREFER_PTHREAD_FLAG ON)
  find_package(Threads REQUIRED)
+diff --git a/src/core/auth/qgsauthmanager.h b/src/core/auth/qgsauthmanager.h
+index bf913d88..e28d179f 100644
+--- a/src/core/auth/qgsauthmanager.h
++++ b/src/core/auth/qgsauthmanager.h
+@@ -752,7 +752,7 @@ class CORE_EXPORT QgsAuthManager : public QObject
+      */
+     static QgsAuthManager *instance() SIP_SKIP;
+ 
+-#ifdef __MINGW32__
++#ifdef Q_OS_WIN
+   public:
+     explicit QgsAuthManager() SIP_SKIP;
+ #else
