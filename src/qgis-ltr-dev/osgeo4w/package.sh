@@ -99,15 +99,15 @@ nextbinary
 	cmakeenv
 	ninjaenv
 
-	pip install transifex-client
-
 	cd ../qgis
 
-
-	if [ -n "$TX_TOKEN" ] && ! PATH=/bin:$PATH bash -x scripts/pull_ts.sh; then
-		echo "TSPULL FAILED $?"
-		rm -rf i18n doc/TRANSLATORS
-		git checkout i18n doc/TRANSLATORS
+	if [ -n "$TX_TOKEN" ]; then
+		pip install transifex-client
+		if ! PATH=/bin:$PATH bash -x scripts/pull_ts.sh; then
+			echo "TSPULL FAILED $?"
+			rm -rf i18n doc/TRANSLATORS
+			git checkout i18n doc/TRANSLATORS
+		fi
 	fi
 
 	cd ../osgeo4w
@@ -178,6 +178,8 @@ nextbinary
 		-D DART_TESTING_TIMEOUT=60 \
 		-D PUSH_TO_DASH=TRUE \
 		$(cygpath -m $SRCDIR)
+
+	cp -u $BUILDDIR/CTestConfig.cmake $SRCDIR
 
 	echo CLEAN: $(date)
 	cmake --build $(cygpath -am $BUILDDIR) --target clean --config $BUILDCONF
