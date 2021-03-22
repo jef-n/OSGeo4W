@@ -81,7 +81,6 @@ install/DLLs/_testimportmultiple.pyd
 install/DLLs/_testmultiphase.pyd
 install/Lib/ctypes/test
 install/Lib/distutils/tests
-install/Lib/doctest.py
 install/Lib/idlelib/idle_test
 install/Lib/lib2to3/tests
 install/Lib/sqlite3/test
