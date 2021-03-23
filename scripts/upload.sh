@@ -2,6 +2,8 @@
 
 set -e
 
+: ${OSGEO4W_RSYNC_OPT:=}
+
 export D=$(cygpath -a "$(dirname "${BASH_SOURCE[0]}")")
 
 source "$D/build-helpers"

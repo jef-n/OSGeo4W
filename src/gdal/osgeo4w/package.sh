@@ -1,5 +1,5 @@
 export P=gdal
-export V=3.2.2rc1
+export V=3.2.2
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-devel libjpeg12-devel"
@@ -14,12 +14,12 @@ startlog
 
 [ -f $P-$V.tar.gz ] || wget -q http://download.osgeo.org/gdal/${V%rc*}/$P-$V.tar.gz
 [ -f ../$P-${V%rc*}/makefile.vc ] || tar -C .. -xzf $P-$V.tar.gz
-[ -f patched ] || {
-	patch -p1 --dry-run -d../$P-${V%rc*} <patch
-	patch -p1 -d../$P-${V%rc*} <patch
+[ -f ../$P-${V%rc*}/patched ] || {
+	cd ../$P-${V%rc*}
+	patch -p1 --dry-run <../osgeo4w/patch
+	patch -p1 <../osgeo4w/patch
 	touch patched
 }
-
 
 #
 # Download MrSID, ECW and filegdb dependencies

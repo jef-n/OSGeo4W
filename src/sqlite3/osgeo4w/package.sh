@@ -1,16 +1,20 @@
 export P=sqlite3
-export V=3.33.0
+export V=3.35.2
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
 
-export BASE=sqlite-amalgamation-3330000
+
+IFS=. read major minor patch < <(echo $V)
+
+export BASE=$(printf "sqlite-amalgamation-%d%02d%02d00" $major $minor $patch)
+export URL=https://sqlite.org/2021/$BASE.zip
 
 source ../../../scripts/build-helpers
 
 startlog
 
-[ -f $BASE.zip ] || wget https://www.sqlite.org/2020/$BASE.zip
+[ -f $BASE.zip ] || wget $URL
 if ! [ -d ../$BASE ]; then
 	cd ..
 	unzip osgeo4w/$BASE.zip

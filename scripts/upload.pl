@@ -108,26 +108,55 @@ sub getver {
 }
 
 sub compare_versions {
-	my($a, $b) = @_;
+        my($a, $b) = @_;
 
-	my @a = split /\./, $a;
-	my @b = split /\./, $b;
+        my @a = split /\./, $a;
+        my @b = split /\./, $b;
 
-	my $n = @a < @b ? @a : @b;
+        while( @a && @b ) {
+                my $a = shift @a;
+                my $b = shift @b;
+                next if $a eq $b;
 
-	while( @a && @b ) {
-		my $a = shift @a;
-		my $b = shift @b;
+		# a
+		# 1
+		# 1a
+		# 1rc1
+		while($a && $b) {
+			# print "a:$a b:$b\n";
+			my ($an) = $a =~ /^(\d+)/;
+			my ($bn) = $b =~ /^(\d+)/;
 
-		next if $a eq $b;
+			if(defined $an && defined $bn) {
+				# print "N: $an <=> $bn\n";
+				return $an <=> $bn unless $an == $bn;
+				$a =~ s/^\d+//;
+				$b =~ s/^\d+//;
+			} elsif($an || $bn) {
+				warn "Invalid version compare: $a vs $b";
+				return undef;
+			}
 
-		my ($an, $ann) = $a =~ /^(\d+)(\D.*)?$/;
-		my ($bn, $bnn) = $b =~ /^(\d+)(\D.*)?$/;
+			($an) = $a =~ /^(\D+)/;
+			($bn) = $b =~ /^(\D+)/;
 
-		return defined $an && defined $bn ? $an <=> $bn : $an cmp $bn;
-	}
+			if($an && $bn) {
+				# print "L: $an <=> $bn\n";
+				return $an cmp $bn unless $an eq $bn;
+				$a =~ s/^\D+//;
+				$b =~ s/^\D+//;
+			} elsif($an || $bn) {
+				return -1 if $an =~ /^-?rc$/i;	# rc* < ""
+				return 1 if $bn =~ /^-?rc$/i;	# "" > rc*
+				return $an ? 1 : -1;		# a > ""  | "" < a
+			}
+		}
 
-	return @a ? 1 : @b ? -1 : 0;
+		return 1 if $a;
+		return -1 if $b;
+        }
+
+        return @a ? 1 : @b ? -1 : 0;
 }
 
 system("/usr/bin/rsync $ENV{'MASTER_SCP'}/x86_64/setup.ini /tmp/setup-master.ini") == 0 or die "Could not download setup.ini";
@@ -244,15 +273,16 @@ unless(keys %files) {
 	exit 0;
 }
 
+
 my($host,$path) = $ENV{MASTER_SCP} =~ /^(.*):(.*)$/;
 
-open F, "| /usr/bin/rsync -vtuO --chmod=D775,F664 --files-from=- '$ENV{OSGEO4W_REP}' '$ENV{MASTER_SCP}'";
+open F, "| /usr/bin/rsync $ENV{OSGEO4W_RSYNC_OPT} -vtuO --chmod=D775,F664 --files-from=- '$ENV{OSGEO4W_REP}' '$ENV{MASTER_SCP}'";
 for my $file (sort keys %files) {
 	print F "$file\n";
 }
 close F or die "Update of files failed: $!";
 
-if( system("/usr/bin/rsync -vtuO --chmod=D775,F664 -r '$tdir/' '$ENV{MASTER_SCP}/'") != 0 ) {
+if( system("/usr/bin/rsync $ENV{OSGEO4W_RSYNC_OPT} -vtuO --chmod=D775,F664 -r '$tdir/' '$ENV{MASTER_SCP}/'") != 0 ) {
 	die "Update of hints failed: $!";
 }
 
