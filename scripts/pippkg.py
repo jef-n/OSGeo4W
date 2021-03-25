@@ -198,14 +198,14 @@ for f in map( lambda x: abspath(join(props['Location'], x)).replace(sep,'/'), pr
 
     f = GetLongPathName(f)
 
-    if f.endswith(".exe") and pkg in ['pip', 'setuptools']:
+    if f.endswith(".exe") or f.endswith("-script.py"):
         exe = open(f, "rb")
         data = exe.read()
         exe.close()
 
         data2 = re.sub(
             b"#!.*\\\\python.?\\.exe",
-            str.encode("#!@osgeo4w@\\\\bin\\\\{}".format('python3.exe')),
+            str.encode("#!@osgeo4w@\\\\bin\\\\python3.exe"),
             data
         )
 
