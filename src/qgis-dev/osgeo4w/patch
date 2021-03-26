@@ -146,8 +146,23 @@ index 1efe3922f..1efceeb5a 100644
 -}
 \ No newline at end of file
 +}
+diff --git a/python/__init__.py b/python/__init__.py
+index 0eb585123..643ccab27 100644
+--- a/python/__init__.py
++++ b/python/__init__.py
+@@ -66,6 +66,10 @@ if os.name == 'nt':
+     # any of the QGIS modules or else it will error.
+     setupenv()
+ 
++    if sys.version_info[0]>3 or (sys.version_info[0]==3 and sys.version_info[1]>=9):
++        for p in os.getenv("PATH").split(";"):
++            if os.path.exists(p):
++                os.add_dll_directory(p)
+ 
+ from qgis.PyQt import QtCore
+ 
 diff --git a/python/core/auto_generated/auth/qgsauthmanager.sip.in b/python/core/auto_generated/auth/qgsauthmanager.sip.in
-index bb5498201..42c0305bb 100644
+index 7f6e471f7..c23e4de38 100644
 --- a/python/core/auto_generated/auth/qgsauthmanager.sip.in
 +++ b/python/core/auto_generated/auth/qgsauthmanager.sip.in
 @@ -818,6 +818,7 @@ Clear an authentication config from its associated authentication method cache
@@ -159,10 +174,10 @@ index bb5498201..42c0305bb 100644
    public:
    protected:
 diff --git a/src/analysis/CMakeLists.txt b/src/analysis/CMakeLists.txt
-index 35495da0d..7498712e1 100644
+index 6951a5ecc..ce2fd0a9b 100644
 --- a/src/analysis/CMakeLists.txt
 +++ b/src/analysis/CMakeLists.txt
-@@ -450,6 +450,9 @@ target_compile_features(qgis_analysis PRIVATE cxx_std_17)
+@@ -452,6 +452,9 @@ target_compile_features(qgis_analysis PRIVATE cxx_std_17)
  if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
    target_compile_definitions(qgis_analysis PUBLIC _LIBCPP_ENABLE_CXX17_REMOVED_AUTO_PTR)
  endif()
@@ -173,10 +188,10 @@ index 35495da0d..7498712e1 100644
  target_include_directories(qgis_analysis PUBLIC
    ${CMAKE_SOURCE_DIR}/src/analysis
 diff --git a/src/app/CMakeLists.txt b/src/app/CMakeLists.txt
-index 47c64a124..6ad267cf6 100644
+index 8bed5854d..c99d6de3d 100644
 --- a/src/app/CMakeLists.txt
 +++ b/src/app/CMakeLists.txt
-@@ -418,9 +418,10 @@ if(HAVE_OPENCL)
+@@ -420,9 +420,10 @@ if(HAVE_OPENCL)
  endif()
  
  if (HAVE_PDAL)
@@ -190,7 +205,7 @@ index 47c64a124..6ad267cf6 100644
  endif()
  
  if(ENABLE_MODELTEST)
-@@ -600,9 +601,7 @@ if (POSTGRES_FOUND)
+@@ -603,9 +604,7 @@ if (POSTGRES_FOUND)
  endif()
  
  if (HAVE_PDAL)
@@ -202,10 +217,10 @@ index 47c64a124..6ad267cf6 100644
  
  if(MSVC)
 diff --git a/src/app/qgisapp.cpp b/src/app/qgisapp.cpp
-index 8a2ee5f1c..fe46fddd2 100644
+index 46709d736..e42ea0d05 100644
 --- a/src/app/qgisapp.cpp
 +++ b/src/app/qgisapp.cpp
-@@ -523,7 +523,7 @@ extern "C"
+@@ -484,7 +484,7 @@ extern "C"
  #ifndef Q_OS_WIN
  #include <dlfcn.h>
  #else
@@ -215,10 +230,10 @@ index 8a2ee5f1c..fe46fddd2 100644
  #endif
  
 diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
-index a875ee570..d33f05614 100644
+index b84eb1454..1b29dbb6a 100644
 --- a/src/core/CMakeLists.txt
 +++ b/src/core/CMakeLists.txt
-@@ -1637,9 +1637,7 @@ endif()
+@@ -1643,9 +1643,7 @@ endif()
  protobuf_generate_cpp(VECTOR_TILE_PROTO_SRCS VECTOR_TILE_PROTO_HDRS vectortile/vector_tile.proto)
  set(QGIS_CORE_SRCS ${QGIS_CORE_SRCS} ${VECTOR_TILE_PROTO_SRCS})
  set(QGIS_CORE_HDRS ${QGIS_CORE_HDRS} ${VECTOR_TILE_PROTO_HDRS})
@@ -230,10 +245,16 @@ index a875ee570..d33f05614 100644
    set_source_files_properties(${VECTOR_TILE_PROTO_SRCS} PROPERTIES COMPILE_FLAGS -w)
  endif()
 diff --git a/src/core/auth/qgsauthmanager.h b/src/core/auth/qgsauthmanager.h
-index 4d365431a..6484f47d4 100644
+index 4d365431a..10f26161d 100644
 --- a/src/core/auth/qgsauthmanager.h
 +++ b/src/core/auth/qgsauthmanager.h
-@@ -758,7 +758,7 @@ class CORE_EXPORT QgsAuthManager : public QObject
+@@ -753,12 +753,12 @@ class CORE_EXPORT QgsAuthManager : public QObject
+     static QgsAuthManager *instance() SIP_SKIP;
+ 
+ 
+-#ifdef __MINGW32__
++#ifdef Q_OS_WIN
+   public:
      explicit QgsAuthManager() SIP_SKIP;
  #else
    protected:
@@ -243,7 +264,7 @@ index 4d365431a..6484f47d4 100644
  
    private:
 diff --git a/src/providers/pdal/CMakeLists.txt b/src/providers/pdal/CMakeLists.txt
-index d3457a9a6..0792803ad 100644
+index 6a928f1a9..2f577ca32 100644
 --- a/src/providers/pdal/CMakeLists.txt
 +++ b/src/providers/pdal/CMakeLists.txt
 @@ -1,6 +1,9 @@
@@ -256,16 +277,3 @@ index d3457a9a6..0792803ad 100644
  
  set(THREADS_PREFER_PTHREAD_FLAG ON)
  find_package(Threads REQUIRED)
-diff --git a/src/core/auth/qgsauthmanager.h b/src/core/auth/qgsauthmanager.h
-index 4d365431a..f2327d331 100644
---- a/src/core/auth/qgsauthmanager.h
-+++ b/src/core/auth/qgsauthmanager.h
-@@ -753,7 +753,7 @@ class CORE_EXPORT QgsAuthManager : public QObject
-     static QgsAuthManager *instance() SIP_SKIP;
- 
- 
--#ifdef __MINGW32__
-+#ifdef Q_OS_WIN
-   public:
-     explicit QgsAuthManager() SIP_SKIP;
- #else

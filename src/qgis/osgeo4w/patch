@@ -146,18 +146,33 @@ index 1efe3922f8..1efceeb5a8 100644
 -}
 \ No newline at end of file
 +}
+diff --git a/python/__init__.py b/python/__init__.py
+index 0eb585123a..643ccab276 100644
+--- a/python/__init__.py
++++ b/python/__init__.py
+@@ -66,6 +66,10 @@ if os.name == 'nt':
+     # any of the QGIS modules or else it will error.
+     setupenv()
+ 
++    if sys.version_info[0]>3 or (sys.version_info[0]==3 and sys.version_info[1]>=9):
++        for p in os.getenv("PATH").split(";"):
++            if os.path.exists(p):
++                os.add_dll_directory(p)
+ 
+ from qgis.PyQt import QtCore
+ 
 diff --git a/python/core/auto_generated/auth/qgsauthmanager.sip.in b/python/core/auto_generated/auth/qgsauthmanager.sip.in
-index 2bcedd1bb3..fdb57fa8f5 100644
+index 93962d7494..b30e268d4a 100644
 --- a/python/core/auto_generated/auth/qgsauthmanager.sip.in
 +++ b/python/core/auto_generated/auth/qgsauthmanager.sip.in
-@@ -818,6 +818,7 @@ Clear an authentication config from its associated authentication method cache
-   protected:
+@@ -817,6 +817,7 @@ Clear an authentication config from its associated authentication method cache
  
+   protected:
  
 +    explicit QgsAuthManager();
  
- };
- 
+   public:
+   protected:
 diff --git a/src/app/CMakeLists.txt b/src/app/CMakeLists.txt
 index 072e40a9bb..e3168a7841 100644
 --- a/src/app/CMakeLists.txt
@@ -188,10 +203,10 @@ index 072e40a9bb..e3168a7841 100644
  
  if(MSVC)
 diff --git a/src/app/qgisapp.cpp b/src/app/qgisapp.cpp
-index 2e2b62f532..50f2856e12 100644
+index c80097d690..45e2738d62 100644
 --- a/src/app/qgisapp.cpp
 +++ b/src/app/qgisapp.cpp
-@@ -527,7 +527,7 @@ extern "C"
+@@ -530,7 +530,7 @@ extern "C"
  #ifndef Q_OS_WIN
  #include <dlfcn.h>
  #else
@@ -201,10 +216,10 @@ index 2e2b62f532..50f2856e12 100644
  #endif
  
 diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
-index 101e6e25aa..30c98309e0 100644
+index 642547e8fd..360b56fb25 100644
 --- a/src/core/CMakeLists.txt
 +++ b/src/core/CMakeLists.txt
-@@ -1633,9 +1633,7 @@ endif()
+@@ -1635,9 +1635,7 @@ endif()
  protobuf_generate_cpp(VECTOR_TILE_PROTO_SRCS VECTOR_TILE_PROTO_HDRS vectortile/vector_tile.proto)
  set(QGIS_CORE_SRCS ${QGIS_CORE_SRCS} ${VECTOR_TILE_PROTO_SRCS})
  set(QGIS_CORE_HDRS ${QGIS_CORE_HDRS} ${VECTOR_TILE_PROTO_HDRS})

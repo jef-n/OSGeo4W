@@ -138,6 +138,7 @@ nextbinary
 		-D CMAKE_CXX_COMPILER="$(cygpath -m $CXX)" \
 		-D CMAKE_C_COMPILER="$(cygpath -m $CC)" \
 		-D CMAKE_LINKER=link.exe \
+		-D SUBMIT_URL="https://cdash.orfeo-toolbox.org/submit.php?project=QGIS" \
 		-D CMAKE_CXX_FLAGS_${BUILDCONF^^}="/MD /Z7 /MP /Od /D NDEBUG" \
 		-D CMAKE_PDB_OUTPUT_DIRECTORY_${BUILDCONF^^}=$(cygpath -am $BUILDDIR/apps/$P/pdb) \
 		-D BUILDNAME="$BUILDNAME" \
@@ -178,8 +179,6 @@ nextbinary
 		-D DART_TESTING_TIMEOUT=60 \
 		-D PUSH_TO_CDASH=TRUE \
 		$(cygpath -m $SRCDIR)
-
-	cp -u $BUILDDIR/CTestConfig.cmake $SRCDIR
 
 	echo CLEAN: $(date)
 	cmake --build $(cygpath -am $BUILDDIR) --target clean --config $BUILDCONF
