@@ -185,6 +185,8 @@ postinstall = None
 preremove = None
 haspy = False
 
+scriptspath = abspath(join(props['Location'], '..\\..\\Scripts')).replace(sep,'/') + "/"
+
 for f in map( lambda x: abspath(join(props['Location'], x)).replace(sep,'/'), props['Files']):
     if f.endswith(".pyc"):
         continue
@@ -196,9 +198,11 @@ for f in map( lambda x: abspath(join(props['Location'], x)).replace(sep,'/'), pr
     if f.endswith(".py"):
         haspy = True
 
+    isscript = f.startswith(scriptspath)
+
     f = GetLongPathName(f)
 
-    if f.endswith(".exe") or f.endswith("-script.py"):
+    if isscript:
         exe = open(f, "rb")
         data = exe.read()
         exe.close()
@@ -210,6 +214,7 @@ for f in map( lambda x: abspath(join(props['Location'], x)).replace(sep,'/'), pr
         )
 
         if data != data2:
+            print("{}: Script {} patched".format(pkg, f))
             if not postinstall:
                 postinstall = open("postinstall.bat", "wb")
 
