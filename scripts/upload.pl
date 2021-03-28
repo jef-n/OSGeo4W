@@ -273,16 +273,17 @@ unless(keys %files) {
 	exit 0;
 }
 
+my $opt = $ENV{OSGEO4W_RSYNC_OPT} || "";
 
 my($host,$path) = $ENV{MASTER_SCP} =~ /^(.*):(.*)$/;
 
-open F, "| /usr/bin/rsync $ENV{OSGEO4W_RSYNC_OPT} -vtuO --chmod=D775,F664 --files-from=- '$ENV{OSGEO4W_REP}' '$ENV{MASTER_SCP}'";
+open F, "| /usr/bin/rsync $opt -vtuO --chmod=D775,F664 --files-from=- '$ENV{OSGEO4W_REP}' '$ENV{MASTER_SCP}'";
 for my $file (sort keys %files) {
 	print F "$file\n";
 }
 close F or die "Update of files failed: $!";
 
-if( system("/usr/bin/rsync $ENV{OSGEO4W_RSYNC_OPT} -vtuO --chmod=D775,F664 -r '$tdir/' '$ENV{MASTER_SCP}/'") != 0 ) {
+if( system("/usr/bin/rsync $opt -vtuO --chmod=D775,F664 -r '$tdir/' '$ENV{MASTER_SCP}/'") != 0 ) {
 	die "Update of hints failed: $!";
 }
 

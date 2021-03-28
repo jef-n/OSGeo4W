@@ -20,34 +20,34 @@ sub arch_handler(@);
 my %md5s;
 
 if( open F, "md5sums" ) {
-	while(<F>) {
-		chomp;
-		my($md5,$s,$t,$f) = split / /;
-		next unless -f $f;
-		$md5s{$f}{md5} = $md5;
-		$md5s{$f}{s} = $s;
-		$md5s{$f}{t} = $t;
-	}
-	close F;
+    while(<F>) {
+        chomp;
+        my($md5,$s,$t,$f) = split / /;
+        next unless -f $f;
+        $md5s{$f}{md5} = $md5;
+        $md5s{$f}{s} = $s;
+        $md5s{$f}{t} = $t;
+    }
+    close F;
 }
 
 my %licfile;
 my %licmap;
 if( open F, "license.map" ) {
-	while(<F>) {
-		chomp;
-		my($first,$second,$comment) = split / /;
-		$licmap{$second} = $first;
-	}
+    while(<F>) {
+        chomp;
+        my($first,$second,$comment) = split / /;
+        $licmap{$second} = $first;
+    }
 }
 
 my %acceptable;
 if( open F, "acceptable.lst" ) {
-	while(<F>) {
-		chomp;
-		my($id,$comment) = split / /;
-		$acceptable{$id} = 1;
-	}
+    while(<F>) {
+        chomp;
+        my($id,$comment) = split / /;
+        $acceptable{$id} = 1;
+    }
 }
 
 my @okmissing = qw'message ldesc build-depends';
@@ -57,16 +57,17 @@ my $release;
 my $date;
 my $startts;
 GetOptions('okmissing=s'=>\@okmissing,
-	   'output=s'=>\$outfile,
-	   'help'=>\$help,
-	   'release=s'=>\$release,
-	   'arch=s'=>\&arch_handler,
-	   'recursive'=>\$recursive,
-	   'date=s'=>\$date) or usage;
+           'output=s'=>\$outfile,
+           'help'=>\$help,
+           'release=s'=>\$release,
+           'arch=s'=>\&arch_handler,
+           'recursive'=>\$recursive,
+           'date=s'=>\$date) or usage;
+
 if($date) {
-	usage unless $date =~ /^(\d{4})-(\d{2})-(\d{2})$/;
-	$startts = POSIX::mktime( 0, 0, 0, $3, $2-1, $1-1900);
-	usage unless defined $startts;
+    usage unless $date =~ /^(\d{4})-(\d{2})-(\d{2})$/;
+    $startts = POSIX::mktime( 0, 0, 0, $3, $2-1, $1-1900);
+    usage unless defined $startts;
 }
 $help and usage;
 
@@ -87,9 +88,9 @@ my %pkg;
 
 for my $f (@ARGV) {
     if (-d "$f/.") {
-	parsedir($f);
+        parsedir($f);
     } else {
-	parse($f);
+        parse($f);
     }
 }
 
@@ -109,48 +110,48 @@ undef $main::curfile;
 for my $p (sort keys %pkg) {
     # print STDERR "P:$p requires:$pkg{$p}{''}{requires}\n";
     print "\n@ $p\n";
-    for my $key ('sdesc', 'ldesc', 'category', 'requires', 'message', 'build-depends') {
-	my $val = $pkg{$p}{''}{$key};
-	if (!defined($val) && $pkg{$p}{''}{'install'} !~ /_obsolete/o) {
-	    mywarn "package $p is missing a $key field"
-	      unless defined $main::okmissing{$key};
-	} else {
-	    if ($key eq 'requires') {
-		for my $p1 (split(' ', $val)) {
-		     mywarn "package $p requires an unknown package '$p1'"
-		      unless exists $pkg{$p1};
-		}
-	    } elsif ($key eq 'build-depends') {
-		for my $p1 (split(' ', $val)) {
-		    mywarn "build of package $p requires an unknown package '$p1'"
-		      unless exists $pkg{$p1};
-		}
-	    } elsif ($key eq 'category') {
-		for my $c (split(' ', $val)) {
-		    mywarn "package $p uses an invalid category '$c'"
-		      unless $main::categories{lc $c};
-		}
-	    }
-	    print "$key: ", $val, "\n" if defined($val) and $val ne "";
-	}
+    for my $key ('sdesc', 'ldesc', 'category', 'requires', 'message') {
+        my $val = $pkg{$p}{''}{$key};
+        if (!defined($val) && $pkg{$p}{''}{'install'} !~ /_obsolete/o) {
+            mywarn "package $p is missing a $key field"
+              unless defined $main::okmissing{$key};
+        } else {
+            if ($key eq 'requires') {
+                for my $p1 (split(' ', $val)) {
+                    mywarn "package $p requires an unknown package '$p1'"
+                      unless exists $pkg{$p1};
+                }
+            } elsif ($key eq 'build-depends') {
+                for my $p1 (split(' ', $val)) {
+                    mywarn "build of package $p requires an unknown package '$p1'"
+                      unless exists $pkg{$p1};
+                }
+            } elsif ($key eq 'category') {
+                for my $c (split(' ', $val)) {
+                    mywarn "package $p uses an invalid category '$c'"
+                      unless $main::categories{lc $c};
+                }
+            }
+            print "$key: ", $val, "\n" if defined($val) and $val ne "";
+        }
     }
     for my $what ('', "[prev]\n", "[test]\n") {
-	$pkg{$p}{$what} or next;
-	print "$what";
-	for my $key ('version', 'install', 'source', 'license') {
-	    my $val = $pkg{$p}{$what}{$key} or next;
-	    print "$key: ", $val, "\n";
-	}
+        $pkg{$p}{$what} or next;
+        print "$what";
+        for my $key ('version', 'install', 'source', 'license') {
+            my $val = $pkg{$p}{$what}{$key} or next;
+            print "$key: ", $val, "\n";
+        }
     }
 }
 
 open F, ">md5sums";
 for my $f (keys %md5s) {
-	print F
-		$md5s{$f}{md5} . " " .
-		$md5s{$f}{s} . " " .
-		$md5s{$f}{t} . " " .
-		$f . "\n";
+    print F
+        $md5s{$f}{md5} . " " .
+        $md5s{$f}{s} . " " .
+        $md5s{$f}{t} . " " .
+        $f . "\n";
 }
 close F;
 
@@ -160,19 +161,19 @@ sub get {
     my $val = shift;
 
     if ($keyhint eq 'message') {
-	my ($kw, $rest) = $val =~ /^([^"'\s]+)\s+(.*)$/;
-	return undef unless defined($kw) && defined($rest);
-	return $kw . ' ' . get($FH, 'ldesc', $rest);
+        my ($kw, $rest) = $val =~ /^([^"'\s]+)\s+(.*)$/;
+        return undef unless defined($kw) && defined($rest);
+        return $kw . ' ' . get($FH, 'ldesc', $rest);
     } elsif (substr($val, 0, 1) ne '"') {
-	$val = '"'. $val . '"' if $keyhint eq 'ldesc' || $keyhint eq 'sdesc';
+        $val = '"'. $val . '"' if $keyhint eq 'ldesc' || $keyhint eq 'sdesc';
     } else {
-	while (length($val) == 1 || $val !~ /"$/os) {
-	    $_ = <$FH>;
-	    length or last;
-	    chomp;
-	    s/(\S)\s+$/$1/;
-	    $val .= "\n" . $_;
-	}
+        while (length($val) == 1 || $val !~ /"$/os) {
+            $_ = <$FH>;
+            length or last;
+            chomp;
+            s/(\S)\s+$/$1/;
+            $val .= "\n" . $_;
+        }
     }
     $val =~ s/(.)"(.)/$1'$2/mog;
     return $val;
@@ -186,118 +187,112 @@ sub parse {
     $. = 0;
     open(\*F, '<', $f) or die "$0: couldn't open $f - $!\n";
     while (<F>) {
-	chomp;
-	s/#.*$//o;
-	s/^\s+//o;
-	s/(\S)\s+$/$1/o;
-	length or next;
-	/^setup-timestamp:/ and do {
-	    $main::setup_timestamp = $_;
-	    next;
-	};
-	/^setup-version:/ and do {
-	    $main::setup_version = $_;
-	    next;
-	};
-	/^arch:/ and do {
-	    next;
-	};
-	/^release:/ and do {
-	    next;
-	};
-	/^skip:/ and do {
-	    next;
-	};
-	/^\@\s+(\S+)/ and do {
-	    $pname = $1;
-	    $what = '';
-	    next;
-	};
-	/^([^:]+):\s*(.*)$/ and do {
-	    my $key = $1;
-	    my $val = $2;
-	    if ($key !~ /^(?:prev|curr|test)/) {
-		$pkg{$pname}{$what}{$key} = get(\*F, $key, $val);
-	    } else {
-		if ($key eq 'curr') {
-		    $key = '';
-		} else {
-		    $key = "[$key]\n";
-		}
-		$pkg{$pname}{$key}{'version'} = $val;
-	    }
-	    next if defined $val;
-	};
-	/^\[[^\]]+\]/ and do {
-	    $what = $_ . "\n";
-	    next;
-	};
-	die "$0: unrecognized input at line file $f, line $.\n";
+        chomp;
+        s/#.*$//o;
+        s/^\s+//o;
+        s/(\S)\s+$/$1/o;
+        length or next;
+        /^setup-timestamp:/ and do {
+            $main::setup_timestamp = $_;
+            next;
+        };
+        /^setup-version:/ and do {
+            $main::setup_version = $_;
+            next;
+        };
+        /^arch:/ and do {
+            next;
+        };
+        /^release:/ and do {
+            next;
+        };
+        /^skip:/ and do {
+            next;
+        };
+        /^\@\s+(\S+)/ and do {
+            $pname = $1;
+            $what = '';
+            next;
+        };
+        /^([^:]+):\s*(.*)$/ and do {
+            my $key = $1;
+            my $val = $2;
+            if ($key !~ /^(?:prev|curr|test)/) {
+                $pkg{$pname}{$what}{$key} = get(\*F, $key, $val);
+            } else {
+                if ($key eq 'curr') {
+                    $key = '';
+                } else {
+                    $key = "[$key]\n";
+                }
+                $pkg{$pname}{$key}{'version'} = $val;
+            }
+            next if defined $val;
+        };
+        /^\[[^\]]+\]/ and do {
+            $what = $_ . "\n";
+            next;
+        };
+        die "$0: unrecognized input at line file $f, line $.\n";
     }
 }
 
 sub compare_versions {
-        my($a, $b) = @_;
+    my($a, $b) = @_;
 
-        my @a = split /\./, $a;
-        my @b = split /\./, $b;
+    return 0 if $a eq $b;
 
-        while( @a && @b ) {
-                my $a = shift @a;
-                my $b = shift @b;
-                next if $a eq $b;
+    my $r;
+    while($a ne "" && $b ne "") {
+        my($ai, $r) = $a =~ /^(\d*)(.*)$/;
+        $a = $r;
+        my($bi, $r) = $b =~ /^(\d*)(.*)$/;
+        $b = $r;
 
-		# a
-		# 1
-		# 1a
-		# 1rc1
-		while($a && $b) {
-			# print "a:$a b:$b\n";
-			my ($an) = $a =~ /^(\d+)/;
-			my ($bn) = $b =~ /^(\d+)/;
+        my $isnum = $ai ne "";
 
-			if(defined $an && defined $bn) {
-				# print "N: $an <=> $bn\n";
-				return $an <=> $bn unless $an == $bn;
-				$a =~ s/^\d+//;
-				$b =~ s/^\d+//;
-			} elsif($an || $bn) {
-				warn "Invalid version compare: $a vs $b";
-				return undef;
-			}
-
-			($an) = $a =~ /^(\D+)/;
-			($bn) = $b =~ /^(\D+)/;
-
-			if($an && $bn) {
-				# print "L: $an <=> $bn\n";
-				return $an cmp $bn unless $an eq $bn;
-				$a =~ s/^\D+//;
-				$b =~ s/^\D+//;
-			} elsif($an || $bn) {
-				return -1 if $an =~ /^-?rc$/i;	# rc* < ""
-				return 1 if $bn =~ /^-?rc$/i;	# "" > rc*
-				return $an ? 1 : -1;		# a > ""  | "" < a
-			}
-		}
-
-		return 1 if $a;
-		return -1 if $b;
+        unless($isnum) {
+            ($ai, $r) = $a =~ /^(\D*)(.*)/;
+            $a = $r;
+            ($bi, $r) = $b =~ /^(\D*)(.*)/;
+            $b = $r;
         }
 
-        return @a ? 1 : @b ? -1 : 0;
+        return $isnum ? 1 : -1 if $bi eq "";
+
+        if($isnum) {
+            $ai =~ s/^0+//;
+            $bi =~ s/^0+//;
+
+            if(length($ai) > length($bi)) {
+                return 1;
+            } elsif(length($ai) < length($bi)) {
+                return -1;
+            }
+        }
+
+        my $r = $ai cmp $bi;
+        return $r unless $r == 0;
+        return $a =~ /^rc/i ? -1 : 1 if $isnum && $a =~ /^rc/i != $b =~ /^rc/i;
+    }
+
+    if($a eq "" && $b eq "") {
+        return 0;
+    } else {
+        return $a eq "" ? -1 : 1;
+    }
 }
 
 sub parsedir {
     my $d = shift;
     my $pname = basename($d);
-    mywarn "overwriting prevision information for $pname" if exists $pkg{$pname};
+    mywarn "overwriting previous information for $pname" if exists $pkg{$pname};
     delete $pkg{$pname};
     if ($recursive) {
-	for my $drecur (glob("$d/*/.")) {
-	    last if $drecur =~ /\*/;
-	    parsedir(dirname($drecur));
-	}
+        for my $drecur (glob("$d/*/.")) {
+            last if $drecur =~ /\*/;
+            parsedir(dirname($drecur));
+        }
     }
     my $setup_hint = "$d/setup.hint";
     return unless -e $setup_hint;
@@ -305,49 +300,49 @@ sub parsedir {
 
     my $explicit = 0;
     for my $what ('', "[prev]\n", "[test]\n") {
-	my $x = $pkg{$pname}{$what};
-	next unless $x->{'version'};
-	$explicit = 1;
-	addfiles($pname, $x, $d);
+        my $x = $pkg{$pname}{$what};
+        next unless $x->{'version'};
+        $explicit = 1;
+        addfiles($pname, $x, $d);
     }
 
     return if $explicit;
 
     my @files = sort {
-			my ($an, $av) = getver($a);
-			my ($bn, $bv) = getver($b);
+        my ($an, $av) = getver($a);
+        my ($bn, $bv) = getver($b);
 
-			my ($ap, $bp);
-			($av, $ap) = $av =~ /^(.+)-(\d+)$/;
-			($bv, $bp) = $bv =~ /^(.+)-(\d+)$/;
+        my ($ap, $bp);
+        ($av, $ap) = $av =~ /^(.+)-(\d+)$/;
+        ($bv, $bp) = $bv =~ /^(.+)-(\d+)$/;
 
-			my $r;
-		        if( defined $ap && defined $bp ) {
-		                $r = ($an ne $bn) ?
-		                        $an cmp $bn :
-		                        $av ne $bv ?
-		                                compare_versions($av, $bv) :
-		                                $ap <=> $bp;
-		        } else {
-				warn "invalid version $a" unless defined $ap;
-				warn "invalid version $b" unless defined $bp;
-		                $r = $a cmp $b;
-		        }
-			return $r;
-		} grep { !/-src\.tar.bz2/ } glob("$d/*.tar.bz2");
+        my $r;
+        if( defined $ap && defined $bp ) {
+            $r = ($an ne $bn) ?
+                $an cmp $bn :
+                        $av ne $bv ?
+                                compare_versions($av, $bv) :
+                                $ap <=> $bp;
+        } else {
+            warn "invalid version $a" unless defined $ap;
+            warn "invalid version $b" unless defined $bp;
+            $r = $a cmp $b;
+        }
+        return $r;
+    } grep { !/-src\.tar.bz2/ } glob("$d/*.tar.bz2");
     @files = grep { (stat($_))[9]<=$startts; } @files if $startts;
 
     if (!@files) {
-	myerror "not enough package files in $d";
-	return;
+        myerror "not enough package files in $d";
+        return;
     }
     for my $what ('', "[prev]\n") {
-	my $f = pop @files or last;
-	$pkg{$pname}{$what}{-unused} = 1;
-	my $x = $pkg{$pname}{$what};
-	my $p;
-	($p, $x->{'version'}) = getver($f);
-	addfiles($p, $x, $d);
+        my $f = pop @files or last;
+        $pkg{$pname}{$what}{-unused} = 1;
+        my $x = $pkg{$pname}{$what};
+        my $p;
+        ($p, $x->{'version'}) = getver($f);
+        addfiles($p, $x, $d);
     }
 }
 
@@ -363,16 +358,16 @@ sub addfiles {
     my $r = license($d, ".rtf", $pname, $x->{'version'});
 
     if( -e $p && (! -e $t || (stat($p))[9] > (stat($t))[9] ) ) {
-	system "umask 0111; pdftotext -layout -enc ASCII7 '$p' - >'$t'";
+        system "umask 0111; pdftotext -layout -enc ASCII7 '$p' - >'$t'";
     } elsif( -e $r && (! -e $t || (stat($r))[9] > (stat($r))[9] ) ) {
-	system "umask 0111; catdoc -dus-ascii '$r' >'$t'";
+        system "umask 0111; catdoc -dus-ascii '$r' >'$t'";
     }
 
     filer($x, 'license', $t) if -e $t;
 
     if ($pkg{$pname}{''}{'external-source'}) {
-	$pname = $pkg{$pname}{''}{'external-source'};
-	$d = finddir($d, $pname) or return;
+        $pname = $pkg{$pname}{''}{'external-source'};
+        $d = finddir($d, $pname) or return;
     }
 
     my $source  = tarball($d, $pname, $x->{'version'}, 'src');
@@ -391,12 +386,12 @@ sub filer {
     my $f = shift;
 
     unless( -r $f ) {
-	myerror "can't open $f - $!" unless $main::okmissing{$what};
-	return undef;
+        myerror "can't open $f - $!" unless $main::okmissing{$what};
+        return undef;
     }
 
     my $digest = $md5s{$f}{md5};
-    my ($s,$t) = (stat $f)[7,9];	# size and mtime
+    my ($s,$t) = (stat $f)[7,9];        # size and mtime
 
     unless( defined $digest && $md5s{$f}{s}==$s && $md5s{$f}{t}==$t ) {
       open(*F, '<', $f);
@@ -410,15 +405,15 @@ sub filer {
     }
 
     if( $what eq 'license' ) {
-	$digest = $licmap{$digest} if exists $licmap{$digest};
+        $digest = $licmap{$digest} if exists $licmap{$digest};
 
-	unless( exists $licfile{$digest} ) {
-		$licfile{$digest} = $f;
-	} else {
-		$f = $licfile{$digest};
-	}
+        unless( exists $licfile{$digest} ) {
+                $licfile{$digest} = $f;
+        } else {
+                $f = $licfile{$digest};
+        }
 
-	return if exists $acceptable{$digest};
+        return if exists $acceptable{$digest};
     }
 
     $x->{$what} = join(' ', $f, -s $f, $digest);
@@ -451,7 +446,7 @@ sub finddir {
     my $d = $_[0];
     my $pname = $_[1];
     while (($d = dirname($d)) ne '.' && length($d)) {
-	return "$d/$pname" if -d "$d/$pname/.";
+        return "$d/$pname" if -d "$d/$pname/.";
     }
     myerror "couldn't find package directory for external-source '$pname'";
     return undef;
@@ -463,11 +458,11 @@ Usage: genini [--okmissing=key ...] [--recursive] [--output=file] [--help] [--da
 Create OSGeo4W setup.ini from setup.ini, setup.hint and tar ball information.
 
     --okmissing=key    Don't warn if key is missing from setup.ini or setup.hint
-		       or if some expected `source' or `install' tarballs are
-		       missing. Option may be repeated. --okmissing=install is
-		       useful if hint files contain `prev' or `test' entries for
-		       missing tarballs. --okmissing=source is useful for
-		       LOCAL-ONLY[*] srcless install media.
+                       or if some expected `source' or `install' tarballs are
+                       missing. Option may be repeated. --okmissing=install is
+                       useful if hint files contain `prev' or `test' entries for
+                       missing tarballs. --okmissing=source is useful for
+                       LOCAL-ONLY srcless install media.
     --recursive        Recurse all subdirectories of specified dirs
     --arch=x86|x86_64  Must be either x86 or x86_64. Defaults to x86.
     --date=yyyy-mm-dd  Generate ini for an older state (all newer files will be ignored)
@@ -490,3 +485,5 @@ BEGIN {
     my @archs = qw'x86 x86_64';
     @main::valid_arch{map {lc $_} @archs} = @archs;
 }
+
+# vim: set et ts=4 sw=4 :
