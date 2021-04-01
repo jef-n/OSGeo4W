@@ -179,7 +179,7 @@ while True:
         break
     b += 1
 
-tf = tarfile.open(tn, "w:bz2")
+tf = tarfile.open(tn, "w:bz2", format=tarfile.GNU_FORMAT)
 
 postinstall = None
 preremove = None
