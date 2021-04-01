@@ -12,7 +12,7 @@ index 34a4ae5d7..1899d26de 100644
    c:/msys/local/lib
    NO_DEFAULT_PATH
 diff --git a/cmake/PyQtMacros.cmake b/cmake/PyQtMacros.cmake
-index 774d04278..ece1b3e7f 100644
+index 8458f496e..95188b631 100644
 --- a/cmake/PyQtMacros.cmake
 +++ b/cmake/PyQtMacros.cmake
 @@ -9,15 +9,7 @@ SET(PYUIC_PROG_NAMES pyuic5)
@@ -217,7 +217,7 @@ index 8bed5854d..c99d6de3d 100644
  
  if(MSVC)
 diff --git a/src/app/qgisapp.cpp b/src/app/qgisapp.cpp
-index 46709d736..e42ea0d05 100644
+index 16dcc2942..9cd66ae9c 100644
 --- a/src/app/qgisapp.cpp
 +++ b/src/app/qgisapp.cpp
 @@ -484,7 +484,7 @@ extern "C"
@@ -230,10 +230,10 @@ index 46709d736..e42ea0d05 100644
  #endif
  
 diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
-index b84eb1454..1b29dbb6a 100644
+index 8b3c33cc9..342b2c768 100644
 --- a/src/core/CMakeLists.txt
 +++ b/src/core/CMakeLists.txt
-@@ -1643,9 +1643,7 @@ endif()
+@@ -1644,9 +1644,7 @@ endif()
  protobuf_generate_cpp(VECTOR_TILE_PROTO_SRCS VECTOR_TILE_PROTO_HDRS vectortile/vector_tile.proto)
  set(QGIS_CORE_SRCS ${QGIS_CORE_SRCS} ${VECTOR_TILE_PROTO_SRCS})
  set(QGIS_CORE_HDRS ${QGIS_CORE_HDRS} ${VECTOR_TILE_PROTO_HDRS})
@@ -245,10 +245,10 @@ index b84eb1454..1b29dbb6a 100644
    set_source_files_properties(${VECTOR_TILE_PROTO_SRCS} PROPERTIES COMPILE_FLAGS -w)
  endif()
 diff --git a/src/core/auth/qgsauthmanager.h b/src/core/auth/qgsauthmanager.h
-index 4d365431a..10f26161d 100644
+index 0de97ed10..1620e58bc 100644
 --- a/src/core/auth/qgsauthmanager.h
 +++ b/src/core/auth/qgsauthmanager.h
-@@ -753,12 +753,12 @@ class CORE_EXPORT QgsAuthManager : public QObject
+@@ -757,12 +757,12 @@ class CORE_EXPORT QgsAuthManager : public QObject
      static QgsAuthManager *instance() SIP_SKIP;
  
  
@@ -263,6 +263,25 @@ index 4d365431a..10f26161d 100644
  #endif
  
    private:
+diff --git a/src/core/qgscoordinatereferencesystem.h b/src/core/qgscoordinatereferencesystem.h
+index ce7b2f376..13d185b79 100644
+--- a/src/core/qgscoordinatereferencesystem.h
++++ b/src/core/qgscoordinatereferencesystem.h
+@@ -983,10 +983,10 @@ class CORE_EXPORT QgsCoordinateReferenceSystem
+     friend class TestQgsCoordinateReferenceSystem;
+     friend class QgsPostgresProvider;
+     friend class QgsCoordinateReferenceSystemRegistry;
+-    friend bool operator> ( const QgsCoordinateReferenceSystem &c1, const QgsCoordinateReferenceSystem &c2 );
+-    friend bool operator< ( const QgsCoordinateReferenceSystem &c1, const QgsCoordinateReferenceSystem &c2 );
+-    friend bool operator>= ( const QgsCoordinateReferenceSystem &c1, const QgsCoordinateReferenceSystem &c2 );
+-    friend bool operator<= ( const QgsCoordinateReferenceSystem &c1, const QgsCoordinateReferenceSystem &c2 );
++    friend bool CORE_EXPORT operator> ( const QgsCoordinateReferenceSystem &c1, const QgsCoordinateReferenceSystem &c2 );
++    friend bool CORE_EXPORT operator< ( const QgsCoordinateReferenceSystem &c1, const QgsCoordinateReferenceSystem &c2 );
++    friend bool CORE_EXPORT operator>= ( const QgsCoordinateReferenceSystem &c1, const QgsCoordinateReferenceSystem &c2 );
++    friend bool CORE_EXPORT operator<= ( const QgsCoordinateReferenceSystem &c1, const QgsCoordinateReferenceSystem &c2 );
+ 
+     bool createFromPostgisSrid( const long id );
+ };
 diff --git a/src/providers/pdal/CMakeLists.txt b/src/providers/pdal/CMakeLists.txt
 index 6a928f1a9..2f577ca32 100644
 --- a/src/providers/pdal/CMakeLists.txt
