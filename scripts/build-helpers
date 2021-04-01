@@ -231,6 +231,7 @@ fetchdeps() {
 
 	if ! [ -x "$OSGEO4W_SCRIPTS/osgeo4w-setup.exe" ]; then
 		curl --output "$OSGEO4W_SCRIPTS/osgeo4w-setup.exe" $MASTER_REPO/osgeo4w-setup.exe
+		chmod a+x "$OSGEO4W_SCRIPTS/osgeo4w-setup.exe"
 	fi
 
 	if ! regen; then
