@@ -150,7 +150,7 @@ nextbinary
 		-D SQLITE3_LIBRARY=$(cygpath -am "$O4W_ROOT/lib/sqlite3_i.lib") \
 		-D SPATIALITE_LIBRARY=$(cygpath -am "$O4W_ROOT/lib/spatialite_i.lib") \
 		-D SPATIALINDEX_LIBRARY=$(cygpath -am $O4W_ROOT/lib/spatialindex-64.lib) \
-		-D PYTHON_EXECUTABLE=$(cygpath -am $O4W_ROOT/bin/python3.exe) \
+		-D Python_EXECUTABLE=$(cygpath -am $O4W_ROOT/bin/python3.exe) \
 		-D SIP_BINARY_PATH=$(cygpath -am $PYTHONHOME/sip.exe) \
 		-D PYTHON_INCLUDE_PATH=$(cygpath -am $PYTHONHOME/include) \
 		-D PYTHON_LIBRARY=$(cygpath -am $PYTHONHOME/libs/$(basename $PYTHONHOME).lib) \
