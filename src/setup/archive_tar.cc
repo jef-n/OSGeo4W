@@ -15,11 +15,6 @@
 
 /* Built-in tar functionality.  See tar.h for usage. */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: archive_tar.cc,v 2.18 2012/08/30 22:32:13 yselkowitz Exp $\n";
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -37,10 +32,6 @@ static const char *cvsid =
 #include "String++.h"
 
 static int err;
-
-//static char file_name[MAX_PATH+512];
-//static char have_longname = 0;
-//static int  file_length;
 
 static char buf[512];
 
@@ -232,6 +223,9 @@ archive_tar::next_file_name ()
       fprintf (stderr, "error: unknown (or unsupported) file type `%c'\n",
 	       state.tar_header.typeflag);
       err++;
+      /* fall through */
+    case 'g':			/* POSIX.1-2001 global extended header */
+    case 'x':			/* POSIX.1-2001 extended header */
       skip_file ();
       return next_file_name ();
     }
