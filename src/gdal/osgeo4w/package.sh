@@ -19,6 +19,7 @@ startlog
 	patch -p1 --dry-run <../osgeo4w/patch
 	patch -p1 <../osgeo4w/patch
 	touch patched
+	cd ../osgeo4w
 }
 
 #

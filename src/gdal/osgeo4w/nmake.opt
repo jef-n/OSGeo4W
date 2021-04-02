@@ -17,7 +17,8 @@ CPPFLAGS		= $(CFLAGS)
 
 SETARGV			= "$(VCDIR)\lib\x64\setargv.obj"
 
-# JPEG_DIR		= $(OSGEO4W)/include
+# JPEG_EXTERNAL_LIB	= 1
+# JPEGDIR		= $(OSGEO4W)/include
 # JPEG_LIB		= $(OSGEO4W)/lib/jpeg_i.lib $(OSGEO4W)/lib/jpeg12_i.lib
 
 PNG_EXTERNAL_LIB	= 1
