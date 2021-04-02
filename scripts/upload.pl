@@ -270,6 +270,7 @@ foreach my $p (sort keys %packages) {
 
 unless(keys %files) {
 	print STDERR "No files to update\n";
+	unlink ".uploading";
 	exit 0;
 }
 
