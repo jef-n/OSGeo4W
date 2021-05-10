@@ -1,5 +1,5 @@
 export P=gdal
-export V=3.2.2
+export V=3.3.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-devel libjpeg12-devel"
@@ -155,13 +155,13 @@ cd swig/python
 >$PYDESTDIR/etc/preremove/python3-$P.bat
 
 expytmpl=
-for i in scripts/*.py; do
+for i in $PYDESTDIR/apps/$PYTHON/Scripts/*.py; do
 	b=$(basename "$i" .py)
 
 	cat <<EOF >$PYDESTDIR/apps/$PYTHON/Scripts/$b.bat
 @echo off
 call "%OSGEO4W_ROOT%\\bin\\o4w_env.bat"
-python "%OSGEO4W_ROOT%\\apps\\$PYTHON\\$(cygpath -w "$i")" %*
+python "%OSGEO4W_ROOT%\\apps\\$PYTHON\\Scripts\\$b.py" %*
 EOF
 	(
 		echo "#! @osgeo4w@\\apps\\$PYTHON\\python3.exe"
