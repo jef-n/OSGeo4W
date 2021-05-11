@@ -156,7 +156,6 @@ WEBP_ENABLED		= YES
 WEBP_CFLAGS		= -I$(OSGEO4W)/include
 WEBP_LIBS		= $(OSGEO4W)/lib/webp.lib
 
-HAVE_LERC		= 1
+HAVE_LERC		= internal
 
-# sneak in for building internal mssqlspatial
-JASPER_LIB		= $(MSODBCSQL_LIB)
+ADD_LIBS		= $(MSODBCSQL_LIB)
