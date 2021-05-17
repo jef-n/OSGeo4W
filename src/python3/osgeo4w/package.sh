@@ -1,5 +1,5 @@
 export P=python3
-export V=3.9.0
+export V=3.9.5
 export B="next $P-core"
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
@@ -100,9 +100,6 @@ install/Lib/site-packages/pip-$PIPV.dist-info
 EOF
 
 cat <<EOF >setuptools.lst
-easy_install-$VM.exe.tmpl
-easy_install.exe.tmpl
-install/Lib/site-packages/easy_install.py
 install/Lib/site-packages/setuptools
 install/Lib/site-packages/setuptools-$STV.dist-info
 EOF
@@ -365,9 +362,6 @@ cat <<EOF >setuptools-preremove.bat
 python -B %OSGEO4W_ROOT%\\apps\\Python$MM\\Scripts\\preremove-cached.py $P-setuptools
 EOF
 
-exetmpl install/Scripts/easy_install-$VM.exe setuptools
-exetmpl install/Scripts/easy_install.exe setuptools
-
 cat <<EOF >$R/$P-setuptools/setup.hint
 sdesc: "setuptools - Easily download, build, install, upgrade, and uninstall Python packages"
 ldesc: "setuptools - Easily download, build, install, upgrade, and uninstall Python packages"
@@ -379,8 +373,6 @@ EOF
 tar -cjf $R/$P-setuptools/$P-setuptools-$STV-$B.tar.bz2 \
 	--xform "s,^setuptools-postinstall.bat,etc/postinstall/$P-setuptools.bat," \
 	--xform "s,^setuptools-preremove.bat,etc/preremove/$P-setuptools.bat," \
-	--xform "s,^easy_install-$VM.exe.tmpl,${PREFIX}Scripts/easy_install-$VM.exe.tmpl," \
-	--xform "s,^easy_install.exe.tmpl,${PREFIX}Scripts/easy_install.exe.tmpl," \
 	--xform "s,^install/,$PREFIX," \
 	--exclude "__pycache__" \
 	setuptools-postinstall.bat \
@@ -418,7 +410,7 @@ fi
 # OpenSSL shipped in openssl
 # sqlite3 in sqlite3
 # python*.dll moved to bin
-# pip / easy_install to .tmpl
+# pip to .tmpl
 # msvcrt runtime in msvcrt2019
 if egrep -v \
 	-f <(sed -e 's/:.*$//; /\.pyc$/d; s#^'$PREFIX'##; s/[/+.$]/\\&/g; s/(dev)/\\(dev\\)/; s/$/$/;' /tmp/$P-packaged.lst) \
@@ -431,8 +423,6 @@ python$M.dll
 python$MM.dll
 python.exe
 pythonw.exe
-Scripts/easy_install-${V%.*}.exe
-Scripts/easy_install.exe
 Scripts/pip.exe
 Scripts/pip${V%.*}.exe
 Scripts/pip$M.exe
@@ -447,7 +437,7 @@ fi
 
 # whitelist generate files
 # moved python.exe
-# pip/easy_install templates
+# pip templates
 # preremoved-cached.py
 # dlls in bin
 # postinstall/preremove scripts
@@ -457,8 +447,6 @@ if egrep -v \
 	fgrep -v -x -f <(cat <<EOF
 apps/Python$MM/python$M.exe
 apps/Python$MM/pythonw$M.exe
-apps/Python$MM/Scripts/easy_install-${V%.*}.exe.tmpl
-apps/Python$MM/Scripts/easy_install.exe.tmpl
 apps/Python$MM/Scripts/pip.exe.tmpl
 apps/Python$MM/Scripts/pip${V%.*}.exe.tmpl
 apps/Python$MM/Scripts/pip$M.exe.tmpl
