@@ -35,9 +35,6 @@ else
 	cd qgis
 fi
 
-patch -p1 --dry-run <../osgeo4w/patch
-patch -p1 <../osgeo4w/patch
-
 SHA=$(git log -n1 --pretty=%h)
 
 MAJOR=$(sed -ne 's/SET(CPACK_PACKAGE_VERSION_MAJOR "\([0-9]*\)")/\1/ip' CMakeLists.txt)
@@ -311,7 +308,6 @@ EOF
 
 	/bin/tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 \
 		osgeo4w/package.sh \
-		osgeo4w/patch \
 		osgeo4w/msvc-env.bat \
 		osgeo4w/postinstall.bat \
 		osgeo4w/preremove.bat \
