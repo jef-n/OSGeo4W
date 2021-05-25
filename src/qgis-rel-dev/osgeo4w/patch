@@ -189,3 +189,20 @@ index dd3cbbd6..7553755b 100644
  
  set(THREADS_PREFER_PTHREAD_FLAG ON)
  find_package(Threads REQUIRED)
+diff --git a/src/core/providers/ogr/qgsogrprovider.cpp b/src/core/providers/ogr/qgsogrprovider.cpp
+index bcb8a3e73507..2b107897a03f 100644
+--- a/src/core/providers/ogr/qgsogrprovider.cpp
++++ b/src/core/providers/ogr/qgsogrprovider.cpp
+@@ -587,10 +587,10 @@ QgsOgrProvider::QgsOgrProvider( QString const &uri, const ProviderOptions &optio
+     QMutex *mutex = nullptr;
+     OGRLayerH layer = mOgrOrigLayer->getHandleAndMutex( mutex );
+     QMutexLocker locker( mutex );
+-    const QString identifier = GDALGetMetadataItem( layer, "IDENTIFIER", nullptr );
++    const QString identifier = GDALGetMetadataItem( layer, "IDENTIFIER", "" );
+     if ( !identifier.isEmpty() )
+       mLayerMetadata.setTitle( identifier ); // see geopackage specs -- "'identifier' is analogous to 'title'"
+-    const QString abstract = GDALGetMetadataItem( layer, "DESCRIPTION", nullptr );
++    const QString abstract = GDALGetMetadataItem( layer, "DESCRIPTION", "" );
+     if ( !abstract.isEmpty() )
+       mLayerMetadata.setAbstract( abstract );
+   }
