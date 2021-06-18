@@ -78,20 +78,3 @@ index 512e936a..3e68fc4c 100644
    # automatically generated file produces warnings (unused-parameter, unused-variable, misleading-indentation)
    set_source_files_properties(${VECTOR_TILE_PROTO_SRCS} PROPERTIES COMPILE_FLAGS -w)
  endif()
-diff --git a/src/core/providers/ogr/qgsogrprovider.cpp b/src/core/providers/ogr/qgsogrprovider.cpp
-index bcb8a3e73507..2b107897a03f 100644
---- a/src/core/providers/ogr/qgsogrprovider.cpp
-+++ b/src/core/providers/ogr/qgsogrprovider.cpp
-@@ -587,10 +587,10 @@ QgsOgrProvider::QgsOgrProvider( QString const &uri, const ProviderOptions &optio
-     QMutex *mutex = nullptr;
-     OGRLayerH layer = mOgrOrigLayer->getHandleAndMutex( mutex );
-     QMutexLocker locker( mutex );
--    const QString identifier = GDALGetMetadataItem( layer, "IDENTIFIER", nullptr );
-+    const QString identifier = GDALGetMetadataItem( layer, "IDENTIFIER", "" );
-     if ( !identifier.isEmpty() )
-       mLayerMetadata.setTitle( identifier ); // see geopackage specs -- "'identifier' is analogous to 'title'"
--    const QString abstract = GDALGetMetadataItem( layer, "DESCRIPTION", nullptr );
-+    const QString abstract = GDALGetMetadataItem( layer, "DESCRIPTION", "" );
-     if ( !abstract.isEmpty() )
-       mLayerMetadata.setAbstract( abstract );
-   }

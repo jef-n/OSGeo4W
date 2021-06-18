@@ -41,7 +41,7 @@ if [ -d qgis ]; then
 	git clean -f
 	git reset --hard
 
-	git checkout $RELTAG
+	git checkout -f $RELTAG
 else
 	git clone $REPO --branch $RELTAG --single-branch --depth 1 qgis
 	cd qgis

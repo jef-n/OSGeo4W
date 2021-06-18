@@ -33,7 +33,7 @@ if [ -d qgis ]; then
 	git clean -f
 	git reset --hard
 
-	git checkout $RELTAG
+	git checkout -f $RELTAG
 else
 	git clone $REPO --branch $RELTAG --single-branch --depth 1 qgis
 	cd qgis
@@ -133,7 +133,7 @@ nextbinary
 		-D SQLITE3_LIBRARY=$(cygpath -am "$O4W_ROOT/lib/sqlite3_i.lib") \
 		-D SPATIALITE_LIBRARY=$(cygpath -am "$O4W_ROOT/lib/spatialite_i.lib") \
 		-D SPATIALINDEX_LIBRARY=$(cygpath -am $O4W_ROOT/lib/spatialindex-64.lib) \
-		-D PYTHON_EXECUTABLE=$(cygpath -am $O4W_ROOT/bin/python3.exe) \
+		-D Python_EXECUTABLE=$(cygpath -am $O4W_ROOT/bin/python3.exe) \
 		-D SIP_BINARY_PATH=$(cygpath -am $PYTHONHOME/sip.exe) \
 		-D PYTHON_INCLUDE_PATH=$(cygpath -am $PYTHONHOME/include) \
 		-D PYTHON_LIBRARY=$(cygpath -am $PYTHONHOME/libs/$(basename $PYTHONHOME).lib) \
@@ -141,7 +141,7 @@ nextbinary
 		-D QT_HEADERS_DIR=$(cyppath -am $O4W_ROOT/apps/qt5/include) \
 		-D CMAKE_INSTALL_PREFIX=$(cygpath -am $INSTDIR/apps/$P) \
 		-D CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS=TRUE \
-		-D FCGI_INCLUDE_DIR=$(cygpath -am $O4W_ROOT%/include) \
+		-D FCGI_INCLUDE_DIR=$(cygpath -am $O4W_ROOT/include) \
 		-D FCGI_LIBRARY=$(cygpath -am $O4W_ROOT/lib/libfcgi.lib) \
 		-D QCA_INCLUDE_DIR=$(cygpath -am $O4W_ROOT/apps/Qt5/include/QtCrypto) \
 		-D QCA_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt5/lib/qca-qt5.lib) \
@@ -252,6 +252,7 @@ EOF
 		--exclude-from exclude \
 		--exclude "*.pyc" \
 		--exclude apps/$P/python/qgis/_server.pyd \
+		--exclude apps/$P/python/qgis/_server.pyi \
 		--exclude apps/$P/python/qgis/_server.lib \
 		--exclude apps/$P/python/qgis/server \
 		--exclude apps/$P/server/ \
@@ -273,7 +274,6 @@ EOF
 		apps/$P/plugins/identcertauthmethod.dll \
 		apps/$P/plugins/mssqlprovider.dll \
 		apps/$P/plugins/db2provider.dll \
-		apps/$P/plugins/owsprovider.dll \
 		apps/$P/plugins/pkcs12authmethod.dll \
 		apps/$P/plugins/pkipathsauthmethod.dll \
 		apps/$P/plugins/postgresprovider.dll \
@@ -320,6 +320,7 @@ EOF
 	        apps/$P/resources/server/ \
 	        apps/$P/server/ \
 	        apps/$P/python/qgis/_server.pyd \
+	        apps/$P/python/qgis/_server.pyi \
 	        apps/$P/python/qgis/server/ \
 	        httpd.d/httpd_$P.conf.tmpl \
 	        etc/postinstall/$P-server.bat \
