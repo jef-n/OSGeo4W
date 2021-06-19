@@ -95,10 +95,6 @@
 #define IDD_DROPPED                       221
 #define IDD_POSTINSTALL                   222
 #define IDD_EXP_PACKAGES                  223
-#define IDD_APACHE_CONF                   224
-
-#define IDD_EXP_DPACKAGES                 225
-#define IDD_EXP_IPACKAGES                 226
 #define IDD_LICENSE                       227
 
 // Bitmaps
@@ -211,10 +207,7 @@
 #define IDC_FILE_INUSE_MSG                586
 #define IDC_FILE_INUSE_HELP               587
 #define IDC_ADVANCED                      588
-#define IDC_EXPRESS_D                     589
-#define IDC_EXPRESS_I                     590
-#define IDC_APACHE_PORT                   591
-#define IDC_APACHE_PORT_LABEL             592
+#define IDC_EXPRESS                       589
 
 #define IDC_STATIC_LICENSE_TITLE          593
 #define IDC_STATIC_LICENSE_TEXT           594
@@ -224,10 +217,7 @@
 #define IDC_MENUNAME_GRP                  598
 #define IDC_MENUNAME_TEXT                 599
 
-#define IDC_PKG_MAPSERVER                 600
 #define IDC_PKG_GRASS                     601
-#define IDC_PKG_APACHE                    602
 #define IDC_PKG_GDAL                      603
-#define IDC_PKG_UDIG                      604
-#define IDC_PKG_OPENEV                    605
 #define IDC_PKG_QGIS                      606
+#define IDC_PKG_QGIS_LTR                  607

@@ -53,27 +53,21 @@ static ControlAdjuster::ControlInfo ExpressPackageControlsInfo[] = {
 typedef struct {
     const char *package_name;
     int         control_id;
-    int         control_type; // add 2010.02.19 for EXPRESS mode
 } PackageControlPair;
 
 static const PackageControlPair PCPList[] =
 {
-    { "qgis-full",       IDC_PKG_QGIS,IDD_EXP_DPACKAGES },
-    { "gdal-full",       IDC_PKG_GDAL,1 },
-    { "grass",           IDC_PKG_GRASS,IDD_EXP_DPACKAGES },
-//    { "mapserver",       IDC_PKG_MAPSERVER,IDD_EXP_IPACKAGES },
-//    { "apache",          IDC_PKG_APACHE,IDD_EXP_IPACKAGES },
-//    { "udig",            IDC_PKG_UDIG,IDD_EXP_DPACKAGES },
-//    { "openev",          IDC_PKG_OPENEV,IDD_EXP_DPACKAGES },
-    { "",                -1 ,-1 }
+    { "qgis-full",       IDC_PKG_QGIS},
+    { "qgis-ltr-full",   IDC_PKG_QGIS_LTR},
+    { "gdal",            IDC_PKG_GDAL},
+    { "grass",           IDC_PKG_GRASS},
+    { "",                -1}
 };
 
 static void
 save_dialog( HWND h )
 {
   packagedb db;
-
-  apache_port_number = eget(h,IDC_APACHE_PORT);
 
   for( int iPCP = 0; PCPList[iPCP].control_id != -1; iPCP++ )
   {
@@ -123,58 +117,8 @@ load_dialog( HWND h )
       continue;
     }
 
-    // initialize EXPRESS_DESKTOP or INTERNET mode
-    switch( PCPList[iPCP].control_type )
-    {
-      case 0:
-	express_type = BST_UNCHECKED;
-	break;
-      case 1:
-	express_type = BST_CHECKED;
-	break;
-      case IDD_EXP_DPACKAGES:
-	express_type =
-	  ( express_mode_option == IDD_EXP_DPACKAGES) ? BST_CHECKED : BST_UNCHECKED;
-
-	EnableWindow (GetDlgItem (h, PCPList[iPCP].control_id),
-	    ( express_mode_option == IDD_EXP_DPACKAGES) ? TRUE : FALSE);
-	break;
-      case IDD_EXP_IPACKAGES:
-	express_type =
-	  ( express_mode_option == IDD_EXP_IPACKAGES) ? BST_CHECKED : BST_UNCHECKED;
-
-	EnableWindow (GetDlgItem (h, PCPList[iPCP].control_id),
-	    ( express_mode_option == IDD_EXP_IPACKAGES) ? TRUE : FALSE);
-
-	break;
-      default:
-	express_type = BST_UNCHECKED;
-	break;
-    }
-
-
     CheckDlgButton (h, PCPList[iPCP].control_id,
 	pack->installed ? BST_CHECKED : BST_UNCHECKED);
-
-    CheckDlgButton (h, PCPList[iPCP].control_id,
-	express_type);
-
-    //initialize APACHE_PORT_NUMBER
-    if (express_mode_option != IDD_EXP_DPACKAGES )
-    {
-      if(apache_port_number==0)
-      {
-	apache_port_number = 80;
-      }
-      EnableWindow (GetDlgItem (h, IDC_APACHE_PORT_LABEL),TRUE );
-      EnableWindow (GetDlgItem (h, IDC_APACHE_PORT),TRUE );
-      eset (h, IDC_APACHE_PORT, apache_port_number);
-    }
-    else
-    {
-      EnableWindow (GetDlgItem (h, IDC_APACHE_PORT_LABEL),FALSE );
-      EnableWindow (GetDlgItem (h, IDC_APACHE_PORT),FALSE );
-    }
   }
 }
 

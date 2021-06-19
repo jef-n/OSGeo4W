@@ -240,10 +240,8 @@ BEGIN
                     IDC_STATIC_WELCOME_TITLE,35,1,195,24
     LTEXT           "Este programa de instalación se utiliza para la instalación inicial del entorno OSGeo4W así como todas las actualizaciones posteriores Aseguresé de recordar dónde lo guardó.\r\n\r\nLas páginas siguientes le guiarán a través de la instalación. Tenga en cuenta que OSGeo4W consiste de un gran número de paquetes que abarcan una gran variedad de propósitos. Solo instalamos por omisión un conjunto de paquetes. Usted podrá en cualquier momento ejecutar otra vez este programa más adelante para agregar, quitar o actualizar los paquetes como sea necesario. ",
 		    IDC_SPLASH_TEXT,35,25,265,90
-    CONTROL         "Instalación de Escritorio Rápida",
-		    IDC_EXPRESS_D,"Button", BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,60,104,100,10
-    CONTROL         "Instalación Web-GIS Rápida",
-		    IDC_EXPRESS_I,"Button", BS_AUTORADIOBUTTON | WS_TABSTOP,60,124,100,10
+    CONTROL         "Instalación Rápida",
+		    IDC_EXPRESS,"Button", BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,60,104,100,10
     CONTROL         "Instalación Avanzada",
 		    IDC_ADVANCED,"Button", BS_AUTORADIOBUTTON | WS_TABSTOP,60,144,100,10
     ICON         IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
@@ -384,24 +382,15 @@ STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE |
 CAPTION "Instalador OSGeo4W - Seleccione los Paquetes del modo Expreso"
 FONT 8, "MS Shell Dlg"
 BEGIN
-    CONTROL         "MapServer",IDC_PKG_MAPSERVER,"Button",
-                    BS_AUTOCHECKBOX,108,48,100,8
     CONTROL         "QGIS",IDC_PKG_QGIS,"Button",
+                    BS_AUTOCHECKBOX,108,48,100,8
+    CONTROL         "QGIS LTR",IDC_PKG_QGIS_LTR,"Button",
                     BS_AUTOCHECKBOX,108,63,100,8
     CONTROL         "GDAL",IDC_PKG_GDAL,"Button",
                     BS_AUTOCHECKBOX,108,78,100,8
-    CONTROL         "Apache",IDC_PKG_APACHE,"Button",
-                    BS_AUTOCHECKBOX,108,93,45,8
-    CONTROL         "uDig",IDC_PKG_UDIG,"Button",
-                    BS_AUTOCHECKBOX,108,108,100,8
-    CONTROL         "OpenEV",IDC_PKG_OPENEV,"Button",
-                    BS_AUTOCHECKBOX,108,123,100,8
     CONTROL         "GRASS GIS",IDC_PKG_GRASS,"Button",
-                    BS_AUTOCHECKBOX,108,138,100,8
+                    BS_AUTOCHECKBOX,108,93,100,8
     ICON            IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
-    LTEXT           "Número de Puerto:",
-		    IDC_APACHE_PORT_LABEL,154,90,50,15,SS_CENTERIMAGE, WS_EX_RIGHT
-    EDITTEXT        IDC_APACHE_PORT,210,90,25,12,ES_AUTOHSCROLL
     LTEXT           "Seleccione los paquetes",
 		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
 END

@@ -69,10 +69,6 @@ init_run_script ()
   SetEnvironmentVariable ("PATH", backslash (cygpath ("/bin") + ";" + old_path).c_str());
   SetEnvironmentVariable ("OSGEO4W_ROOT", get_root_dir ().c_str());
 
-  char portnum[10];
-  snprintf(portnum, sizeof portnum, "%d", apache_port_number ? apache_port_number : 80 );
-  SetEnvironmentVariable ("APACHE_PORT", portnum);
-
   std::string startmenu;
   get_startmenu(startmenu);
   SetEnvironmentVariable ("OSGEO4W_STARTMENU", startmenu.c_str());

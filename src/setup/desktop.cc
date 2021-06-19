@@ -319,8 +319,8 @@ DesktopSetupPage::OnActivate ()
 long
 DesktopSetupPage::OnBack ()
 {
-  if( express_mode_option )
-      return (long)express_mode_option;
+  if( splash_mode == IDC_EXPRESS )
+      return splash_mode;
   else
       return IDD_CHOOSE;
 }

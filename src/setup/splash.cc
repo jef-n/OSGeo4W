@@ -34,8 +34,6 @@ static BoolOption TestOption( false, 't', "test", "Use setup_test.ini" );
 static BoolOption ExpressOption( true, 'A', "advanced", "Advanced install (as opposed to Express)" );
 static BoolOption SafeModeOption( false, 'S', "safe", "Safe Mode (Skip some admin actions)" );
 
-static int splash_mode = 0;
-
 SplashSetting::SplashSetting()
 {
   const char *m = UserSettings::instance().get("last-mode");
@@ -45,24 +43,17 @@ SplashSetting::SplashSetting()
   if ( !ExpressOption )
     splash_mode = IDC_ADVANCED;
   else
-    splash_mode =
-      casecompare( m, "Desktop" ) ? IDC_EXPRESS_D :
-      casecompare( m, "Internet" ) ? IDC_EXPRESS_I :
-      IDC_ADVANCED;
+    splash_mode = IDC_EXPRESS;
 }
 
 SplashSetting::~SplashSetting()
 {
-  UserSettings::instance().set("last-mode",
-                               splash_mode == IDC_EXPRESS_D ? "Desktop" :
-                               splash_mode == IDC_EXPRESS_I ? "Internet" :
-                               "Advanced" );
+  UserSettings::instance().set("last-mode", splash_mode == IDC_EXPRESS ? "Express" : "Advanced" );
 }
 
 static ControlAdjuster::ControlInfo SplashControlsInfo[] = {
   { IDC_SPLASH_TEXT,        CP_STRETCH,   CP_STRETCH },
-  { IDC_EXPRESS_D,          CP_CENTERED,  CP_CENTERED },
-  { IDC_EXPRESS_I,          CP_CENTERED,  CP_CENTERED },
+  { IDC_EXPRESS,            CP_CENTERED,  CP_CENTERED },
   { IDC_ADVANCED,           CP_CENTERED,  CP_CENTERED },
   { 0, CP_LEFT, CP_TOP }
 };
@@ -83,27 +74,17 @@ SplashPage::OnNext()
 {
   HWND h = GetHWND ();
 
-  if (IsDlgButtonChecked (h, IDC_EXPRESS_D) == BST_CHECKED)
+  if (IsDlgButtonChecked (h, IDC_EXPRESS) == BST_CHECKED)
     {
-      // add new global for control EXPRESS_DESKTOP INSTALL mode
+      // add new global for control EXPRESS INSTALL mode
       // int express_mode_option (state.cc) 
-      splash_mode = IDC_EXPRESS_D;
+      splash_mode = IDC_EXPRESS;
       unattended_mode = unattended;
-      express_mode_option = IDD_EXP_DPACKAGES;
-    }
-  else if (IsDlgButtonChecked (h, IDC_EXPRESS_I) == BST_CHECKED)
-    {
-      // add new global for control EXPRESS_DESKTOP_AND_INTERNET INSTALL mode
-      // int express_mode_option (state.cc) 
-      splash_mode = IDC_EXPRESS_I;
-      unattended_mode = unattended;
-      express_mode_option = IDD_EXP_IPACKAGES;
     }
   else
     {
       splash_mode = IDC_ADVANCED;
       unattended_mode = attended;
-      express_mode_option = 0;
     }
 
   return IDD_SOURCE;
@@ -126,20 +107,17 @@ SplashPage::OnInit ()
 
   if ( splash_mode )
     {
-      CheckDlgButton (h, IDC_EXPRESS_D, splash_mode == IDC_EXPRESS_D ? BST_CHECKED : BST_UNCHECKED );
-      CheckDlgButton (h, IDC_EXPRESS_I, splash_mode == IDC_EXPRESS_I ? BST_CHECKED : BST_UNCHECKED );
+      CheckDlgButton (h, IDC_EXPRESS, splash_mode == IDC_EXPRESS ? BST_CHECKED : BST_UNCHECKED );
       CheckDlgButton (h, IDC_ADVANCED, splash_mode == IDC_ADVANCED ? BST_CHECKED : BST_UNCHECKED );
     }
   else if( !test_mode )
     {
-      CheckDlgButton (h, IDC_EXPRESS_D, BST_CHECKED );
-      CheckDlgButton (h, IDC_EXPRESS_I, BST_UNCHECKED );
+      CheckDlgButton (h, IDC_EXPRESS, BST_CHECKED );
       CheckDlgButton (h, IDC_ADVANCED, BST_UNCHECKED );
     }
   else
     {
-      CheckDlgButton (h, IDC_EXPRESS_D, BST_UNCHECKED );
-      CheckDlgButton (h, IDC_EXPRESS_I, BST_UNCHECKED );
+      CheckDlgButton (h, IDC_EXPRESS, BST_UNCHECKED );
       CheckDlgButton (h, IDC_ADVANCED, BST_CHECKED );
     }
 }

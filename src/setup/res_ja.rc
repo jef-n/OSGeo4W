@@ -240,10 +240,8 @@ BEGIN
                     IDC_STATIC_WELCOME_TITLE,35,1,225,34
     LTEXT           "このセットアッププログラムは後に続くアップデートと同じように、OSGeo4W環境の初期のインストールに使用されます。保存場所を忘れないようにしてください。\r\n\r\nこのページ以降は、インストールのガイドをします。OSGeo4Wは多目的のパッケージから構成されています。初期設定では、パッケージの基本設定のみインストールできます。必要に応じて、追加、削除、パッケージのアップグレードのため、いつでもこのプログラムを実行することができます。",
                     IDC_SPLASH_TEXT,35,35,265,90
-    CONTROL         "エクスプレス デスクトップインストール",
-		    IDC_EXPRESS_D,"Button", BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,60,104,100,10
-    CONTROL         "エクスプレス Web-GISインストール",
-		    IDC_EXPRESS_I,"Button", BS_AUTORADIOBUTTON | WS_TABSTOP,60,124,100,10
+    CONTROL         "エクスプレス インストール",
+		    IDC_EXPRESS,"Button", BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,60,104,100,10
     CONTROL         "アドバンスインストール",
 		    IDC_ADVANCED,"Button", BS_AUTORADIOBUTTON | WS_TABSTOP,60,144,100,10
     ICON         IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
@@ -384,24 +382,15 @@ STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE |
 CAPTION "OSGeo4Wセットアップ－エクスプレスパッケージの選択"
 FONT 8, "MS Shell Dlg"
 BEGIN
-    CONTROL         "MapServer",IDC_PKG_MAPSERVER,"Button",
-                    BS_AUTOCHECKBOX,108,48,100,8
     CONTROL         "QGIS",IDC_PKG_QGIS,"Button",
+                    BS_AUTOCHECKBOX,108,48,100,8
+    CONTROL         "QGIS LTR",IDC_PKG_QGIS_LTR,"Button",
                     BS_AUTOCHECKBOX,108,63,100,8
     CONTROL         "GDAL",IDC_PKG_GDAL,"Button",
                     BS_AUTOCHECKBOX,108,78,100,8
-    CONTROL         "Apache",IDC_PKG_APACHE,"Button",
-                    BS_AUTOCHECKBOX,108,93,45,8
-    CONTROL         "uDig",IDC_PKG_UDIG,"Button",
-                    BS_AUTOCHECKBOX,108,108,100,8
-    CONTROL         "OpenEV",IDC_PKG_OPENEV,"Button",
-                    BS_AUTOCHECKBOX,108,123,100,8
     CONTROL         "GRASS GIS",IDC_PKG_GRASS,"Button",
-                    BS_AUTOCHECKBOX,108,138,100,8
+                    BS_AUTOCHECKBOX,108,93,100,8
     ICON            IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
-    LTEXT           "ポート番号:",
-		    IDC_APACHE_PORT_LABEL,154,90,40,15,SS_CENTERIMAGE, WS_EX_RIGHT
-    EDITTEXT        IDC_APACHE_PORT,210,90,25,12,ES_AUTOHSCROLL
     LTEXT           "パッケージを選択してください",
 		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
 END
