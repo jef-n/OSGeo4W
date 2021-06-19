@@ -33,7 +33,7 @@ my $releasename;
 my $shortname = "qgis";
 my $version;
 my $binary;
-my $root = "http://download.osgeo.org/osgeo4w/testing";
+my $root = "http://download.osgeo.org/osgeo4w/v2";
 my $ininame = "setup.ini";
 my $signwith;
 my $signpass;

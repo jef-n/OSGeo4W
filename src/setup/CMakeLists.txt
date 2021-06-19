@@ -30,7 +30,7 @@ IF(MSVC)
     -DHAVE_STRING_H
     -Dstrcasecmp=_stricmp
     # -Dsnprintf=_snprintf
-    -DOSGEO4W_MIRROR_URL="http://download.osgeo.org/osgeo4w/testing/mirrors.lst"
+    -DOSGEO4W_MIRROR_URL="http://download.osgeo.org/osgeo4w/v2/mirrors.lst"
     -wd4996 # 'function': was declared deprecated
   )
   SET_SOURCE_FILES_PROPERTIES(PickView.cc

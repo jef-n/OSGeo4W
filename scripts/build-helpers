@@ -1,9 +1,9 @@
 set -e
 
 export MASTER_HOST=download.osgeo.org
-export MASTER_BASE=osgeo4w/testing
+export MASTER_BASE=osgeo4w/v2
 export MASTER_REPO=http://$MASTER_HOST/$MASTER_BASE
-export MASTER_REGEN_URI=http://$MASTER_HOST/cgi-bin/osgeo4w-regen-testing.sh
+export MASTER_REGEN_URI=http://$MASTER_HOST/cgi-bin/osgeo4w-regen-v2.sh
 export MASTER_SCP=$MASTER_HOST:/osgeo/download/$MASTER_BASE
 export OSGEO4W_SCRIPTS=$(cygpath -a "$( dirname "${BASH_SOURCE[0]}" )")
 export OSGEO4W_PWD=$PWD
