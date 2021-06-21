@@ -18,5 +18,6 @@ for i in ${PKGS:-qgis qgis-ltr}; do
 		-shortname="$i" \
 		-banner=$PWD/src/$i/osgeo4w/qgis_msibanner.bmp \
 		-background=$PWD/src/$i/osgeo4w/qgis_msiinstaller.bmp \
+		-arpicon=$PWD/src/$i/osgeo4w/qgis.ico \
 		$i-full
 done

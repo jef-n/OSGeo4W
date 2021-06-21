@@ -222,7 +222,7 @@ for f in map( lambda x: abspath(join(props['Location'], x)).replace(sep,'/'), pr
                 preremove = open("preremove.bat", "wb")
 
             postinstall.write(str.encode("textreplace -std -t {}\r\n".format(prefix.sub('', f))))
-            preremove.write(str.encode("del {}\r\n".format(prefix.sub('', f))))
+            preremove.write(str.encode("del {}\r\n".format(prefix.sub('', f).replace('/', '\\')))
 
             f += ".tmpl"
 
