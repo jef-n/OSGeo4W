@@ -34,8 +34,14 @@ PKG=python-$V-amd64.exe
 [ -f $PKG ] || wget https://www.python.org/ftp/python/$V/$PKG
 chmod a+rx $PKG
 
+d=$(cygpath -aw install)
+
+if [ -d install ]; then
+	./$PKG /quiet /uninstall TargetDir=${d//\\/\\\\}
+	rm -fr install
+fi
+
 if ! [ -d install ]; then
-	d=$(cygpath -aw install)
 	./$PKG /quiet TargetDir=${d//\\/\\\\} AssociateFiles=0 Shortcuts=0 SimpleInstall=1
 fi
 
@@ -141,6 +147,7 @@ EOF
 
 cat <<EOF >ini.bat
 SET PYTHONHOME=%OSGEO4W_ROOT%\\apps\\Python$MM
+SET PYTHONUTF8=1
 PATH %OSGEO4W_ROOT%\\apps\\Python$MM\Scripts;%PATH%
 EOF
 
@@ -356,8 +363,6 @@ tar -cjf $R/$P-pip/$P-pip-$PIPV-$B.tar.bz2 \
 # setuptools
 #
 
-rm -f setuptools-postinstall.bat
-
 cat <<EOF >setuptools-preremove.bat
 python -B %OSGEO4W_ROOT%\\apps\\Python$MM\\Scripts\\preremove-cached.py $P-setuptools
 EOF
@@ -371,11 +376,9 @@ requires: base $P-core $P-devel
 EOF
 
 tar -cjf $R/$P-setuptools/$P-setuptools-$STV-$B.tar.bz2 \
-	--xform "s,^setuptools-postinstall.bat,etc/postinstall/$P-setuptools.bat," \
 	--xform "s,^setuptools-preremove.bat,etc/preremove/$P-setuptools.bat," \
 	--xform "s,^install/,$PREFIX," \
 	--exclude "__pycache__" \
-	setuptools-postinstall.bat \
 	setuptools-preremove.bat \
 	-T setuptools.lst
 
