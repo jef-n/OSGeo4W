@@ -25,6 +25,7 @@ cd ..
 
 if [ -d qgis ]; then
 	cd qgis
+	git config core.filemode false
 
 	git clean -f
 	git reset --hard
@@ -33,6 +34,7 @@ if [ -d qgis ]; then
 else
 	git clone $REPO --branch master --single-branch qgis
 	cd qgis
+	git config core.filemode false
 fi
 
 SHA=$(git log -n1 --pretty=%h)
@@ -219,8 +221,8 @@ nextbinary
 
 	v=$MAJOR.$MINOR.$PATCH
 
-	sagadef=$(sed -rne "s/^REQUIRED_VERSION *= *('.*')$/\\1/p" install/apps/$P/python/plugins/processing/algs/saga/SagaAlgorithmProvider.py)
-	sed -e "s/^REQUIRED_VERSION *= *'.*'$/REQUIRED_VERSION = @saga@/" install/apps/$P/python/plugins/processing/algs/saga/SagaAlgorithmProvider.py >install/apps/$P/python/plugins/processing/algs/saga/SagaAlgorithmProvider.py.tmpl
+	sagadef=$(sed -rne "s/^REQUIRED_VERSION *= *('.*')$/\\1/p" install/apps/$P/python/plugins/sagaprovider/SagaAlgorithmProvider.py)
+	sed -e "s/^REQUIRED_VERSION *= *'.*'$/REQUIRED_VERSION = @saga@/" install/apps/$P/python/plugins/sagaprovider/SagaAlgorithmProvider.py >install/apps/$P/python/plugins/sagaprovider/SagaAlgorithmProvider.py.tmpl
 
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       qgis.reg.tmpl    >install/bin/qgis.reg.tmpl
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                postinstall.bat  >install/etc/postinstall/$P.bat
@@ -243,7 +245,7 @@ nextbinary
 	/bin/tar -cjf $R/$P-$V-$B.tar.bz2 \
 		--exclude-from exclude \
 		--exclude "*.pyc" \
-		--exclude "install/apps/$P/python/plugins/processing/algs/saga/SagaAlgorithmProvider.py" \
+		--exclude "install/apps/$P/python/plugins/sagaprovider/SagaAlgorithmProvider.py" \
 		--xform "s,^qgis.vars,bin/$P-bin.vars," \
 		--xform "s,^osgeo4w/apps/qt5/plugins/,apps/$P/qtplugins/," \
 		--xform "s,^install/apps/$P/bin/qgis.exe,bin/$P-bin.exe," \

@@ -132,7 +132,7 @@ my %sdesc;
 my %md5;
 my $package;
 
-system "wget $wgetopt -O setup.ini $root/x86_64/$ininame";
+system "wget $wgetopt --no-cache -O setup.ini $root/x86_64/$ininame";
 die "download of setup.ini failed" if $?;
 open F, "setup.ini" || die "setup.ini not found";
 while(<F>) {

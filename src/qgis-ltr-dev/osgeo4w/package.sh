@@ -37,6 +37,7 @@ cd ..
 
 if [ -d qgis ]; then
 	cd qgis
+	git config core.filemode false
 
 	git fetch origin $LTRBRANCH
 	git clean -f
@@ -47,6 +48,7 @@ if [ -d qgis ]; then
 else
 	git clone $REPO --branch $LTRBRANCH --single-branch --depth 1 qgis
 	cd qgis
+	git config core.filemode false
 fi
 
 patch -p1 --dry-run <../osgeo4w/patch
