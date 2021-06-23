@@ -434,7 +434,7 @@ sdesc: "QGIS Full Desktop (meta package; long term release)"
 ldesc: "QGIS Full Desktop (meta package; long term release)"
 maintainer: $MAINTAINER
 category: Desktop
-requires: $P proj $P-grass-plugin $P-oracle-provider python3-pyparsing python3-simplejson python3-shapely python3-matplotlib gdal-hdf5 gdal-ecw gdal-mrsid gdal-oracle gdal-sosi python3-pygments qt5-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-pillow python3-pandas python3-geographiclib saga
+requires: $P proj $P-grass-plugin $P-oracle-provider python3-pyparsing python3-simplejson python3-shapely python3-matplotlib gdal-hdf5 gdal-ecw gdal-mrsid gdal-oracle gdal-sosi python3-pygments qt5-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-setuptools python3-pillow python3-pandas python3-geographiclib saga
 external-source: $P
 EOF
 
