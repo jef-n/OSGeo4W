@@ -179,9 +179,10 @@ declare -x cmakeenv
 ninjaenv() {
 	if ! [ -x "$OSGEO4W_SCRIPTS/ninja.exe" ]; then
 		(
+			cd /tmp
+			curl --remote-name -L https://github.com/ninja-build/ninja/releases/download/v1.10.2/ninja-win.zip
 			cd $OSGEO4W_SCRIPTS
-			curl --output /tmp/ninja.zip https://github.com/ninja-build/ninja/releases/download/v1.10.1/ninja-win.zip
-			unzip /tmp/ninja.zip
+			unzip /tmp/ninja-win.zip
 
 			chmod a+rx ninja.exe
 		)
@@ -265,6 +266,7 @@ fetchdeps() {
 	cmd="$cmd --no-startmenu"
 	cmd="$cmd --no-desktop"
 	cmd="$cmd -s $(cygpath -am $OSGEO4W_REP)"
+	cmd="$cmd -s $MASTER_REPO"
 	cmd="$cmd -l $(cygpath -am $OSGEO4W_REP/package-cache)"
 
 	for p in "$@"; do

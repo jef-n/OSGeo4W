@@ -2,7 +2,7 @@ export P=qgis-rel-dev
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-devel grass qt5-oci qt5-oci-debug sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pyqt5 python3-sip python3-devel python3-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-devel qscintilla-devel qt5-devel qwt-devel libspatialite-devel oci-devel qtkeychain-devel zlib-devel opencl-devel exiv2-devel protobuf-devel pdal pdal-devel python3-setuptools zstd-devel oci-devel qtwebkit-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel"
+export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-devel grass qt5-oci qt5-oci-debug sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt5 python3-sip python3-devel python3-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-devel qscintilla-devel qt5-devel qwt-devel libspatialite-devel oci-devel qtkeychain-devel zlib-devel opencl-devel exiv2-devel protobuf-devel pdal pdal-devel python3-setuptools zstd-devel oci-devel qtwebkit-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel"
 
 : ${SITE:=qgis.org}
 : ${TARGET:=Nightly}
@@ -42,6 +42,7 @@ if [ -d qgis ]; then
 	git reset --hard
 
 	git checkout $RELBRANCH
+	git config pull.ff only
 	git pull
 else
 	git clone $REPO --branch $RELBRANCH --single-branch --depth 1 qgis

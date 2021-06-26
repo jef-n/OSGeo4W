@@ -13,15 +13,3 @@ index 0eb58512..643ccab2 100644
  
  from qgis.PyQt import QtCore
  
-diff --git a/python/core/auto_generated/auth/qgsauthmanager.sip.in b/python/core/auto_generated/auth/qgsauthmanager.sip.in
-index 93962d74..b30e268d 100644
---- a/python/core/auto_generated/auth/qgsauthmanager.sip.in
-+++ b/python/core/auto_generated/auth/qgsauthmanager.sip.in
-@@ -817,6 +817,7 @@ Clear an authentication config from its associated authentication method cache
- 
-   protected:
- 
-+    explicit QgsAuthManager();
- 
-   public:
-   protected:
