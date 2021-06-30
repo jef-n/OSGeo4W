@@ -55,7 +55,7 @@ cmake -G Ninja \
 	-D CMAKE_CXX_STANDARD=17 \
 	-D CMAKE_BUILD_TYPE=Release \
 	-D CMAKE_INSTALL_PREFIX=../install \
-	-D PCRASTER_PYTHON_INSTALL_DIR=$(cygpath -am ../install/apps/Python39/Lib/site-packages/pcraster) \
+	-D PCRASTER_PYTHON_INSTALL_DIR=$(cygpath -am ../install/apps/Python39/Lib/site-packages) \
 	-D XercesC_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D XercesC_LIBRARY=$(cygpath -am ../osgeo4w/lib/xerces-c_3.lib) \
 	-D Python3_EXECUTABLE=$(cygpath -am ../osgeo4w/bin/python.exe) \
