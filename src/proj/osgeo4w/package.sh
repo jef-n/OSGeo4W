@@ -1,5 +1,5 @@
 export P=proj
-export V=8.0.1
+export V=8.1.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="sqlite3-devel libtiff-devel curl-devel"
@@ -15,8 +15,8 @@ vs2019env
 cmakeenv
 ninjaenv
 
-mkdir -p build install
-cd build
+mkdir -p build-$V install
+cd build-$V
 
 export INCLUDE="$INCLUDE;$(cygpath -aw osgeo4w/include)"
 export LIB="$LIB;$(cygpath -aw osgeo4w/lib)"
