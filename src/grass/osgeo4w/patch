@@ -1,55 +1,6 @@
-diff -ur grass-7.8.4/lib/cairodriver/text.c ../lib/cairodriver/text.c
---- grass-7.8.4/lib/cairodriver/text.c	2020-10-05 08:39:31.000000000 +0200
-+++ ../lib/cairodriver/text.c	2020-11-08 17:25:27.051487800 +0100
-@@ -15,7 +15,7 @@
- #include <grass/glocale.h>
- #include "cairodriver.h"
- 
--#if CAIRO_HAS_FT_FONT
-+#if CAIRO_HAS_FC_FONT
- #include <cairo-ft.h>
- #include <fontconfig/fontconfig.h>
- #endif
-@@ -170,7 +170,7 @@
-     G_free(font);
- }
- 
--#if CAIRO_HAS_FT_FONT
-+#if CAIRO_HAS_FC_FONT
- 
- static void fc_init(void)
- {
-@@ -281,7 +281,7 @@
- */
- void Cairo_set_font(const char *name)
- {
--#if CAIRO_HAS_FT_FONT
-+#if CAIRO_HAS_FC_FONT
-     if (is_toy_font(name))
- 	set_font_toy(name);
-     else
-@@ -322,7 +322,7 @@
- void Cairo_font_list(char ***list, int *count)
- {
-     font_list_toy(list, count, 0);
--#if CAIRO_HAS_FT_FONT
-+#if CAIRO_HAS_FC_FONT
-     font_list_fc(list, count, 0);
- #endif
- }
-@@ -336,8 +336,7 @@
- void Cairo_font_info(char ***list, int *count)
- {
-     font_list_toy(list, count, 1);
--#if CAIRO_HAS_FT_FONT
-+#if CAIRO_HAS_FC_FONT
-     font_list_fc(list, count, 1);
- #endif
- }
--
-diff -ur grass-7.8.5/lib/gis/gisinit.c ../lib/gis/gisinit.c
---- grass-7.8.5/lib/gis/gisinit.c	2020-12-21 19:40:15.000000000 +0100
-+++ ../lib/gis/gisinit.c	2021-02-08 14:46:49.600045400 +0100
+diff -ur grass-7.8.6RC1/lib/gis/gisinit.c ../grass-7.8.6RC1/lib/gis/gisinit.c
+--- grass-7.8.6RC1/lib/gis/gisinit.c	2021-05-19 23:27:58.000000000 +0200
++++ ../grass-7.8.6RC1/lib/gis/gisinit.c	2021-07-11 00:57:15.481226500 +0200
 @@ -49,12 +49,14 @@
  
      G_set_program_name(pgm);
@@ -65,21 +16,35 @@ diff -ur grass-7.8.5/lib/gis/gisinit.c ../lib/gis/gisinit.c
      
      /* Make sure location and mapset are set */
      G_location_path();
-diff -ur grass-7.8.6RC1/mswindows/env.bat ../grass-7.8.6RC1/mswindows/env.bat
---- grass-7.8.6RC1/mswindows/env.bat	2021-05-19 23:27:58.000000000 +0200
-+++ ../grass-7.8.6RC1/mswindows/env.bat	2021-05-24 22:52:39.085696600 +0200
-@@ -11,8 +11,6 @@
- set GDAL_DATA=%GISBASE%\share\gdal
- set GEOTIFF_CSV=%GISBASE%\share\epsg_csv
+diff -ur grass-7.8.6RC1/lib/python/ctypes/loader.py ../grass-7.8.6RC1/lib/python/ctypes/loader.py
+--- grass-7.8.6RC1/lib/python/ctypes/loader.py	2021-05-19 23:27:58.000000000 +0200
++++ ../grass-7.8.6RC1/lib/python/ctypes/loader.py	2021-07-11 22:32:57.313827800 +0200
+@@ -236,6 +236,12 @@
+ class WindowsLibraryLoader(LibraryLoader):
+     name_formats = ["%s.dll", "lib%s.dll"]
  
--set FONTCONFIG_FILE=%GISBASE%\etc\fonts.conf
--
- set PATH=%GISBASE%\extrabin;%GISBASE%\bin;%PYTHONHOME%;%PATH%
++    def __init__(self):
++        super().__init__()
++        for p in os.getenv("PATH").split(";"):
++            if os.path.exists(p) and hasattr(os, 'add_dll_directory'):
++                os.add_dll_directory(p)
++
+     def load(self, path):
+         return _WindowsLibrary(path)
  
- REM set RStudio temporarily to %PATH% if it exists
-diff -ur grass-7.8.4/mswindows/osgeo4w/env.bat.tmpl ../mswindows/osgeo4w/env.bat.tmpl
---- grass-7.8.4/mswindows/osgeo4w/env.bat.tmpl	2020-10-05 08:39:31.000000000 +0200
-+++ ../mswindows/osgeo4w/env.bat.tmpl	2020-11-08 18:01:50.115323200 +0100
+diff -ur grass-7.8.6RC1/mswindows/osgeo4w/config.h.vc ../grass-7.8.6RC1/mswindows/osgeo4w/config.h.vc
+--- grass-7.8.6RC1/mswindows/osgeo4w/config.h.vc	2021-05-19 23:27:58.000000000 +0200
++++ ../grass-7.8.6RC1/mswindows/osgeo4w/config.h.vc	2021-07-11 00:57:15.482226700 +0200
+@@ -298,4 +298,6 @@
+ /* define if langinfo.h exists */
+ /* #undef HAVE_LANGINFO_H */
+ 
++#define HAVE_PROJ_H 1
++
+ #endif /* _config_h */
+diff -ur grass-7.8.6RC1/mswindows/osgeo4w/env.bat.tmpl ../grass-7.8.6RC1/mswindows/osgeo4w/env.bat.tmpl
+--- grass-7.8.6RC1/mswindows/osgeo4w/env.bat.tmpl	2021-05-19 23:27:58.000000000 +0200
++++ ../grass-7.8.6RC1/mswindows/osgeo4w/env.bat.tmpl	2021-07-11 22:31:11.868198500 +0200
 @@ -2,8 +2,6 @@
  REM Environmental variables for GRASS OSGeo4W installer
  REM
@@ -89,12 +54,10 @@ diff -ur grass-7.8.4/mswindows/osgeo4w/env.bat.tmpl ../mswindows/osgeo4w/env.bat
  set GISBASE=%OSGEO4W_ROOT%\apps\grass\grass@POSTFIX@
  
  REM Uncomment if you want to use Bash instead of Cmd
-@@ -12,13 +10,3 @@
- 
- set GRASS_PYTHON=%OSGEO4W_ROOT%\bin\python3.exe
+@@ -14,11 +12,3 @@
  set GRASS_PROJSHARE=%OSGEO4W_ROOT%\share\proj
--
--set FONTCONFIG_FILE=%GISBASE%\etc\fonts.conf
+ 
+ set FONTCONFIG_FILE=%GISBASE%\etc\fonts.conf
 -
 -REM
 -REM RStudio-related
@@ -103,9 +66,9 @@ diff -ur grass-7.8.4/mswindows/osgeo4w/env.bat.tmpl ../mswindows/osgeo4w/env.bat
 -IF EXIST "%ProgramFiles%\RStudio\bin\rstudio.exe" set PATH=%PATH%;%ProgramFiles%\RStudio\bin
 -REM set R_USER if %USERPROFILE%\Documents\R\ exists to catch most common cases of private R libraries
 -IF EXIST "%USERPROFILE%\Documents\R\" set R_USER=%USERPROFILE%\Documents\
-diff -ur grass-7.8.4/mswindows/osgeo4w/mklibs.sh ../mswindows/osgeo4w/mklibs.sh
---- grass-7.8.4/mswindows/osgeo4w/mklibs.sh	2020-10-05 08:39:31.000000000 +0200
-+++ ../mswindows/osgeo4w/mklibs.sh	2020-11-18 12:11:53.836510400 +0100
+diff -ur grass-7.8.6RC1/mswindows/osgeo4w/mklibs.sh ../grass-7.8.6RC1/mswindows/osgeo4w/mklibs.sh
+--- grass-7.8.6RC1/mswindows/osgeo4w/mklibs.sh	2021-05-19 23:27:58.000000000 +0200
++++ ../grass-7.8.6RC1/mswindows/osgeo4w/mklibs.sh	2021-07-11 00:57:15.485226700 +0200
 @@ -1,31 +1,14 @@
  #!/bin/sh
  
@@ -151,9 +114,9 @@ diff -ur grass-7.8.4/mswindows/osgeo4w/mklibs.sh ../mswindows/osgeo4w/mklibs.sh
  	    lib -nologo $libname || exit)
  done
 +
-diff -ur grass-7.8.4/mswindows/osgeo4w/package.sh ../mswindows/osgeo4w/package.sh
---- grass-7.8.4/mswindows/osgeo4w/package.sh	2020-10-05 08:39:31.000000000 +0200
-+++ ../mswindows/osgeo4w/package.sh	2020-11-18 12:13:37.303734600 +0100
+diff -ur grass-7.8.6RC1/mswindows/osgeo4w/package.sh ../grass-7.8.6RC1/mswindows/osgeo4w/package.sh
+--- grass-7.8.6RC1/mswindows/osgeo4w/package.sh	2021-05-19 23:27:58.000000000 +0200
++++ ../grass-7.8.6RC1/mswindows/osgeo4w/package.sh	2021-07-11 22:26:11.538459900 +0200
 @@ -1,7 +1,5 @@
  #!/usr/bin/bash
  
@@ -210,7 +173,7 @@ diff -ur grass-7.8.4/mswindows/osgeo4w/package.sh ../mswindows/osgeo4w/package.s
  
  T0=$(date +%s)
  LT=$T0
-@@ -125,42 +106,19 @@
+@@ -125,42 +106,29 @@
  
  exec 3>&1 > >(tee mswindows/osgeo4w/package.log) 2>&1
  
@@ -254,11 +217,21 @@ diff -ur grass-7.8.4/mswindows/osgeo4w/package.sh ../mswindows/osgeo4w/package.s
 +	/mingw64/bin/zlib1.dll
 +	/mingw64/bin/libbz2-1.dll
 +	/mingw64/bin/libiconv-2.dll
++	/mingw64/bin/libexpat-1.dll
++	/mingw64/bin/libfontconfig-1.dll
++	/mingw64/bin/libbrotlidec.dll
++	/mingw64/bin/libbrotlicommon.dll
 +	/mingw64/bin/libintl-8.dll
 +	/mingw64/bin/libsystre-0.dll
 +	/mingw64/bin/libtre-5.dll
 +	/mingw64/bin/libwinpthread-1.dll
++	/mingw64/bin/libcairo-2.dll
++	/mingw64/bin/libpixman-1-0.dll
 +	/mingw64/bin/libpng16-16.dll
++	/mingw64/bin/libfreetype-6.dll
++	/mingw64/bin/libharfbuzz-0.dll
++	/mingw64/bin/libglib-2.0-0.dll
++	/mingw64/bin/libgraphite2.dll
 +	/mingw64/bin/libpcre-1.dll
 +	/mingw64/bin/libstdc++-6.dll
 +	/mingw64/bin/libgcc_s_seh-1.dll
@@ -266,7 +239,7 @@ diff -ur grass-7.8.4/mswindows/osgeo4w/package.sh ../mswindows/osgeo4w/package.s
  
  if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
  	if [ -e include/Make/Platform.make ] ; then
-@@ -171,17 +129,17 @@
+@@ -171,18 +139,17 @@
  	log remove old logs
  	rm -f mswindows/osgeo4w/package.log.*
  
@@ -279,22 +252,22 @@ diff -ur grass-7.8.4/mswindows/osgeo4w/package.sh ../mswindows/osgeo4w/package.s
  	cp -uv $OSGEO4W_ROOT_MSYS/lib/libpq.lib mswindows/osgeo4w/lib/pq.lib
 -	cp -uv $OSGEO4W_ROOT_MSYS/lib/proj_i.lib mswindows/osgeo4w/lib/proj.lib
  	cp -uv $OSGEO4W_ROOT_MSYS/lib/sqlite3_i.lib mswindows/osgeo4w/lib/sqlite3.lib
-+	cp -uv $OSGEO4W_ROOT_MSYS/lib/cairo.lib mswindows/osgeo4w/lib/libcairo.lib
  
  	log configure
  	./configure \
--		--host=$conf_host \
-- 		--with-libs="$OSGEO4W_ROOT/lib" \
+-	        --host=$conf_host \
+-		--with-libs="$OSGEO4W_ROOT/lib" \
 +	        --host=x86_64-w64-mingw32 \
 +		--with-libs="$OSGEO4W_ROOT_MSYS/lib" \
  		--with-includes=$OSGEO4W_ROOT_MSYS/include \
                  --libexecdir=$OSGEO4W_ROOT_MSYS/bin \
-@@ -194,10 +152,10 @@
+                 --prefix=$OSGEO4W_ROOT_MSYS/apps/grass \
+@@ -194,10 +161,10 @@
  		--enable-largefile \
  		--with-fftw \
  		--with-freetype \
 -		--with-freetype-includes=/mingw${MINGW_POSTFIX}/include/freetype2 \
-+		--with-freetype-includes=$OSGEO4W_ROOT_MSYS/include/freetype2 \
++		--with-freetype-includes=/mingw64/include/freetype2 \
  		--with-proj-share=$OSGEO4W_ROOT_MSYS/share/proj \
  		--with-proj-includes=$OSGEO4W_ROOT_MSYS/include \
 -		--with-proj-libs=$PWD/mswindows/osgeo4w/lib \
@@ -302,12 +275,12 @@ diff -ur grass-7.8.4/mswindows/osgeo4w/package.sh ../mswindows/osgeo4w/package.s
  		--with-postgres \
  		--with-postgres-includes=$OSGEO4W_ROOT_MSYS/include \
  		--with-postgres-libs=$PWD/mswindows/osgeo4w/lib \
-@@ -211,10 +169,11 @@
+@@ -211,10 +178,11 @@
  		--with-zstd \
  		--with-odbc \
  	        --with-cairo \
 +		--with-cairo-includes=$OSGEO4W_ROOT_MSYS/include \
-+		--with-cairo-ldflags="-L$PWD/mswindows/osgeo4w/lib -lcairo" \
++		--with-cairo-ldflags="-L$PWD/mswindows/osgeo4w/lib -lcairo -lfontconfig" \
  	        --with-opengl=windows \
 -                --with-bzlib $conf_opts
 -# see #3047
@@ -317,7 +290,7 @@ diff -ur grass-7.8.4/mswindows/osgeo4w/package.sh ../mswindows/osgeo4w/package.s
  
  	touch mswindows/osgeo4w/configure-stamp
  fi
-@@ -248,8 +207,7 @@
+@@ -248,8 +216,7 @@
  
  if [ -n "$PACKAGE_PATCH" ]; then
      log building vc libraries
@@ -327,16 +300,17 @@ diff -ur grass-7.8.4/mswindows/osgeo4w/package.sh ../mswindows/osgeo4w/package.s
      mv mswindows/osgeo4w/vc/grass*.lib $OSGEO4W_ROOT_MSYS/apps/grass/grass$POSTFIX/lib
  
      log creating package
-@@ -267,8 +225,6 @@
+@@ -267,8 +234,7 @@
  
      # copy dependencies (TODO: to be reduced)
      cp -uv $DLLS apps/grass/grass$POSTFIX/bin
 -    cp -uv /mingw${MINGW_POSTFIX}/etc/fonts/fonts.conf \
 -	apps/grass/grass$POSTFIX/etc
++    cp -uv /mingw64/etc/fonts/fonts.conf apps/grass/grass$POSTFIX/etc
  
      # creating grass package
      /bin/tar -cjf $PDIR/grass$PACKAGE_POSTFIX-$VERSION-$PACKAGE_PATCH.tar.bz2 \
-@@ -277,7 +233,6 @@
+@@ -277,7 +243,6 @@
  	bin/python-${GRASS_EXECUTABLE}.bat \
  	etc/postinstall/grass${PACKAGE_POSTFIX}.bat \
  	etc/preremove/grass${PACKAGE_POSTFIX}.bat
@@ -344,9 +318,9 @@ diff -ur grass-7.8.4/mswindows/osgeo4w/package.sh ../mswindows/osgeo4w/package.s
  fi
  
  log
-diff -ur grass-7.8.5/mswindows/osgeo4w/postinstall.bat ../mswindows/osgeo4w/postinstall.bat
---- grass-7.8.5/mswindows/osgeo4w/postinstall.bat	2020-12-21 19:40:15.000000000 +0100
-+++ ../mswindows/osgeo4w/postinstall.bat	2021-02-18 22:16:03.605663800 +0100
+diff -ur grass-7.8.6RC1/mswindows/osgeo4w/postinstall.bat ../grass-7.8.6RC1/mswindows/osgeo4w/postinstall.bat
+--- grass-7.8.6RC1/mswindows/osgeo4w/postinstall.bat	2021-05-19 23:27:58.000000000 +0200
++++ ../grass-7.8.6RC1/mswindows/osgeo4w/postinstall.bat	2021-07-11 00:57:15.487226500 +0200
 @@ -1,10 +1,12 @@
  set ICON=%OSGEO4W_ROOT%\apps\grass\grass@POSTFIX@\gui\icons\grass_osgeo.ico
  set BATCH=%OSGEO4W_ROOT%\bin\@GRASS_EXECUTABLE@.bat
@@ -363,28 +337,3 @@ diff -ur grass-7.8.5/mswindows/osgeo4w/postinstall.bat ../mswindows/osgeo4w/post
  
  rem run g.mkfontcap outside a GRASS session during
  rem an OSGeo4W installation for updating paths to fonts
-diff -ur grass-7.8.5/mswindows/osgeo4w/config.h.vc ../mswindows/osgeo4w/config.h.vc
---- grass-7.8.5/mswindows/osgeo4w/config.h.vc	2020-12-21 19:40:15.000000000 +0100
-+++ ../mswindows/osgeo4w/config.h.vc	2021-03-01 12:52:05.809216000 +0100
-@@ -298,4 +298,6 @@
- /* define if langinfo.h exists */
- /* #undef HAVE_LANGINFO_H */
- 
-+#define HAVE_PROJ_H 1
-+
- #endif /* _config_h */
-diff -u grass-7.8.5/gui/wxpython/wxgui.py ../grass-7.8.5/gui/wxpython/wxgui.py
---- grass-7.8.5/gui/wxpython/wxgui.py	2020-12-21 19:40:15.000000000 +0100
-+++ ../grass-7.8.5/gui/wxpython/wxgui.py	2021-03-03 23:14:36.234361600 +0100
-@@ -62,6 +62,11 @@
- 
-         :return: True
-         """
-+
-+        for p in os.getenv("PATH").split(";"):
-+           if os.path.exists(p):
-+             os.add_dll_directory(p)
-+
-         # create splash screen
-         introImagePath = os.path.join(globalvar.IMGDIR, "splash_screen.png")
-         introImage = wx.Image(introImagePath, wx.BITMAP_TYPE_PNG)

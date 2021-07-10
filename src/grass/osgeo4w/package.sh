@@ -2,7 +2,7 @@ export P=grass
 export V=7.8.6RC1
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="gdal-devel proj-devel geos-devel libjpeg-devel libpng-devel libpq-devel libtiff-devel sqlite3-devel zstd-devel python3-core python3-six liblas-devel cairo-devel freetype-devel python3-wxpython"
+export BUILDDEPENDS="gdal-devel proj-devel geos-devel libjpeg-devel libpng-devel libpq-devel libtiff-devel sqlite3-devel zstd-devel python3-core python3-six python3-pywin32 liblas-devel python3-wxpython"
 
 source ../../../scripts/build-helpers
 
@@ -13,11 +13,11 @@ startlog
 MM=${V%.*}
 MM=${MM//./}
 
-case "$V" in
-*RC*)
-	export OSGEO4W_BUILDMODE=test
-	;;
-esac
+# case "$V" in
+# *RC*)
+# 	export OSGEO4W_BUILDMODE=test
+# 	;;
+# esac
 
 [ -f $P-$V.tar.gz ] || wget http://download.osgeo.org/$P/${P}$MM/source/$P-$V.tar.gz
 [ -f ../$P-$V/configure ] || tar -C .. -xzf $P-$V.tar.gz
@@ -27,7 +27,7 @@ esac
 	touch ../$P-$V/patched
 }
 
-msysarch=msys2-base-x86_64-20200903.tar.xz
+msysarch=msys2-base-x86_64-20210604.tar.xz
 
 [ -f $msysarch ] || wget http://repo.msys2.org/distrib/x86_64/$msysarch
 [ -d msys64 ] || tar xJf $msysarch
@@ -71,8 +71,10 @@ msysarch=msys2-base-x86_64-20200903.tar.xz
 		mingw-w64-x86_64-libwinpthread-git \
 		mingw-w64-x86_64-libpng \
 		mingw-w64-x86_64-pcre \
-		mingw-w64-x86_64-fftw"
-	cmd.exe /c "$cmd" || cmd.exe /c "$cmd"
+		mingw-w64-x86_64-fftw \
+		mingw-w64-x86_64-cairo
+	"
+	cmd.exe /c "$cmd" || cmd.exe /c "$cmd" || cmd.exe /c "$cmd"
 
 	cd ../$P-$V
 
@@ -89,7 +91,7 @@ cat <<EOF >$R/setup.hint
 sdesc: "GRASS GIS"
 ldesc: "Geographic Resources Analysis Support System (GRASS GIS)"
 category: Desktop
-requires: liblas $RUNTIMEDEPENDS avce00 gpsbabel gs python3-gdal python3-matplotlib libtiff python3-wxpython python3-pillow python3-pip python3-ply python3-pyopengl cairo python3-psycopg2-binary python3-six zstd python3-pywin32 freetype
+requires: liblas $RUNTIMEDEPENDS gdal302-runtime avce00 gpsbabel gs python3-gdal python3-matplotlib libtiff python3-wxpython python3-pillow python3-pip python3-ply python3-pyopengl python3-psycopg2-binary python3-six zstd python3-pywin32
 maintainer: $MAINTAINER
 EOF
 
