@@ -2,7 +2,7 @@ diff --git a/python/__init__.py b/python/__init__.py
 index 0eb58512..643ccab2 100644
 --- a/python/__init__.py
 +++ b/python/__init__.py
-@@ -66,6 +66,10 @@ if os.name == 'nt':
+@@ -64,6 +64,10 @@ if os.name == 'nt':
      # any of the QGIS modules or else it will error.
      setupenv()
  
@@ -12,4 +12,21 @@ index 0eb58512..643ccab2 100644
 +                os.add_dll_directory(p)
  
  from qgis.PyQt import QtCore
- 
+
+diff --git a/src/native/win/qgswinnative.cpp b/src/native/win/qgswinnative.cpp
+index 1622bf2b22..13eda842b3 100644
+--- a/src/native/win/qgswinnative.cpp
++++ b/src/native/win/qgswinnative.cpp
+@@ -64,7 +64,11 @@ void QgsWinNative::initializeMainWindow( QWindow *window,
+   mTaskProgress = mTaskButton->progress();
+   mTaskProgress->setVisible( false );
+
+-  WinToastLib::WinToast::instance()->setAppName( applicationName.toStdWString() );
++  QString appName = qgetenv( "QGIS_WIN_APP_NAME" );
++  if ( appName.isEmpty() )
++    appName = applicationName;
++
++  WinToastLib::WinToast::instance()->setAppName( appName.toStdWString() );
+   WinToastLib::WinToast::instance()->setAppUserModelId(
+     WinToastLib::WinToast::configureAUMI( organizationName.toStdWString(),
+                                           applicationName.toStdWString(),

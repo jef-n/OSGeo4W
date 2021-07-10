@@ -91,3 +91,20 @@ index bf913d88..34b9587c 100644
  #endif
  
    private:
+diff --git a/src/native/win/qgswinnative.cpp b/src/native/win/qgswinnative.cpp
+index 1622bf2b22..13eda842b3 100644
+--- a/src/native/win/qgswinnative.cpp
++++ b/src/native/win/qgswinnative.cpp
+@@ -64,7 +64,11 @@ void QgsWinNative::initializeMainWindow( QWindow *window,
+   mTaskProgress = mTaskButton->progress();
+   mTaskProgress->setVisible( false );
+ 
+-  WinToastLib::WinToast::instance()->setAppName( applicationName.toStdWString() );
++  QString appName = qgetenv( "QGIS_WIN_APP_NAME" );
++  if ( appName.isEmpty() )
++    appName = applicationName;
++
++  WinToastLib::WinToast::instance()->setAppName( appName.toStdWString() );
+   WinToastLib::WinToast::instance()->setAppUserModelId(
+     WinToastLib::WinToast::configureAUMI( organizationName.toStdWString(),
+                                           applicationName.toStdWString(),

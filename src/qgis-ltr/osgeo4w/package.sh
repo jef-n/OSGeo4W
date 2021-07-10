@@ -135,6 +135,7 @@ nextbinary
 		-D CMAKE_BUILD_TYPE=$BUILDCONF \
 		-D CMAKE_CONFIGURATION_TYPES="$BUILDCONF" \
 		-D SETUPAPI_LIBRARY="$SETUPAPI_LIBRARY" \
+		-D PROJ_INCLUDE_DIR=$(cygpath -am $O4W_ROOT/include) \
 		-D GEOS_LIBRARY=$(cygpath -am "$O4W_ROOT/lib/geos_c.lib") \
 		-D SQLITE3_LIBRARY=$(cygpath -am "$O4W_ROOT/lib/sqlite3_i.lib") \
 		-D SPATIALITE_LIBRARY=$(cygpath -am "$O4W_ROOT/lib/spatialite_i.lib") \
@@ -144,7 +145,7 @@ nextbinary
 		-D PYTHON_INCLUDE_PATH=$(cygpath -am $PYTHONHOME/include) \
 		-D PYTHON_LIBRARY=$(cygpath -am $PYTHONHOME/libs/$(basename $PYTHONHOME).lib) \
 		-D QT_LIBRARY_DIR=$(cygpath -am $O4W_ROOT/lib) \
-		-D QT_HEADERS_DIR=$(cyppath -am $O4W_ROOT/apps/qt5/include) \
+		-D QT_HEADERS_DIR=$(cygpath -am $O4W_ROOT/apps/qt5/include) \
 		-D CMAKE_INSTALL_PREFIX=$(cygpath -am $INSTDIR/apps/$P) \
 		-D CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS=TRUE \
 		-D FCGI_INCLUDE_DIR=$(cygpath -am $O4W_ROOT%/include) \
@@ -154,6 +155,7 @@ nextbinary
 		-D QWT_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt5/lib/qwt.lib) \
 		-D QSCINTILLA_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt5/lib/qscintilla2.lib) \
 		-D DART_TESTING_TIMEOUT=60 \
+		-D PUSH_TO_CDASH=TRUE \
 		$(cygpath -m $SRCDIR)
 
 	echo CLEAN: $(date)

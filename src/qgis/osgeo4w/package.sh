@@ -138,7 +138,7 @@ nextbinary
 		-D PYTHON_INCLUDE_PATH=$(cygpath -am $PYTHONHOME/include) \
 		-D PYTHON_LIBRARY=$(cygpath -am $PYTHONHOME/libs/$(basename $PYTHONHOME).lib) \
 		-D QT_LIBRARY_DIR=$(cygpath -am $O4W_ROOT/lib) \
-		-D QT_HEADERS_DIR=$(cyppath -am $O4W_ROOT/apps/qt5/include) \
+		-D QT_HEADERS_DIR=$(cygpath -am $O4W_ROOT/apps/qt5/include) \
 		-D CMAKE_INSTALL_PREFIX=$(cygpath -am $INSTDIR/apps/$P) \
 		-D CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS=TRUE \
 		-D FCGI_INCLUDE_DIR=$(cygpath -am $O4W_ROOT/include) \
