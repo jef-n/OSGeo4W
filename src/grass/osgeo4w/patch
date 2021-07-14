@@ -1,6 +1,6 @@
 diff -ur grass-7.8.6RC1/lib/gis/gisinit.c ../grass-7.8.6RC1/lib/gis/gisinit.c
 --- grass-7.8.6RC1/lib/gis/gisinit.c	2021-05-19 23:27:58.000000000 +0200
-+++ ../grass-7.8.6RC1/lib/gis/gisinit.c	2021-07-11 00:57:15.481226500 +0200
++++ ../grass-7.8.6RC1/lib/gis/gisinit.c	2021-07-11 23:09:54.831823400 +0200
 @@ -49,12 +49,14 @@
  
      G_set_program_name(pgm);
@@ -18,7 +18,7 @@ diff -ur grass-7.8.6RC1/lib/gis/gisinit.c ../grass-7.8.6RC1/lib/gis/gisinit.c
      G_location_path();
 diff -ur grass-7.8.6RC1/lib/python/ctypes/loader.py ../grass-7.8.6RC1/lib/python/ctypes/loader.py
 --- grass-7.8.6RC1/lib/python/ctypes/loader.py	2021-05-19 23:27:58.000000000 +0200
-+++ ../grass-7.8.6RC1/lib/python/ctypes/loader.py	2021-07-11 22:32:57.313827800 +0200
++++ ../grass-7.8.6RC1/lib/python/ctypes/loader.py	2021-07-11 23:09:54.835823200 +0200
 @@ -236,6 +236,12 @@
  class WindowsLibraryLoader(LibraryLoader):
      name_formats = ["%s.dll", "lib%s.dll"]
@@ -34,7 +34,7 @@ diff -ur grass-7.8.6RC1/lib/python/ctypes/loader.py ../grass-7.8.6RC1/lib/python
  
 diff -ur grass-7.8.6RC1/mswindows/osgeo4w/config.h.vc ../grass-7.8.6RC1/mswindows/osgeo4w/config.h.vc
 --- grass-7.8.6RC1/mswindows/osgeo4w/config.h.vc	2021-05-19 23:27:58.000000000 +0200
-+++ ../grass-7.8.6RC1/mswindows/osgeo4w/config.h.vc	2021-07-11 00:57:15.482226700 +0200
++++ ../grass-7.8.6RC1/mswindows/osgeo4w/config.h.vc	2021-07-11 23:09:54.840823600 +0200
 @@ -298,4 +298,6 @@
  /* define if langinfo.h exists */
  /* #undef HAVE_LANGINFO_H */
@@ -44,7 +44,7 @@ diff -ur grass-7.8.6RC1/mswindows/osgeo4w/config.h.vc ../grass-7.8.6RC1/mswindow
  #endif /* _config_h */
 diff -ur grass-7.8.6RC1/mswindows/osgeo4w/env.bat.tmpl ../grass-7.8.6RC1/mswindows/osgeo4w/env.bat.tmpl
 --- grass-7.8.6RC1/mswindows/osgeo4w/env.bat.tmpl	2021-05-19 23:27:58.000000000 +0200
-+++ ../grass-7.8.6RC1/mswindows/osgeo4w/env.bat.tmpl	2021-07-11 22:31:11.868198500 +0200
++++ ../grass-7.8.6RC1/mswindows/osgeo4w/env.bat.tmpl	2021-07-11 23:09:54.848823300 +0200
 @@ -2,8 +2,6 @@
  REM Environmental variables for GRASS OSGeo4W installer
  REM
@@ -68,7 +68,7 @@ diff -ur grass-7.8.6RC1/mswindows/osgeo4w/env.bat.tmpl ../grass-7.8.6RC1/mswindo
 -IF EXIST "%USERPROFILE%\Documents\R\" set R_USER=%USERPROFILE%\Documents\
 diff -ur grass-7.8.6RC1/mswindows/osgeo4w/mklibs.sh ../grass-7.8.6RC1/mswindows/osgeo4w/mklibs.sh
 --- grass-7.8.6RC1/mswindows/osgeo4w/mklibs.sh	2021-05-19 23:27:58.000000000 +0200
-+++ ../grass-7.8.6RC1/mswindows/osgeo4w/mklibs.sh	2021-07-11 00:57:15.485226700 +0200
++++ ../grass-7.8.6RC1/mswindows/osgeo4w/mklibs.sh	2021-07-11 23:09:54.853823700 +0200
 @@ -1,31 +1,14 @@
  #!/bin/sh
  
@@ -116,7 +116,7 @@ diff -ur grass-7.8.6RC1/mswindows/osgeo4w/mklibs.sh ../grass-7.8.6RC1/mswindows/
 +
 diff -ur grass-7.8.6RC1/mswindows/osgeo4w/package.sh ../grass-7.8.6RC1/mswindows/osgeo4w/package.sh
 --- grass-7.8.6RC1/mswindows/osgeo4w/package.sh	2021-05-19 23:27:58.000000000 +0200
-+++ ../grass-7.8.6RC1/mswindows/osgeo4w/package.sh	2021-07-11 22:26:11.538459900 +0200
++++ ../grass-7.8.6RC1/mswindows/osgeo4w/package.sh	2021-07-14 08:50:04.453753400 +0200
 @@ -1,7 +1,5 @@
  #!/usr/bin/bash
  
@@ -173,7 +173,7 @@ diff -ur grass-7.8.6RC1/mswindows/osgeo4w/package.sh ../grass-7.8.6RC1/mswindows
  
  T0=$(date +%s)
  LT=$T0
-@@ -125,42 +106,29 @@
+@@ -125,42 +106,30 @@
  
  exec 3>&1 > >(tee mswindows/osgeo4w/package.log) 2>&1
  
@@ -235,11 +235,12 @@ diff -ur grass-7.8.6RC1/mswindows/osgeo4w/package.sh ../grass-7.8.6RC1/mswindows
 +	/mingw64/bin/libpcre-1.dll
 +	/mingw64/bin/libstdc++-6.dll
 +	/mingw64/bin/libgcc_s_seh-1.dll
++	/mingw64/bin/libfftw3-3.dll
 +"
  
  if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
  	if [ -e include/Make/Platform.make ] ; then
-@@ -171,18 +139,17 @@
+@@ -171,18 +140,17 @@
  	log remove old logs
  	rm -f mswindows/osgeo4w/package.log.*
  
@@ -262,7 +263,7 @@ diff -ur grass-7.8.6RC1/mswindows/osgeo4w/package.sh ../grass-7.8.6RC1/mswindows
  		--with-includes=$OSGEO4W_ROOT_MSYS/include \
                  --libexecdir=$OSGEO4W_ROOT_MSYS/bin \
                  --prefix=$OSGEO4W_ROOT_MSYS/apps/grass \
-@@ -194,10 +161,10 @@
+@@ -194,10 +162,10 @@
  		--enable-largefile \
  		--with-fftw \
  		--with-freetype \
@@ -275,7 +276,7 @@ diff -ur grass-7.8.6RC1/mswindows/osgeo4w/package.sh ../grass-7.8.6RC1/mswindows
  		--with-postgres \
  		--with-postgres-includes=$OSGEO4W_ROOT_MSYS/include \
  		--with-postgres-libs=$PWD/mswindows/osgeo4w/lib \
-@@ -211,10 +178,11 @@
+@@ -211,10 +179,11 @@
  		--with-zstd \
  		--with-odbc \
  	        --with-cairo \
@@ -290,7 +291,7 @@ diff -ur grass-7.8.6RC1/mswindows/osgeo4w/package.sh ../grass-7.8.6RC1/mswindows
  
  	touch mswindows/osgeo4w/configure-stamp
  fi
-@@ -248,8 +216,7 @@
+@@ -248,8 +217,7 @@
  
  if [ -n "$PACKAGE_PATCH" ]; then
      log building vc libraries
@@ -300,7 +301,7 @@ diff -ur grass-7.8.6RC1/mswindows/osgeo4w/package.sh ../grass-7.8.6RC1/mswindows
      mv mswindows/osgeo4w/vc/grass*.lib $OSGEO4W_ROOT_MSYS/apps/grass/grass$POSTFIX/lib
  
      log creating package
-@@ -267,8 +234,7 @@
+@@ -267,8 +235,7 @@
  
      # copy dependencies (TODO: to be reduced)
      cp -uv $DLLS apps/grass/grass$POSTFIX/bin
@@ -310,7 +311,7 @@ diff -ur grass-7.8.6RC1/mswindows/osgeo4w/package.sh ../grass-7.8.6RC1/mswindows
  
      # creating grass package
      /bin/tar -cjf $PDIR/grass$PACKAGE_POSTFIX-$VERSION-$PACKAGE_PATCH.tar.bz2 \
-@@ -277,7 +243,6 @@
+@@ -277,7 +244,6 @@
  	bin/python-${GRASS_EXECUTABLE}.bat \
  	etc/postinstall/grass${PACKAGE_POSTFIX}.bat \
  	etc/preremove/grass${PACKAGE_POSTFIX}.bat
@@ -320,7 +321,7 @@ diff -ur grass-7.8.6RC1/mswindows/osgeo4w/package.sh ../grass-7.8.6RC1/mswindows
  log
 diff -ur grass-7.8.6RC1/mswindows/osgeo4w/postinstall.bat ../grass-7.8.6RC1/mswindows/osgeo4w/postinstall.bat
 --- grass-7.8.6RC1/mswindows/osgeo4w/postinstall.bat	2021-05-19 23:27:58.000000000 +0200
-+++ ../grass-7.8.6RC1/mswindows/osgeo4w/postinstall.bat	2021-07-11 00:57:15.487226500 +0200
++++ ../grass-7.8.6RC1/mswindows/osgeo4w/postinstall.bat	2021-07-11 23:09:54.866823800 +0200
 @@ -1,10 +1,12 @@
  set ICON=%OSGEO4W_ROOT%\apps\grass\grass@POSTFIX@\gui\icons\grass_osgeo.ico
  set BATCH=%OSGEO4W_ROOT%\bin\@GRASS_EXECUTABLE@.bat
