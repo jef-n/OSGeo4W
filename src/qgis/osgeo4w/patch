@@ -13,28 +13,6 @@ index bee060f91a..38154e1f0e 100644
  
  if os.name == 'nt':
      # On Windows we need to setup the paths before we can import
-diff --git a/src/python/qgspythonutilsimpl.cpp b/src/python/qgspythonutilsimpl.cpp
-index 18b7b46855..6d4a144d7a 100644
---- a/src/python/qgspythonutilsimpl.cpp
-+++ b/src/python/qgspythonutilsimpl.cpp
-@@ -163,6 +163,17 @@ bool QgsPythonUtilsImpl::checkSystemImports()
- void QgsPythonUtilsImpl::init()
- {
-   // initialize python
-+  PyStatus status;
-+  PyPreConfig preconfig;
-+  PyPreConfig_InitPythonConfig(&preconfig);
-+
-+  preconfig.utf8_mode = 1;
-+
-+  status = Py_PreInitialize(&preconfig);
-+  if (PyStatus_Exception(status)) {
-+      Py_ExitStatusException(status);
-+  }
-+
-   Py_Initialize();
- 
-   mPythonEnabled = true;
 diff --git a/src/native/win/qgswinnative.cpp b/src/native/win/qgswinnative.cpp
 index 1622bf2b22..13eda842b3 100644
 --- a/src/native/win/qgswinnative.cpp

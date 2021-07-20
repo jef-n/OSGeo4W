@@ -78,28 +78,6 @@ index 512e936a..3e68fc4c 100644
    # automatically generated file produces warnings (unused-parameter, unused-variable, misleading-indentation)
    set_source_files_properties(${VECTOR_TILE_PROTO_SRCS} PROPERTIES COMPILE_FLAGS -w)
  endif()
-diff --git a/src/python/qgspythonutilsimpl.cpp b/src/python/qgspythonutilsimpl.cpp
-index 2b84dba9..d5c8f961 100644
---- a/src/python/qgspythonutilsimpl.cpp
-+++ b/src/python/qgspythonutilsimpl.cpp
-@@ -155,6 +155,17 @@ bool QgsPythonUtilsImpl::checkSystemImports()
- void QgsPythonUtilsImpl::init()
- {
-   // initialize python
-+  PyStatus status;
-+  PyPreConfig preconfig;
-+  PyPreConfig_InitPythonConfig(&preconfig);
-+
-+  preconfig.utf8_mode = 1;
-+
-+  status = Py_PreInitialize(&preconfig);
-+  if (PyStatus_Exception(status)) {
-+      Py_ExitStatusException(status);
-+  }
-+
-   Py_Initialize();
-   // initialize threading AND acquire GIL
-   PyEval_InitThreads();
 diff --git a/src/native/win/qgswinnative.cpp b/src/native/win/qgswinnative.cpp
 index 1622bf2b22..13eda842b3 100644
 --- a/src/native/win/qgswinnative.cpp
