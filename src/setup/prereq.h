@@ -35,18 +35,18 @@ public:
   // checks all dependecies, populates 'unmet'
   // returns true if unsatisfied dependencies exist
   bool isMet ();
-  
+
   // formats 'unmet' as a string for display
   void getUnmetString (std::string &s);
-  
+
   // selects/picks the needed packages that were missing
   void selectMissing ();
-  
+
   // notes the current trust (for use in selectMissing)
   void setTrust (trusts t) { theTrust = t; };
 
 private:
-  
+
   // this is the actual hash_map that does all the work
   static map <packagemeta *, vector <packagemeta *>, packagemeta_ltcomp> unmet;
   static trusts theTrust;

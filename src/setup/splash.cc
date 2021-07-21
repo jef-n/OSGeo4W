@@ -77,7 +77,7 @@ SplashPage::OnNext()
   if (IsDlgButtonChecked (h, IDC_EXPRESS) == BST_CHECKED)
     {
       // add new global for control EXPRESS INSTALL mode
-      // int express_mode_option (state.cc) 
+      // int express_mode_option (state.cc)
       splash_mode = IDC_EXPRESS;
       unattended_mode = unattended;
     }
@@ -100,7 +100,7 @@ SplashPage::OnInit ()
   ver += is_64bit ? " (64 bit)" : " (32 bit)";
   SetDlgItemFont(IDC_VERSION, "Arial", 10, FW_BOLD);
   ::SetWindowText (GetDlgItem (IDC_VERSION), ver.c_str());
-  makeClickable (IDC_SPLASH_URL, "http://osgeo4w.osgeo.org");
+  makeClickable (IDC_SPLASH_URL, "https://osgeo4w.osgeo.org");
 
   test_mode = TestOption;
   safe_mode = SafeModeOption;

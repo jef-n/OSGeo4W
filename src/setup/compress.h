@@ -23,13 +23,13 @@ class compress:public io_stream
 public:
   /* Get a decompressed stream from a normal stream. If this function returns non-null
    * a valid compress header was found. The io_stream pointer passed to decompress
-   * should be discarded. The old io_stream will be automatically closed when the 
+   * should be discarded. The old io_stream will be automatically closed when the
    * decompression stream is closed
    */
   static io_stream *decompress (io_stream *);
-  /* 
+  /*
    * To create a stream that will be compressed, you should open the url, and then get a new stream
-   * from compress::compress. 
+   * from compress::compress.
    */
   /* read data (duh!) */
   virtual ssize_t read (void *buffer, size_t len) = 0;

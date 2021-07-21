@@ -21,13 +21,18 @@
 
 GetOption *GetOption::Instance = 0;
 
-GetOption *GetOption::GetInstance ()
+GetOption &GetOption::GetInstance ()
 {
   if ( !Instance )
     {
       Instance = new GetOption();
       Instance->Init ();
     }
+  return *Instance;
+}
 
-  return Instance;
+void
+GetOption::Init ()
+{
+  OptionSet::Init();
 }

@@ -23,7 +23,7 @@ typedef SSIZE_T ssize_t;
 
 /* this is the parent class for all IO operations. It's flexable enough to be cover for
  * HTTP access, local file access, and files being extracted from archives.
- * It also encapsulates the idea of an archive, and all non-archives become the special 
+ * It also encapsulates the idea of an archive, and all non-archives become the special
  * case.
  */
 
@@ -90,7 +90,7 @@ public:
    * from archive::decompress. This behaviour is by design - to allow deliberate access
    * to the compressed data.
    * To create a stream that will be compressed, you should open the url, and then get a new stream
-   * from archive::compress. 
+   * from archive::compress.
    * If a stream is opened for reading, and it's an archive, the next_file_name method
    * will return non-NULL. To access the files within the archive use io_stream::factory
    * to create a new stream that will read from the archive.
@@ -98,7 +98,7 @@ public:
   static io_stream *open (const std::string&, const std::string&);
   static int remove (const std::string& );
   static int exists (const std::string& );
-  /* moves physical stream source to dest. A copy will be attempted if a 
+  /* moves physical stream source to dest. A copy will be attempted if a
    * pointer flip fails.
    */
   static int move (const std::string& , const std::string& );
@@ -159,7 +159,7 @@ public:
   io_stream& operator << (io_stream&);
   virtual void operator << (std::string) {}
   virtual void operator << (const char *) {}
-  
+
 protected:
   void operator= (const io_stream &);
   io_stream() {};

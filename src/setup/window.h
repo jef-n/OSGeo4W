@@ -53,7 +53,7 @@ private:
 
   // if we have activated tool tips this will contain the handle
   HWND TooltipHandle;
-  
+
   // maps a control ID to a string resource ID
   std::map<int, int> TooltipStrings;
 
@@ -79,7 +79,7 @@ public:
   virtual bool Create (Window * Parent = NULL,
 		       DWORD Style =
 		       WS_OVERLAPPEDWINDOW | WS_VISIBLE | WS_CLIPCHILDREN);
-  
+
   static void SetAppInstance (HINSTANCE h)
   {
     // This only has to be called once in the entire app, before

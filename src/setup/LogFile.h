@@ -43,7 +43,7 @@ public:
   virtual ~LogFile();
   // get a specific verbosity stream.
   virtual std::ostream &operator() (enum log_level level);
-  
+
 protected:
   LogFile(std::stringbuf *aStream);
   LogFile (LogFile const &); // no copy constructor

@@ -16,11 +16,6 @@
 /* The purpose of this file is to put all general purpose file manipulation
    code in one place. */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: filemanip.cc,v 2.36 2012/08/30 22:32:14 yselkowitz Exp $\n";
-#endif
-
 #include <string.h>
 #include <wchar.h>
 #include <stdlib.h>
@@ -50,7 +45,7 @@ get_file_size (const std::string& name)
   return rv;
 }
 
-std::string 
+std::string
 base (const std::string& aString)
 {
   if (!aString.size())
@@ -175,10 +170,10 @@ std::string
 backslash(const std::string& s)
 {
   std::string rv(s);
-  
+
   for (std::string::iterator it = rv.begin(); it != rv.end(); ++it)
     if (*it == '/')
       *it = '\\';
-    
+
   return rv;
 }

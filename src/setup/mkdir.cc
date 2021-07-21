@@ -15,11 +15,6 @@
 
 /* see mkdir.h */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: mkdir.cc,v 2.6 2003/01/15 22:29:16 maxb Exp $\n";
-#endif
-
 #include "win32.h"
 #include <sys/stat.h>
 #include <stdio.h>
@@ -82,7 +77,7 @@ mkdir_p (int isadir, const char *path)
       *slash = saved_char;
       return 1;
     }
-  
+
   *slash = saved_char;
 
   if (!isadir)

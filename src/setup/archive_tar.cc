@@ -99,10 +99,10 @@ int
 archive_tar::seek (long where, io_stream_seek_t whence)
 {
   /* seeking in the parent archive doesn't make sense. although we could
-     map to files ? 
-     Also, seeking might make sense for rewing..?? 
+     map to files ?
+     Also, seeking might make sense for rewing..??
      */
-  return -1; 
+  return -1;
 }
 
 int
@@ -175,7 +175,7 @@ archive_tar::next_file_name ()
 		   MAX_PATH);
 	  err++;
 	  state.parent->read (&state.tar_header, sizeof state.tar_header);
-	  sscanf (state.tar_header.size, "%Io", &state.file_length);
+	  sscanf (state.tar_header.size, "%zo", &state.file_length);
 	  state.file_offset = 0;
 	  skip_file ();
 	  return next_file_name ();

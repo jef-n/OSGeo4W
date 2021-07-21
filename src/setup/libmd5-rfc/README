@@ -8,7 +8,7 @@ The libmd5-rfc package consists of the three files:
 
 This README is specific to Cygwin setup.
 
-The md5main.c file is not used, but is present so that this directory 
+The md5main.c file is not used, but is present so that this directory
 corresponds exactly (with the exception of this README) to the upstream
 distribution tarball.
 

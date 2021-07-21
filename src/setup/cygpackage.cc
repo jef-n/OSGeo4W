@@ -13,13 +13,8 @@
  *
  */
 
-/* this is the parent class for all package operations. 
+/* this is the parent class for all package operations.
  */
-
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: cygpackage.cc,v 2.22 2013/07/12 20:23:07 cgf Exp $\n";
-#endif
 
 #include "cygpackage.h"
 #include <stdio.h>
@@ -50,7 +45,7 @@ cygpackage::cygpackage ()
 {
   memset( getfilenamebuffer, '\0', MAX_PATH);
 
-  /* FIXME: query the install database for the currently installed 
+  /* FIXME: query the install database for the currently installed
    * version details
    */
 }

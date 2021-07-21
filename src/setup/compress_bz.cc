@@ -169,7 +169,7 @@ ssize_t compress_bz::peek (void *buffer, size_t len)
       else
 	/* error */
 	return got;
-      
+
       /* we may have read less than requested. */
       memcpy (buffer, peekbuf, peeklen);
       return peeklen;

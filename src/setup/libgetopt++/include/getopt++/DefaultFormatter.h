@@ -45,16 +45,23 @@ class DefaultFormatter {
         theStream(aStream)
     {}
     void operator () (Option *anOption) {
-      theStream << s_lead << anOption->shortOption ()[0]
-		<< l_lead << anOption->longOption ()
+      if (anOption->shortOption ()[0] == '\0')
+        theStream << "   ";
+      else
+        theStream << s_lead << anOption->shortOption ()[0];
+
+      std::string longOption = anOption->longOptionPrefixes ()[0] +
+        anOption->longOption ();
+
+      theStream << l_lead << longOption
 		<< std::string (o_len
 				- s_lead.size () - 1 - l_lead.size ()
-				- anOption->longOption ().size (), ' ');
+				- longOption.size (), ' ');
       std::string helpmsg = anOption->shortHelp();
       while (helpmsg.size() > h_len)
 	{
 	  // TODO: consider using a line breaking strategy here.
-	  size_t pos = helpmsg.substr(0,h_len).find_last_of(" ");
+	  int pos = helpmsg.substr(0,h_len).find_last_of(" ");
 	  theStream << helpmsg.substr(0,pos)
 		    << std::endl << std::string (o_len, ' ');
 	  helpmsg.erase (0,pos+1);

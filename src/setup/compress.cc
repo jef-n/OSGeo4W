@@ -24,7 +24,7 @@
  * One such task is identifying compresss
  *
  * to federate into each class one might add a magic parameter to the constructor, which
- * the class could test itself. 
+ * the class could test itself.
  */
 
 #define longest_magic 3

@@ -110,7 +110,7 @@ static void
 load_dialog (HWND h)
 {
   eset (h, IDC_MENUNAME_TEXT, menu_name);	// FIXME: order is important here - setting IDC_LOCAL_DIR triggers save_dialog
-  eset (h, IDC_LOCAL_DIR_DESC, 
+  eset (h, IDC_LOCAL_DIR_DESC,
 	  Window::loadRString( source != IDC_SOURCE_CWD ? IDS_LOCAL_DIR_DOWNLOAD : IDS_LOCAL_DIR_INSTALL ).c_str() );
   eset (h, IDC_LOCAL_DIR, local_dir);
   check_if_enable_next (h);
@@ -254,7 +254,7 @@ LocalDirPage::OnNext ()
     local_dir.erase (local_dir.size() - 1, 1);
   log (LOG_PLAIN) << "Selected local directory: " << local_dir << endLog;
   log (LOG_PLAIN) << "Menu name: " << menu_name << endLog;
-  
+
   bool trySetCurDir = true;
   while (trySetCurDir)
     {
@@ -295,7 +295,7 @@ LocalDirPage::OnNext ()
 	  DWORD err = GetLastError ();
 	  char* buf;
 	  std::string msg;
-	  if (FormatMessage (FORMAT_MESSAGE_FROM_SYSTEM | 
+	  if (FormatMessage (FORMAT_MESSAGE_FROM_SYSTEM |
 	    FORMAT_MESSAGE_ALLOCATE_BUFFER, 0, err, LANG_NEUTRAL,
 	    (LPSTR)&buf, 0, 0) != 0)
 	    {
@@ -309,7 +309,7 @@ LocalDirPage::OnNext ()
 			     loadRString( IDS_UNKNOWN_ERR ).c_str(), err );
 	  log (LOG_PLAIN) << msg << endLog;
 	  int ret = MessageBox (h, msg.c_str(), 0, MB_ICONEXCLAMATION | MB_ABORTRETRYIGNORE);
-	  
+
 	  if ((ret == IDABORT) || (ret == IDCANCEL))
 	    return -1;
 	  else

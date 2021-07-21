@@ -16,11 +16,6 @@
 /* Archive IO operations
  */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: archive.cc,v 2.20 2013/07/02 04:59:48 cgf Exp $\n";
-#endif
-
 #include "LogSingleton.h"
 
 #include "io_stream.h"
@@ -34,7 +29,7 @@ static const char *cvsid =
  * One such task is identifying archives
  *
  * to federate into each class one might add a magic parameter to the constructor, which
- * the class could test itself. 
+ * the class could test itself.
  */
 
 /* GNU TAR:
@@ -91,7 +86,7 @@ archive::extract_file (archive * source, const std::string& prefixURL,
 	    if (!in)
 	      {
 		log (LOG_TIMESTAMP) << "Failed to extract the file "
-				    << destfilename << " from the archive" 
+				    << destfilename << " from the archive"
 				    << endLog;
 		res = extract_inuse;
 		goto out;
@@ -125,7 +120,7 @@ archive::extract_file (archive * source, const std::string& prefixURL,
 	case ARCHIVE_FILE_SYMLINK:
 	  if (io_stream::mkpath_p (PATH_TO_FILE, destfilename))
 	    {
-	      log (LOG_TIMESTAMP) << "Failed to make the path for %s" 
+	      log (LOG_TIMESTAMP) << "Failed to make the path for %s"
 				  << destfilename << endLog;
 	      res = extract_other;
 	    }

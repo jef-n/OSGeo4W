@@ -18,11 +18,6 @@
    that unlike other do_* functions, this one is called directly from
    install.cc */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: desktop.cc,v 2.48 2007/05/04 21:56:53 igor Exp $\n";
-#endif
-
 #include "win32.h"
 #include <shlobj.h>
 #include "desktop.h"
@@ -122,7 +117,7 @@ get_desktop(std::string &target)
       msg ("Program directory for program link changed to: %s\n", path);
     }
   // end of Win95 addition
-  
+
   target = std::string(path) + "/" + menu_name;
 }
 
@@ -202,7 +197,7 @@ load_dialog (HWND h)
       // Don't need the checkboxes
       if (header_string == NULL)
         header_string = eget (h, IDC_STATIC_HEADER_TITLE, header_string);
-      if (message_string == NULL) 
+      if (message_string == NULL)
         message_string = eget (h, IDC_STATIC_HEADER, message_string);
       eset (h, IDC_STATIC_HEADER_TITLE, "Installation complete");
       eset (h, IDC_STATIC_HEADER, "Shows installation status in download-only mode.");
@@ -288,13 +283,13 @@ DesktopSetupPage::OnInit ()
 void
 DesktopSetupPage::OnActivate ()
 {
-  if (NoShortcutsOption || source == IDC_SOURCE_DOWNLOAD) 
+  if (NoShortcutsOption || source == IDC_SOURCE_DOWNLOAD)
     {
       root_desktop = root_menu = 0;
     }
   else
     {
-      if (NoStartMenuOption) 
+      if (NoStartMenuOption)
 	{
 	  root_menu = 0;
 	}
@@ -303,7 +298,7 @@ DesktopSetupPage::OnActivate ()
 	  root_menu = check_startmenu (OSGEO4W_SHELL, backslash (cygpath ("/OSGeo4W.bat")));
 	}
 
-      if (NoDesktopOption) 
+      if (NoDesktopOption)
 	{
 	  root_desktop = 0;
 	}
@@ -331,7 +326,7 @@ DesktopSetupPage::OnFinish ()
   return true;
 }
 
-long 
+long
 DesktopSetupPage::OnUnattended ()
 {
   Window::PostMessageNow (WM_APP_UNATTENDED_FINISH);

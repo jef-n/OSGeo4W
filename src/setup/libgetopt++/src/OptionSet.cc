@@ -21,14 +21,11 @@
 #include "getopt++/Option.h"
 #include "getopt++/DefaultFormatter.h"
 
-#include "win32.h"
 #include <iostream>
 #include <algorithm>
 
-using namespace std;
-
 bool
-OptionSet::isOption(string::size_type pos) const
+OptionSet::isOption(std::string::size_type pos) const
 {
     return pos == 1 || pos == 2;
 }
@@ -36,42 +33,52 @@ OptionSet::isOption(string::size_type pos) const
 void
 OptionSet::processOne()
 {
-    string &option (argv[0]);
-    string::size_type pos = option.find_first_not_of("-");
+    std::string &option (argv[0]);
+    std::string::size_type pos = option.find_first_not_of("-");
 
     if (!isOption(pos)) {
         /* Push the non option into storage */
-	if (nonOptionHandler) {
-	    lastResult = nonOptionHandler->Process(option.c_str());
-	} else {
-	    nonoptions.push_back(option);
-	    lastResult = Option::Ok;
-	}
+      if (nonOptionHandler) {
+        lastResult = nonOptionHandler->Process(option.c_str(), 0);
+      } else {
+        nonoptions.push_back(option);
+        lastResult = Option::Ok;
+      }
     } else {
-	doOption(option, pos);
+      doOption(option, pos);
     }
 }
 
-Option *
-OptionSet::findOption(string &option, string::size_type const &pos) const
+void
+OptionSet::findOption(std::string &option, std::string::size_type const &pos,
+                      Option *&theOption, int & prefixIndex) const
 {
-    Option *theOption = NULL;
+    theOption = NULL;
+    prefixIndex = 0;
 
-    for (std::vector<Option *>::const_iterator i = options.begin(); i != options.end(); 
+    for (std::vector<Option *>::const_iterator i = options.begin(); i != options.end();
             ++i) {
         if (pos == 1) {
             if (option[0] == (*i)->shortOption()[0]) {
                 theOption = (*i);
+                return;
             }
         } else {
-            /* pos == 2 : todo - prefix matches */
-
-            if (option.find((*i)->longOption()) == 0) {
+          /* pos == 2 */
+          std::vector<std::string> prefixes = (*i)->longOptionPrefixes();
+          for (std::vector<std::string>::const_iterator j = prefixes.begin();
+               j != prefixes.end();
+               j++)
+            {
+              std::string prefixedOption = *j + (*i)->longOption();
+              if (option.find(prefixedOption) == 0) {
                 theOption = (*i);
+                prefixIndex = j - prefixes.begin();
+                return;
+              }
             }
         }
     }
-    return theOption;
 }
 
 bool
@@ -79,16 +86,16 @@ OptionSet::doNoArgumentOption(std::string &option, std::string::size_type const 
 {
     if (pos == 1 && option.size() > 1) {
 	/* Parameter when none allowed */
-	
+
 	if (option.find("=") == 1)
 	    /* How best to provide failure state ? */
 	    return false;
-	
+
 	argv.insert(argv.begin() + 1,"-" + option.substr(1));
     }
-    
+
     if (pos == 2) {
-	if (option.find("=") != string::npos)
+	if (option.find("=") != std::string::npos)
 	    /* How best to provide failure state ? */
 	    return false;
     }
@@ -97,13 +104,15 @@ OptionSet::doNoArgumentOption(std::string &option, std::string::size_type const 
 
 /* TODO: factor this better */
 void
-OptionSet::doOption(string &option, string::size_type const &pos)
+OptionSet::doOption(std::string &option, std::string::size_type const &pos)
 {
     lastResult = Option::Failed;
     option.erase(0, pos);
-    Option *theOption = findOption(option, pos);
+    Option *theOption = NULL;
+    int prefixIndex = 0;
+    findOption(option, pos, theOption, prefixIndex);
     char const *optionValue = NULL;
-    string value;
+    std::string value;
 
     if (theOption == NULL)
 	return;
@@ -111,9 +120,9 @@ OptionSet::doOption(string &option, string::size_type const &pos)
     switch (theOption->argument()) {
 
     case Option::None:
-        if (!doNoArgumentOption (option, pos))
-	    return;
-	break;
+      if (!doNoArgumentOption (option, pos))
+        return;
+      break;
 
     case Option::Optional: {
             if (pos == 1) {
@@ -121,12 +130,13 @@ OptionSet::doOption(string &option, string::size_type const &pos)
                     /* Value in next argv */
 
                     if (argv.size() > 1) {
-                        string::size_type maybepos = argv[1].find_first_not_of("-");
+                        std::string::size_type maybepos = argv[1].find_first_not_of("-");
 
-                        if (!isOption(maybepos))
+                        if (!isOption(maybepos)) {
                             /* not an option */
                             value = argv[1];
 			    argv.erase(argv.begin() + 1);
+                        }
                     }
                 } else {
                     /* value if present is in this argv */
@@ -141,9 +151,9 @@ OptionSet::doOption(string &option, string::size_type const &pos)
             }
 
             if (pos == 2) {
-                string::size_type vpos = option.find("=");
+                std::string::size_type vpos = option.find("=");
 
-                if (vpos != string::npos) {
+                if (vpos != std::string::npos) {
                     /* How best to provide failure state ? */
 
                     if (vpos == option.size() - 1)
@@ -155,11 +165,12 @@ OptionSet::doOption(string &option, string::size_type const &pos)
                     /* Value in next argv */
 
                     if (argv.size() > 1) {
-                        string::size_type maybepos = argv[1].find_first_not_of("-");
+                        std::string::size_type maybepos = argv[1].find_first_not_of("-");
 
-                        if (!isOption(maybepos))
+                        if (!isOption(maybepos)) {
                             value = argv[1];
 			    argv.erase(argv.begin() + 1);
+                        }
                     }
                 }
             }
@@ -180,13 +191,13 @@ OptionSet::doOption(string &option, string::size_type const &pos)
                         /* but there aren't any */
 			return;
 
-                    string::size_type maybepos = argv[1].find_first_not_of("-");
+                    std::string::size_type maybepos = argv[1].find_first_not_of("-");
 
                     if (isOption(maybepos))
                         /* The next argv is an option */
 			return;
 
-                    value = argv[1]; 
+                    value = argv[1];
 		    argv.erase(argv.begin() + 1);
                 } else {
                     if (option.find ("=") != 1 || option.size() < 3)
@@ -200,9 +211,9 @@ OptionSet::doOption(string &option, string::size_type const &pos)
             }
 
             if (pos == 2) {
-                string::size_type vpos = option.find("=");
+                std::string::size_type vpos = option.find("=");
 
-                if (vpos != string::npos) {
+                if (vpos != std::string::npos) {
                     /* How best to provide failure state ? */
 
                     if (vpos == option.size() - 1)
@@ -216,7 +227,7 @@ OptionSet::doOption(string &option, string::size_type const &pos)
                         /* but there aren't any */
 			return;
 
-                    string::size_type maybepos = argv[1].find_first_not_of("-");
+                    std::string::size_type maybepos = argv[1].find_first_not_of("-");
 
                     if (isOption(maybepos))
                         /* The next argv is an option */
@@ -225,13 +236,14 @@ OptionSet::doOption(string &option, string::size_type const &pos)
                     value = argv[1];
 		    argv.erase(argv.begin() + 1);
                 }
-            } 
-	    
+            }
+
 	    optionValue = value.c_str();
         }
 	break;
-    } 
-    lastResult = theOption->Process(optionValue);
+    }
+    theOption->setPresent(true);
+    lastResult = theOption->Process(optionValue, prefixIndex);
 }
 
 OptionSet::OptionSet () {}
@@ -243,9 +255,9 @@ void
 OptionSet::Init()
 {
     options       = std::vector<Option *> ();
-    argv          = std::vector<string> ();
-    nonoptions    = std::vector<string> ();
-    remainingargv = std::vector<string> ();
+    argv          = std::vector<std::string> ();
+    nonoptions    = std::vector<std::string> ();
+    remainingargv = std::vector<std::string> ();
     nonOptionHandler = NULL;
 }
 
@@ -269,8 +281,8 @@ OptionSet::process (Option *aNonOptionHandler)
 
         case Option::Stop:
 	    if (argv.size() > 1) {
-		// dies: copy(argv.begin() + 1, argv.end(), remainingargv.begin()); 
-		for (std::vector<string>::iterator i = argv.begin() + 1; i != argv.end(); ++i)
+		// dies: copy(argv.begin() + 1, argv.end(), remainingargv.begin());
+		for (std::vector<std::string>::iterator i = argv.begin() + 1; i != argv.end(); ++i)
 		    remainingargv.push_back(*i);
 	    }
             return true;
@@ -292,7 +304,7 @@ OptionSet::Process (int argc, char **argV, Option *nonOptionHandler)
     remainingargv.clear();
 
     for (int counter = 1; counter < argc; ++counter)
-        argv.push_back(string(argV[counter]));
+        argv.push_back(std::string(argV[counter]));
 
     return process(nonOptionHandler);
 }
@@ -308,27 +320,22 @@ OptionSet::Process (std::vector<std::string> const &parms, Option *nonOptionHand
     return process(nonOptionHandler);
 }
 
-//FIXME: check for conflicts.
 void
 OptionSet::Register (Option * anOption)
 {
-    for (std::vector<Option *>::const_iterator i = options.begin(); i != options.end(); ++i) {
-      if( ( ( anOption->shortOption()[0]!=' ' && anOption->shortOption()[0] == (*i)->shortOption()[0] ) || anOption->longOption() == (*i)->longOption() ) && anOption->shortHelp() != (*i)->shortHelp() ) {
-        std::string error;
-        error = "duplicate option:";
-        error += "\nnew short:" + anOption->shortOption() + " long:" + anOption->longOption() + " help:" + anOption->shortHelp();
-        error += "\nexisting short:" + (*i)->shortOption() + " long:" + (*i)->longOption() + " help:" + (*i)->shortHelp();
-        MessageBox (NULL, error.c_str(), "Duplicate Option", MB_ICONERROR);
-        exit(1);
-      }
-    }
-
     options.push_back(anOption);
 }
 
-void
-OptionSet::ParameterUsage (ostream &aStream)
+static bool
+comp_long_option(const Option *a, const Option *b)
 {
+  return (a->longOption().compare(b->longOption()) < 0);
+}
+
+void
+OptionSet::ParameterUsage (std::ostream &aStream)
+{
+    std::sort(options.begin(), options.end(), comp_long_option);
     for_each (options.begin(), options.end(), DefaultFormatter (aStream));
 }
 
@@ -338,13 +345,13 @@ OptionSet::optionsInSet() const
     return options;
 }
 
-std::vector<string> const &
+std::vector<std::string> const &
 OptionSet::nonOptions() const
 {
     return nonoptions;
 }
 
-std::vector<string> const &
+std::vector<std::string> const &
 OptionSet::remainingArgv() const
 {
     return remainingargv;

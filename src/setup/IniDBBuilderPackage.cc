@@ -65,12 +65,10 @@ IniDBBuilderPackage::buildVersion (const std::string& aVersion)
     {
       if (version_compare(setup_version, version) < 0)
         {
-          std::string old_vers = Window::sprintf(
-            "The current ini file is from a newer version of setup-%s.exe. "
+          std::string old_vers =
+            "The current ini file is from a newer version of setup.exe. "
             "If you have any trouble installing, please download a fresh "
-            "version from http://download.osgeo.org/osgeo4w/osgeo4w-setup-%s.exe",
-            is_64bit ? "x86_64" : "x86",
-            is_64bit ? "x86_64" : "x86");
+            "version from https://download.osgeo.org/osgeo4w/osgeo4w-setup.exe";
           _feedback.warning(old_vers.c_str());
         }
     }

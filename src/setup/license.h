@@ -19,7 +19,7 @@ class LicensePage : public PropertyPage
 public:
   HWND ins_pkgname;
   HWND ins_licensetxt;
-  
+
   LicensePage ();
   //LicensePage (LicensePage const &);
   virtual ~LicensePage() {}
@@ -41,7 +41,7 @@ public:
   bool loadLicense(std::string file);
 
   std::string currentLicense;
-  
+
   /*Printing functions*/
   void printLicense(HWND hWndParent);
 

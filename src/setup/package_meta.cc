@@ -13,10 +13,6 @@
  *
  */
 
-#if 0
-static const char *cvsid = "\n%%% $Id: package_meta.cc,v 2.63 2013/07/25 12:03:49 corinna Exp $\n";
-#endif
-
 #include "package_meta.h"
 
 #include <string>
@@ -41,7 +37,6 @@ using namespace std;
 #include "mount.h"
 /* this goes at the same time */
 #include "win32.h"
-
 
 #include "script.h"
 
@@ -109,9 +104,9 @@ packagemeta::_actions & packagemeta::_actions::operator++ ()
 template<class T> struct removeCategory : public unary_function<T, void>
 {
   removeCategory(packagemeta *pkg) : _pkg (pkg) {}
-  void operator() (T x) 
+  void operator() (T x)
     {
-      vector <packagemeta *> &aList = packagedb::categories[x]; 
+      vector <packagemeta *> &aList = packagedb::categories[x];
       aList.erase (find (aList.begin(), aList.end(), _pkg));
     }
   packagemeta *_pkg;
@@ -220,7 +215,7 @@ packagemeta::add_category (const std::string& cat)
 
 struct StringConcatenator : public unary_function<const std::string, void>{
     StringConcatenator(std::string aString) : gap(aString){}
-    void operator()(const std::string& aString) 
+    void operator()(const std::string& aString)
     {
       if (result.size() != 0)
         result += gap;
@@ -279,7 +274,7 @@ bool packagemeta::isManuallyWanted() const
   hasManualSelections |= parsed_categories.size () > 0;
   bool bReturn = false;
 
-  /* First time through, we parse all the names out from the 
+  /* First time through, we parse all the names out from the
     option string and store them away in an STL set.  */
   if (!parsed_yet)
   {
@@ -302,7 +297,7 @@ bool packagemeta::isManuallyWanted() const
     a lookup in the cache of already-parsed names.  */
   bReturn = parsed_names.find(name) != parsed_names.end();
 
-  /* If we didn't select the package manually, did we select any 
+  /* If we didn't select the package manually, did we select any
      of the categories it is in? */
   if (!bReturn && parsed_categories.size ())
     {
@@ -314,7 +309,7 @@ bool packagemeta::isManuallyWanted() const
 	    bReturn = true;
 	  }
     }
-  
+
   if (bReturn)
     log (LOG_PLAIN) << "Added manual package " << name << endLog;
   return bReturn;
@@ -380,7 +375,7 @@ packagemeta::SDesc () const
 }
 
 /* Return an appropriate caption given the current action. */
-std::string 
+std::string
 packagemeta::action_caption () const
 {
   if (!desired && installed)
@@ -457,7 +452,7 @@ packagemeta::set_action (packageversion const &default_version)
       return;
     }
   else if (desired == installed &&
-	   (!installed || 
+	   (!installed ||
 	    // neither bin nor source are being installed
 	    (!(installed.picked() || installed.sourcePackage().picked()) &&
 	     // bin or source are available
@@ -490,7 +485,7 @@ packagemeta::set_action (packageversion const &default_version)
       return;
     }
   /* are we currently on source only or on the radio button but not installed */
-  else if ((desired == installed 
+  else if ((desired == installed
 	    && installed.sourcePackage().picked ()) || desired == default_version)
     {
       /* move onto the loop through versions */
@@ -643,13 +638,13 @@ void
 packagemeta::logAllVersions () const
 {
     for (set<packageversion>::iterator i = versions.begin();
-	 i != versions.end(); ++i) 
+	 i != versions.end(); ++i)
       {
 	log (LOG_BABBLE) << "   name:" << i->Name()
 	  << ", [" << trustLabel(*i)
 	  << "] ver=" << i->Canonical_version()
 	  << endLog;
-	if (i->depends()->size()) 
+	if (i->depends()->size())
 	{
 	  std::ostream & logger = log (LOG_BABBLE);
 	  logger << "      depends=";
@@ -679,7 +674,7 @@ packagemeta::logAllVersions () const
 #endif
 }
 
-std::string 
+std::string
 packagemeta::trustLabel(packageversion const &aVersion) const
 {
     if (aVersion == prev)

@@ -27,5 +27,5 @@
  * Inspired but not equivalent to rpmvercmp().
  */
 int version_compare (std::string a, std::string b);
-    
+
 #endif /* SETUP_VERSION_COMPARE_H */

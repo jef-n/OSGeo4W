@@ -13,11 +13,6 @@
  *
  */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: UserSettingTest.cc,v 1.1 2003/07/26 07:08:43 rbcollins Exp $\n";
-#endif
-
 #include "site.h"
 #include "win32.h"
 #include <stdio.h>

@@ -13,11 +13,6 @@
  *
  */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: io_stream_memory.cc,v 2.5 2004/11/18 01:19:09 maxb Exp $\n";
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

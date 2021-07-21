@@ -16,11 +16,6 @@
 /* The purpose of this file is to provide common functionality for
    all the dialogs in the program. */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: dialog.cc,v 2.10 2006/04/15 21:21:25 maxb Exp $\n";
-#endif
-
 #include "win32.h"
 #include <stdio.h>
 #include <stdlib.h>

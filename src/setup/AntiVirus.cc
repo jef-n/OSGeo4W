@@ -29,7 +29,7 @@
 
 
 /* XXX: Split this into observer and model classes */
-  
+
 /* Default is to leave well enough alone */
 static BoolOption DisableVirusOption (false, 'b', "disable-buggy-antivirus", "Disable known or suspected buggy anti virus software packages during execution.");
 
@@ -85,15 +85,9 @@ AntiVirusPage::OnActivate ()
 {
   load_dialog (GetHWND ());
   // Check to see if any radio buttons are selected. If not, select a default.
-  if ((!SendMessage
-       (GetDlgItem (IDC_DISABLE_AV), BM_GETCHECK, 0,
-	0) == BST_CHECKED)
-      && (!SendMessage (GetDlgItem (IDC_LEAVE_AV), BM_GETCHECK, 0, 0)
-	  == BST_CHECKED))
-    {
-      SendMessage (GetDlgItem (IDC_LEAVE_AV), BM_SETCHECK,
-		   BST_CHECKED, 0);
-    }
+  if (SendMessage (GetDlgItem (IDC_DISABLE_AV), BM_GETCHECK, 0, 0) != BST_CHECKED
+      && SendMessage (GetDlgItem (IDC_LEAVE_AV), BM_GETCHECK, 0, 0) != BST_CHECKED)
+    SendMessage (GetDlgItem (IDC_LEAVE_AV), BM_SETCHECK, BST_CHECKED, 0);
 }
 
 bool
@@ -143,7 +137,7 @@ AntiVirusPage::OnDeactivate ()
       disableAV = IDC_LEAVE_AV;
       return;
     }
-	
+
   AVRunning = false;
   log (LOG_PLAIN) << "Disabled Anti Virus software" << endLog;
 }
@@ -164,25 +158,25 @@ AntiVirusPage::OnUnattended ()
 void
 detect ()
 {
-    if (!IsWindowsNT() || safe_mode)
+    if (safe_mode)
 	return;
 
-    // TODO: trim the access rights down 
+    // TODO: trim the access rights down
     SCM = OpenSCManager (NULL, NULL, SC_MANAGER_ALL_ACCESS);
 
     if (!SCM) {
-	log (LOG_PLAIN) << "Could not open Service control manager" << endLog;
+	log (LOG_BABBLE) << "Could not open Service control manager" << endLog;
 	return;
     }
-    
+
     /* in future, factor this to a routine to find service foo (ie norton, older
-       mcafee etc 
+       mcafee etc
        */
-    McAfeeService = OpenService (SCM, "AvSynMgr", 
+    McAfeeService = OpenService (SCM, "AvSynMgr",
 	SERVICE_QUERY_STATUS| SERVICE_STOP| SERVICE_START);
 
     if (!McAfeeService) {
-	log (LOG_PLAIN) << "Could not open service McShield for query, start and stop. McAfee may not be installed, or we don't have access." << endLog;
+	log (LOG_BABBLE) << "Could not open service McShield for query, start and stop. McAfee may not be installed, or we don't have access." << endLog;
 	CloseServiceHandle(SCM);
 	return;
     }
@@ -199,14 +193,14 @@ detect ()
       }
 
     if (status.dwCurrentState == SERVICE_STOPPED ||
-	status.dwCurrentState == SERVICE_STOP_PENDING) 
+	status.dwCurrentState == SERVICE_STOP_PENDING)
       {
 	CloseServiceHandle(SCM);
 	CloseServiceHandle(McAfeeService);
 	log (LOG_PLAIN) << "Mcafee is already stopped, nothing to see here"
           << endLog;
       }
-    
+
     log (LOG_PLAIN) << "Found McAfee anti virus program" << endLog;
     KnownAVIsPresent = true;
 }
@@ -228,14 +222,13 @@ AntiVirus::AtExit()
 	return;
 
     if (!StartService(McAfeeService, 0, NULL))
-        {
-	  log (LOG_PLAIN) << "Could not start McAfee service again, disabled AV logic" << endLog;
-	  disableAV = IDC_LEAVE_AV;
-	  return;
-	}
+      {
+	log (LOG_PLAIN) << "Could not start McAfee service again, disabled AV logic" << endLog;
+	disableAV = IDC_LEAVE_AV;
+	return;
+      }
 
-    log (LOG_PLAIN) << "Enabled Anti Virus software" << endLog;  
-    
+    log (LOG_PLAIN) << "Enabled Anti Virus software" << endLog;
+
     AVRunning = true;
-	
 }

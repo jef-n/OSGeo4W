@@ -18,7 +18,7 @@
 
 #include "io_stream.h"
 
-/* An IOStreamProvider provides the interface for io_stream::open and 
+/* An IOStreamProvider provides the interface for io_stream::open and
  * related calls to operate.
  */
 

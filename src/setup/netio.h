@@ -29,10 +29,6 @@ typedef SSIZE_T ssize_t;
 class NetIO
 {
 protected:
-  NetIO (char const *url);
-  void set_url (char const *url);
-  BOOL ftp_auth;
-
   static char *net_user;
   static char *net_passwd;
   static char *net_proxy_user;
@@ -44,19 +40,15 @@ protected:
 public:
   /* if nonzero, this is the estimated total file size */
   size_t file_size;
-  /* broken down url FYI */
-  char *url;
-  char *proto;
-  char *host;
-  int port;
-  char *path;
-    virtual ~ NetIO ();
+
+  NetIO () : file_size(0) {};
+  virtual ~ NetIO () {};
 
   /* The user calls this function to create a suitable accessor for
      the given URL.  It uses the network setup state in state.h.  If
      anything fails, either the return values is NULL or the returned
      object is !ok() */
-  static NetIO *open (char const *url, bool nocache = false);
+  static NetIO *open (char const *url, bool cachable);
 
   /* If !ok() that means the transfer isn't happening. */
   virtual int ok () = 0;
@@ -68,6 +60,8 @@ public:
   static int net_method;
   static char *net_proxy_host;
   static int net_proxy_port;
+
+  static const char *net_method_name();
 
   /* Helper functions for http/ftp protocols.  Both return nonzero for
      "cancel", zero for "ok".  They set net_proxy_user, etc, in

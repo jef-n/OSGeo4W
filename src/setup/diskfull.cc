@@ -18,11 +18,6 @@
    handle disks bigger than 2G, and a new API that isn't always
    available. */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: diskfull.cc,v 2.5 2006/04/15 21:21:25 maxb Exp $\n";
-#endif
-
 #include "win32.h"
 
 #include "diskfull.h"

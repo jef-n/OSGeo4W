@@ -32,7 +32,7 @@ MACRO(ADD_FLEX_FILES _sources )
 
       SET(_out ${CMAKE_CURRENT_BINARY_DIR}/flex_${_basename}.cpp)
 
-      # -d option for flex means that it will produce output to stderr while analyzing 
+      # -d option for flex means that it will produce output to stderr while analyzing
 
       ADD_CUSTOM_COMMAND(
          OUTPUT ${_out}
@@ -65,7 +65,7 @@ MACRO(ADD_FLEX_FILES_PREFIX _sources prefix )
       SET(_out ${CMAKE_CURRENT_BINARY_DIR}/flex_${_basename}.cpp)
 
 
-      # -d option for flex means that it will produce output to stderr while analyzing 
+      # -d option for flex means that it will produce output to stderr while analyzing
 
       ADD_CUSTOM_COMMAND(
          OUTPUT ${_out}

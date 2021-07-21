@@ -15,11 +15,6 @@
 
 /* All we do here is instantiate the extern'd variables from state.h */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: state.cc,v 2.7 2010/02/15 00:45:01 davek Exp $\n";
-#endif
-
 #include "state.h"
 #include "resource.h"
 

@@ -67,7 +67,7 @@ public:
   virtual ostream &operator() (enum log_level level);
 
   friend ostream& endLog(ostream& outs);
-  
+
 protected:
   LogSingleton (LogSingleton const &); // no copy constructor
   LogSingleton &operator = (LogSingleton const&); // no assignment operator

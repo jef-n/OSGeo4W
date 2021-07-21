@@ -13,11 +13,6 @@
  *
  */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: ScanFindVisitor.cc,v 2.5 2013/07/12 20:23:07 cgf Exp $\n";
-#endif
-
 #include "ScanFindVisitor.h"
 #include "filemanip.h"
 #include "IniDBBuilder.h"

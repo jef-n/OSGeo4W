@@ -190,7 +190,7 @@ PropertyPage::DialogProc (UINT message, WPARAM wParam, LPARAM lParam)
 
               OnActivate ();
 
-              if (unattended_mode) 
+              if (unattended_mode)
               {
                 // -2 == disable unattended mode, display page
                 // -1 == display page but stay in unattended mode (progress bars)
@@ -218,8 +218,8 @@ PropertyPage::DialogProc (UINT message, WPARAM wParam, LPARAM lParam)
                   SetWindowLongPtr (GetHWND (), DWLP_MSGRESULT, nextwindow);
                   return TRUE;
                 }
-              } 
-              else 
+              }
+              else
               {
                 // 0 == Accept activation, -1 = Don't accept
                 ::SetWindowLongPtr (GetHWND (), DWLP_MSGRESULT, 0);
@@ -294,27 +294,27 @@ PropertyPage::DialogProc (UINT message, WPARAM wParam, LPARAM lParam)
           // check for text controls that we've url-ified that are initializing
           int id;
           std::map <int, ClickableURL>::iterator theURL;
-          
+
           // get the ID of the control, and look it up in our list
           if ((id = GetDlgCtrlID ((HWND)lParam)) == 0 ||
                (theURL = urls.find (id)) == urls.end ())
-            
+
             // nope sorry, don't know nothing about this control
             return FALSE;
-            
+
           // set FG = blue, BG = default background for a dialog
           SetTextColor ((HDC)wParam, RGB (0, 0, 255));
           SetBkColor ((HDC)wParam, GetSysColor (COLOR_BTNFACE));
-          
+
           // get the current font, add underline, and set it back
           if (theURL->second.font == 0)
             {
               TEXTMETRIC tm;
-              
+
               GetTextMetrics ((HDC)wParam, &tm);
               LOGFONT lf;
               memset (&lf, 0, sizeof (LOGFONT));
-              lf.lfUnderline = TRUE;              
+              lf.lfUnderline = TRUE;
               lf.lfHeight = tm.tmHeight;
               lf.lfWeight = tm.tmWeight;
               lf.lfItalic = tm.tmItalic;
@@ -329,13 +329,13 @@ PropertyPage::DialogProc (UINT message, WPARAM wParam, LPARAM lParam)
                 log(LOG_PLAIN) << "Warning: unable to set font for url "
                     << theURL->second.url << endLog;
             }
-          
+
           // apply the font
           SelectObject ((HDC)wParam, theURL->second.font);
-          
+
           // make a brush if we have not yet
           if (theURL->second.brush == NULL)
-              theURL->second.brush = CreateSolidBrush 
+              theURL->second.brush = CreateSolidBrush
                                             (GetSysColor (COLOR_BTNFACE));
 
           return (INT_PTR) theURL->second.brush;
@@ -391,7 +391,7 @@ PropertyPage::makeClickable (int id, std::string link)
   HWND hctl = ::GetDlgItem (GetHWND (), id);
   if (hctl == NULL)
     return;           // invalid ID
-  
+
   if (urls.find (id) != urls.end ())
     return;           // already done this one
 
@@ -399,13 +399,13 @@ PropertyPage::makeClickable (int id, std::string link)
   c.url = link;
   c.font = NULL;      // these will be created as needed
   c.brush = NULL;
-  if ((c.origWinProc = reinterpret_cast<WNDPROC>(SetWindowLongPtr (hctl, 
+  if ((c.origWinProc = reinterpret_cast<WNDPROC>(SetWindowLongPtr (hctl,
           GWLP_WNDPROC, (LONG_PTR) & PropertyPage::urlWinProc))) == 0)
     return;           // failure
-    
+
   // add this to 'urls' so that the dialog and control winprocs know about it
   urls[id] = c;
-  
+
   // set a tooltip for the link
   AddTooltip (id, link.c_str());
 }
@@ -416,7 +416,7 @@ PropertyPage::urlWinProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
   int id;
   std::map <int, ClickableURL>::iterator theURL;
-  
+
   // get the ID of the control, and look it up in our list
   if ((id = GetDlgCtrlID (hwnd)) == 0 ||
        (theURL = urls.find (id)) == urls.end ())
@@ -430,8 +430,8 @@ PropertyPage::urlWinProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     case WM_LBUTTONDOWN:
       {
         // they clicked our URL!  yay!
-        intptr_t rc = (intptr_t) ShellExecute (hwnd, "open", 
-            theURL->second.url.c_str (), NULL, NULL, SW_SHOWNORMAL);        
+        intptr_t rc = (intptr_t) ShellExecute (hwnd, "open",
+            theURL->second.url.c_str (), NULL, NULL, SW_SHOWNORMAL);
 
         if (rc <= 32)
           log(LOG_PLAIN) << "Unable to launch browser for URL " <<
@@ -465,7 +465,7 @@ PropertyPage::urlWinProc (HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         return CallWindowProc (saveWinProc, hwnd, uMsg, wParam, lParam);
       }
   }
-  
+
   // pass on control to the previous winproc
   return CallWindowProc (theURL->second.origWinProc, hwnd, uMsg, wParam, lParam);
 }

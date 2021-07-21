@@ -14,41 +14,37 @@
 
 #include <getopt++/StringArrayOption.h>
 
-using namespace std;
-
 StringArrayOption::StringArrayOption(char shortopt,
-		       char const *longopt, string const &shorthelp,
-		       OptionSet *owner) :
+		       char const *longopt, std::string const &shorthelp,
+		       OptionSet &owner) :
 		       _optional(Required), _shortopt(shortopt),
 		       _longopt (longopt), _shorthelp (shorthelp)
 {
-  if( !owner )
-    owner = GetOption::GetInstance();
-  owner->Register (this);
+  owner.Register (this);
 }
 
 StringArrayOption::~ StringArrayOption () {};
 
-string const
+std::string const
 StringArrayOption::shortOption () const
 {
-  return string() + _shortopt + ":";
+  return std::string() + _shortopt + ":";
 }
 
-string const
+std::string const
 StringArrayOption::longOption () const
 {
   return _longopt;
 }
 
-string const
+std::string const
 StringArrayOption::shortHelp () const
 {
   return _shorthelp;
 }
 
 Option::Result
-StringArrayOption::Process (char const *optarg)
+StringArrayOption::Process (char const *optarg, int prefixIndex)
 {
   if (optarg)
     {
@@ -58,7 +54,7 @@ StringArrayOption::Process (char const *optarg)
   return Failed;
 }
 
-StringArrayOption::operator vector<string> () const
+StringArrayOption::operator std::vector<std::string> () const
 {
   return _value;
 }

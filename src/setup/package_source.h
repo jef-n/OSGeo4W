@@ -32,8 +32,8 @@
  * Name (ie mutt
  * Vendor Version (ie 2.5.1)
  * Package Version (ie 16)
- * Stability 
- * Files 
+ * Stability
+ * Files
  */
 
 /* For non installed files, this class can be populated via information about
@@ -74,21 +74,21 @@ public:
     {
       _installedSize = size;
     }
-  /* The canonical name - the complete path to the source file 
+  /* The canonical name - the complete path to the source file
    * i.e. foo/bar/package-1.tar.bz2
    */
   virtual const char *Canonical () const
   {
     return canonical;
   }
-  /* The basename - without extention 
+  /* The basename - without extension
    * i.e. package-1
    */
   virtual const char *Base () const
   {
     return base;
   }
-  /* The basename - with extention 
+  /* The basename - with extension
    * i.e. package-1.tar.bz2
    */
   virtual const char *Filename () const

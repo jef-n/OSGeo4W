@@ -15,14 +15,9 @@
 
 /* this is the parent class for all IO operations. It's flexable enough to be cover for
  * HTTP access, local file access, and files being extracted from archives.
- * It also encapsulates the idea of an archive, and all non-archives become the special 
+ * It also encapsulates the idea of an archive, and all non-archives become the special
  * case.
  */
-
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: io_stream.cc,v 2.24 2011/04/21 09:31:37 jturney Exp $\n";
-#endif
 
 #include "LogSingleton.h"
 
@@ -39,7 +34,7 @@ typedef map <std::string, IOStreamProvider *, casecompare_lt_op> providersType;
 static providersType *providers;
 static size_t longestPrefix = 0;
 static int inited = 0;
-  
+
 void
 io_stream::registerProvider (IOStreamProvider &theProvider,
 			     const std::string& urlPrefix)
@@ -75,8 +70,8 @@ findProvider (const std::string& path)
 io_stream *
 io_stream::factory (io_stream * parent)
 {
-  /* something like,  
-   * if !next_file_name 
+  /* something like,
+   * if !next_file_name
    *   return NULL
    * switch (magic_id(peek (parent), max_magic_length))
    * case io_stream * foo = new tar
@@ -137,7 +132,7 @@ io_stream::mklink (const std::string& from, const std::string& to,
     url_scheme_not_registered (to);
   if (fromp != top)
     throw new invalid_argument ("Attempt to link across url providers.");
-  return fromp->mklink (&from.c_str()[fromp->key.size()], 
+  return fromp->mklink (&from.c_str()[fromp->key.size()],
     			&to.c_str()[top->key.size()], linktype);
 }
 

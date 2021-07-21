@@ -15,11 +15,6 @@
 
 /* Log to one or more files. */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: LogFile.cc,v 2.20 2009/12/18 11:59:53 corinna Exp $\n";
-#endif
-
 #include <stdlib.h>
 #include "LogFile.h"
 #include "io_stream.h"
@@ -82,7 +77,7 @@ LogFile::createLogFile()
     return new LogFile(theStream);
 }
 
-LogFile::LogFile(std::stringbuf *aStream) : LogSingleton (aStream) 
+LogFile::LogFile(std::stringbuf *aStream) : LogSingleton (aStream)
 {
 }
 LogFile::~LogFile(){}
@@ -99,7 +94,7 @@ LogFile::setFile (int minlevel, const std::string& path, bool append)
   FileSet::iterator f = files.find (filedef(path));
   if (f != files.end ())
     files.erase (f);
-  
+ 
   filedef t (path);
   t.level = minlevel;
   t.append = append;
@@ -126,7 +121,7 @@ LogFile::exit (int const exit_code)
   if (been_here)
     ::exit (exit_code);
   been_here = 1;
-  
+
   if (exit_msg)
     {
       char buf[1000], fmt[1000];
@@ -136,7 +131,7 @@ LogFile::exit (int const exit_code)
           log (LOG_PLAIN) << "note: " << buf << endLog;
         }
     }
-  
+
   log (LOG_TIMESTAMP) << "Ending OSGeo4W install" << endLog;
 
   for (FileSet::iterator i = files.begin();

@@ -273,7 +273,7 @@
     Revision:
       libgetoptplusplus--own-getopt--1.0--base-0
 
-    
+
     (automatically generated log message)
 
     new files:
@@ -290,7 +290,7 @@
 
 2003-11-16 Robert Collins  <rbtcollins@hotmail.com>
 
-	* src/OptionSet.cc (OptionSet::Process): Call the default optionset 
+	* src/OptionSet.cc (OptionSet::Process): Call the default optionset
 	if one is supplied and no options are in the default.
 
 2003-03-19 Robert Collins  <rbtcollins@hotmail.com>
@@ -368,27 +368,27 @@
 	* include/getopt++/BoolOption.h: Ditto.
 	* src/BoolOption.cc: Ditto.
 	* src/OptionSet.cc: Ditto.
-	* include/getopt++/Option.h: Ditto. 
+	* include/getopt++/Option.h: Ditto.
 	Remove String++ includes, it's not needed anymore.
 	* include/getopt++/OptionSet.h: Make the destructor virtual.
 
 2002-04-23  Robert Collins  <rbtcollins@hotmail.com>
 
-	* src/OptionSet.cc (OptionSet::ParameterUsage): Line-break long 
+	* src/OptionSet.cc (OptionSet::ParameterUsage): Line-break long
 	help text.
 
 2002-04-20  Robert Collins  <rbtcollins@hotmail.com>
 
-	* Makefile.am (libgetopt___la_SOURCES): Add OptionSet.cc and 
+	* Makefile.am (libgetopt___la_SOURCES): Add OptionSet.cc and
 	StringOption.cc for new functionality.
 	(getoptinclude_HEADERS): Install the new headers.
 	* include/getopt++/BoolOption.h (BoolOption::shortOption): Change
 	to align with new Option header.
 	* include/getopt++/Option.h (Option::shortOption): Change to allow
 	short options with arguments.
-	* include/getopt++/OptionSet.h: Implement ParameterUsage to show 
+	* include/getopt++/OptionSet.h: Implement ParameterUsage to show
 	program options.
-	Change Process to include a fallback OptionSet - for picking up 
+	Change Process to include a fallback OptionSet - for picking up
 	non-option arguments.
 	* include/getopt++/StringOption.h: New file.
 	* src/BoolOption.cc (BoolOption::shortOption): Change as per the header.

@@ -16,11 +16,6 @@
 /* The purpose of this file is to get the list of mirror sites and ask
    the user which mirror site they want to download from. */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: site.cc,v 2.52 2012/08/30 22:32:14 yselkowitz Exp $\n";
-#endif
-
 #include <string>
 #include <algorithm>
 #include <iterator>
@@ -257,6 +252,7 @@ load_site_list (SiteList& theSites, char *theString)
         continue;
       /* Accept only the URL schemes we can understand. */
       if (strncmp(bol, "http://", 7) == 0 ||
+          strncmp(bol, "https://", 8) == 0 ||
           strncmp(bol, "ftp://", 6) == 0)
         {
           char *semi = strchr (bol, ';');

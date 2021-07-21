@@ -12,9 +12,6 @@
  * Written by DJ Delorie <dj@cygnus.com>
  *
  */
-#if 0
-static const char *cvsid = "\n%%% $Id: autoload.c,v 2.6 2007/02/28 00:55:04 briand Exp $\n";
-#endif
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -76,7 +73,7 @@ autoload_common (int x)
   unsigned char *proc;
   HINSTANCE h;
   AutoEntry *a;
-  
+
   a = *(AutoEntry **)(&x - 1);
   if (a->dll->handle == 0)
     {

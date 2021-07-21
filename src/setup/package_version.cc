@@ -13,13 +13,8 @@
  *
  */
 
-/* this is the parent class for all package operations. 
+/* this is the parent class for all package operations.
  */
-
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: package_version.cc,v 2.32 2013/07/22 05:46:26 cgf Exp $\n";
-#endif
 
 #include "package_version.h"
 #include "package_db.h"
@@ -35,7 +30,7 @@ static const char *cvsid =
 using namespace std;
 
 /* a default class to avoid special casing empty packageversions */
-  
+
 /* TODO place into the class header */
 class _defaultversion : public _packageversion
 {
@@ -87,13 +82,13 @@ packageversion::packageversion (_packageversion *pkg)
   ++data->references;
 }
 
-packageversion::packageversion (packageversion const &existing) : 
+packageversion::packageversion (packageversion const &existing) :
 data(existing.data)
 {
   ++data->references;
 }
 
-packageversion::~packageversion() 
+packageversion::~packageversion()
 {
   if (--data->references == 0)
     delete data;
@@ -148,7 +143,7 @@ packageversion::operator < (packageversion const &rhs) const
   return false;
 }
 
-const std::string 
+const std::string
 packageversion::Name () const
 {
   return data->Name ();
@@ -242,7 +237,7 @@ void
 packageversion::set_hasLicense(bool pval)
 {
   data->set_hasLicense(pval);
-}    
+}
 
 void
 packageversion::set_autodep (const std::string& regex)
@@ -328,7 +323,7 @@ packageversion::picked () const
   return data->picked;
 }
 
-void 
+void
 packageversion::pick (bool aBool, packagemeta *pkg)
 {
   data->pick(aBool);
@@ -466,7 +461,7 @@ processOneDependency (trusts deftrust, size_t depth,
     << trusted.Name() << " of required package " << required->name
     << " does not meet the specification for " << *spec
     << endLog;
-  
+
   set <packageversion>::iterator v;
   for (v = required->versions.begin();
     v != required->versions.end() && !spec->satisfies (*v); ++v);
@@ -476,7 +471,7 @@ processOneDependency (trusts deftrust, size_t depth,
       log (LOG_TIMESTAMP) << "No other satisfying package available." << endLog;
       return 0;
     }
-  
+
   log (LOG_TIMESTAMP) << "Selecting other satisfying package " << v->Name() << " " << v->Canonical_version() << endLog;
   return select (deftrust, depth, required, *v);
 }
@@ -550,7 +545,7 @@ packageversion::compareVersions(packageversion a, packageversion b)
 {
   /* Compare Vendor_version */
   int comparison = version_compare(a.Vendor_version(), b.Vendor_version());
- 
+
 #if DEBUG
   log (LOG_BABBLE) << "vendor version comparison " << a.Vendor_version() << " and " << b.Vendor_version() << ", result was " << comparison << endLog;
 #endif
@@ -570,7 +565,7 @@ packageversion::compareVersions(packageversion a, packageversion b)
 }
 
 /* the parent data class */
-  
+
 _packageversion::_packageversion ():picked (false), hasLic(false), references (0)
 {
 }
@@ -600,7 +595,7 @@ _packageversion::sourcePackage ()
       packagemeta * pkg;
       pkg = db.findSource (_sourcePackage);
       /* no valid source meta available, just return the default
-	 (blank) package version 
+	 (blank) package version
 	 */
       if (!pkg)
 	return sourceVersion;
@@ -624,7 +619,7 @@ _packageversion::accessible() const
        i!=sources.end(); ++i)
     if (!i->Cached ())
       cached = false;
-  if (cached) 
+  if (cached)
     return true;
   if (::source == IDC_SOURCE_CWD)
     return false;

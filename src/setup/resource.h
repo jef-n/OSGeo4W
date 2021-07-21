@@ -48,26 +48,27 @@
 #define IDS_SEL_DOWNLOAD_DIR              144
 #define IDS_SEL_LOCAL_DIR                 145
 #define IDS_UNKNOWN_ERR                   146
+#define IDS_INTERNET_ERR                  147
 
-#define IDS_LIST_CURRENT                  147
-#define IDS_LIST_NEW                      148
-#define IDS_LIST_BIN                      149
-#define IDS_LIST_SRC                      150
-#define IDS_LIST_CATEGORIES               151
-#define IDS_LIST_CATEGORY                 152
-#define IDS_LIST_SIZE                     153
-#define IDS_LIST_PACKAGE                  154
-#define IDS_CAPTION_FULL                  155
-#define IDS_CAPTION_PENDING               156
-#define IDS_CAPTION_UPTODATE              157
-#define IDS_CAPTION_NOTINSTALLED          158
-#define IDS_CAPTION_CATEGORY              159
-#define IDS_CAPTION_LIC_PACKAGE           160
-#define IDS_LICENSE_MISSING               161
-#define IDS_LICENSE_NOLOAD                162
-#define IDS_LICENSE_EMPTYPATH             163
-#define IDS_NOTHING_TO_INSTALL_OR_UPGRADE 164
-#define IDS_NOTHING_TO_DOWNLOAD           165
+#define IDS_LIST_CURRENT                  148
+#define IDS_LIST_NEW                      149
+#define IDS_LIST_BIN                      150
+#define IDS_LIST_SRC                      151
+#define IDS_LIST_CATEGORIES               152
+#define IDS_LIST_CATEGORY                 153
+#define IDS_LIST_SIZE                     154
+#define IDS_LIST_PACKAGE                  155
+#define IDS_CAPTION_FULL                  156
+#define IDS_CAPTION_PENDING               157
+#define IDS_CAPTION_UPTODATE              158
+#define IDS_CAPTION_NOTINSTALLED          159
+#define IDS_CAPTION_CATEGORY              160
+#define IDS_CAPTION_LIC_PACKAGE           161
+#define IDS_LICENSE_MISSING               162
+#define IDS_LICENSE_NOLOAD                163
+#define IDS_LICENSE_EMPTYPATH             164
+#define IDS_NOTHING_TO_INSTALL_OR_UPGRADE 165
+#define IDS_NOTHING_TO_DOWNLOAD           166
 
 // Dialogs
 
@@ -125,7 +126,7 @@
 #define IDC_SITE_NEXT                     506
 #define IDC_BACK                          507
 #define IDC_OTHER_URL                     508
-#define IDC_NET_IE5                       509
+#define IDC_NET_PRECONFIG                 509
 #define IDC_NET_DIRECT                    510
 #define IDC_NET_PROXY                     511
 #define IDC_PROXY_HOST                    512

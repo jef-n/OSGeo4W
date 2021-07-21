@@ -21,9 +21,10 @@
 #endif
 #if HAVE_STRING_H
 #include <string>
-#else 
+#else
 #error "<string> required"
 #endif
+#include <vector>
 
 // Each registered option must implement this class.
 class Option
@@ -32,13 +33,14 @@ public:
   virtual ~ Option ();
   virtual std::string const shortOption () const = 0;
   virtual std::string const longOption () const = 0;
+  virtual std::vector<std::string> const & longOptionPrefixes () const;
   virtual std::string const shortHelp () const = 0;
   enum Result {
       Failed,
       Ok,
       Stop
   };
-  virtual Result Process (char const *) = 0;
+  virtual Result Process (char const *, int) = 0;
   enum Argument {
       None,
       Optional,
@@ -46,8 +48,12 @@ public:
   };
   virtual Argument argument () const = 0;
 
+  void setPresent(bool _present) { present = _present; }
+  bool isPresent() { return present; }
+
 protected:
     Option ();
+    bool present;
 };
 
 #endif // _OPTION_H_

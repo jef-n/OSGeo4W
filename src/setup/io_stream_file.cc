@@ -13,22 +13,17 @@
  *
  */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: io_stream_file.cc,v 2.21 2006/04/16 21:35:57 maxb Exp $\n";
-#endif
-
 #include "win32.h"
 #include "mklink2.h"
 #include "filemanip.h"
 #include "mkdir.h"
-  
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
 #include <unistd.h>
 #include <vector>
-  
+
 #include "io_stream_file.h"
 #include "IOStreamProvider.h"
 #include "Window.h"
@@ -65,7 +60,7 @@ private:
   static FileProvider theInstance;
 };
 FileProvider FileProvider::theInstance = FileProvider();
-  
+
 
 /* for set_mtime */
 #define FACTOR (0x19db1ded53ea710LL)

@@ -26,11 +26,6 @@
    install packages, or to install packages that aren't installed by
    default. */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: choose.cc,v 2.166 2013/07/26 12:04:24 corinna Exp $\n";
-#endif
-
 #include "win32.h"
 #include <commctrl.h>
 #include <stdio.h>

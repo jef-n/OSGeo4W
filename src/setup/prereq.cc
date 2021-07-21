@@ -13,11 +13,6 @@
  *
  */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: prereq.cc,v 2.9 2010/12/16 17:48:42 jturney Exp $\n";
-#endif
-
 #include "win32.h"
 #include <commctrl.h>
 #include <stdio.h>
@@ -56,7 +51,7 @@ extern ThreeBarProgressPage Progress;
 PrereqPage::PrereqPage ()
 {
   sizeProcessor.AddControlInfo (PrereqControlsInfo);
-}  
+}
 
 bool
 PrereqPage::Create ()
@@ -69,7 +64,7 @@ PrereqPage::OnInit ()
 {
   // start with the checkbox set
   CheckDlgButton (GetHWND (), IDC_PREREQ_CHECK, BST_CHECKED);
-  
+
   // set the edit-area to a larger font
   SetDlgItemFont(IDC_PREREQ_EDIT, "MS Shell Dlg", 10);
 }
@@ -78,9 +73,9 @@ void
 PrereqPage::OnActivate()
 {
   // if we have gotten this far, then PrereqChecker has already run isMet
-  // and found that there were missing packages; so we can just call 
+  // and found that there were missing packages; so we can just call
   // getUnmetString to format the results and display it
-  
+
   std::string s;
   PrereqChecker p;
   p.getUnmetString (s);
@@ -97,7 +92,7 @@ PrereqPage::OnNext ()
   if (!IsDlgButtonChecked (h, IDC_PREREQ_CHECK))
     {
       // breakage imminent!  danger, danger
-      int res = MessageBox (h, 
+      int res = MessageBox (h,
           "The listed packages are required for packages depending on them to "
           "work.  We strongly recommend that you allow Setup to select them."
           "\r\n\r\n"
@@ -107,7 +102,7 @@ PrereqPage::OnNext ()
       if (res == IDNO)
         return -1;
       else
-        log (LOG_PLAIN) << 
+        log (LOG_PLAIN) <<
             "NOTE!  User refused suggested missing dependencies!  "
             "Expect some packages to give errors or not function at all." << endLog;
     }
@@ -204,7 +199,7 @@ PrereqChecker::isMet ()
           // lines this will have to be updated
           PackageSpecification *dep_spec = (*d)->at(0);
           packagemeta *dep = db.findBinary (*dep_spec);
-          
+
           if (dep && !(dep->desired && dep_spec->satisfies (dep->desired)))
             {
               // we've got an unmet dependency
@@ -226,7 +221,7 @@ void
 PrereqChecker::getUnmetString (std::string &s)
 {
   s = "";
-  
+
   map <packagemeta *, vector <packagemeta *>, packagemeta_ltcomp>::iterator i;
   for (i = unmet.begin(); i != unmet.end(); i++)
     {
@@ -252,8 +247,8 @@ PrereqChecker::selectMissing ()
 
   // provide a default, even though this should have been set for us
   if (!theTrust)
-    theTrust = TRUST_CURR;    
-  
+    theTrust = TRUST_CURR;
+
   // get each of the keys of 'unmet'
   map <packagemeta *, vector <packagemeta *>, packagemeta_ltcomp>::iterator i;
   for (i = unmet.begin(); i != unmet.end(); i++)
@@ -261,7 +256,7 @@ PrereqChecker::selectMissing ()
       packageversion vers = i->first->trustp (theTrust);
       i->first->desired = vers;
       vers.sourcePackage ().pick (false, NULL);
-      
+
       if (vers == i->first->installed)
         {
           vers.pick (false, NULL);
