@@ -20,6 +20,7 @@ EOF
 
 cat <<EOF >pip.env
 export GDAL_CONFIG=$(cygpath -am gdal-config.bat)
+export PIP_USE_PEP517=0
 EOF
 
 adddepends="$RUNTIMEDEPENDS" packagewheel
