@@ -31,7 +31,7 @@
 #include "String++.h"
 
 static BoolOption TestOption( false, 't', "test", "Use setup_test.ini" );
-static BoolOption ExpressOption( true, 'A', "advanced", "Advanced install (as opposed to Express)" );
+static BoolOption AdvancedOption( true, 'A', "advanced", "Advanced install (as opposed to Express)" );
 static BoolOption SafeModeOption( false, 'S', "safe", "Safe Mode (Skip some admin actions)" );
 
 SplashSetting::SplashSetting()
@@ -40,7 +40,7 @@ SplashSetting::SplashSetting()
   if( !m )
     return;
 
-  if ( !ExpressOption )
+  if ( AdvancedOption )
     splash_mode = IDC_ADVANCED;
   else
     splash_mode = IDC_EXPRESS;

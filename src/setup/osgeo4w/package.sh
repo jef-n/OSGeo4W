@@ -1,5 +1,5 @@
 export P=setup
-export V=1.0.10
+export V=1.0.11
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
@@ -73,7 +73,10 @@ cat <<EOF >install/bin/setup.bat.tmpl
 @start /B "Running Setup" "@osgeo4w@\bin\osgeo4w-setup-work.exe" -R "@osgeo4w@" %*
 EOF
 
+rm -f install/bin/osgeo4w-setup.exe
+
 if [ -f OSGeo_DigiCert_Signing_Cert.p12 -a -f OSGeo_DigiCert_Signing_Cert.pass ]; then
+
 	osslsigncode sign \
 		-pkcs12 OSGeo_DigiCert_Signing_Cert.p12 \
 		-pass $(<OSGeo_DigiCert_Signing_Cert.pass) \
