@@ -246,7 +246,7 @@ if haspy and not preremove:
 
 if preremove:
     if haspy:
-        preremove.write(str.encode("python3 -B %PYTHONHOME%\\Scripts\\preremove-cached.py {}\n".format(pname)))
+        preremove.write(str.encode("python3 -B \"%PYTHONHOME%\\Scripts\\preremove-cached.py\" {}\n".format(pname)))
 
     preremove.close()
     tf.add("preremove.bat", "etc/preremove/{}.bat".format(pname))

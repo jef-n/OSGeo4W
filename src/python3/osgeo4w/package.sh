@@ -159,7 +159,7 @@ EOF
 cat <<EOF >core-preremove.bat
 del "%OSGEO4W_ROOT%\\apps\\Python$MM\\DLLs\\libssl-1_1.dll"
 del "%OSGEO4W_ROOT%\\apps\\Python$MM\\DLLs\\libcrypto-1_1.dll"
-python -B %OSGEO4W_ROOT%\\apps\\Python$MM\\Scripts\\preremove-cached.py $P-core
+python -B "%OSGEO4W_ROOT%\\apps\\Python$MM\\Scripts\\preremove-cached.py" $P-core
 EOF
 
 mkdir -p install/bin install/$PREFIX
@@ -264,7 +264,7 @@ external-source: $P
 EOF
 
 cat <<EOF >test-preremove.bat
-python -B %OSGEO4W_ROOT%\\apps\\Python$MM\\Scripts\\preremove-cached.py $P-test
+python -B "%OSGEO4W_ROOT%\\apps\\Python$MM\\Scripts\\preremove-cached.py" $P-test
 EOF
 
 tar -cjf $R/$P-test/$P-test-$V-$B.tar.bz2 \
@@ -288,7 +288,7 @@ external-source: $P
 EOF
 
 cat <<EOF >tcltk-preremove.bat
-python -B %OSGEO4W_ROOT%\\apps\\Python$MM\\Scripts\\preremove-cached.py $P-tcltk
+python -B "%OSGEO4W_ROOT%\\apps\\Python$MM\\Scripts\\preremove-cached.py" $P-tcltk
 EOF
 
 tar -cjf $R/$P-tcltk/$P-tcltk-$V-$B.tar.bz2 \
@@ -313,7 +313,7 @@ external-source: $P
 EOF
 
 cat <<EOF >tools-preremove.bat
-python -B %OSGEO4W_ROOT%\\apps\\Python$MM\\Scripts\\preremove-cached.py $P-tools
+python -B "%OSGEO4W_ROOT%\\apps\\Python$MM\\Scripts\\preremove-cached.py" $P-tools
 EOF
 
 tar -cjf $R/$P-tools/$P-tools-$V-$B.tar.bz2 \
@@ -332,7 +332,7 @@ tar -cjf $R/$P-tools/$P-tools-$V-$B.tar.bz2 \
 rm -f pip-postinstall.bat
 
 cat <<EOF >pip-preremove.bat
-python -B %OSGEO4W_ROOT%\\apps\\Python$MM\\Scripts\\preremove-cached.py $P-pip
+python -B "%OSGEO4W_ROOT%\\apps\\Python$MM\\Scripts\\preremove-cached.py" $P-pip
 EOF
 
 exetmpl install/Scripts/pip.exe pip
@@ -364,7 +364,7 @@ tar -cjf $R/$P-pip/$P-pip-$PIPV-$B.tar.bz2 \
 #
 
 cat <<EOF >setuptools-preremove.bat
-python -B %OSGEO4W_ROOT%\\apps\\Python$MM\\Scripts\\preremove-cached.py $P-setuptools
+python -B "%OSGEO4W_ROOT%\\apps\\Python$MM\\Scripts\\preremove-cached.py" $P-setuptools
 EOF
 
 cat <<EOF >$R/$P-setuptools/setup.hint

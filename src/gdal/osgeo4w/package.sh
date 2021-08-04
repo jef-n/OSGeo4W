@@ -174,7 +174,7 @@ EOF
 	expytmpl="$expytmpl --exclude apps/$PYTHON/Scripts/$b.py"
 done
 
-echo -e "python -B %PYTHONHOME%\\Scripts\\preremove-cached.py python3-$P\r" >>$PYDESTDIR/etc/preremove/python3-$P.bat
+echo -e "python -B \"%PYTHONHOME%\\Scripts\\preremove-cached.py\" python3-$P\r" >>$PYDESTDIR/etc/preremove/python3-$P.bat
 
 cd ../../../osgeo4w
 
