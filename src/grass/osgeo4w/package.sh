@@ -1,5 +1,5 @@
 export P=grass
-export V=7.8.6RC1
+export V=7.8.6RC2
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="gdal-devel proj-devel geos-devel libjpeg-devel libpng-devel libpq-devel libtiff-devel sqlite3-devel zstd-devel python3-core python3-six python3-pywin32 liblas-devel python3-wxpython"
@@ -19,7 +19,7 @@ MM=${MM//./}
 # 	;;
 # esac
 
-[ -f $P-$V.tar.gz ] || wget http://download.osgeo.org/$P/${P}$MM/source/$P-$V.tar.gz
+[ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://github.com/OSGeo/$P/archive/refs/tags/$V.tar.gz
 [ -f ../$P-$V/configure ] || tar -C .. -xzf $P-$V.tar.gz
 [ -f ../$P-$V/patched ] || {
 	patch -l -d ../$P-$V -p1 --dry-run <patch
