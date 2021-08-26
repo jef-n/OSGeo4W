@@ -1,5 +1,5 @@
 export P=gdal
-export V=3.3.1
+export V=3.3.2rc1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-devel libjpeg12-devel"
@@ -12,7 +12,10 @@ export PYTHON=Python39
 
 startlog
 
-[ -f $P-$V.tar.gz ] || wget -q http://download.osgeo.org/gdal/${V%rc*}/$P-$V.tar.gz
+[ -f $P-$V.tar.gz ] || {
+	wget -q http://download.osgeo.org/gdal/${V%rc*}/$P-$V.tar.gz
+	rm -f ../$P-${V%rc*}/{makefile.vc,patched}
+}
 [ -f ../$P-${V%rc*}/makefile.vc ] || tar -C .. -xzf $P-$V.tar.gz
 [ -f ../$P-${V%rc*}/patched ] || {
 	cd ../$P-${V%rc*}
@@ -88,7 +91,7 @@ mkdir -p $R/$P-{devel,oracle,filegdb,ecw,mrsid,sosi,mss,hdf5} $R/$P$abi-runtime 
 
 if [ -f $R/$P-$V-$B-src.tar.bz2 ]; then
 	echo "$R/$P-$V-$B-src.tar.bz2 already exists - skipping"
-	continue
+	exit 1
 fi
 
 export EXT_NMAKE_OPT=$(cygpath -am $PWD/nmake.opt)
@@ -287,6 +290,18 @@ maintainer: $MAINTAINER
 requires: $P$abi-runtime hdf5
 external-source: $P
 EOF
+
+appendversions $R/setup.hint
+appendversions $R/$P$abi-runtime/setup.hint
+appendversions $R/$P-devel/setup.hint
+appendversions $R/python3-$P/setup.hint
+appendversions $R/$P-oracle/setup.hint
+appendversions $R/$P-filegdb/setup.hint
+appendversions $R/$P-ecw/setup.hint
+appendversions $R/$P-mrsid/setup.hint
+appendversions $R/$P-sosi/setup.hint
+appendversions $R/$P-mss/setup.hint
+appendversions $R/$P-hdf5/setup.hint
 
 cp ../$P-${V%rc*}/LICENSE.TXT $R/$P-$V-$B.txt
 cp ../$P-${V%rc*}/LICENSE.TXT $R/$P-oracle/$P-oracle-$V-$B.txt

@@ -396,6 +396,7 @@ nextbinary() {
 			binary_test=1
 		fi
 		B=$binary_test
+		log "Building test version $V-$B"
 	else
 		version_prev=$version_curr
 		binary_prev=$binary_curr
@@ -408,6 +409,7 @@ nextbinary() {
 		fi
 
 		B=$binary_curr
+		log "Building production version $V-$B"
 	fi
 }
 declare -x nextbinary
@@ -484,7 +486,6 @@ init() {
 		echo "Builds are supposed to be run outside of OSGeo4W" >&2
 		exit 1
 	fi
-
 
 	# Verify that a repository is set
 	if ! [ -d "$OSGEO4W_REP" ]; then

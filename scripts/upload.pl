@@ -184,6 +184,7 @@ while(<H>) {
 close H;
 
 my $tdir = File::Temp->newdir(CLEANUP => 0);
+print STDERR "Temporary directory: $tdir\n";
 
 foreach my $p (sort keys %packages) {
 	my @v;
@@ -217,15 +218,15 @@ foreach my $p (sort keys %packages) {
 
 		# Skip already remotely available versions
 		for my $sec (qw/curr prev/) {
-			next V if defined $remote{$p}->{$sec}{version} && $remote{$p}->{$sec}{version} eq $v;
+			next V if defined $remote{$p}->{$sec}->{version} && $remote{$p}->{$sec}->{version} eq $v;
 		}
 
 		push @uploads, $v;
 	}
 
 	undef @v;
-	push @v, $local{$p}->{test}{version};
-	push @v, $remote{$p}->{test}{version};
+	push @v, $local{$p}->{test}->{version};
+	push @v, $remote{$p}->{test}->{version};
 
 	undef %v;
 	@v = grep { defined && !$v{$_}++ } @v;
@@ -235,7 +236,7 @@ foreach my $p (sort keys %packages) {
 	if(@v) {
 		$test = $v[0];
 
-		if(!defined $remote{$p}->{test}{version} || $remote{$p}->{test}{version} ne $test) {
+		if(!defined $remote{$p}->{test}->{version} || $remote{$p}->{test}->{version} ne $test) {
 			push @uploads, $test;
 		}
 	}
@@ -261,10 +262,19 @@ foreach my $p (sort keys %packages) {
 
 	close O;
 
+	my $uploads = 0;
 	for my $u (@uploads) {
 		for my $f (qw/install source license/ ) {
-			$files{ $local{$p}->{$u}->{$f}->{file} } = 1 if exists $local{$p}->{$u}->{$f}->{file};
+			next unless exists $local{$p}->{$u}->{$f}->{file};
+			$files{ $local{$p}->{$u}->{$f}->{file} } = 1;
+			$uploads = 1;
 		}
+	}
+
+	if($uploads) {
+		print STDERR "updated hint: $tdir/$d/$p/setup.hint\n";
+	} else {
+		unlink "$tdir/$d/$p/setup.hint";
 	}
 }
 

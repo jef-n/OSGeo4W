@@ -1,5 +1,5 @@
 export P=proj
-export V=8.1.0
+export V=8.1.1RC2
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="sqlite3-devel libtiff-devel curl-devel"
@@ -77,6 +77,10 @@ requires: $P
 maintainer: $MAINTAINER
 external-source: $P
 EOF
+
+appendversions $R/setup.hint
+appendversions $R/$P$abi-runtime/setup.hint
+appendversions $R/$P-devel/setup.hint
 
 cp ../$P-${V%RC*}/COPYING $R/$P-$V-$B.txt
 
