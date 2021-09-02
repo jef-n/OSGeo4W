@@ -244,6 +244,10 @@ foreach my $p (sort keys %packages) {
 	die "Hint for $p not found" unless exists $shints{$p};
 	my $d = $shints{$p};
 
+	die "$p: curr $curr equals test $test\nLocal:" . Dumper($local{$p})  . "\nRemote: " . Dumper($remote{$p}) if defined $curr && defined $test && $curr eq $test;
+	die "$p: curr $curr equals prev $prev\nLocal:" . Dumper($local{$p})  . "\nRemote: " . Dumper($remote{$p}) if defined $curr && defined $prev && $curr eq $prev;
+	die "$p: prev $prev equals test $test\nLocal:" . Dumper($local{$p})  . "\nRemote: " . Dumper($remote{$p}) if defined $prev && defined $test && $prev eq $test;
+
 	make_path("$tdir/$d/$p") unless -d "$tdir/$d/$p";
 	die "Could not created " unless -d "$tdir/$d/$p";
 
@@ -272,7 +276,7 @@ foreach my $p (sort keys %packages) {
 	}
 
 	if($uploads) {
-		print STDERR "updated hint: $tdir/$d/$p/setup.hint\n";
+		print STDERR "updated hint: $tdir/$d/$p/setup.hint [c:$curr p:$prev t:$test]\n";
 	} else {
 		unlink "$tdir/$d/$p/setup.hint";
 	}
