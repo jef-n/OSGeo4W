@@ -200,6 +200,7 @@ regen() {
 	(
 		# update local package repository
 		cd $OSGEO4W_REP
+		[ -d x86_64/release ] || mkdir -p x86_64/release
 		! [ -f x86_64/setup.ini ] || cp x86_64/setup.ini x86_64/setup.ini.prev
 		perl $OSGEO4W_SCRIPTS/genini --arch=x86_64 --output=x86_64/setup.ini.tmp --recursive x86_64/release
 		mv x86_64/setup.ini.tmp x86_64/setup.ini
