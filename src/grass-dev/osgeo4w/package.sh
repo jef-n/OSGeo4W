@@ -8,7 +8,7 @@ export BUILDDEPENDS="gdal-devel pdal-devel proj-devel geos-devel netcdf-devel li
 branch=main
 
 if [ "$CI" ] ; then
-cd "$OSGEO4W_REP"
+cd "$PACKAGE_SRC"
 fi
 
 source ../../../scripts/build-helpers
@@ -80,12 +80,6 @@ msysarch=msys2-base-x86_64-20210604.tar.xz
 	cmd.exe /c "$cmd" || cmd.exe /c "$cmd" || cmd.exe /c "$cmd"
 
 	cd ../$P-$V
-
-if [ "$CI" ] ; then
-	P=$(cygpath -ua "C:/Program Files (x86)\Microsoft Visual Studio/2019/Enterprise/VC/Tools/MSVC/14.29.30133/bin/HostX64/x64/")
-	sed -i "3 a export PATH=\"$P:$PATH\"" mswindows/osgeo4w/mklibs.sh
-	sed -i "s/dumpbin -exports/dumpbin \/EXPORTS/" mswindows/osgeo4w/mklibs.sh
-fi
 
 	cmd.exe /c "$(cygpath -aw $OSGEO4W_PWD/msys64/usr/bin/bash) $xtrace mswindows/osgeo4w/package.sh"
 )

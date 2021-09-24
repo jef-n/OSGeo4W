@@ -38,10 +38,10 @@ index 157d622b3..6f3441b70 100644
  set GRASS_PROJSHARE=%OSGEO4W_ROOT%\share\proj
  
 diff --git a/mswindows/osgeo4w/mklibs.sh b/mswindows/osgeo4w/mklibs.sh
-index 00a597afa..b7aaa57ee 100755
+index 00a597afa..dafc2e0fe 100755
 --- a/mswindows/osgeo4w/mklibs.sh
 +++ b/mswindows/osgeo4w/mklibs.sh
-@@ -1,31 +1,14 @@
+@@ -1,31 +1,24 @@
  #!/bin/sh
  
  set -e
@@ -50,14 +50,17 @@ index 00a597afa..b7aaa57ee 100755
 -if [ -z "$OSGEO4W_POSTFIX" ]; then
 -    OSGEO4W_POSTFIX=""
 -fi
-+[ -d mswindows/osgeo4w/vc ] || mkdir mswindows/osgeo4w/vc
- 
+-
 -if [ "$OSGEO4W_POSTFIX" != "64" ]; then
 -    MACHINE=x86
--else
++if [ "$CI" ] ; then
++	DUMPBIN_PATH=$(cygpath -ua "C:/Program Files (x86)\Microsoft Visual Studio/2019/Enterprise/VC/Tools/MSVC/14.29.30133/bin/HostX64/x64/")
++	export PATH="${DUMPBIN_PATH}:$PATH"
++	# dumpbin in GH actions does not support options starting with "-"
++	DUMPBIN_EXPORT="/EXPORTS"
+ else
 -    MACHINE=x64
-+if [ -n "$VCPATH" ]; then
-+	PATH=$PATH:$VCPATH
++	DUMPBIN_EXPORT="-exports"
  fi
  
 -PROGRAMFILES="/c/Program Files (x86)"
@@ -71,13 +74,23 @@ index 00a597afa..b7aaa57ee 100755
 -PATH="$VSDIR/Common7/Tools:$PATH"
 -PATH="$PATH:/c/OSGeo4W${OSGEO4W_POSTFIX}/bin"
 -export PATH
--
--[ -d mswindows/osgeo4w/vc ] || mkdir mswindows/osgeo4w/vc
--
+ 
+ [ -d mswindows/osgeo4w/vc ] || mkdir mswindows/osgeo4w/vc
+ 
++if [ -n "$VCPATH" ]; then
++	PATH=$PATH:$VCPATH
++fi
++
  for dllfile in "$@"; do
  	dlldir=${dllfile%/*}
  	dllfile=${dllfile##*/}
-@@ -43,6 +26,7 @@ for dllfile in "$@"; do
+@@ -38,11 +31,12 @@ for dllfile in "$@"; do
+ 
+  	echo "$dllfile => $dllname"
+ 
+-	(cd $dlldir; dumpbin -exports $dllfile) |
++	(cd $dlldir; dumpbin "$DUMPBIN_EXPORT" $dllfile) |
+ 		sed -nf mswindows/osgeo4w/mklibs.sed |
  		egrep -v "^[	 ]*(_+IMPORT_DESCRIPTOR_.*|_+NULL_IMPORT_DESCRIPTOR)$" >mswindows/osgeo4w/vc/${defname%$VERSION}
  
  	(cd mswindows/osgeo4w/vc ;
