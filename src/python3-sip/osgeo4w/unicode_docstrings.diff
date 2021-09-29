@@ -1,0 +1,22 @@
+From: Phil Thompson <phil@riverbankcomputing.com>
+Date: Wed, 4 Aug 2021 18:02:25 +0100
+Subject: Fixed a regression in the handling of Unicode docstrings
+
+Origin: upstream, https://riverbankcomputing.com/hg/sip/rev/64d8a5d785e1
+---
+ code_generator/gencode.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/code_generator/gencode.c b/code_generator/gencode.c
+index 9bcafa5..a68784e 100644
+--- a/code_generator/gencode.c
++++ b/code_generator/gencode.c
+@@ -13638,7 +13638,7 @@ void prcode(FILE *fp, const char *fmt, ...)
+                     if (isprint(c))
+                         fputc(c, fp);
+                     else
+-                        fprintf(fp, "\\x%02x", (int)c);
++                        fprintf(fp, "\\%03o", (unsigned char)c);
+ 
+                     break;
+                 }
