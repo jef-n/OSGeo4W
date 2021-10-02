@@ -1,8 +1,13 @@
 export P=grass
+
 export V=7.8.6RC3
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="gdal-devel proj-devel geos-devel libjpeg-devel libpng-devel libpq-devel libtiff-devel sqlite3-devel zstd-devel python3-core python3-six python3-pywin32 liblas-devel python3-wxpython"
+
+if [ "$CI" ] ; then
+cd "$OSGEO4W_PWD"
+fi
 
 source ../../../scripts/build-helpers
 
@@ -15,6 +20,7 @@ MM=${MM//./}
 
 [ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://github.com/OSGeo/$P/archive/refs/tags/$V.tar.gz
 [ -f ../$P-$V/configure ] || tar -C .. -xzf $P-$V.tar.gz
+
 [ -f ../$P-$V/patched ] || {
 	patch -l -d ../$P-$V -p1 --dry-run <patch
 	patch -l -d ../$P-$V -p1 <patch
@@ -82,8 +88,8 @@ cp ../$P-$V/mswindows/osgeo4w/package/$P-$V-1.tar.bz2 $R/$P-$V-$B.tar.bz2
 cp ../$P-$V/COPYING $R/$P-$V-$B.txt
 
 cat <<EOF >$R/setup.hint
-sdesc: "GRASS GIS"
-ldesc: "Geographic Resources Analysis Support System (GRASS GIS)"
+sdesc: "GRASS GIS 7.8"
+ldesc: "Geographic Resources Analysis Support System (GRASS GIS) 7.8"
 category: Desktop
 requires: liblas $RUNTIMEDEPENDS avce00 gpsbabel gs python3-gdal python3-matplotlib libtiff python3-wxpython python3-pillow python3-pip python3-ply python3-pyopengl python3-psycopg2-binary python3-six zstd python3-pywin32
 maintainer: $MAINTAINER
