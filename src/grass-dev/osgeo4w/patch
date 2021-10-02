@@ -411,20 +411,3 @@ index 0efcf3477..e9f75cecf 100644
 +"%GISBASE%\bin\g.mkfontcap.exe" -o
 +
 +del "%BATCH%.tmpl
-diff --git a/python/grass/ctypes/loader.py b/python/grass/ctypes/loader.py
-index 9fdca092d..e0f28a8e0 100644
---- a/python/grass/ctypes/loader.py
-+++ b/python/grass/ctypes/loader.py
-@@ -238,6 +238,12 @@ class _WindowsLibrary(object):
- class WindowsLibraryLoader(LibraryLoader):
-     name_formats = ["%s.dll", "lib%s.dll"]
- 
-+    def __init__(self):
-+        super().__init__()
-+        for p in os.getenv("PATH").split(";"):
-+            if os.path.exists(p) and hasattr(os, 'add_dll_directory'):
-+                os.add_dll_directory(p)
-+
-     def load(self, path):
-         return _WindowsLibrary(path)
- 
