@@ -1,5 +1,5 @@
 export P=python3
-export V=3.9.5
+export V=3.9.6
 export B="next $P-core"
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
@@ -141,12 +141,21 @@ for cachedir in sorted(cachedirs.keys(), reverse=True):
         pass
 EOF
 
+cat <<EOF >sitecustomize.py
+import os
+
+for p in os.getenv("PATH").split(";"):
+    if os.path.exists(p):
+        os.add_dll_directory(p)
+EOF
+
 #
 # core
 #
 
 cat <<EOF >ini.bat
 SET PYTHONHOME=%OSGEO4W_ROOT%\\apps\\Python$MM
+SET PYTHONPATH=
 SET PYTHONUTF8=1
 PATH %OSGEO4W_ROOT%\\apps\\Python$MM\Scripts;%PATH%
 EOF
@@ -176,6 +185,7 @@ cp ./install/python$MM.dll install/$PREFIX/python$MM.dll
 
 tar -cjf $R/$P-core/$P-core-$V-$B.tar.bz2 \
 	--xform "s,preremove-cached.py,${PREFIX}Scripts/preremove-cached.py," \
+	--xform "s,sitecustomize.py,${PREFIX}Lib/site-packages/sitecustomize.py," \
 	--xform "s,core-postinstall.bat,etc/postinstall/$P-core.bat," \
 	--xform "s,core-preremove.bat,etc/preremove/$P-core.bat," \
 	--xform "s,^install/python$MM.dll,bin/python$MM.dll," \
@@ -194,6 +204,7 @@ tar -cjf $R/$P-core/$P-core-$V-$B.tar.bz2 \
 	--exclude-from setuptools.lst \
 	--exclude-from tools.lst \
 	preremove-cached.py \
+	sitecustomize.py \
 	core-postinstall.bat \
 	core-preremove.bat \
 	ini.bat \
@@ -382,6 +393,21 @@ tar -cjf $R/$P-setuptools/$P-setuptools-$STV-$B.tar.bz2 \
 	setuptools-preremove.bat \
 	-T setuptools.lst
 
+if [ "$OSGEO4W_BUILDMODE" = "test" ]; then
+	v=version_test
+else
+	v=version_curr
+fi
+
+eval $v=$V appendversions $R/$P-core/setup.hint
+eval $v=$V appendversions $R/$P-help/setup.hint
+eval $v=$V appendversions $R/$P-devel/setup.hint
+eval $v=$V appendversions $R/$P-test/setup.hint
+eval $v=$V appendversions $R/$P-tcltk/setup.hint
+eval $v=$V appendversions $R/$P-tools/setup.hint
+eval $v=$PIPV appendversions $R/$P-pip/setup.hint
+eval $v=$STV appendversions $R/$P-setuptools/setup.hint
+
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 cp $R/$P-$V-$B-src.tar.bz2 $R/$P-setuptools/$P-setuptools-$STV-$B-src.tar.bz2
 cp $R/$P-$V-$B-src.tar.bz2 $R/$P-pip/$P-pip-$PIPV-$B-src.tar.bz2
@@ -454,6 +480,7 @@ apps/Python$MM/Scripts/pip.exe.tmpl
 apps/Python$MM/Scripts/pip${V%.*}.exe.tmpl
 apps/Python$MM/Scripts/pip$M.exe.tmpl
 apps/Python$MM/Scripts/preremove-cached.py
+apps/Python$MM/Lib/site-packages/sitecustomize.py
 bin/python$M.dll
 bin/python$M.exe
 bin/python$MM.dll
