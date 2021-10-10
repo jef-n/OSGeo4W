@@ -23,11 +23,6 @@ MM=${MM//./}
 [ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://codeload.github.com/OSGeo/grass/tar.gz/$branch
 [ -f ../$P-$V/configure ] || tar -C .. -xzf $P-$V.tar.gz
 [ -d ../grass-$branch -a ! -d ../$P-$V ] | mv ../grass-$branch ../$P-$V
-[ -f ../$P-$V/patched ] || {
-	patch -l -d ../$P-$V -p1 --dry-run <patch
-	patch -l -d ../$P-$V -p1 <patch
-	touch ../$P-$V/patched
-}
 
 msysarch=msys2-base-x86_64-20210604.tar.xz
 
@@ -75,6 +70,7 @@ msysarch=msys2-base-x86_64-20210604.tar.xz
 		mingw-w64-x86_64-pcre \
 		mingw-w64-x86_64-fftw \
 		mingw-w64-x86_64-lapack \
+		mingw-w64-x86_64-openmp \
 		mingw-w64-x86_64-cairo
 	"
 	cmd.exe /c "$cmd" || cmd.exe /c "$cmd" || cmd.exe /c "$cmd"
@@ -100,6 +96,6 @@ EOF
 
 appendversions $R/setup.hint
 
-tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/patch
+tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 
 endlog
