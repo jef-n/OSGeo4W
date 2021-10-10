@@ -1,6 +1,6 @@
 diff -ur grass-7.8.6/lib/gis/gisinit.c ../grass-7.8.6/lib/gis/gisinit.c
---- grass-7.8.6RC1/lib/gis/gisinit.c	2021-05-19 23:27:58.000000000 +0200
-+++ ../grass-7.8.6RC1/lib/gis/gisinit.c	2021-07-11 23:09:54.831823400 +0200
+--- grass-7.8.6/lib/gis/gisinit.c	2021-05-19 23:27:58.000000000 +0200
++++ ../grass-7.8.6/lib/gis/gisinit.c	2021-07-11 23:09:54.831823400 +0200
 @@ -49,12 +49,14 @@
 
      G_set_program_name(pgm);
@@ -50,3 +50,13 @@ diff -ur grass-7.8.6/lib/gis/gisinit.c ../grass-7.8.6/lib/gis/gisinit.c
   	    lib -nologo $libname || exit)
   done
  -
+diff -ur grass-7.8.6/mswindows/osgeo4w/config.h.vc ../grass-7.8.6/mswindows/osgeo4w/config.h.vc
+--- grass-7.8.6/mswindows/osgeo4w/config.h.vc        2021-05-19 23:27:58.000000000 +0200
++++ ../grass-7.8.6/mswindows/osgeo4w/config.h.vc     2021-07-11 23:09:54.840823600 +0200
+@@ -298,4 +298,6 @@
+ /* define if langinfo.h exists */
+ /* #undef HAVE_LANGINFO_H */
+
++#define HAVE_PROJ_H 1
++
+ #endif /* _config_h */
