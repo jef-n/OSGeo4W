@@ -2,7 +2,7 @@ export P=qgis-ltr-dev
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-devel grass qt5-oci qt5-oci-debug sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt5 python3-sip python3-devel python3-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-devel qscintilla-devel qt5-devel qwt-devel libspatialite-devel oci-devel qtkeychain-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel oci-devel qtwebkit-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel"
+export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-devel grass qt5-oci qt5-oci-debug sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt5 python3-sip python3-pyqt-builder python3-devel python3-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-devel qscintilla-devel qt5-devel qwt-devel libspatialite-devel oci-devel qtkeychain-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel oci-devel qtwebkit-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel"
 
 : ${SITE:=qgis.org}
 : ${TARGET:=Nightly}
@@ -167,7 +167,6 @@ nextbinary
 		-D SPATIALITE_LIBRARY=$(cygpath -am "$O4W_ROOT/lib/spatialite_i.lib") \
 		-D SPATIALINDEX_LIBRARY=$(cygpath -am $O4W_ROOT/lib/spatialindex-64.lib) \
 		-D PYTHON_EXECUTABLE=$(cygpath -am $O4W_ROOT/bin/python3.exe) \
-		-D SIP_BINARY_PATH=$(cygpath -am $PYTHONHOME/sip.exe) \
 		-D PYTHON_INCLUDE_PATH=$(cygpath -am $PYTHONHOME/include) \
 		-D PYTHON_LIBRARY=$(cygpath -am $PYTHONHOME/libs/$(basename $PYTHONHOME).lib) \
 		-D QT_LIBRARY_DIR=$(cygpath -am $O4W_ROOT/lib) \
@@ -184,8 +183,10 @@ nextbinary
 		-D PUSH_TO_CDASH=TRUE \
 		$(cygpath -m $SRCDIR)
 
-	echo CLEAN: $(date)
-	cmake --build $(cygpath -am $BUILDDIR) --target clean --config $BUILDCONF
+	if [ -z "$OSGEO4W_SKIP_CLEAN" ]; then
+		echo CLEAN: $(date)
+		cmake --build $(cygpath -am $BUILDDIR) --target clean --config $BUILDCONF
+	fi
 
 	mkdir -p $BUILDDIR/apps/$P/pdb
 
@@ -198,6 +199,7 @@ nextbinary
 		exit 1
 	fi
 
+	if [ -z "$OSGEO4W_SKIP_TESTS" ]; then
 	(
 		echo RUN_TESTS: $(date)
 		reg add "HKCU\\Software\\Microsoft\\Windows\\Windows Error Reporting" /v DontShow /t REG_DWORD /d 1 /f
@@ -221,6 +223,7 @@ nextbinary
 			touch ../testfailure
 		fi
 	)
+	fi
 
 	cmake --build $(cygpath -am $BUILDDIR) --target ${TARGET}Submit --config $BUILDCONF || echo SUBMISSION FAILED
 

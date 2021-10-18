@@ -1,3 +1,23 @@
+diff --git a/cmake/FindSIP.cmake b/cmake/FindSIP.cmake
+index 35eb9e55..6e7be503 100644
+--- a/cmake/FindSIP.cmake
++++ b/cmake/FindSIP.cmake
+@@ -38,13 +38,13 @@ ELSE(SIP_VERSION)
+     STRING(REGEX REPLACE "^sip_version:([^\n]+).*$" "\\1" SIP_VERSION ${sip_config})
+     STRING(REGEX REPLACE ".*\nsip_version_num:([^\n]+).*$" "\\1" SIP_VERSION_NUM ${sip_config})
+     STRING(REGEX REPLACE ".*\nsip_version_str:([^\n]+).*$" "\\1" SIP_VERSION_STR ${sip_config})
+-    STRING(REGEX REPLACE ".*\nsip_bin:([^\n]+).*$" "\\1" SIP_BINARY_PATH ${sip_config})
+     STRING(REGEX REPLACE ".*\ndefault_sip_dir:([^\n]+).*$" "\\1" SIP_DEFAULT_SIP_DIR ${sip_config})
+     IF(${SIP_VERSION_STR} VERSION_LESS 5)
++      STRING(REGEX REPLACE ".*\nsip_bin:([^\n]+).*$" "\\1" SIP_BINARY_PATH ${sip_config})
+       STRING(REGEX REPLACE ".*\nsip_inc_dir:([^\n]+).*$" "\\1" SIP_INCLUDE_DIR ${sip_config})
+       STRING(REGEX REPLACE ".*\nsip_module_dir:([^\n]+).*$" "\\1" SIP_MODULE_DIR ${sip_config})
+     ELSE(${SIP_VERSION_STR} VERSION_LESS 5)
+-      FIND_PROGRAM(SIP_MODULE_EXECUTABLE sip-module)
++      FIND_PROGRAM(SIP_BUILD_EXECUTABLE sip-build)
+     ENDIF(${SIP_VERSION_STR} VERSION_LESS 5)
+     SET(SIP_FOUND TRUE)
+   ENDIF(sip_config)
 diff --git a/cmake/PyQtMacros.cmake b/cmake/PyQtMacros.cmake
 index 774d0427..ece1b3e7 100644
 --- a/cmake/PyQtMacros.cmake
@@ -36,11 +56,346 @@ index 774d0427..ece1b3e7 100644
    IF (NOT PYRCC_PROGRAM)
      MESSAGE(FATAL_ERROR "pyrcc5 not found - aborting")
    ENDIF (NOT PYRCC_PROGRAM)
+diff --git a/cmake/SIPMacros.cmake b/cmake/SIPMacros.cmake
+index 3084a4fd..0af5c8f4 100644
+--- a/cmake/SIPMacros.cmake
++++ b/cmake/SIPMacros.cmake
+@@ -43,15 +43,13 @@ SET(SIP_EXTRA_OPTIONS)
+ SET(SIP_EXTRA_OBJECTS)
+ 
+ MACRO(GENERATE_SIP_PYTHON_MODULE_CODE MODULE_NAME MODULE_SIP SIP_FILES CPP_FILES)
++
+   STRING(REPLACE "." "/" _x ${MODULE_NAME})
+   GET_FILENAME_COMPONENT(_parent_module_path ${_x} PATH)
+   GET_FILENAME_COMPONENT(_child_module_name ${_x} NAME)
+-
+   GET_FILENAME_COMPONENT(_module_path ${MODULE_SIP} PATH)
+   GET_FILENAME_COMPONENT(_abs_module_sip ${MODULE_SIP} ABSOLUTE)
+ 
+-  FILE(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${_module_path})    # Output goes in this dir.
+-
+   # If this is not need anymore (using input configuration file for SIP files)
+   # SIP could be run in the source rather than in binary directory
+   SET(_configured_module_sip ${CMAKE_CURRENT_BINARY_DIR}/${_module_path}/${_module_path}.sip)
+@@ -63,30 +61,8 @@ MACRO(GENERATE_SIP_PYTHON_MODULE_CODE MODULE_NAME MODULE_SIP SIP_FILES CPP_FILES
+     CONFIGURE_FILE(${_sip_file} ${_out_sip_file})
+   ENDFOREACH (_sip_file)
+ 
+-
+-  SET(_sip_includes)
+-  FOREACH (_inc ${SIP_INCLUDES})
+-    GET_FILENAME_COMPONENT(_abs_inc ${_inc} ABSOLUTE)
+-    LIST(APPEND _sip_includes -I ${_abs_inc})
+-  ENDFOREACH (_inc )
+-
+-  SET(_sip_tags)
+-  FOREACH (_tag ${SIP_TAGS})
+-    LIST(APPEND _sip_tags -t ${_tag})
+-  ENDFOREACH (_tag)
+-
+-  SET(_sip_x)
+-  FOREACH (_x ${SIP_DISABLE_FEATURES})
+-    LIST(APPEND _sip_x -x ${_x})
+-  ENDFOREACH (_x ${SIP_DISABLE_FEATURES})
+-
+   SET(_message "-DMESSAGE=Generating CPP code for module ${MODULE_NAME}")
+   SET(_sip_output_files)
+-  FOREACH(CONCAT_NUM RANGE 0 ${SIP_CONCAT_PARTS} )
+-    IF( ${CONCAT_NUM} LESS ${SIP_CONCAT_PARTS} )
+-      SET(_sip_output_files ${_sip_output_files} ${CMAKE_CURRENT_BINARY_DIR}/${_module_path}/sip${_child_module_name}part${CONCAT_NUM}.cpp )
+-    ENDIF( ${CONCAT_NUM} LESS ${SIP_CONCAT_PARTS} )
+-  ENDFOREACH(CONCAT_NUM RANGE 0 ${SIP_CONCAT_PARTS} )
+ 
+   # Suppress warnings
+   IF(PEDANTIC)
+@@ -111,22 +87,67 @@ MACRO(GENERATE_SIP_PYTHON_MODULE_CODE MODULE_NAME MODULE_SIP SIP_FILES CPP_FILES
+     ADD_DEFINITIONS( /bigobj )
+   ENDIF(MSVC)
+ 
+-  SET(SIPCMD ${SIP_BINARY_PATH} ${_sip_tags} -w -e ${_sip_x} ${SIP_EXTRA_OPTIONS} -j ${SIP_CONCAT_PARTS} -c ${CMAKE_CURRENT_BINARY_DIR}/${_module_path} -I ${CMAKE_CURRENT_BINARY_DIR}/${_module_path} ${_sip_includes} ${_configured_module_sip})
+-  ADD_CUSTOM_COMMAND(
+-    OUTPUT ${_sip_output_files}
+-    COMMAND ${CMAKE_COMMAND} -E echo ${message}
+-    COMMAND ${CMAKE_COMMAND} -E touch ${_sip_output_files}
+-    COMMAND ${SIPCMD}
+-    MAIN_DEPENDENCY ${_configured_module_sip}
+-    DEPENDS ${SIP_EXTRA_FILES_DEPEND}
+-    VERBATIM
+-  )
+-  IF (SIP_MODULE_EXECUTABLE)
++  IF (SIP_BUILD_EXECUTABLE)
++
++    FILE(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${_module_path}/build/${_child_module_name})    # Output goes in this dir.
++
++    FOREACH(CONCAT_NUM RANGE 0 ${SIP_CONCAT_PARTS} )
++      IF( ${CONCAT_NUM} LESS ${SIP_CONCAT_PARTS} )
++        SET(_sip_output_files ${_sip_output_files} ${CMAKE_CURRENT_BINARY_DIR}/${_module_path}/build/${_child_module_name}/sip${_child_module_name}part${CONCAT_NUM}.cpp )
++      ENDIF( ${CONCAT_NUM} LESS ${SIP_CONCAT_PARTS} )
++    ENDFOREACH(CONCAT_NUM RANGE 0 ${SIP_CONCAT_PARTS} )
++
++    SET(SIPCMD ${SIP_BUILD_EXECUTABLE} --pep484-pyi --no-make --concatenate=${SIP_CONCAT_PARTS} --qmake=${QMAKE_EXECUTABLE} --include-dir=${CMAKE_CURRENT_BINARY_DIR})
++
+     ADD_CUSTOM_COMMAND(
+-      OUTPUT ${_sip_output_files} APPEND
+-      COMMAND ${SIP_MODULE_EXECUTABLE} --target-dir ${CMAKE_CURRENT_BINARY_DIR}/${_module_path} --sip-h ${PYQT5_SIP_IMPORT}
++      OUTPUT ${_sip_output_files}
++      COMMAND ${CMAKE_COMMAND} -E echo ${message}
++      COMMAND ${SIPCMD}
++      COMMAND ${CMAKE_COMMAND} -E touch ${_sip_output_files}
++      WORKING_DIRECTORY ${_module_path}
++      MAIN_DEPENDENCY ${_configured_module_sip}
++      DEPENDS ${SIP_EXTRA_FILES_DEPEND}
++      VERBATIM
+     )
+-  ENDIF (SIP_MODULE_EXECUTABLE)
++
++  ELSE (SIP_BUILD_EXECUTABLE)
++
++    FILE(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${_module_path})    # Output goes in this dir.
++
++    SET(_sip_includes)
++    FOREACH (_inc ${SIP_INCLUDES})
++      GET_FILENAME_COMPONENT(_abs_inc ${_inc} ABSOLUTE)
++      LIST(APPEND _sip_includes -I ${_abs_inc})
++    ENDFOREACH (_inc )
++
++    SET(_sip_tags)
++    FOREACH (_tag ${SIP_TAGS})
++      LIST(APPEND _sip_tags -t ${_tag})
++    ENDFOREACH (_tag)
++
++    SET(_sip_x)
++    FOREACH (_x ${SIP_DISABLE_FEATURES})
++      LIST(APPEND _sip_x -x ${_x})
++    ENDFOREACH (_x ${SIP_DISABLE_FEATURES})
++
++    FOREACH(CONCAT_NUM RANGE 0 ${SIP_CONCAT_PARTS} )
++      IF( ${CONCAT_NUM} LESS ${SIP_CONCAT_PARTS} )
++        SET(_sip_output_files ${_sip_output_files} ${CMAKE_CURRENT_BINARY_DIR}/${_module_path}/sip${_child_module_name}part${CONCAT_NUM}.cpp )
++      ENDIF( ${CONCAT_NUM} LESS ${SIP_CONCAT_PARTS} )
++    ENDFOREACH(CONCAT_NUM RANGE 0 ${SIP_CONCAT_PARTS} )
++
++    SET(SIPCMD ${SIP_BINARY_PATH} ${_sip_tags} -w -e ${_sip_x} ${SIP_EXTRA_OPTIONS} -j ${SIP_CONCAT_PARTS} -c ${CMAKE_CURRENT_BINARY_DIR}/${_module_path} -I ${CMAKE_CURRENT_BINARY_DIR}/${_module_path} ${_sip_includes} ${_configured_module_sip})
++    ADD_CUSTOM_COMMAND(
++      OUTPUT ${_sip_output_files}
++      COMMAND ${CMAKE_COMMAND} -E echo ${message}
++      COMMAND ${CMAKE_COMMAND} -E touch ${_sip_output_files}
++      COMMAND ${SIPCMD}
++      MAIN_DEPENDENCY ${_configured_module_sip}
++      DEPENDS ${SIP_EXTRA_FILES_DEPEND}
++      VERBATIM
++    )
++
++  ENDIF (SIP_BUILD_EXECUTABLE)
+ 
+   ADD_CUSTOM_TARGET(generate_sip_${MODULE_NAME}_cpp_files DEPENDS ${_sip_output_files})
+ 
+@@ -143,8 +164,11 @@ MACRO(BUILD_SIP_PYTHON_MODULE MODULE_NAME SIP_FILES EXTRA_OBJECTS)
+   # tracking get confused.)
+   STRING(REPLACE "." "_" _logical_name ${MODULE_NAME})
+   SET(_logical_name "python_module_${_logical_name}")
++  GET_FILENAME_COMPONENT(_module_path ${SIP_FILES} PATH)
+ 
+   ADD_LIBRARY(${_logical_name} MODULE ${_sip_output_files} ${EXTRA_OBJECTS})
++  SET_PROPERTY(TARGET ${_logical_name} PROPERTY AUTOMOC OFF)
++  TARGET_INCLUDE_DIRECTORIES(${_logical_name} PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/${_module_path}/build)
+   SET_TARGET_PROPERTIES(${_logical_name} PROPERTIES CXX_VISIBILITY_PRESET default)
+   IF (NOT APPLE)
+     TARGET_LINK_LIBRARIES(${_logical_name} ${PYTHON_LIBRARY})
+diff --git a/python/3d/project.py.in b/python/3d/project.py.in
+new file mode 100644
+index 00000000..ecbdce41
+--- /dev/null
++++ b/python/3d/project.py.in
+@@ -0,0 +1,50 @@
++import os
++
++from pyqtbuild import PyQtBindings, PyQtProject
++from sipbuild import Option
++
++
++class QGIS(PyQtProject):
++    """ The QGIS project. """
++
++    def __init__(self):
++        """ Initialize the project. """
++        super().__init__()
++        self.sip_files_dir = '.'
++        self.bindings_factories = [Qgis3D]
++
++    def get_options(self):
++        """ Return the list of configurable options. """
++        options = super().get_options()
++        options.append(
++                Option('include_dirs', option_type=list,
++                        help="additional directory to search for .sip files",
++                        metavar="DIR"))
++        return options
++
++    def apply_user_defaults(self, tool):
++        """ Set default values for user options that haven't been set yet. """
++        super().apply_user_defaults(tool)
++        if self.include_dirs is not None:
++            self.sip_include_dirs += self.include_dirs
++
++
++class Qgis3D(PyQtBindings):
++    """ The QGIS 3D bindings. """
++
++    def __init__(self, project):
++        """ Initialize the bindings. """
++        super().__init__(project, '3d')
++        self.sip_file = '3d.sip'
++        self.exceptions = True
++        self.disabled_features = "@SIP_DISABLE_FEATURES@".split(";")
++
++    def apply_user_defaults(self, tool):
++        """ Set default values for user options that haven't been set yet. """
++        if self.project.py_platform.startswith('win32'):
++            self.tags.append('WS_WIN')
++        elif self.project.py_platform == 'darwin':
++            self.tags.append('WS_MACX')
++        else:
++            self.tags.append('WS_X11')
++        super().apply_user_defaults(tool)
+diff --git a/python/3d/pyproject.toml.in b/python/3d/pyproject.toml.in
+new file mode 100644
+index 00000000..9c58a933
+--- /dev/null
++++ b/python/3d/pyproject.toml.in
+@@ -0,0 +1,14 @@
++# Specify the build system.
++[build-system]
++requires = ["sip >=5.0.0, <7", "PyQt-builder >=1.6, <2"]
++build-backend = "sipbuild.api"
++
++# Specify the PEP 566 metadata for the project.
++[tool.sip.metadata]
++name = "QGIS"
++version = "@COMPLETE_VERSION@"
++summary = "Python bindings for QGIS"
++home-page = "https://qgis.org"
++author = "The QGIS Community"
++license = "GPL v2"
++requires-dist = "PyQt5"
+diff --git a/python/CMakeLists.txt b/python/CMakeLists.txt
+index 2e081dc2..ff53e9b1 100644
+--- a/python/CMakeLists.txt
++++ b/python/CMakeLists.txt
+@@ -201,6 +201,8 @@ else()
+   set(SIP_FINAL "")
+ endif()
+ 
++set(QGIS_PYTHON_DIR ${PYTHON_SITE_PACKAGES_DIR}/qgis)
++
+ # core module
+ file(GLOB_RECURSE sip_files_core core/*.sip core/*.sip.in)
+ set(SIP_EXTRA_FILES_DEPEND ${sip_files_core})
+@@ -208,14 +210,19 @@ set(SIP_EXTRA_OPTIONS ${PYQT_SIP_FLAGS} -g -o -a ${CMAKE_BINARY_DIR}/python/qgis
+ if((${SIP_VERSION_STR} VERSION_EQUAL 4.19.11) OR (${SIP_VERSION_STR} VERSION_GREATER 4.19.11))
+   set(SIP_EXTRA_OPTIONS ${SIP_EXTRA_OPTIONS} -n ${PYQT5_SIP_IMPORT})
+ endif()
+-if((${SIP_VERSION_STR} VERSION_EQUAL 4.18) OR (${SIP_VERSION_STR} VERSION_GREATER 4.18))
++if(SIP_BUILD_EXECUTABLE)
++  install(FILES ${CMAKE_BINARY_DIR}/python/core/build/_core/_core.pyi DESTINATION ${QGIS_PYTHON_DIR})
++elseif((${SIP_VERSION_STR} VERSION_EQUAL 4.18) OR (${SIP_VERSION_STR} VERSION_GREATER 4.18))
+   set(SIP_EXTRA_OPTIONS ${SIP_EXTRA_OPTIONS} -y ${QGIS_PYTHON_OUTPUT_DIRECTORY}/_core.pyi)
++  install(FILES ${QGIS_PYTHON_OUTPUT_DIRECTORY}/_core.pyi DESTINATION ${QGIS_PYTHON_DIR})
+ endif()
+ 
+ if((${PYQT5_VERSION_STR} VERSION_EQUAL 5.15) OR (${PYQT5_VERSION_STR} VERSION_GREATER 5.15))
+   set(SIP_DISABLE_FEATURES ${SIP_DISABLE_FEATURES} VECTOR_MAPPED_TYPE)
+ endif()
+ 
++configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/project.py.in ${CMAKE_CURRENT_BINARY_DIR}/core/project.py @ONLY)
++configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/pyproject.toml.in ${CMAKE_CURRENT_BINARY_DIR}/core/pyproject.toml @ONLY)
+ GENERATE_SIP_PYTHON_MODULE_CODE(qgis._core core/core.sip "${sip_files_core}" cpp_files)
+ BUILD_SIP_PYTHON_MODULE(qgis._core core/core.sip ${cpp_files} "" qgis_core)
+ set(SIP_CORE_CPP_FILES ${cpp_files})
+@@ -241,8 +248,11 @@ if (WITH_GUI)
+   if((${SIP_VERSION_STR} VERSION_EQUAL 4.19.11) OR (${SIP_VERSION_STR} VERSION_GREATER 4.19.11))
+     set(SIP_EXTRA_OPTIONS ${SIP_EXTRA_OPTIONS} -n ${PYQT5_SIP_IMPORT})
+   endif()
+-  if((${SIP_VERSION_STR} VERSION_EQUAL 4.18) OR (${SIP_VERSION_STR} VERSION_GREATER 4.18))
++  if(SIP_BUILD_EXECUTABLE)
++    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/gui/build/_gui/_gui.pyi DESTINATION ${QGIS_PYTHON_DIR})
++  elseif((${SIP_VERSION_STR} VERSION_EQUAL 4.18) OR (${SIP_VERSION_STR} VERSION_GREATER 4.18))
+     set(SIP_EXTRA_OPTIONS ${SIP_EXTRA_OPTIONS} -y ${QGIS_PYTHON_OUTPUT_DIRECTORY}/_gui.pyi)
++    install(FILES ${QGIS_PYTHON_OUTPUT_DIRECTORY}/_gui.pyi DESTINATION ${QGIS_PYTHON_DIR})
+   endif()
+   if(QSCI_SIP_DIR)
+     set(SIP_EXTRA_OPTIONS ${SIP_EXTRA_OPTIONS} -I ${QSCI_SIP_DIR})
+@@ -251,6 +261,8 @@ if (WITH_GUI)
+     set(SIP_DISABLE_FEATURES ${SIP_DISABLE_FEATURES} HAVE_QSCI_SIP)
+   endif()
+ 
++  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/gui/project.py.in ${CMAKE_CURRENT_BINARY_DIR}/gui/project.py @ONLY)
++  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/gui/pyproject.toml.in ${CMAKE_CURRENT_BINARY_DIR}/gui/pyproject.toml @ONLY)
+   GENERATE_SIP_PYTHON_MODULE_CODE(qgis._gui gui/gui.sip "${sip_files_gui}" cpp_files)
+   BUILD_SIP_PYTHON_MODULE(qgis._gui gui/gui.sip ${cpp_files} "" qgis_core qgis_gui)
+ endif()
+@@ -275,10 +287,15 @@ if (WITH_3D)
+   if((${SIP_VERSION_STR} VERSION_EQUAL 4.19.11) OR (${SIP_VERSION_STR} VERSION_GREATER 4.19.11))
+     set(SIP_EXTRA_OPTIONS ${SIP_EXTRA_OPTIONS} -n ${PYQT5_SIP_IMPORT})
+   endif()
+-  if((${SIP_VERSION_STR} VERSION_EQUAL 4.18) OR (${SIP_VERSION_STR} VERSION_GREATER 4.18))
++  if(SIP_BUILD_EXECUTABLE)
++    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/3d/build/_3d/_3d.pyi DESTINATION ${QGIS_PYTHON_DIR})
++  elseif((${SIP_VERSION_STR} VERSION_EQUAL 4.18) OR (${SIP_VERSION_STR} VERSION_GREATER 4.18))
+     set(SIP_EXTRA_OPTIONS ${SIP_EXTRA_OPTIONS} -y ${QGIS_PYTHON_OUTPUT_DIRECTORY}/_qgis3d.pyi)
++    install(FILES ${QGIS_PYTHON_OUTPUT_DIRECTORY}/_qgis3d.pyi DESTINATION ${QGIS_PYTHON_DIR})
+   endif()
+ 
++  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/3d/project.py.in ${CMAKE_CURRENT_BINARY_DIR}/3d/project.py @ONLY)
++  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/3d/pyproject.toml.in ${CMAKE_CURRENT_BINARY_DIR}/3d/pyproject.toml @ONLY)
+   GENERATE_SIP_PYTHON_MODULE_CODE(qgis._3d 3d/3d.sip "${sip_files_3d}" cpp_files)
+   BUILD_SIP_PYTHON_MODULE(qgis._3d 3d/3d.sip ${cpp_files} "" qgis_core qgis_3d)
+ endif()
+@@ -299,9 +316,15 @@ if (WITH_SERVER AND WITH_SERVER_PLUGINS)
+   if((${SIP_VERSION_STR} VERSION_EQUAL 4.19.11) OR (${SIP_VERSION_STR} VERSION_GREATER 4.19.11))
+     set(SIP_EXTRA_OPTIONS ${SIP_EXTRA_OPTIONS} -n ${PYQT5_SIP_IMPORT})
+   endif()
+-  if((${SIP_VERSION_STR} VERSION_EQUAL 4.18) OR (${SIP_VERSION_STR} VERSION_GREATER 4.18))
++  if(SIP_BUILD_EXECUTABLE)
++    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/server/build/_server/_server.pyi DESTINATION ${QGIS_PYTHON_DIR})
++  elseif((${SIP_VERSION_STR} VERSION_EQUAL 4.18) OR (${SIP_VERSION_STR} VERSION_GREATER 4.18))
+     set(SIP_EXTRA_OPTIONS ${SIP_EXTRA_OPTIONS} -y ${QGIS_PYTHON_OUTPUT_DIRECTORY}/_server.pyi)
++    install(FILES ${QGIS_PYTHON_OUTPUT_DIRECTORY}/_server.pyi DESTINATION ${QGIS_PYTHON_DIR})
+   endif()
++
++  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/server/project.py.in ${CMAKE_CURRENT_BINARY_DIR}/server/project.py @ONLY)
++  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/server/pyproject.toml.in ${CMAKE_CURRENT_BINARY_DIR}/server/pyproject.toml @ONLY)
+   GENERATE_SIP_PYTHON_MODULE_CODE(qgis._server server/server.sip "${sip_files_server}" cpp_files)
+   BUILD_SIP_PYTHON_MODULE(qgis._server server/server.sip ${cpp_files} "" qgis_core qgis_server)
+ endif()
+@@ -335,15 +358,19 @@ if(WITH_ANALYSIS)
+   if((${SIP_VERSION_STR} VERSION_EQUAL 4.19.11) OR (${SIP_VERSION_STR} VERSION_GREATER 4.19.11))
+     set(SIP_EXTRA_OPTIONS ${SIP_EXTRA_OPTIONS} -n ${PYQT5_SIP_IMPORT})
+   endif()
+-  if((${SIP_VERSION_STR} VERSION_EQUAL 4.18) OR (${SIP_VERSION_STR} VERSION_GREATER 4.18))
++  if(SIP_BUILD_EXECUTABLE)
++    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/analysis/build/_analysis/_analysis.pyi DESTINATION ${QGIS_PYTHON_DIR})
++  elseif((${SIP_VERSION_STR} VERSION_EQUAL 4.18) OR (${SIP_VERSION_STR} VERSION_GREATER 4.18))
+     set(SIP_EXTRA_OPTIONS ${SIP_EXTRA_OPTIONS} -y ${QGIS_PYTHON_OUTPUT_DIRECTORY}/_analysis.pyi)
++    install(FILES ${QGIS_PYTHON_OUTPUT_DIRECTORY}/_analysis.pyi DESTINATION ${QGIS_PYTHON_DIR})
+   endif()
++
++  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/analysis/project.py.in ${CMAKE_CURRENT_BINARY_DIR}/analysis/project.py @ONLY)
++  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/analysis/pyproject.toml.in ${CMAKE_CURRENT_BINARY_DIR}/analysis/pyproject.toml @ONLY)
+   GENERATE_SIP_PYTHON_MODULE_CODE(qgis._analysis analysis/analysis.sip "${sip_files_analysis}" cpp_files)
+   BUILD_SIP_PYTHON_MODULE(qgis._analysis analysis/analysis.sip ${cpp_files} "" qgis_core qgis_analysis)
+ endif()
+ 
+-set(QGIS_PYTHON_DIR ${PYTHON_SITE_PACKAGES_DIR}/qgis)
+-
+ if(WITH_QSCIAPI)
+   # wait until after python module builds for api files to be available
+   set(QGIS_PYTHON_API_FILE "${CMAKE_BINARY_DIR}/python/qsci_apis/PyQGIS.api")
 diff --git a/python/__init__.py b/python/__init__.py
-index 0eb58512..643ccab2 100644
+index f3ee61fb..0e6a132b 100644
 --- a/python/__init__.py
 +++ b/python/__init__.py
-@@ -66,6 +66,10 @@ if os.name == 'nt':
+@@ -70,6 +70,10 @@ if os.name == 'nt':
      # any of the QGIS modules or else it will error.
      setupenv()
  
@@ -51,6 +406,82 @@ index 0eb58512..643ccab2 100644
  
  from qgis.PyQt import QtCore
  
+diff --git a/python/analysis/project.py.in b/python/analysis/project.py.in
+new file mode 100644
+index 00000000..d62cfc8d
+--- /dev/null
++++ b/python/analysis/project.py.in
+@@ -0,0 +1,50 @@
++import os
++
++from pyqtbuild import PyQtBindings, PyQtProject
++from sipbuild import Option
++
++
++class QGIS(PyQtProject):
++    """ The QGIS project. """
++
++    def __init__(self):
++        """ Initialize the project. """
++        super().__init__()
++        self.sip_files_dir = '.'
++        self.bindings_factories = [QgisAnalysis]
++
++    def get_options(self):
++        """ Return the list of configurable options. """
++        options = super().get_options()
++        options.append(
++                Option('include_dirs', option_type=list,
++                        help="additional directory to search for .sip files",
++                        metavar="DIR"))
++        return options
++
++    def apply_user_defaults(self, tool):
++        """ Set default values for user options that haven't been set yet. """
++        super().apply_user_defaults(tool)
++        if self.include_dirs is not None:
++            self.sip_include_dirs += self.include_dirs
++
++
++class QgisAnalysis(PyQtBindings):
++    """ The QGIS Analysis bindings. """
++
++    def __init__(self, project):
++        """ Initialize the bindings. """
++        super().__init__(project, 'analysis')
++        self.sip_file = 'analysis.sip'
++        self.exceptions = True
++        self.disabled_features = "@SIP_DISABLE_FEATURES@".split(";")
++
++    def apply_user_defaults(self, tool):
++        """ Set default values for user options that haven't been set yet. """
++        if self.project.py_platform.startswith('win32'):
++            self.tags.append('WS_WIN')
++        elif self.project.py_platform == 'darwin':
++            self.tags.append('WS_MACX')
++        else:
++            self.tags.append('WS_X11')
++        super().apply_user_defaults(tool)
+diff --git a/python/analysis/pyproject.toml.in b/python/analysis/pyproject.toml.in
+new file mode 100644
+index 00000000..9c58a933
+--- /dev/null
++++ b/python/analysis/pyproject.toml.in
+@@ -0,0 +1,14 @@
++# Specify the build system.
++[build-system]
++requires = ["sip >=5.0.0, <7", "PyQt-builder >=1.6, <2"]
++build-backend = "sipbuild.api"
++
++# Specify the PEP 566 metadata for the project.
++[tool.sip.metadata]
++name = "QGIS"
++version = "@COMPLETE_VERSION@"
++summary = "Python bindings for QGIS"
++home-page = "https://qgis.org"
++author = "The QGIS Community"
++license = "GPL v2"
++requires-dist = "PyQt5"
 diff --git a/python/core/auto_generated/auth/qgsauthmanager.sip.in b/python/core/auto_generated/auth/qgsauthmanager.sip.in
 index a0a02f71..a3a2b3cf 100644
 --- a/python/core/auto_generated/auth/qgsauthmanager.sip.in
@@ -63,6 +494,275 @@ index a0a02f71..a3a2b3cf 100644
  
    public:
    protected:
+diff --git a/python/core/auto_generated/qgsdiagramrenderer.sip.in b/python/core/auto_generated/qgsdiagramrenderer.sip.in
+index f162f223..06c37842 100644
+--- a/python/core/auto_generated/qgsdiagramrenderer.sip.in
++++ b/python/core/auto_generated/qgsdiagramrenderer.sip.in
+@@ -843,6 +843,11 @@ class QgsLinearlyInterpolatedDiagramRenderer : QgsDiagramRenderer
+   public:
+     QgsLinearlyInterpolatedDiagramRenderer();
+     ~QgsLinearlyInterpolatedDiagramRenderer();
++    QgsLinearlyInterpolatedDiagramRenderer( const QgsLinearlyInterpolatedDiagramRenderer &other );
++%Docstring
++Copy constructor
++%End
++
+ 
+     virtual QgsLinearlyInterpolatedDiagramRenderer *clone() const /Factory/;
+ 
+@@ -928,11 +933,6 @@ Returns configuration of appearance of legend. Will return ``None`` if no config
+     virtual QSizeF diagramSize( const QgsFeature &, const QgsRenderContext &c ) const;
+ 
+ 
+-    QgsLinearlyInterpolatedDiagramRenderer( const QgsLinearlyInterpolatedDiagramRenderer &other );
+-%Docstring
+-Copy constructor
+-%End
+-
+ };
+ 
+ /************************************************************************
+diff --git a/python/core/auto_generated/raster/qgsrasterinterface.sip.in b/python/core/auto_generated/raster/qgsrasterinterface.sip.in
+index 733c75da..99bcbdd3 100644
+--- a/python/core/auto_generated/raster/qgsrasterinterface.sip.in
++++ b/python/core/auto_generated/raster/qgsrasterinterface.sip.in
+@@ -475,7 +475,7 @@ Fill in histogram defaults if not specified
+       maximum = PyFloat_AsDouble( a4 );
+     }
+ 
+-#if defined(SIP_PROTECTED_IS_PUBLIC)
++#if defined(SIP_PROTECTED_IS_PUBLIC) || (SIP_VERSION >= 0x050000 && !defined(_MSC_VER))
+     sipCpp->initHistogram( *a0, a1, a2, minimum, maximum, *a5, a6, a7 );
+ #else
+     sipCpp->sipProtect_initHistogram( *a0, a1, a2, minimum, maximum, *a5, a6, a7 );
+diff --git a/python/core/project.py.in b/python/core/project.py.in
+new file mode 100644
+index 00000000..1fd92b7f
+--- /dev/null
++++ b/python/core/project.py.in
+@@ -0,0 +1,50 @@
++import os
++
++from pyqtbuild import PyQtBindings, PyQtProject
++from sipbuild import Option
++
++
++class QGIS(PyQtProject):
++    """ The QGIS project. """
++
++    def __init__(self):
++        """ Initialize the project. """
++        super().__init__()
++        self.sip_files_dir = '.'
++        self.bindings_factories = [QgisCore]
++
++    def get_options(self):
++        """ Return the list of configurable options. """
++        options = super().get_options()
++        options.append(
++                Option('include_dirs', option_type=list,
++                        help="additional directory to search for .sip files",
++                        metavar="DIR"))
++        return options
++
++    def apply_user_defaults(self, tool):
++        """ Set default values for user options that haven't been set yet. """
++        super().apply_user_defaults(tool)
++        if self.include_dirs is not None:
++            self.sip_include_dirs += self.include_dirs
++
++
++class QgisCore(PyQtBindings):
++    """ The QGIS Core bindings. """
++
++    def __init__(self, project):
++        """ Initialize the bindings. """
++        super().__init__(project, 'core')
++        self.sip_file = 'core.sip'
++        self.exceptions = True
++        self.disabled_features = "@SIP_DISABLE_FEATURES@".split(";")
++
++    def apply_user_defaults(self, tool):
++        """ Set default values for user options that haven't been set yet. """
++        if self.project.py_platform.startswith('win32'):
++            self.tags.append('WS_WIN')
++        elif self.project.py_platform == 'darwin':
++            self.tags.append('WS_MACX')
++        else:
++            self.tags.append('WS_X11')
++        super().apply_user_defaults(tool)
+diff --git a/python/core/pyproject.toml.in b/python/core/pyproject.toml.in
+new file mode 100644
+index 00000000..9c58a933
+--- /dev/null
++++ b/python/core/pyproject.toml.in
+@@ -0,0 +1,14 @@
++# Specify the build system.
++[build-system]
++requires = ["sip >=5.0.0, <7", "PyQt-builder >=1.6, <2"]
++build-backend = "sipbuild.api"
++
++# Specify the PEP 566 metadata for the project.
++[tool.sip.metadata]
++name = "QGIS"
++version = "@COMPLETE_VERSION@"
++summary = "Python bindings for QGIS"
++home-page = "https://qgis.org"
++author = "The QGIS Community"
++license = "GPL v2"
++requires-dist = "PyQt5"
+diff --git a/python/gui/project.py.in b/python/gui/project.py.in
+new file mode 100644
+index 00000000..aa9cd77f
+--- /dev/null
++++ b/python/gui/project.py.in
+@@ -0,0 +1,50 @@
++import os
++
++from pyqtbuild import PyQtBindings, PyQtProject
++from sipbuild import Option
++
++
++class QGIS(PyQtProject):
++    """ The QGIS project. """
++
++    def __init__(self):
++        """ Initialize the project. """
++        super().__init__()
++        self.sip_files_dir = '.'
++        self.bindings_factories = [QgisGui]
++
++    def get_options(self):
++        """ Return the list of configurable options. """
++        options = super().get_options()
++        options.append(
++                Option('include_dirs', option_type=list,
++                        help="additional directory to search for .sip files",
++                        metavar="DIR"))
++        return options
++
++    def apply_user_defaults(self, tool):
++        """ Set default values for user options that haven't been set yet. """
++        super().apply_user_defaults(tool)
++        if self.include_dirs is not None:
++            self.sip_include_dirs += self.include_dirs
++
++
++class QgisGui(PyQtBindings):
++    """ The QGIS Gui bindings. """
++
++    def __init__(self, project):
++        """ Initialize the bindings. """
++        super().__init__(project, 'gui')
++        self.sip_file = 'gui.sip'
++        self.exceptions = True
++        self.disabled_features = "@SIP_DISABLE_FEATURES@".split(";")
++
++    def apply_user_defaults(self, tool):
++        """ Set default values for user options that haven't been set yet. """
++        if self.project.py_platform.startswith('win32'):
++            self.tags.append('WS_WIN')
++        elif self.project.py_platform == 'darwin':
++            self.tags.append('WS_MACX')
++        else:
++            self.tags.append('WS_X11')
++        super().apply_user_defaults(tool)
+diff --git a/python/gui/pyproject.toml.in b/python/gui/pyproject.toml.in
+new file mode 100644
+index 00000000..9c58a933
+--- /dev/null
++++ b/python/gui/pyproject.toml.in
+@@ -0,0 +1,14 @@
++# Specify the build system.
++[build-system]
++requires = ["sip >=5.0.0, <7", "PyQt-builder >=1.6, <2"]
++build-backend = "sipbuild.api"
++
++# Specify the PEP 566 metadata for the project.
++[tool.sip.metadata]
++name = "QGIS"
++version = "@COMPLETE_VERSION@"
++summary = "Python bindings for QGIS"
++home-page = "https://qgis.org"
++author = "The QGIS Community"
++license = "GPL v2"
++requires-dist = "PyQt5"
+diff --git a/python/server/project.py.in b/python/server/project.py.in
+new file mode 100644
+index 00000000..a0704561
+--- /dev/null
++++ b/python/server/project.py.in
+@@ -0,0 +1,50 @@
++import os
++
++from pyqtbuild import PyQtBindings, PyQtProject
++from sipbuild import Option
++
++
++class QGIS(PyQtProject):
++    """ The QGIS project. """
++
++    def __init__(self):
++        """ Initialize the project. """
++        super().__init__()
++        self.sip_files_dir = '.'
++        self.bindings_factories = [QgisServer]
++
++    def get_options(self):
++        """ Return the list of configurable options. """
++        options = super().get_options()
++        options.append(
++                Option('include_dirs', option_type=list,
++                        help="additional directory to search for .sip files",
++                        metavar="DIR"))
++        return options
++
++    def apply_user_defaults(self, tool):
++        """ Set default values for user options that haven't been set yet. """
++        super().apply_user_defaults(tool)
++        if self.include_dirs is not None:
++            self.sip_include_dirs += self.include_dirs
++
++
++class QgisServer(PyQtBindings):
++    """ The QGIS Server bindings. """
++
++    def __init__(self, project):
++        """ Initialize the bindings. """
++        super().__init__(project, 'server')
++        self.sip_file = 'server.sip'
++        self.exceptions = True
++        self.disabled_features = "@SIP_DISABLE_FEATURES@".split(";")
++
++    def apply_user_defaults(self, tool):
++        """ Set default values for user options that haven't been set yet. """
++        if self.project.py_platform.startswith('win32'):
++            self.tags.append('WS_WIN')
++        elif self.project.py_platform == 'darwin':
++            self.tags.append('WS_MACX')
++        else:
++            self.tags.append('WS_X11')
++        super().apply_user_defaults(tool)
+diff --git a/python/server/pyproject.toml.in b/python/server/pyproject.toml.in
+new file mode 100644
+index 00000000..9c58a933
+--- /dev/null
++++ b/python/server/pyproject.toml.in
+@@ -0,0 +1,14 @@
++# Specify the build system.
++[build-system]
++requires = ["sip >=5.0.0, <7", "PyQt-builder >=1.6, <2"]
++build-backend = "sipbuild.api"
++
++# Specify the PEP 566 metadata for the project.
++[tool.sip.metadata]
++name = "QGIS"
++version = "@COMPLETE_VERSION@"
++summary = "Python bindings for QGIS"
++home-page = "https://qgis.org"
++author = "The QGIS Community"
++license = "GPL v2"
++requires-dist = "PyQt5"
 diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
 index 512e936a..3e68fc4c 100644
 --- a/src/core/CMakeLists.txt
@@ -78,8 +778,78 @@ index 512e936a..3e68fc4c 100644
    # automatically generated file produces warnings (unused-parameter, unused-variable, misleading-indentation)
    set_source_files_properties(${VECTOR_TILE_PROTO_SRCS} PROPERTIES COMPILE_FLAGS -w)
  endif()
+diff --git a/src/core/qgsdiagramrenderer.cpp b/src/core/qgsdiagramrenderer.cpp
+index e108be27..5d006b89 100644
+--- a/src/core/qgsdiagramrenderer.cpp
++++ b/src/core/qgsdiagramrenderer.cpp
+@@ -659,6 +659,19 @@ QgsLinearlyInterpolatedDiagramRenderer::~QgsLinearlyInterpolatedDiagramRenderer(
+   delete mDataDefinedSizeLegend;
+ }
+ 
++QgsLinearlyInterpolatedDiagramRenderer &QgsLinearlyInterpolatedDiagramRenderer::operator=( const QgsLinearlyInterpolatedDiagramRenderer &other )
++{
++  if ( &other == this )
++  {
++    return *this;
++  }
++  mSettings = other.mSettings;
++  mInterpolationSettings = other.mInterpolationSettings;
++  delete mDataDefinedSizeLegend;
++  mDataDefinedSizeLegend = new QgsDataDefinedSizeLegend( *other.mDataDefinedSizeLegend );
++  return *this;
++}
++
+ QgsLinearlyInterpolatedDiagramRenderer *QgsLinearlyInterpolatedDiagramRenderer::clone() const
+ {
+   return new QgsLinearlyInterpolatedDiagramRenderer( *this );
+diff --git a/src/core/qgsdiagramrenderer.h b/src/core/qgsdiagramrenderer.h
+index 0888bc1e..789b1b3c 100644
+--- a/src/core/qgsdiagramrenderer.h
++++ b/src/core/qgsdiagramrenderer.h
+@@ -856,6 +856,10 @@ class CORE_EXPORT QgsLinearlyInterpolatedDiagramRenderer : public QgsDiagramRend
+   public:
+     QgsLinearlyInterpolatedDiagramRenderer();
+     ~QgsLinearlyInterpolatedDiagramRenderer() override;
++    //! Copy constructor
++    QgsLinearlyInterpolatedDiagramRenderer( const QgsLinearlyInterpolatedDiagramRenderer &other );
++
++    QgsLinearlyInterpolatedDiagramRenderer &operator=( const QgsLinearlyInterpolatedDiagramRenderer &other );
+ 
+     QgsLinearlyInterpolatedDiagramRenderer *clone() const override SIP_FACTORY;
+ 
+@@ -924,17 +928,12 @@ class CORE_EXPORT QgsLinearlyInterpolatedDiagramRenderer : public QgsDiagramRend
+ 
+     QSizeF diagramSize( const QgsFeature &, const QgsRenderContext &c ) const override;
+ 
+-    //! Copy constructor
+-    QgsLinearlyInterpolatedDiagramRenderer( const QgsLinearlyInterpolatedDiagramRenderer &other );
+-
+   private:
+     QgsDiagramSettings mSettings;
+     QgsDiagramInterpolationSettings mInterpolationSettings;
+ 
+     //! Stores more settings about how legend for varying size of symbols should be rendered
+     QgsDataDefinedSizeLegend *mDataDefinedSizeLegend = nullptr;
+-
+-    QgsLinearlyInterpolatedDiagramRenderer &operator=( const QgsLinearlyInterpolatedDiagramRenderer & ) = delete;
+ };
+ 
+ #endif // QGSDIAGRAMRENDERER_H
+diff --git a/src/core/raster/qgsrasterinterface.h b/src/core/raster/qgsrasterinterface.h
+index 9fc9879a..4c2aeeed 100644
+--- a/src/core/raster/qgsrasterinterface.h
++++ b/src/core/raster/qgsrasterinterface.h
+@@ -526,7 +526,7 @@ class CORE_EXPORT QgsRasterInterface
+       maximum = PyFloat_AsDouble( a4 );
+     }
+ 
+-#if defined(SIP_PROTECTED_IS_PUBLIC)
++#if defined(SIP_PROTECTED_IS_PUBLIC) || (SIP_VERSION >= 0x050000 && !defined(_MSC_VER))
+     sipCpp->initHistogram( *a0, a1, a2, minimum, maximum, *a5, a6, a7 );
+ #else
+     sipCpp->sipProtect_initHistogram( *a0, a1, a2, minimum, maximum, *a5, a6, a7 );
 diff --git a/src/native/win/qgswinnative.cpp b/src/native/win/qgswinnative.cpp
-index 1622bf2b22..13eda842b3 100644
+index 1622bf2b..13eda842 100644
 --- a/src/native/win/qgswinnative.cpp
 +++ b/src/native/win/qgswinnative.cpp
 @@ -64,7 +64,11 @@ void QgsWinNative::initializeMainWindow( QWindow *window,
@@ -95,3 +865,1013 @@ index 1622bf2b22..13eda842b3 100644
    WinToastLib::WinToast::instance()->setAppUserModelId(
      WinToastLib::WinToast::configureAUMI( organizationName.toStdWString(),
                                            applicationName.toStdWString(),
+diff --git a/python/analysis/auto_generated/interpolation/DualEdgeTriangulation.sip b/python/analysis/auto_generated/interpolation/DualEdgeTriangulation.sip
+deleted file mode 100644
+index 39dfc9eed7..0000000000
+--- a/python/analysis/auto_generated/interpolation/DualEdgeTriangulation.sip
++++ /dev/null
+@@ -1,234 +0,0 @@
+-/************************************************************************
+- * This file has been generated automatically from                      *
+- *                                                                      *
+- * src/analysis/interpolation/DualEdgeTriangulation.h                   *
+- *                                                                      *
+- * Do not edit manually ! Edit header and run scripts/sipify.pl again   *
+- ************************************************************************/
+-
+-
+-
+-
+-class DualEdgeTriangulation: Triangulation
+-{
+-%Docstring
+- DualEdgeTriangulation is an implementation of a triangulation class based on the dual edge data structure*
+-%End
+-
+-%TypeHeaderCode
+-#include "DualEdgeTriangulation.h"
+-%End
+-  public:
+-    DualEdgeTriangulation();
+-    DualEdgeTriangulation( int nop, Triangulation *decorator );
+-    virtual ~DualEdgeTriangulation();
+-    void setDecorator( Triangulation *d );
+-    virtual void addLine( Line3D *line /Transfer/, bool breakline );
+-
+-%Docstring
+-Adds a line (e.g. a break-, structure- or an isoline) to the triangulation. The class takes ownership of the line object and its points
+-%End
+-    virtual int addPoint( QgsPoint *p /Transfer/ );
+-
+-%Docstring
+-Adds a point to the triangulation and returns the number of this point in case of success or -100 in case of failure
+- :rtype: int
+-%End
+-    virtual void performConsistencyTest();
+-%Docstring
+-Performs a consistency check, remove this later
+-%End
+-    virtual bool calcNormal( double x, double y, Vector3D *result /Out/ );
+-%Docstring
+-Calculates the normal at a point on the surface
+- :rtype: bool
+-%End
+-    virtual bool calcPoint( double x, double y, QgsPoint *result /Out/ );
+-%Docstring
+-Calculates x-, y and z-value of the point on the surface
+- :rtype: bool
+-%End
+-    virtual QgsPoint *getPoint( unsigned int i ) const;
+-%Docstring
+-Returns a pointer to the point with number i
+- :rtype: QgsPoint
+-%End
+-    virtual int getOppositePoint( int p1, int p2 );
+-
+-%Docstring
+-Returns the number of the point opposite to the triangle points p1, p2 (which have to be on a halfedge)
+- :rtype: int
+-%End
+-    virtual bool getTriangle( double x, double y, QgsPoint *p1 /Out/, int *n1 /Out/, QgsPoint *p2 /Out/, int *n2 /Out/, QgsPoint *p3 /Out/, int *n3 /Out/ ) /PyName=getTriangleVertices/;
+-%Docstring
+-Finds out, in which triangle the point with coordinates x and y is and assigns the numbers of the vertices to 'n1', 'n2' and 'n3' and the vertices to 'p1', 'p2' and 'p3'
+- :rtype: bool
+-%End
+-    virtual bool getTriangle( double x, double y, QgsPoint *p1 /Out/, QgsPoint *p2 /Out/, QgsPoint *p3 /Out/ );
+-%Docstring
+-Finds out, in which triangle the point with coordinates x and y is and assigns addresses to the points at the vertices to 'p1', 'p2' and 'p3
+- :rtype: bool
+-%End
+-    virtual QList<int> *getSurroundingTriangles( int pointno );
+-
+-%Docstring
+-Returns a pointer to a value list with the information of the triangles surrounding (counterclockwise) a point. Four integer values describe a triangle, the first three are the number of the half edges of the triangle and the fourth is -10, if the third (and most counterclockwise) edge is a breakline, and -20 otherwise. The value list has to be deleted by the code which called the method
+- :rtype: list of int
+-%End
+-    virtual double getXMax() const;
+-%Docstring
+-Returns the largest x-coordinate value of the bounding box
+- :rtype: float
+-%End
+-    virtual double getXMin() const;
+-%Docstring
+-Returns the smallest x-coordinate value of the bounding box
+- :rtype: float
+-%End
+-    virtual double getYMax() const;
+-%Docstring
+-Returns the largest y-coordinate value of the bounding box
+- :rtype: float
+-%End
+-    virtual double getYMin() const;
+-%Docstring
+-Returns the smallest x-coordinate value of the bounding box
+- :rtype: float
+-%End
+-    virtual int getNumberOfPoints() const;
+-%Docstring
+-Returns the number of points
+- :rtype: int
+-%End
+-    virtual void setForcedCrossBehavior( Triangulation::ForcedCrossBehavior b );
+-%Docstring
+-Sets the behavior of the triangulation in case of crossing forced lines
+-%End
+-    virtual void setEdgeColor( int r, int g, int b );
+-%Docstring
+-Sets the color of the normal edges
+-%End
+-    virtual void setForcedEdgeColor( int r, int g, int b );
+-%Docstring
+-Sets the color of the forced edges
+-%End
+-    virtual void setBreakEdgeColor( int r, int g, int b );
+-%Docstring
+-Sets the color of the breaklines
+-%End
+-    virtual void setTriangleInterpolator( TriangleInterpolator *interpolator );
+-
+-%Docstring
+-Sets an interpolator object
+-%End
+-    virtual void eliminateHorizontalTriangles();
+-
+-%Docstring
+-Eliminates the horizontal triangles by swapping or by insertion of new points
+-%End
+-    virtual void ruppertRefinement();
+-%Docstring
+-Adds points to make the triangles better shaped (algorithm of ruppert)
+-%End
+-    virtual bool pointInside( double x, double y );
+-
+-%Docstring
+-Returns true, if the point with coordinates x and y is inside the convex hull and false otherwise
+- :rtype: bool
+-%End
+-    virtual bool swapEdge( double x, double y );
+-%Docstring
+-Swaps the edge which is closest to the point with x and y coordinates (if this is possible)
+- :rtype: bool
+-%End
+-    virtual QList<int> *getPointsAroundEdge( double x, double y );
+-%Docstring
+-Returns a value list with the numbers of the four points, which would be affected by an edge swap. This function is e.g. needed by NormVecDecorator to know the points, for which the normals have to be recalculated. The returned ValueList has to be deleted by the code which calls the method
+- :rtype: list of int
+-%End
+-
+-    virtual bool saveAsShapefile( const QString &fileName ) const;
+-%Docstring
+- Saves the triangulation as a (line) shapefile
+-:return: true in case of success*
+- :rtype: bool
+-%End
+-
+-  protected:
+-    unsigned int insertEdge( int dual, int next, int point, bool mbreak, bool forced );
+-%Docstring
+-Inserts an edge and makes sure, everything is OK with the storage of the edge. The number of the HalfEdge is returned
+-%End
+-    int insertForcedSegment( int p1, int p2, bool breakline );
+-%Docstring
+-Inserts a forced segment between the points with the numbers p1 and p2 into the triangulation and returns the number of a HalfEdge belonging to this forced edge or -100 in case of failure
+- :rtype: int
+-%End
+-    int baseEdgeOfPoint( int point );
+-%Docstring
+-Returns the number of an edge which points to the point with number 'point' or -1 if there is an error
+- :rtype: int
+-%End
+-    int baseEdgeOfTriangle( QgsPoint *point );
+-%Docstring
+-Returns the number of a HalfEdge from a triangle in which 'point' is in. If the number -10 is returned, this means, that 'point' is outside the convex hull. If -5 is returned, then numerical problems with the leftOfTest occurred (and the value of the possible edge is stored in the variable 'mUnstableEdge'. -20 means, that the inserted point is exactly on an edge (the number is stored in the variable 'mEdgeWithPoint'). -25 means, that the point is already in the triangulation (the number of the point is stored in the member 'mTwiceInsPoint'. If -100 is returned, this means that something else went wrong
+- :rtype: int
+-%End
+-    bool checkSwap( unsigned int edge, unsigned int recursiveDeep );
+-%Docstring
+-Checks, if 'edge' has to be swapped because of the empty circle criterion. If so, doSwap(...) is called.
+- :rtype: bool
+-%End
+-    void doSwap( unsigned int edge, unsigned int recursiveDeep );
+-%Docstring
+-Swaps 'edge' and test recursively for other swaps (delaunay criterion)
+-%End
+-    void doOnlySwap( unsigned int edge );
+-%Docstring
+-Swaps 'edge' and does no recursiv testing
+-%End
+-    bool swapPossible( unsigned int edge );
+-%Docstring
+-Returns true, if it is possible to swap an edge, otherwise false(concave quad or edge on (or outside) the convex hull)
+- :rtype: bool
+-%End
+-    void triangulatePolygon( QList<int> *poly, QList<int> *free, int mainedge );
+-%Docstring
+-Divides a polygon in a triangle and two polygons and calls itself recursively for these two polygons. 'poly' is a pointer to a list with the numbers of the edges of the polygon, 'free' is a pointer to a list of free halfedges, and 'mainedge' is the number of the edge, towards which the new triangle is inserted. Mainedge has to be the same as poly->begin(), otherwise the recursion does not work
+-%End
+-    bool halfEdgeBBoxTest( int edge, double xlowleft, double ylowleft, double xupright, double yupright ) const;
+-%Docstring
+-Tests, if the bounding box of the halfedge with index i intersects the specified bounding box. The main purpose for this method is the drawing of the triangulation
+- :rtype: bool
+-%End
+-    double swapMinAngle( int edge ) const;
+-%Docstring
+-Calculates the minimum angle, which would be present, if the specified halfedge would be swapped
+- :rtype: float
+-%End
+-    int splitHalfEdge( int edge, float position );
+-%Docstring
+-Inserts a new point on the halfedge with number 'edge'. The position can have a value from 0 to 1 (e.g. 0.5 would be in the middle). The return value is the number of the new inserted point. tin is the triangulation, which should be used to calculate the elevation of the inserted point
+- :rtype: int
+-%End
+-    bool edgeOnConvexHull( int edge );
+-%Docstring
+-Returns true, if a half edge is on the convex hull and false otherwise
+- :rtype: bool
+-%End
+-    void evaluateInfluenceRegion( QgsPoint *point, int edge, QSet<int> &set );
+-%Docstring
+-Function needed for the ruppert algorithm. Tests, if point is in the circle through both endpoints of edge and the endpoint of edge->dual->next->point. If so, the function calls itself recursively for edge->next and edge->next->next. Stops, if it finds a forced edge or a convex hull edge
+-%End
+-};
+-
+-
+-
+-
+-/************************************************************************
+- * This file has been generated automatically from                      *
+- *                                                                      *
+- * src/analysis/interpolation/DualEdgeTriangulation.h                   *
+- *                                                                      *
+- * Do not edit manually ! Edit header and run scripts/sipify.pl again   *
+- ************************************************************************/
+diff --git a/python/core/auto_generated/geonode/qgsgeonoderequest.sip b/python/core/auto_generated/geonode/qgsgeonoderequest.sip
+deleted file mode 100644
+index b265afd665..0000000000
+--- a/python/core/auto_generated/geonode/qgsgeonoderequest.sip
++++ /dev/null
+@@ -1,151 +0,0 @@
+-/************************************************************************
+- * This file has been generated automatically from                      *
+- *                                                                      *
+- * src/core/geonode/qgsgeonoderequest.h                                 *
+- *                                                                      *
+- * Do not edit manually ! Edit header and run scripts/sipify.pl again   *
+- ************************************************************************/
+-
+-
+-
+-
+-struct QgsServiceLayerDetail
+-{
+-%TypeHeaderCode
+-#include <qgsgeonoderequest.h>
+-%End
+-  QUuid uuid;
+-  QString name;
+-  QString typeName;
+-  QString title;
+-  QString wmsURL;
+-  QString wfsURL;
+-  QString xyzURL;
+-};
+-
+-struct QgsGeoNodeStyle
+-{
+-%TypeHeaderCode
+-#include <qgsgeonoderequest.h>
+-%End
+-  QString id;
+-  QString name;
+-  QString title;
+-  QDomDocument body;
+-  QString styleUrl;
+-};
+-
+-class QgsGeoNodeRequest : QObject
+-{
+-
+-%TypeHeaderCode
+-#include "qgsgeonoderequest.h"
+-%End
+-  public:
+-
+-    explicit QgsGeoNodeRequest( bool forceRefresh, QObject *parent = nullptr );
+-%Docstring
+- Constructor for QgsGeoNodeRequest.
+-
+- If ``forceRefresh`` is false, then cached copies of the request may be reused.
+-%End
+-    QgsGeoNodeRequest( const QString &baseUrl, bool forceRefresh, QObject *parent = nullptr );
+-    virtual ~QgsGeoNodeRequest();
+-
+-    bool request( const QString &endPoint );
+-%Docstring
+- :rtype: bool
+-%End
+-
+-    QList<QgsServiceLayerDetail> getLayers();
+-%Docstring
+- :rtype: list of QgsServiceLayerDetail
+-%End
+-
+-    QList<QgsGeoNodeStyle> getStyles( const QString &layerName );
+-%Docstring
+- :rtype: list of QgsGeoNodeStyle
+-%End
+-
+-    QgsGeoNodeStyle getDefaultStyle( const QString &layerName );
+-%Docstring
+- :rtype: QgsGeoNodeStyle
+-%End
+-
+-    QgsGeoNodeStyle getStyle( const QString &styleID );
+-%Docstring
+- :rtype: QgsGeoNodeStyle
+-%End
+-
+-    QStringList serviceUrls( const QString &serviceType );
+-%Docstring
+-Obtain list of unique URLs in the geonode
+- :rtype: list of str
+-%End
+-
+-    QgsStringMap serviceUrlData( const QString &serviceType );
+-%Docstring
+-Obtain map of layer name and url for a service type
+- :rtype: QgsStringMap
+-%End
+-
+-    QString lastError() const;
+-%Docstring
+- :rtype: str
+-%End
+-
+-    QByteArray response() const;
+-%Docstring
+- :rtype: QByteArray
+-%End
+-
+-    QNetworkReply *reply() const;
+-%Docstring
+- :rtype: QNetworkReply
+-%End
+-
+-    void abort();
+-%Docstring
+-Abort network request immediately
+-%End
+-
+-    QString getProtocol() const;
+-%Docstring
+- :rtype: str
+-%End
+-    void setProtocol( const QString &protocol );
+-
+-  signals:
+-    void statusChanged( const QString &statusQString );
+-%Docstring
+- emit a signal to be caught by qgisapp and display a statusQString on status bar
+-%End
+-
+-    void requestFinished();
+-%Docstring
+- emit a signal once the request is finished
+-%End
+-
+-  protected slots:
+-    void replyFinished();
+-    void replyProgress( qint64, qint64 );
+-
+-  protected:
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-};
+-
+-/************************************************************************
+- * This file has been generated automatically from                      *
+- *                                                                      *
+- * src/core/geonode/qgsgeonoderequest.h                                 *
+- *                                                                      *
+- * Do not edit manually ! Edit header and run scripts/sipify.pl again   *
+- ************************************************************************/
+diff --git a/python/core/auto_generated/mesh/qgsnativemesh.sip.in b/python/core/auto_generated/mesh/qgsnativemesh.sip.in
+deleted file mode 100644
+index 5be24a6f0c..0000000000
+--- a/python/core/auto_generated/mesh/qgsnativemesh.sip.in
++++ /dev/null
+@@ -1,28 +0,0 @@
+-/************************************************************************
+- * This file has been generated automatically from                      *
+- *                                                                      *
+- * src/core/mesh/qgsnativemesh.h                                        *
+- *                                                                      *
+- * Do not edit manually ! Edit header and run scripts/sipify.pl again   *
+- ************************************************************************/
+-
+-
+-
+-
+-
+-typedef QgsPoint QgsMeshVertex; //xyz coords of vertex
+-typedef std::vector<int> QgsMeshFace; //list of vertex indexes
+-
+-struct QgsNativeMesh
+-{
+-  std::vector<QgsMeshVertex> vertices;
+-  std::vector<QgsMeshFace> faces;
+-};
+-
+-/************************************************************************
+- * This file has been generated automatically from                      *
+- *                                                                      *
+- * src/core/mesh/qgsnativemesh.h                                        *
+- *                                                                      *
+- * Do not edit manually ! Edit header and run scripts/sipify.pl again   *
+- ************************************************************************/
+diff --git a/python/gui/auto_generated/locator/qgslocator.sip b/python/gui/auto_generated/locator/qgslocator.sip
+deleted file mode 100644
+index 69b60f06a7..0000000000
+--- a/python/gui/auto_generated/locator/qgslocator.sip
++++ /dev/null
+@@ -1,142 +0,0 @@
+-/************************************************************************
+- * This file has been generated automatically from                      *
+- *                                                                      *
+- * src/gui/locator/qgslocator.h                                         *
+- *                                                                      *
+- * Do not edit manually ! Edit header and run scripts/sipify.pl again   *
+- ************************************************************************/
+-
+-
+-
+-
+-class QgsLocator : QObject
+-{
+-%Docstring
+- Handles the management of QgsLocatorFilter objects and async collection of search results from them.
+-
+- QgsLocator acts as both a registry for QgsLocatorFilter objects and a means of firing up
+- asynchronous queries against these filter objects.
+-
+- Filters are first registered to the locator by calling registerFilter(). Registering filters
+- transfers their ownership to the locator object. Plugins which register filters to the locator
+- must take care to correctly call deregisterFilter() and deregister their filter upon plugin
+- unload to avoid crashes.
+-
+- In order to trigger a search across registered filters, the fetchResults() method is called.
+- This triggers threaded calls to QgsLocatorFilter.fetchResults() for all registered filters.
+- As individual filters find matching results, the foundResult() signal will be triggered
+- for each result. Callers should connect this signal to an appropriate slot designed
+- to collect and handle these results. Since foundResult() is triggered whenever a filter
+- encounters an individual result, it will usually be triggered many times for a single
+- call to fetchResults().
+-
+-.. versionadded:: 3.0
+-%End
+-
+-%TypeHeaderCode
+-#include "qgslocator.h"
+-%End
+-  public:
+-
+-    QgsLocator( QObject *parent /TransferThis/ = 0 );
+-%Docstring
+- Constructor for QgsLocator.
+-%End
+-
+-    ~QgsLocator();
+-%Docstring
+- Destructor for QgsLocator. Destruction will block while any currently running query is terminated.
+-%End
+-
+-    void registerFilter( QgsLocatorFilter *filter /Transfer/ );
+-%Docstring
+- Registers a ``filter`` within the locator. Ownership of the filter is transferred to the
+- locator.
+- \warning Plugins which register filters to the locator must take care to correctly call
+- deregisterFilter() and deregister their filters upon plugin unload to avoid crashes.
+-.. seealso:: deregisterFilter()
+-%End
+-
+-    void deregisterFilter( QgsLocatorFilter *filter );
+-%Docstring
+- Deregisters a ``filter`` from the locator and deletes it. Calling this will block whilst
+- any currently running query is terminated.
+-
+- Plugins which register filters to the locator must take care to correctly call
+- deregisterFilter() to deregister their filters upon plugin unload to avoid crashes.
+-
+-.. seealso:: registerFilter()
+-%End
+-
+-    QList< QgsLocatorFilter *> filters();
+-%Docstring
+- Returns the list of filters registered in the locator.
+-.. seealso:: prefixedFilters()
+- :rtype: list of QgsLocatorFilter
+-%End
+-
+-    QMap< QString, QgsLocatorFilter *> prefixedFilters() const;
+-%Docstring
+- Returns a map of prefix to filter, for all registered filters
+- with valid prefixes.
+-.. seealso:: filters()
+- :rtype: QMap< str, QgsLocatorFilter *>
+-%End
+-
+-    void fetchResults( const QString &string, const QgsLocatorContext &context, QgsFeedback *feedback = 0 );
+-%Docstring
+- Triggers the background fetching of filter results for a specified search ``string``.
+- The ``context`` argument encapsulates the context relating to the search (such as a map
+- extent to prioritize).
+-
+- If specified, the ``feedback`` object must exist for the lifetime of this query.
+-
+- The foundResult() signal will be emitted for each individual result encountered
+- by the registered filters.
+-%End
+-
+-    void cancel();
+-%Docstring
+- Cancels any current running query, and blocks until query is completely canceled by
+- all filters.
+-.. seealso:: cancelWithoutBlocking()
+-%End
+-
+-    void cancelWithoutBlocking();
+-%Docstring
+- Triggers cancellation of any current running query without blocking. The query may
+- take some time to cancel after calling this.
+-.. seealso:: cancel()
+-%End
+-
+-    bool isRunning() const;
+-%Docstring
+- Returns true if a query is currently being executed by the locator.
+- :rtype: bool
+-%End
+-
+-  signals:
+-
+-    void foundResult( const QgsLocatorResult &result );
+-%Docstring
+- Emitted whenever a filter encounters a matching ``result`` after the fetchResults() method
+- is called.
+-%End
+-
+-    void finished();
+-%Docstring
+- Emitted when locator has finished a query, either as a result
+- of successful completion or early cancellation.
+-%End
+-
+-};
+-
+-
+-
+-/************************************************************************
+- * This file has been generated automatically from                      *
+- *                                                                      *
+- * src/gui/locator/qgslocator.h                                         *
+- *                                                                      *
+- * Do not edit manually ! Edit header and run scripts/sipify.pl again   *
+- ************************************************************************/
+diff --git a/python/gui/auto_generated/locator/qgslocatorcontext.sip b/python/gui/auto_generated/locator/qgslocatorcontext.sip
+deleted file mode 100644
+index c9dd0f3da5..0000000000
+--- a/python/gui/auto_generated/locator/qgslocatorcontext.sip
++++ /dev/null
+@@ -1,53 +0,0 @@
+-/************************************************************************
+- * This file has been generated automatically from                      *
+- *                                                                      *
+- * src/gui/locator/qgslocatorcontext.h                                  *
+- *                                                                      *
+- * Do not edit manually ! Edit header and run scripts/sipify.pl again   *
+- ************************************************************************/
+-
+-
+-
+-
+-class QgsLocatorContext
+-{
+-%Docstring
+- Encapsulates the properties relating to the context of a locator search.
+-.. versionadded:: 3.0
+-%End
+-
+-%TypeHeaderCode
+-#include "qgslocatorcontext.h"
+-%End
+-  public:
+-
+-    QgsLocatorContext();
+-%Docstring
+- Constructor for QgsLocatorContext.
+-%End
+-
+-    QgsRectangle targetExtent;
+-%Docstring
+- Map extent to target in results. This can be used to prioritize searching
+- for results close to the current map extent. The CRS for the extent
+- is specified by targetExtentCrs.
+-.. seealso:: targetExtentCrs
+-%End
+-
+-    QgsCoordinateReferenceSystem targetExtentCrs;
+-%Docstring
+- Coordinate reference system for the map extent variable.
+-.. seealso:: targetExtent
+-%End
+-
+-};
+-
+-
+-
+-/************************************************************************
+- * This file has been generated automatically from                      *
+- *                                                                      *
+- * src/gui/locator/qgslocatorcontext.h                                  *
+- *                                                                      *
+- * Do not edit manually ! Edit header and run scripts/sipify.pl again   *
+- ************************************************************************/
+diff --git a/python/gui/auto_generated/locator/qgslocatorfilter.sip b/python/gui/auto_generated/locator/qgslocatorfilter.sip
+deleted file mode 100644
+index ce57eb41cb..0000000000
+--- a/python/gui/auto_generated/locator/qgslocatorfilter.sip
++++ /dev/null
+@@ -1,225 +0,0 @@
+-/************************************************************************
+- * This file has been generated automatically from                      *
+- *                                                                      *
+- * src/gui/locator/qgslocatorfilter.h                                   *
+- *                                                                      *
+- * Do not edit manually ! Edit header and run scripts/sipify.pl again   *
+- ************************************************************************/
+-
+-
+-
+-
+-
+-class QgsLocatorResult
+-{
+-%Docstring
+- Encapsulates properties of an individual matching result found by a QgsLocatorFilter.
+-.. versionadded:: 3.0
+-%End
+-
+-%TypeHeaderCode
+-#include "qgslocatorfilter.h"
+-%End
+-  public:
+-
+-    QgsLocatorResult();
+-%Docstring
+- Constructor for QgsLocatorResult.
+-%End
+-
+-    QgsLocatorResult( QgsLocatorFilter *filter, const QString &displayString, const QVariant &userData = QVariant() );
+-%Docstring
+- Constructor for QgsLocatorResult.
+-%End
+-
+-    QgsLocatorFilter *filter;
+-%Docstring
+- Filter from which the result was obtained.
+-%End
+-
+-    QString displayString;
+-%Docstring
+- String displayed for result.
+-%End
+-
+-    QString description;
+-%Docstring
+- Descriptive text for result.
+-%End
+-
+-    QVariant userData;
+-%Docstring
+- Custom reference or other data set by the filter.
+-%End
+-
+-    QIcon icon;
+-%Docstring
+- Icon for result.
+-%End
+-
+-    double score;
+-%Docstring
+- Match score, from 0 - 1, where 1 represents a perfect match.
+-%End
+-
+-};
+-
+-class QgsLocatorFilter : QObject
+-{
+-%Docstring
+- Abstract base class for filters which collect locator results.
+-.. versionadded:: 3.0
+-%End
+-
+-%TypeHeaderCode
+-#include "qgslocatorfilter.h"
+-%End
+-  public:
+-
+-    enum Priority
+-    {
+-      Highest,
+-      High,
+-      Medium,
+-      Low,
+-      Lowest
+-    };
+-
+-    QgsLocatorFilter( QObject *parent = nullptr );
+-%Docstring
+- Constructor for QgsLocatorFilter.
+-%End
+-
+-    virtual QString name() const = 0;
+-%Docstring
+- Returns the unique name for the filter. This should be an untranslated string identifying the filter.
+-.. seealso:: displayName()
+- :rtype: str
+-%End
+-
+-    virtual QString displayName() const = 0;
+-%Docstring
+- Returns a translated, user-friendly name for the filter.
+-.. seealso:: name()
+- :rtype: str
+-%End
+-
+-    virtual Priority priority() const;
+-%Docstring
+- Returns the priority for the filter, which controls how results are
+- ordered in the locator.
+- :rtype: Priority
+-%End
+-
+-    virtual QString prefix() const;
+-%Docstring
+- Returns the search prefix character(s) for this filter. Prefix a search
+- with these characters will restrict the locator search to only include
+- results from this filter.
+-.. note::
+-
+-   Plugins are not permitted to utilize prefixes with < 3 characters,
+- as these are reserved for core QGIS functions. If a plugin registers
+- a filter with a prefix shorter than 3 characters then the prefix will
+- be ignored.
+- :rtype: str
+-%End
+-
+-    virtual void fetchResults( const QString &string, const QgsLocatorContext &context, QgsFeedback *feedback ) = 0;
+-%Docstring
+- Retrieves the filter results for a specified search ``string``. The ``context``
+- argument encapsulates the context relating to the search (such as a map
+- extent to prioritize).
+-
+- Implementations of fetchResults() should emit the resultFetched()
+- signal whenever they encounter a matching result.
+-
+- Subclasses should periodically check the ``feedback`` object to determine
+- whether the query has been canceled. If so, the subclass should return
+- from this method as soon as possible.
+-%End
+-
+-    virtual void triggerResult( const QgsLocatorResult &result ) = 0;
+-%Docstring
+- Triggers a filter ``result`` from this filter. This is called when
+- one of the results obtained by a call to fetchResults() is triggered
+- by a user. The filter subclass must implement logic here
+- to perform the desired operation for the search result.
+- E.g. a file search filter would open file associated with the triggered
+- result.
+-%End
+-
+-    bool useWithoutPrefix() const;
+-%Docstring
+- Returns true if the filter should be used when no prefix
+- is entered.
+-.. seealso:: setUseWithoutPrefix()
+- :rtype: bool
+-%End
+-
+-    void setUseWithoutPrefix( bool useWithoutPrefix );
+-%Docstring
+- Sets whether the filter should be used when no prefix
+- is entered.
+-.. seealso:: useWithoutPrefix()
+-%End
+-
+-    static bool stringMatches( const QString &candidate, const QString &search );
+-%Docstring
+- Tests a ``candidate`` string to see if it should be considered a match for
+- a specified ``search`` string.
+- Filter subclasses should use this method when comparing strings instead
+- of directly using QString.contains() or Python 'in' checks.
+- :rtype: bool
+-%End
+-
+-    bool enabled() const;
+-%Docstring
+- Returns true if the filter is enabled.
+-.. seealso:: setEnabled()
+- :rtype: bool
+-%End
+-
+-    void setEnabled( bool enabled );
+-%Docstring
+- Sets whether the filter is ``enabled``.
+-.. seealso:: enabled()
+-%End
+-
+-    virtual bool hasConfigWidget() const;
+-%Docstring
+- Should return true if the filter has a configuration widget.
+-.. seealso:: createConfigWidget()
+- :rtype: bool
+-%End
+-
+-    virtual void openConfigWidget( QWidget *parent = nullptr );
+-%Docstring
+- Opens the configuration widget for the filter (if it has one), with the specified ``parent`` widget.
+- The base class implementation does nothing. Subclasses can override this to show their own
+- custom configuration widget.
+-.. note::
+-
+-   hasConfigWidget() must return true to indicate that the filter supports configuration.
+-%End
+-
+-  signals:
+-
+-    void resultFetched( const QgsLocatorResult &result );
+-%Docstring
+- Should be emitted by filters whenever they encounter a matching result
+- during within their fetchResults() implementation.
+-%End
+-
+-};
+-
+-
+-
+-
+-/************************************************************************
+- * This file has been generated automatically from                      *
+- *                                                                      *
+- * src/gui/locator/qgslocatorfilter.h                                   *
+- *                                                                      *
+- * Do not edit manually ! Edit header and run scripts/sipify.pl again   *
+- ************************************************************************/
+diff --git a/python/gui/auto_generated/qgsqmlwidget.sip.in b/python/gui/auto_generated/qgsqmlwidget.sip.in
+deleted file mode 100644
+index b039619ae2..0000000000
+--- a/python/gui/auto_generated/qgsqmlwidget.sip.in
++++ /dev/null
+@@ -1,43 +0,0 @@
+-/************************************************************************
+- * This file has been generated automatically from                      *
+- *                                                                      *
+- * src/gui/qgsqmlwidget.h                                               *
+- *                                                                      *
+- * Do not edit manually ! Edit header and run scripts/sipify.pl again   *
+- ************************************************************************/
+-
+-
+-class QgsQmlWidget
+-{
+-%Docstring
+-*************************************************************************
+-qgsqmlwidget.h
+-
+----------------------
+-begin                : 25.6.2018
+-copyright            : (C) 2018 by Matthias Kuhn
+-email                : matthias@opengis.ch
+-**************************************************************************
+-
+-This program is free software; you can redistribute it and/or modify  *
+-it under the terms of the GNU General Public License as published by  *
+-the Free Software Foundation; either version 2 of the License, or     *
+-(at your option) any later version.                                   *
+-
+-**************************************************************************
+-%End
+-
+-%TypeHeaderCode
+-#include "qgsqmlwidget.h"
+-%End
+-  public:
+-    QgsQmlWidget();
+-};
+-
+-/************************************************************************
+- * This file has been generated automatically from                      *
+- *                                                                      *
+- * src/gui/qgsqmlwidget.h                                               *
+- *                                                                      *
+- * Do not edit manually ! Edit header and run scripts/sipify.pl again   *
+- ************************************************************************/
+diff --git a/python/gui/qgssourceselectdialog.sip b/python/gui/qgssourceselectdialog.sip
+deleted file mode 100644
+index b32a512d50..0000000000
+--- a/python/gui/qgssourceselectdialog.sip
++++ /dev/null
+@@ -1,86 +0,0 @@
+-/************************************************************************
+- * This file has been generated automatically from                      *
+- *                                                                      *
+- * src/gui/qgssourceselectdialog.h                                      *
+- *                                                                      *
+- * Do not edit manually ! Edit header and run scripts/sipify.pl again   *
+- ************************************************************************/
+-
+-
+-
+-
+-
+-class QgsSourceSelectDialog : QDialog, protected Ui::QgsSourceSelectBase
+-{
+-%Docstring
+- Generic class listing layers available from a remote service.
+-%End
+-
+-%TypeHeaderCode
+-#include "qgssourceselectdialog.h"
+-%End
+-  public:
+-    enum ServiceType { MapService, FeatureService };
+-
+-    QgsSourceSelectDialog( const QString &serviceName, ServiceType serviceType, QWidget *parent, Qt::WindowFlags fl );
+-%Docstring
+-Constructor
+-%End
+-
+-    ~QgsSourceSelectDialog();
+-    void setCurrentExtentAndCrs( const QgsRectangle &canvasExtent, const QgsCoordinateReferenceSystem &canvasCrs );
+-%Docstring
+-Sets the current extent and CRS. Used to select an appropriate CRS and possibly to retrieve data only in the current extent
+-%End
+-
+-  signals:
+-    void addLayer( QString uri, QString typeName );
+-%Docstring
+-Emitted when a layer is added from the dialog
+-%End
+-    void connectionsChanged();
+-%Docstring
+-Emitted when the connections for the service were changed
+-%End
+-
+-  protected:
+-
+-    virtual bool connectToService( const QgsOwsConnection &connection ) = 0;
+-%Docstring
+-To be implemented in the child class. Called when a new connection is initiated.
+- :rtype: bool
+-%End
+-    virtual void buildQuery( const QgsOwsConnection &, const QModelIndex & );
+-%Docstring
+-May be implemented in child classes for services which support customized queries.
+-%End
+-    virtual QString getLayerURI( const QgsOwsConnection &connection,
+-                                 const QString &layerTitle,
+-                                 const QString &layerName,
+-                                 const QString &crs = QString(),
+-                                 const QString &filter = QString(),
+-                                 const QgsRectangle &bBox = QgsRectangle() ) const = 0;
+-%Docstring
+-To be implemented in the child class. Constructs an URI for the specified service layer.
+- :rtype: str
+-%End
+-    void populateImageEncodings( const QStringList &availableEncodings );
+-%Docstring
+-Updates the UI for the list of available image encodings from the specified list.
+-%End
+-    QString getSelectedImageEncoding() const;
+-%Docstring
+-Returns the selected image encoding.
+- :rtype: str
+-%End
+-
+-};
+-
+-
+-/************************************************************************
+- * This file has been generated automatically from                      *
+- *                                                                      *
+- * src/gui/qgssourceselectdialog.h                                      *
+- *                                                                      *
+- * Do not edit manually ! Edit header and run scripts/sipify.pl again   *
+- ************************************************************************/
