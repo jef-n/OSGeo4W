@@ -22,6 +22,7 @@ use RTF::Writer;
 use File::Copy;
 use File::Basename;
 use Cwd qw/abs_path/;
+use Encode;
 
 my $ug = Data::UUID->new;
 
@@ -68,6 +69,22 @@ my $result = GetOptions(
 	);
 
 die "certificate not found" if defined $signwith && ! -f $signwith;
+
+my $ereleasename;
+my $codepage = "1252";
+
+if(defined $releasename) {
+	my $r = decode_utf8($releasename);
+
+	undef $codepage;
+	for my $c (qw/1252 1250/) {
+		$ereleasename = eval { encode("windows-$c", $r, Encode::FB_CROAK) };
+		next unless defined $ereleasename;
+		$codepage = $c;
+	}
+
+	die "No encoding for releasename $releasename found" unless defined $codepage;
+}
 
 if(defined $banner) {
 	die "banner $banner not found" unless -r $banner;
@@ -603,7 +620,7 @@ EOF
 			open $f, ">../packages/files" . ++$fn . ".wxs";
 
 			print $f <<EOF;
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="windows-$codepage"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
  <Fragment>
   <DirectoryRef Id="INSTALLDIR">
@@ -677,15 +694,26 @@ EOF
 # WixUIBannerBmp: Top banner							493 × 58
 # WixUIDialogBmp: Background bitmap used on the welcome and completion dialogs	493 × 312
 
+my $productname = "$packagename $version";
+$productname .= " '$ereleasename'" if defined $ereleasename;
+
+open F, ">packages/lang.wxl";
+print F <<EOF;
+<?xml version="1.0" encoding="windows-$codepage"?>
+<WixLocalization Culture="en-us" Codepage="$codepage" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+</WixLocalization>
+EOF
+close F;
+
 open F, ">packages/installer.wxs";
 print F <<EOF;
-<?xml version="1.0" encoding="windows-1252"?>
+<?xml version="1.0" encoding="windows-$codepage"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Name="$packagename $version '$releasename'"
+  <Product Name="$productname"
      Manufacturer="$manufacturer"
      Id='$productuuid'
      UpgradeCode="$upgradeuuid"
-     Language="1033" Codepage="1252" Version="$version">
+     Language="1033" Codepage="$codepage" Version="$version">
 
     <Package Id="*" Keywords="Installer" Description="$packagename $version Installer"
       Comments="QGIS is a registered trademark of QGIS.org"
@@ -693,7 +721,7 @@ print F <<EOF;
       InstallerVersion="200"
       Languages="1033"
       Compressed="yes"
-      SummaryCodepage="1252"
+      SummaryCodepage="$codepage"
       InstallScope="perMachine" />
 
     <Media Id="1" EmbedCab="yes" CompressionLevel="high" Cabinet="application.cab" />
@@ -800,7 +828,7 @@ print "Running light...\n" if $verbose;
 # warning LGHT1076 : ICE60: The file filXXX is not a Font, and its version is not a companion file reference. It should have a language specified in the Language column.
 #
 # ICE64: complains about the desktop and start menu folder
-my $cmd = "$run ./wix/light.exe -nologo -ext WixUIExtension -ext WixUtilExtension -out $installer.msi -sice:ICE09 -sice:ICE32 -sice:ICE60 -sice:ICE61 -sice:ICE64 -b ../unpacked " . join(" ", @wixobj);
+my $cmd = "$run ./wix/light.exe -nologo -ext WixUIExtension -ext WixUtilExtension -loc lang.wxl -out $installer.msi -sice:ICE09 -sice:ICE32 -sice:ICE60 -sice:ICE61 -sice:ICE64 -b ../unpacked " . join(" ", @wixobj);
 print "EXEC: $cmd\n" if $verbose;
 system $cmd;
 die "light failed" if $?;
