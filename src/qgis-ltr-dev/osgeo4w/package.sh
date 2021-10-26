@@ -43,7 +43,10 @@ if [ -d qgis ]; then
 	git clean -f
 	git reset --hard
 
-	git checkout $LTRBRANCH
+	if [ "$(git branch --show-current)" != $LTRBRANCH ]; then
+		git checkout $LTRBRANCH || git switch $LTRBRANCH
+	fi
+
 	git config pull.ff only
 	git pull
 else

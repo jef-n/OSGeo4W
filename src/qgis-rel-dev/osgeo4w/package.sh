@@ -41,7 +41,10 @@ if [ -d qgis ]; then
 	git clean -f
 	git reset --hard
 
-	git checkout $RELBRANCH
+	if [ "$(git branch --show-current)" != $RELBRANCH ]; then
+		git checkout $RELBRANCH || git switch $RELBRANCH
+	fi
+
 	git config pull.ff only
 	git pull
 else
