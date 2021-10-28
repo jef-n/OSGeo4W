@@ -292,7 +292,7 @@ EOF
 		--exclude apps/$P/python/qgis/_server.lib \
 		--exclude apps/$P/python/qgis/server \
 		--exclude apps/$P/server/ \
-		--exclude apps/$P/python/plugins/processing/algs/saga/SagaAlgorithmProvider.py \
+		--exclude apps/$P/python/plugins/sagaprovider/SagaAlgorithmProvider.py \
 	        apps/$P/python/ \
 		apps/$P/bin/qgispython.dll \
 		apps/$P/bin/qgis_analysis.dll \
