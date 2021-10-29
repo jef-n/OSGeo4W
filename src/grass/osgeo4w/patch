@@ -138,3 +138,16 @@ diff -ur ../grass-7.8.6RC3/mswindows/osgeo4w/postinstall.bat grass-7.8.6RC3/mswi
 +"%GISBASE%\bin\g.mkfontcap.exe" -o
 +
 +del "%BATCH%.tmpl
+diff --git ../grass-7.8.6RC3/lib/raster/gdal.c grass-7.8.6RC3/lib/raster/gdal.c
+--- ../grass-7.8.6RC3/lib/raster/gdal.c 2021-10-01 21:08:51.000000000 +0200
++++ grass-7.8.6RC3/lib/raster/gdal.c    2021-10-04 21:32:24.956712700 +0200
+@@ -116,6 +116,9 @@ static void load_library(void)
+ 	"libgdal1.7.0.so",
+ # endif
+ # ifdef _WIN32
++	"gdal303.dll",
++	"gdal302.dll",
++	"gdal301.dll",
+ 	"gdal300.dll",
+ 	"gdal204.dll",        
+ 	"gdal203.dll",
