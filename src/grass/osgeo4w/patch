@@ -154,12 +154,13 @@ diff --git ../grass-7.8.6RC3/lib/raster/gdal.c grass-7.8.6RC3/lib/raster/gdal.c
 diff --git ../grass-7.8.6RC3/gui/wxpython/psmap/frame.py grass-7.8.6RC3/gui/wxpython/psmap/frame.py
 --- ../grass-7.8.6RC3/gui/wxpython/psmap/frame.py 2021-10-01 21:08:51.000000000 +0200
 +++ grass-7.8.6RC3/gui/wxpython/psmap/frame.py    2021-10-04 21:32:24.956712700 +0200
-@@ -404,8 +404,7 @@ def OnCmdDone(self, event):
+@@ -404,8 +404,8 @@ def OnCmdDone(self, event):
                             '-sOutputFile=%s' % event.userData['pdfname'],
                             '-P-', '-dSAFER',
                             '-dCompatibilityLevel=1.4',
 -                           '-c', '.setpdfwrite', '-f',
 -                           event.userData['filename']]
++                           '-c', '30000000', 'setvmthreshold',
 +                           '-f', event.userData['filename']]
              else:
                  command = [
