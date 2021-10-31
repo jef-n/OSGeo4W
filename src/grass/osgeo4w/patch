@@ -2,9 +2,9 @@ diff -ur ../grass-7.8.6RC3/lib/gis/gisinit.c grass-7.8.6RC3/lib/gis/gisinit.c
 --- ../grass-7.8.6RC3/lib/gis/gisinit.c	2021-10-01 21:08:51.000000000 +0200
 +++ grass-7.8.6RC3/lib/gis/gisinit.c	2021-10-04 21:31:30.412052700 +0200
 @@ -49,12 +49,14 @@
-
+ 
      G_set_program_name(pgm);
-
+ 
 +#ifndef _WIN32
      /* verify version of GRASS headers (and anything else in include) */
      if (strcmp(version, GIS_H_VERSION) != 0)
@@ -13,7 +13,7 @@ diff -ur ../grass-7.8.6RC3/lib/gis/gisinit.c grass-7.8.6RC3/lib/gis/gisinit.c
  			"You need to rebuild GRASS GIS or untangle multiple installations."),
                          version, GIS_H_VERSION);
 +#endif
-
+     
      /* Make sure location and mapset are set */
      G_location_path();
 diff -ur ../grass-7.8.6RC3/mswindows/osgeo4w/config.h.vc grass-7.8.6RC3/mswindows/osgeo4w/config.h.vc
@@ -22,7 +22,7 @@ diff -ur ../grass-7.8.6RC3/mswindows/osgeo4w/config.h.vc grass-7.8.6RC3/mswindow
 @@ -295,4 +295,6 @@
  /* define if langinfo.h exists */
  /* #undef HAVE_LANGINFO_H */
-
+ 
 +#define HAVE_PROJ_H 1
 +
  #endif /* _config_h */
@@ -31,7 +31,7 @@ diff -ur ../grass-7.8.6RC3/mswindows/osgeo4w/env.bat.tmpl grass-7.8.6RC3/mswindo
 +++ grass-7.8.6RC3/mswindows/osgeo4w/env.bat.tmpl	2021-10-04 21:31:30.421161400 +0200
 @@ -12,11 +12,3 @@
  set GRASS_PROJSHARE=%OSGEO4W_ROOT%\share\proj
-
+ 
  set FONTCONFIG_FILE=%GISBASE%\etc\fonts.conf
 -
 -REM
@@ -45,7 +45,7 @@ diff -ur ../grass-7.8.6RC3/mswindows/osgeo4w/package.sh grass-7.8.6RC3/mswindows
 --- ../grass-7.8.6RC3/mswindows/osgeo4w/package.sh	2021-10-01 21:08:51.000000000 +0200
 +++ grass-7.8.6RC3/mswindows/osgeo4w/package.sh	2021-10-04 21:23:54.848000700 +0200
 @@ -149,13 +149,13 @@
-
+ 
  	log configure
  	./configure \
 -	    --host=x86_64-w64-mingw32 \
@@ -75,7 +75,7 @@ diff -ur ../grass-7.8.6RC3/mswindows/osgeo4w/package.sh grass-7.8.6RC3/mswindows
 +		--with-opengl=windows \
  		--with-bzlib \
  		--with-liblas=$PWD/mswindows/osgeo4w/liblas-config
-
+ 
 diff -ur ../grass-7.8.6RC3/mswindows/osgeo4w/postinstall.bat grass-7.8.6RC3/mswindows/osgeo4w/postinstall.bat
 --- ../grass-7.8.6RC3/mswindows/osgeo4w/postinstall.bat	2021-10-01 21:08:51.000000000 +0200
 +++ grass-7.8.6RC3/mswindows/osgeo4w/postinstall.bat	2021-10-04 21:32:24.956712700 +0200
@@ -87,8 +87,8 @@ diff -ur ../grass-7.8.6RC3/mswindows/osgeo4w/postinstall.bat grass-7.8.6RC3/mswi
 -
 -for /F "tokens=* USEBACKQ" %%F IN (`getspecialfolder Documents`) do set DOCUMENTS=%%F
 -
--if not %OSGEO4W_MENU_LINKS%==0 xxmklink "%OSGEO4W_STARTMENU%\GRASS GIS @VERSION@.lnk" "%BATCH%"  "--gui" "%DOCUMENTS%" "Launch GRASS GIS @VERSION@" 1 "%ICON%"
--if not %OSGEO4W_DESKTOP_LINKS%==0 xxmklink "%OSGEO4W_DESKTOP%\GRASS GIS @VERSION@.lnk" "%BATCH%"  "--gui" "%DOCUMENTS%" "Launch GRASS GIS @VERSION@" 1 "%ICON%"
+-if not %OSGEO4W_MENU_LINKS%==0 xxmklink "%OSGEO4W_STARTMENU%\GRASS GIS @VERSION@.lnk" "%BATCH%"  "--gui" "%DOCUMENTS%" "Launch GRASS GIS @VERSION@" 1 "%ICON%" 
+-if not %OSGEO4W_DESKTOP_LINKS%==0 xxmklink "%OSGEO4W_DESKTOP%\GRASS GIS @VERSION@.lnk" "%BATCH%"  "--gui" "%DOCUMENTS%" "Launch GRASS GIS @VERSION@" 1 "%ICON%" 
 -
 -rem run g.mkfontcap outside a GRASS session during
 -rem an OSGeo4W installation for updating paths to fonts
@@ -116,8 +116,8 @@ diff -ur ../grass-7.8.6RC3/mswindows/osgeo4w/postinstall.bat grass-7.8.6RC3/mswi
 +
 +for /F "tokens=* USEBACKQ" %%F IN (`getspecialfolder Documents`) do set DOCUMENTS=%%F
 +
-+if not %OSGEO4W_MENU_LINKS%==0 xxmklink "%OSGEO4W_STARTMENU%\GRASS GIS @VERSION@.lnk" "%BATCH%"  "--gui" "%DOCUMENTS%" "Launch GRASS GIS @VERSION@" 1 "%ICON%"
-+if not %OSGEO4W_DESKTOP_LINKS%==0 xxmklink "%OSGEO4W_DESKTOP%\GRASS GIS @VERSION@.lnk" "%BATCH%"  "--gui" "%DOCUMENTS%" "Launch GRASS GIS @VERSION@" 1 "%ICON%"
++if not %OSGEO4W_MENU_LINKS%==0 xxmklink "%OSGEO4W_STARTMENU%\GRASS GIS @VERSION@.lnk" "%BATCH%"  "--gui" "%DOCUMENTS%" "Launch GRASS GIS @VERSION@" 1 "%ICON%" 
++if not %OSGEO4W_DESKTOP_LINKS%==0 xxmklink "%OSGEO4W_DESKTOP%\GRASS GIS @VERSION@.lnk" "%BATCH%"  "--gui" "%DOCUMENTS%" "Launch GRASS GIS @VERSION@" 1 "%ICON%" 
 +
 +rem run g.mkfontcap outside a GRASS session during
 +rem an OSGeo4W installation for updating paths to fonts
