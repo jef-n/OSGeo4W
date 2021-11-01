@@ -1,6 +1,20 @@
-diff -ur ../grass-7.8.6RC3/lib/gis/gisinit.c grass-7.8.6RC3/lib/gis/gisinit.c
---- ../grass-7.8.6RC3/lib/gis/gisinit.c	2021-10-01 21:08:51.000000000 +0200
-+++ grass-7.8.6RC3/lib/gis/gisinit.c	2021-10-04 21:31:30.412052700 +0200
+diff -ur grass-7.8.6/gui/wxpython/psmap/frame.py ../grass-7.8.6/gui/wxpython/psmap/frame.py
+--- grass-7.8.6/gui/wxpython/psmap/frame.py	2021-10-10 13:38:28.000000000 +0200
++++ ../grass-7.8.6/gui/wxpython/psmap/frame.py	2021-10-31 02:09:46.744423500 +0100
+@@ -404,8 +404,8 @@
+                            '-sOutputFile=%s' % event.userData['pdfname'],
+                            '-P-', '-dSAFER',
+                            '-dCompatibilityLevel=1.4',
+-                           '-c', '.setpdfwrite', '-f',
+-                           event.userData['filename']]
++                           '-c', '30000000', 'setvmthreshold',
++                           '-f', event.userData['filename']]
+             else:
+                 command = [
+                     'ps2pdf',
+diff -ur grass-7.8.6/lib/gis/gisinit.c ../grass-7.8.6/lib/gis/gisinit.c
+--- grass-7.8.6/lib/gis/gisinit.c	2021-10-10 13:38:28.000000000 +0200
++++ ../grass-7.8.6/lib/gis/gisinit.c	2021-10-31 02:09:46.736423200 +0100
 @@ -49,12 +49,14 @@
  
      G_set_program_name(pgm);
@@ -16,9 +30,22 @@ diff -ur ../grass-7.8.6RC3/lib/gis/gisinit.c grass-7.8.6RC3/lib/gis/gisinit.c
      
      /* Make sure location and mapset are set */
      G_location_path();
-diff -ur ../grass-7.8.6RC3/mswindows/osgeo4w/config.h.vc grass-7.8.6RC3/mswindows/osgeo4w/config.h.vc
---- ../grass-7.8.6RC3/mswindows/osgeo4w/config.h.vc	2021-10-01 21:08:51.000000000 +0200
-+++ grass-7.8.6RC3/mswindows/osgeo4w/config.h.vc	2021-10-04 21:31:30.416058400 +0200
+diff -ur grass-7.8.6/lib/raster/gdal.c ../grass-7.8.6/lib/raster/gdal.c
+--- grass-7.8.6/lib/raster/gdal.c	2021-10-10 13:38:28.000000000 +0200
++++ ../grass-7.8.6/lib/raster/gdal.c	2021-10-31 02:09:46.742423300 +0100
+@@ -116,6 +116,9 @@
+ 	"libgdal1.7.0.so",
+ # endif
+ # ifdef _WIN32
++	"gdal303.dll",
++	"gdal302.dll",
++	"gdal301.dll",
+ 	"gdal300.dll",
+ 	"gdal204.dll",        
+ 	"gdal203.dll",        
+diff -ur grass-7.8.6/mswindows/osgeo4w/config.h.vc ../grass-7.8.6/mswindows/osgeo4w/config.h.vc
+--- grass-7.8.6/mswindows/osgeo4w/config.h.vc	2021-10-10 13:38:28.000000000 +0200
++++ ../grass-7.8.6/mswindows/osgeo4w/config.h.vc	2021-10-31 02:09:46.737423800 +0100
 @@ -295,4 +295,6 @@
  /* define if langinfo.h exists */
  /* #undef HAVE_LANGINFO_H */
@@ -26,9 +53,9 @@ diff -ur ../grass-7.8.6RC3/mswindows/osgeo4w/config.h.vc grass-7.8.6RC3/mswindow
 +#define HAVE_PROJ_H 1
 +
  #endif /* _config_h */
-diff -ur ../grass-7.8.6RC3/mswindows/osgeo4w/env.bat.tmpl grass-7.8.6RC3/mswindows/osgeo4w/env.bat.tmpl
---- ../grass-7.8.6RC3/mswindows/osgeo4w/env.bat.tmpl	2021-10-01 21:08:51.000000000 +0200
-+++ grass-7.8.6RC3/mswindows/osgeo4w/env.bat.tmpl	2021-10-04 21:31:30.421161400 +0200
+diff -ur grass-7.8.6/mswindows/osgeo4w/env.bat.tmpl ../grass-7.8.6/mswindows/osgeo4w/env.bat.tmpl
+--- grass-7.8.6/mswindows/osgeo4w/env.bat.tmpl	2021-10-10 13:38:28.000000000 +0200
++++ ../grass-7.8.6/mswindows/osgeo4w/env.bat.tmpl	2021-10-31 02:09:46.738439300 +0100
 @@ -12,11 +12,3 @@
  set GRASS_PROJSHARE=%OSGEO4W_ROOT%\share\proj
  
@@ -41,9 +68,9 @@ diff -ur ../grass-7.8.6RC3/mswindows/osgeo4w/env.bat.tmpl grass-7.8.6RC3/mswindo
 -IF EXIST "%ProgramFiles%\RStudio\bin\rstudio.exe" set PATH=%PATH%;%ProgramFiles%\RStudio\bin
 -REM set R_USER if %USERPROFILE%\Documents\R\ exists to catch most common cases of private R libraries
 -IF EXIST "%USERPROFILE%\Documents\R\" set R_USER=%USERPROFILE%\Documents\
-diff -ur ../grass-7.8.6RC3/mswindows/osgeo4w/package.sh grass-7.8.6RC3/mswindows/osgeo4w/package.sh
---- ../grass-7.8.6RC3/mswindows/osgeo4w/package.sh	2021-10-01 21:08:51.000000000 +0200
-+++ grass-7.8.6RC3/mswindows/osgeo4w/package.sh	2021-10-04 21:23:54.848000700 +0200
+diff -ur grass-7.8.6/mswindows/osgeo4w/package.sh ../grass-7.8.6/mswindows/osgeo4w/package.sh
+--- grass-7.8.6/mswindows/osgeo4w/package.sh	2021-10-10 13:38:28.000000000 +0200
++++ ../grass-7.8.6/mswindows/osgeo4w/package.sh	2021-10-31 02:09:46.740423100 +0100
 @@ -149,13 +149,13 @@
  
  	log configure
@@ -76,9 +103,9 @@ diff -ur ../grass-7.8.6RC3/mswindows/osgeo4w/package.sh grass-7.8.6RC3/mswindows
  		--with-bzlib \
  		--with-liblas=$PWD/mswindows/osgeo4w/liblas-config
  
-diff -ur ../grass-7.8.6RC3/mswindows/osgeo4w/postinstall.bat grass-7.8.6RC3/mswindows/osgeo4w/postinstall.bat
---- ../grass-7.8.6RC3/mswindows/osgeo4w/postinstall.bat	2021-10-01 21:08:51.000000000 +0200
-+++ grass-7.8.6RC3/mswindows/osgeo4w/postinstall.bat	2021-10-04 21:32:24.956712700 +0200
+diff -ur grass-7.8.6/mswindows/osgeo4w/postinstall.bat ../grass-7.8.6/mswindows/osgeo4w/postinstall.bat
+--- grass-7.8.6/mswindows/osgeo4w/postinstall.bat	2021-10-10 13:38:28.000000000 +0200
++++ ../grass-7.8.6/mswindows/osgeo4w/postinstall.bat	2021-10-31 02:09:46.741423500 +0100
 @@ -1,29 +1,29 @@
 -set ICON=%OSGEO4W_ROOT%\apps\grass\grass@POSTFIX@\gui\icons\grass_osgeo.ico
 -set BATCH=%OSGEO4W_ROOT%\bin\@GRASS_EXECUTABLE@.bat
@@ -138,30 +165,3 @@ diff -ur ../grass-7.8.6RC3/mswindows/osgeo4w/postinstall.bat grass-7.8.6RC3/mswi
 +"%GISBASE%\bin\g.mkfontcap.exe" -o
 +
 +del "%BATCH%.tmpl
-diff --git ../grass-7.8.6RC3/lib/raster/gdal.c grass-7.8.6RC3/lib/raster/gdal.c
---- ../grass-7.8.6RC3/lib/raster/gdal.c 2021-10-01 21:08:51.000000000 +0200
-+++ grass-7.8.6RC3/lib/raster/gdal.c    2021-10-04 21:32:24.956712700 +0200
-@@ -116,6 +116,9 @@ static void load_library(void)
- 	"libgdal1.7.0.so",
- # endif
- # ifdef _WIN32
-+	"gdal303.dll",
-+	"gdal302.dll",
-+	"gdal301.dll",
- 	"gdal300.dll",
- 	"gdal204.dll",
- 	"gdal203.dll",
-diff --git ../grass-7.8.6RC3/gui/wxpython/psmap/frame.py grass-7.8.6RC3/gui/wxpython/psmap/frame.py
---- ../grass-7.8.6RC3/gui/wxpython/psmap/frame.py 2021-10-01 21:08:51.000000000 +0200
-+++ grass-7.8.6RC3/gui/wxpython/psmap/frame.py    2021-10-04 21:32:24.956712700 +0200
-@@ -404,8 +404,8 @@ def OnCmdDone(self, event):
-                            '-sOutputFile=%s' % event.userData['pdfname'],
-                            '-P-', '-dSAFER',
-                            '-dCompatibilityLevel=1.4',
--                           '-c', '.setpdfwrite', '-f',
--                           event.userData['filename']]
-+                           '-c', '30000000', 'setvmthreshold',
-+                           '-f', event.userData['filename']]
-             else:
-                 command = [
-                     'ps2pdf',

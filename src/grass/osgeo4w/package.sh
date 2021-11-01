@@ -16,8 +16,8 @@ MM=${MM//./}
 [ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://github.com/OSGeo/$P/archive/refs/tags/$V.tar.gz
 [ -f ../$P-$V/configure ] || tar -C .. -xzf $P-$V.tar.gz
 [ -f ../$P-$V/patched ] || {
-	patch -l -d ../$P-$V -p1 --dry-run <patch
-	patch -l -d ../$P-$V -p1 <patch
+	patch -d ../$P-$V -p1 --dry-run <patch
+	patch -d ../$P-$V -p1 <patch
 	touch ../$P-$V/patched
 }
 
