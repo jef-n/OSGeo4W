@@ -207,7 +207,7 @@ new file mode 100644
 index 00000000..ecbdce41
 --- /dev/null
 +++ b/python/3d/project.py.in
-@@ -0,0 +1,50 @@
+@@ -0,0 +1,51 @@
 +import os
 +
 +from pyqtbuild import PyQtBindings, PyQtProject
@@ -247,6 +247,7 @@ index 00000000..ecbdce41
 +        super().__init__(project, '3d')
 +        self.sip_file = '3d.sip'
 +        self.exceptions = True
++        self.release_gil = True
 +        self.disabled_features = "@SIP_DISABLE_FEATURES@".split(";")
 +
 +    def apply_user_defaults(self, tool):
@@ -411,7 +412,7 @@ new file mode 100644
 index 00000000..d62cfc8d
 --- /dev/null
 +++ b/python/analysis/project.py.in
-@@ -0,0 +1,50 @@
+@@ -0,0 +1,51 @@
 +import os
 +
 +from pyqtbuild import PyQtBindings, PyQtProject
@@ -451,6 +452,7 @@ index 00000000..d62cfc8d
 +        super().__init__(project, 'analysis')
 +        self.sip_file = 'analysis.sip'
 +        self.exceptions = True
++        self.release_gil = True
 +        self.disabled_features = "@SIP_DISABLE_FEATURES@".split(";")
 +
 +    def apply_user_defaults(self, tool):
@@ -540,7 +542,7 @@ new file mode 100644
 index 00000000..1fd92b7f
 --- /dev/null
 +++ b/python/core/project.py.in
-@@ -0,0 +1,50 @@
+@@ -0,0 +1,51 @@
 +import os
 +
 +from pyqtbuild import PyQtBindings, PyQtProject
@@ -580,6 +582,7 @@ index 00000000..1fd92b7f
 +        super().__init__(project, 'core')
 +        self.sip_file = 'core.sip'
 +        self.exceptions = True
++        self.release_gil = True
 +        self.disabled_features = "@SIP_DISABLE_FEATURES@".split(";")
 +
 +    def apply_user_defaults(self, tool):
@@ -616,7 +619,7 @@ new file mode 100644
 index 00000000..aa9cd77f
 --- /dev/null
 +++ b/python/gui/project.py.in
-@@ -0,0 +1,50 @@
+@@ -0,0 +1,51 @@
 +import os
 +
 +from pyqtbuild import PyQtBindings, PyQtProject
@@ -656,6 +659,7 @@ index 00000000..aa9cd77f
 +        super().__init__(project, 'gui')
 +        self.sip_file = 'gui.sip'
 +        self.exceptions = True
++        self.release_gil = True
 +        self.disabled_features = "@SIP_DISABLE_FEATURES@".split(";")
 +
 +    def apply_user_defaults(self, tool):
@@ -692,7 +696,7 @@ new file mode 100644
 index 00000000..a0704561
 --- /dev/null
 +++ b/python/server/project.py.in
-@@ -0,0 +1,50 @@
+@@ -0,0 +1,51 @@
 +import os
 +
 +from pyqtbuild import PyQtBindings, PyQtProject
@@ -732,6 +736,7 @@ index 00000000..a0704561
 +        super().__init__(project, 'server')
 +        self.sip_file = 'server.sip'
 +        self.exceptions = True
++        self.release_gil = True
 +        self.disabled_features = "@SIP_DISABLE_FEATURES@".split(";")
 +
 +    def apply_user_defaults(self, tool):
