@@ -49,7 +49,10 @@ while(<F>) {
 		$pkg = "$pkg-devel";
 	}
 
-	die "no src for $pkg" unless exists $src{$pkg};
+	unless(exists $src{$pkg}) {
+		warn "no src for $pkg";
+		next;
+	}
 
 	$pkg = $src{$pkg};
 

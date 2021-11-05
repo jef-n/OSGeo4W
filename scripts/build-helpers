@@ -275,7 +275,12 @@ fetchdeps() {
 	done
 
 	log "OSGEO4W:$cmd"
-	$cmd
+	if ! $cmd; then
+		log "OSGeo4W failed"
+		for i in osgeo4w/setup.log osgeo4w/setup.log.full osgeo4w/var/log/setup.log osgeo4w/var/log/setup.log.full; do
+			[ -f $i ] && cat $i
+		done
+	fi
 
 	missing=
 	for p in "$@"; do
@@ -290,9 +295,6 @@ fetchdeps() {
 		return 0
 	else
 		log "Missing dependencies:$missing"
-		for i in osgeo4w/setup.log osgeo4w/setup.log.full osgeo4w/var/log/setup.log osgeo4w/var/log/setup.log.full; do
-			[ -f $i ] && cat $i
-		done
 		return 1
 	fi
 }

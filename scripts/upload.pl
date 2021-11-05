@@ -276,7 +276,11 @@ foreach my $p (sort keys %packages) {
 	}
 
 	if($uploads) {
-		print STDERR "updated hint: $tdir/$d/$p/setup.hint [c:$curr p:$prev t:$test]\n";
+		my @v;
+		push @v, "c:$curr" if defined $curr;
+		push @v, "p:$prev" if defined $prev;
+		push @v, "t:$test" if defined $test;
+		print STDERR "updated hint: $tdir/$d/$p/setup.hint [" . join(" ", @v) . "]\n";
 	} else {
 		unlink "$tdir/$d/$p/setup.hint";
 	}
