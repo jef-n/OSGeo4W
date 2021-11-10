@@ -9,27 +9,36 @@ my %src;
 my %bin;
 my $pkg;
 
+system("/usr/bin/rsync download.osgeo.org:/osgeo/download/osgeo4w/v2/x86_64/setup.ini /tmp/setup-master.ini") == 0 or die "Could not download setup.ini";
+
+$src{"openjpeg-tools"} = "openjpeg";
+$src{"alkis-import"} = "alkis-import";
+$src{"qtkeychain"} = "qtkeychain-libs";
+
 # collect package from source relations
-open F, "x86_64/setup.ini";
-while(<F>) {
-	if(/^@ (\S+)\s+$/) {
-		$pkg = $1
+for my $f ("/tmp/setup-master.ini", "x86_64/setup.ini") {
+	open F, $f;
+	while(<F>) {
+		if(/^@ (\S+)\s+$/) {
+			$pkg = $1
 
-	# source: x86_64/release/avce00/avce00-2.0.0-3-src.tar.bz2 1316 1225e82b0adbb05fdee034c206992d28
-	} elsif( /^source:\s+(\S+)\s+\d+\s+\S+\s+$/ ) {
-		next if exists $src{$pkg};
+		# source: x86_64/release/avce00/avce00-2.0.0-3-src.tar.bz2 1316 1225e82b0adbb05fdee034c206992d28
+		} elsif( /^source:\s+(\S+)\s+\d+\s+\S+\s+$/ ) {
+			next if exists $src{$pkg};
 
-		my ($src, $ver, $bin) = $1 =~ m#^.+/([^/]+)/\1-(.*)-(\d+)-src.tar.bz2$#;
-		die "invalid $1" unless defined $src && defined $ver && defined $bin;
+			my ($src, $ver, $bin) = $1 =~ m#^.+/([^/]+)/\1-(.*)-(\d+)-src.tar.bz2$#;
+			die "invalid $1" unless defined $src && defined $ver && defined $bin;
 
-		die "src/$src not found" unless -f "src/$src/osgeo4w/package.sh";
+			$src = "qtkeychain" if $src eq "qtkeychain-libs";
 
-		$src{$pkg} = $src;
-		push @{ $bin{$src} }, $pkg;
+			die "src/$src [$ver:$bin] not found" unless -f "src/$src/osgeo4w/package.sh";
+
+			$src{$pkg} = $src;
+			push @{ $bin{$src} }, $pkg;
+		}
 	}
+	close F;
 }
-close F;
-
 
 my %fdep;
 my %rdep;

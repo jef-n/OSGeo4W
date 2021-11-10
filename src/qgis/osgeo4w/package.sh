@@ -104,6 +104,8 @@ nextbinary
 	rm -f qgsversion.h
 	touch $SRCDIR/CMakeLists.txt
 
+	OSGEO4W_SKIP_TESTS=1
+
 	cmake -G Ninja \
 		-D CMAKE_CXX_COMPILER="$(cygpath -m $CXX)" \
 		-D CMAKE_C_COMPILER="$(cygpath -m $CC)" \
@@ -118,6 +120,7 @@ nextbinary
 		-D WITH_QSPATIALITE=TRUE \
 		-D WITH_SERVER=TRUE \
 		-D SERVER_SKIP_ECW=TRUE \
+		-D ENABLE_TESTS=FALSE \
 		-D WITH_GRASS=TRUE \
 		-D WITH_3D=TRUE \
 		-D WITH_GRASS7=TRUE \

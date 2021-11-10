@@ -1,0 +1,21 @@
+diff -ur openjpeg-2.4.0/src/bin/jp3d/convert.c ../openjpeg-2.4.0/src/bin/jp3d/convert.c
+--- openjpeg-2.4.0/src/bin/jp3d/convert.c	2020-12-28 21:59:39.000000000 +0100
++++ ../openjpeg-2.4.0/src/bin/jp3d/convert.c	2021-11-09 20:18:15.355245000 +0100
+@@ -581,7 +581,7 @@
+     f = fopen(filename, "rb");
+     if (!f) {
+         fprintf(stdout, "[ERROR] Failed to open %s for reading !!\n", filename);
+-        opj_free(volume);
++        free(volume);
+         return 0;
+     }
+ 
+@@ -919,7 +919,7 @@
+     f = fopen(filename, "rb");
+     if (!f) {
+         fprintf(stderr, "[ERROR] Failed to open %s for reading !!\n", filename);
+-        opj_free(volume);
++        free(volume);
+         return 0;
+     }
+ 

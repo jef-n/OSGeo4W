@@ -1,6 +1,6 @@
 diff -ur grass-7.8.6/gui/wxpython/psmap/frame.py ../grass-7.8.6/gui/wxpython/psmap/frame.py
 --- grass-7.8.6/gui/wxpython/psmap/frame.py	2021-10-10 13:38:28.000000000 +0200
-+++ ../grass-7.8.6/gui/wxpython/psmap/frame.py	2021-10-31 02:09:46.744423500 +0100
++++ ../grass-7.8.6/gui/wxpython/psmap/frame.py	2021-11-01 11:25:51.106679300 +0100
 @@ -404,8 +404,8 @@
                             '-sOutputFile=%s' % event.userData['pdfname'],
                             '-P-', '-dSAFER',
@@ -14,12 +14,12 @@ diff -ur grass-7.8.6/gui/wxpython/psmap/frame.py ../grass-7.8.6/gui/wxpython/psm
                      'ps2pdf',
 diff -ur grass-7.8.6/lib/gis/gisinit.c ../grass-7.8.6/lib/gis/gisinit.c
 --- grass-7.8.6/lib/gis/gisinit.c	2021-10-10 13:38:28.000000000 +0200
-+++ ../grass-7.8.6/lib/gis/gisinit.c	2021-10-31 02:09:46.736423200 +0100
++++ ../grass-7.8.6/lib/gis/gisinit.c	2021-11-09 12:43:29.210713200 +0100
 @@ -49,12 +49,14 @@
  
      G_set_program_name(pgm);
  
-+#ifndef _WIN32
++#ifndef WIN32
      /* verify version of GRASS headers (and anything else in include) */
      if (strcmp(version, GIS_H_VERSION) != 0)
  	G_fatal_error(_("Module built against version %s but "
@@ -30,13 +30,29 @@ diff -ur grass-7.8.6/lib/gis/gisinit.c ../grass-7.8.6/lib/gis/gisinit.c
      
      /* Make sure location and mapset are set */
      G_location_path();
+@@ -84,12 +86,14 @@
+     if (initialized)
+ 	return;
+ 
++#ifndef WIN32
+     /* verify version of GRASS headers (and anything else in include) */
+     if (strcmp(version, GIS_H_VERSION) != 0)
+ 	G_fatal_error(_("Module built against version %s but "
+ 			"trying to use version %s. "
+ 			"You need to rebuild GRASS GIS or untangle multiple installations."),
+                         version, GIS_H_VERSION);
++#endif
+     gisinit();
+ }
+ 
 diff -ur grass-7.8.6/lib/raster/gdal.c ../grass-7.8.6/lib/raster/gdal.c
 --- grass-7.8.6/lib/raster/gdal.c	2021-10-10 13:38:28.000000000 +0200
-+++ ../grass-7.8.6/lib/raster/gdal.c	2021-10-31 02:09:46.742423300 +0100
-@@ -116,6 +116,9 @@
++++ ../grass-7.8.6/lib/raster/gdal.c	2021-11-01 11:25:51.109679100 +0100
+@@ -116,6 +116,10 @@
  	"libgdal1.7.0.so",
  # endif
  # ifdef _WIN32
++	"gdal304.dll",
 +	"gdal303.dll",
 +	"gdal302.dll",
 +	"gdal301.dll",
@@ -45,7 +61,7 @@ diff -ur grass-7.8.6/lib/raster/gdal.c ../grass-7.8.6/lib/raster/gdal.c
  	"gdal203.dll",        
 diff -ur grass-7.8.6/mswindows/osgeo4w/config.h.vc ../grass-7.8.6/mswindows/osgeo4w/config.h.vc
 --- grass-7.8.6/mswindows/osgeo4w/config.h.vc	2021-10-10 13:38:28.000000000 +0200
-+++ ../grass-7.8.6/mswindows/osgeo4w/config.h.vc	2021-10-31 02:09:46.737423800 +0100
++++ ../grass-7.8.6/mswindows/osgeo4w/config.h.vc	2021-11-01 11:25:51.110679400 +0100
 @@ -295,4 +295,6 @@
  /* define if langinfo.h exists */
  /* #undef HAVE_LANGINFO_H */
@@ -55,7 +71,7 @@ diff -ur grass-7.8.6/mswindows/osgeo4w/config.h.vc ../grass-7.8.6/mswindows/osge
  #endif /* _config_h */
 diff -ur grass-7.8.6/mswindows/osgeo4w/env.bat.tmpl ../grass-7.8.6/mswindows/osgeo4w/env.bat.tmpl
 --- grass-7.8.6/mswindows/osgeo4w/env.bat.tmpl	2021-10-10 13:38:28.000000000 +0200
-+++ ../grass-7.8.6/mswindows/osgeo4w/env.bat.tmpl	2021-10-31 02:09:46.738439300 +0100
++++ ../grass-7.8.6/mswindows/osgeo4w/env.bat.tmpl	2021-11-01 11:25:51.111678600 +0100
 @@ -12,11 +12,3 @@
  set GRASS_PROJSHARE=%OSGEO4W_ROOT%\share\proj
  
@@ -70,7 +86,7 @@ diff -ur grass-7.8.6/mswindows/osgeo4w/env.bat.tmpl ../grass-7.8.6/mswindows/osg
 -IF EXIST "%USERPROFILE%\Documents\R\" set R_USER=%USERPROFILE%\Documents\
 diff -ur grass-7.8.6/mswindows/osgeo4w/package.sh ../grass-7.8.6/mswindows/osgeo4w/package.sh
 --- grass-7.8.6/mswindows/osgeo4w/package.sh	2021-10-10 13:38:28.000000000 +0200
-+++ ../grass-7.8.6/mswindows/osgeo4w/package.sh	2021-10-31 02:09:46.740423100 +0100
++++ ../grass-7.8.6/mswindows/osgeo4w/package.sh	2021-11-01 11:25:51.112679300 +0100
 @@ -149,13 +149,13 @@
  
  	log configure
@@ -105,8 +121,8 @@ diff -ur grass-7.8.6/mswindows/osgeo4w/package.sh ../grass-7.8.6/mswindows/osgeo
  
 diff -ur grass-7.8.6/mswindows/osgeo4w/postinstall.bat ../grass-7.8.6/mswindows/osgeo4w/postinstall.bat
 --- grass-7.8.6/mswindows/osgeo4w/postinstall.bat	2021-10-10 13:38:28.000000000 +0200
-+++ ../grass-7.8.6/mswindows/osgeo4w/postinstall.bat	2021-10-31 02:09:46.741423500 +0100
-@@ -1,29 +1,29 @@
++++ ../grass-7.8.6/mswindows/osgeo4w/postinstall.bat	2021-11-09 10:44:28.527248000 +0100
+@@ -1,29 +1,31 @@
 -set ICON=%OSGEO4W_ROOT%\apps\grass\grass@POSTFIX@\gui\icons\grass_osgeo.ico
 -set BATCH=%OSGEO4W_ROOT%\bin\@GRASS_EXECUTABLE@.bat
 -textreplace -std -t "%BATCH%"
@@ -164,4 +180,6 @@ diff -ur grass-7.8.6/mswindows/osgeo4w/postinstall.bat ../grass-7.8.6/mswindows/
 +rem run g.mkfontcap outside a GRASS session
 +"%GISBASE%\bin\g.mkfontcap.exe" -o
 +
-+del "%BATCH%.tmpl
++del "%BATCH%.tmpl"
++
++exit /b 0

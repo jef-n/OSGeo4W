@@ -331,7 +331,7 @@ unless(-d "unpacked" ) {
 			next;
 		}
 
-		$p =~ s#^.*/#packages/#;
+		$p =~ s#^.*/##;
 
 		unless( -r $p ) {
 			print "Package $p not found.\n" if $verbose;
@@ -341,8 +341,8 @@ unless(-d "unpacked" ) {
 		print O "$pn $p 0\n";
 
 		print "Unpacking $p...\n" if $verbose;
-		system "bash -c 'tar $taropt -C unpacked -xjvf $p | gzip -c >unpacked/etc/setup/$pn.lst.gz && [ \${PIPESTATUS[0]} == 0 -a \${PIPESTATUS[1]} == 0 ]'";
-		die "unpacking of $p failed" if $?;
+		system "bash -c 'tar $taropt -C unpacked -xjvf packages/$p | gzip -c >unpacked/etc/setup/$pn.lst.gz && [ \${PIPESTATUS[0]} == 0 -a \${PIPESTATUS[1]} == 0 ]'";
+		die "unpacking of packages/$p failed" if $?;
 	}
 
 	close O;

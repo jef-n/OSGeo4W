@@ -1,41 +1,23 @@
-diff -ur orig/gdal-3.1.3/frmts/gtiff/libtiff/makefile.vc ../frmts/gtiff/libtiff/makefile.vc
---- orig/gdal-3.1.3/frmts/gtiff/libtiff/makefile.vc	2020-09-01 10:36:30.000000000 +0200
-+++ ../frmts/gtiff/libtiff/makefile.vc	2020-10-11 16:12:10.142034500 +0200
-@@ -56,14 +56,14 @@
- !IFDEF JPEG_EXTERNAL_LIB
- JPEG_FLAGS =	-I$(JPEGDIR) -DJPEG_SUPPORT  -DOJPEG_SUPPORT
- !ELSE
--JPEG_FLAGS =	-I..\..\jpeg\libjpeg -DJPEG_SUPPORT -DOJPEG_SUPPORT
-+EXTRAFLAGS =	-I..\..\jpeg\libjpeg -DJPEG_SUPPORT -DOJPEG_SUPPORT $(EXTRAFLAGS)
- !ENDIF
- !ENDIF
+--- gdal-3.4.0/swig/python/gdal-utils/osgeo_utils/gdal_polygonize.py	2021-11-04 12:55:49.000000000 +0100
++++ ../gdal-3.4.0/swig/python/gdal-utils/osgeo_utils/gdal_polygonize.py	2021-11-10 02:40:42.901525800 +0100
+@@ -206,9 +206,9 @@
  
- !IFDEF ZLIB_EXTERNAL_LIB
- ZLIB_FLAGS = $(ZLIB_INC)
- !ELSE
--ZLIB_FLAGS = -I..\..\zlib
-+EXTRA_FLAGS = -I..\..\zlib $(EXTRA_FLAGS)
- !ENDIF
+         parser.add_argument("-b", "-band", dest="band_number", metavar="band", type=str, default='1',
+                             help="The band on <raster_file> to build the polygons from. "
+-                                 "Starting with GDAL 2.2, the value can also be set to “mask”, "
++                                 "Starting with GDAL 2.2, the value can also be set to \"mask\", "
+                                  "to indicate that the mask band of the first band must be used "
+-                                 "(or “mask,band_number” for the mask of a specified band).")
++                                 "(or \"mask,band_number\" for the mask of a specified band).")
  
- !IFDEF JPEG12_SUPPORTED
-diff -ur orig/gdal-3.1.3/frmts/gtiff/makefile.vc ../frmts/gtiff/makefile.vc
---- orig/gdal-3.1.3/frmts/gtiff/makefile.vc	2020-09-01 10:36:30.000000000 +0200
-+++ ../frmts/gtiff/makefile.vc	2020-10-11 16:12:10.140034100 +0200
-@@ -39,7 +39,7 @@
- !IFDEF GEOTIFF_INC
- SUB_GEOTIFF_TARGET =	
- !ELSE
--GEOTIFF_INC   =	-Ilibgeotiff -DINTERNAL_LIBGEOTIFF
-+EXTRAFLAGS	=	-Ilibgeotiff -DINTERNAL_LIBGEOTIFF $(EXTRAFLAGS)
- SUB_GEOTIFF_TARGET =	geotiff
- !ENDIF
+         parser.add_argument("-of", "-f", dest="driver_name", metavar='ogr_format',
+                             help="Select the output format. "
+@@ -224,7 +224,7 @@
+                             help="The name of the layer created to hold the polygon features.")
  
-@@ -47,7 +47,7 @@
- !IFDEF JPEG_EXTERNAL_LIB
- JPEG_FLAGS =	-I..\jpeg -I$(JPEGDIR) -DHAVE_LIBJPEG
- !ELSE
--JPEG_FLAGS =	-I..\jpeg -I..\jpeg\libjpeg -DHAVE_LIBJPEG
-+EXTRAFLAGS =	-I..\jpeg -I..\jpeg\libjpeg -DHAVE_LIBJPEG $(EXTRAFLAGS)
- !ENDIF
- !ENDIF
+         parser.add_argument("dst_fieldname", type=str, nargs='?',
+-                            help="The name of the field to create (defaults to “DN”).")
++                            help="The name of the field to create (defaults to \"DN\").")
+ 
+         return parser
  

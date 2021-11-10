@@ -1,8 +1,8 @@
 export P=gdal
-export V=3.3.3
+export V=3.4.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-devel libjpeg12-devel"
+export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-devel libjpeg12-devel python3-setuptools"
 
 source ../../../scripts/build-helpers
 
@@ -23,6 +23,12 @@ startlog
 	patch -p1 <../osgeo4w/patch
 	touch patched
 	cd ../osgeo4w
+}
+
+[ -f osgeo4w/apps/Python39/Lib/site-packages/setuptools/command/patched ] || {
+	patch -p0 --dry-run <easy_install.diff
+	patch -p0 <easy_install.diff
+	touch osgeo4w/apps/Python39/Lib/site-packages/setuptools/command/patched
 }
 
 #
@@ -115,18 +121,22 @@ cd ../$P-${V%rc*}
 	vs2019env
 	export PATH=$PATH:/bin
 
+	pv=$(sed -ne 's/#define POPPLER_VERSION "\([0-9]*\)\.\([0-9]*\)\..*$/\1:\2/p' ../osgeo4w/osgeo4w/include/poppler/poppler-config.h)
+
 	for i in clean default install devinstall; do
 		[ -f ../osgeo4w/no$i ] && continue
 
-
 		nmake /f makefile.vc \
+			POPPLER_MAJOR_VERSION=${pv%:*} \
+			POPPLER_MINOR_VERSION=${pv#*:} \
+			OPENJPEG_INCLUDE=$(cygpath -aw ../osgeo4w/osgeo4w/include/openjpeg-*) \
 			OSGEO4W=$(cygpath -aw ../osgeo4w/osgeo4w) \
 			EXT_NMAKE_OPT=$(cygpath -aw ../osgeo4w/nmake.opt) \
 			GDAL_HOME=$(cygpath -aw $DESTDIR) \
 			ECWDIR=$(cygpath -aw $ECW_SDK) \
 			FGDB_SDK=$(cygpath -aw $FGDB_SDK) \
 			MRSID_SDK=$(cygpath -aw $MRSID_SDK) \
-			VCDIR="$VCToolsInstallDir" \
+			SETARGV="\"$VCToolsInstallDir\\lib\\x64\\setargv.obj\"" \
 			$i
 	done
 
@@ -176,6 +186,8 @@ EOF
 
 	expytmpl="$expytmpl --exclude apps/$PYTHON/Scripts/$b.py"
 done
+
+echo $(basename "$PYDESTDIR/apps/$PYTHON/lib/site-packages/GDAL"*.egg) >$PYDESTDIR/apps/$PYTHON/lib/site-packages/python3-$P.pth
 
 echo -e "python -B \"%PYTHONHOME%\\Scripts\\preremove-cached.py\" python3-$P\r" >>$PYDESTDIR/etc/preremove/python3-$P.bat
 
@@ -404,7 +416,8 @@ fi
 tar -C .. -cjvf $R/$P-$V-$B-src.tar.bz2 \
 	osgeo4w/package.sh \
 	osgeo4w/nmake.opt \
-	osgeo4w/patch
+	osgeo4w/patch \
+	osgeo4w/easy_install.diff
 
 rm -f no*
 

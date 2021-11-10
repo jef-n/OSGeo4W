@@ -264,8 +264,6 @@ fetchdeps() {
 	cmd="$cmd --only-site"
 	cmd="$cmd --safe"
 	cmd="$cmd --no-shortcuts"
-	cmd="$cmd --no-startmenu"
-	cmd="$cmd --no-desktop"
 	cmd="$cmd -s $(cygpath -am $OSGEO4W_REP)"
 	cmd="$cmd -s $MASTER_REPO"
 	cmd="$cmd -l $(cygpath -am $OSGEO4W_REP/package-cache)"
@@ -429,8 +427,11 @@ packagewheel() {
 	(
 		cd $OSGEO4W_PWD
 
-		mkdir -p build
-		export TEMP=$(cygpath -aw build)
+		# mkdir -p build
+		# export TEMP=$(cygpath -aw build)
+		# PATH too long
+		mkdir -p /c/TEMP/
+		export TEMP=/c/TEMP/
 
 		fetchenv osgeo4w/bin/o4w_env.bat
 		vs2019env

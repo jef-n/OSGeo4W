@@ -1,23 +1,28 @@
 export P=poppler
-export V=20.10.0
+export V=21.11.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="freetype-devel libjpeg-devel zlib-devel libpng-devel libtiff-devel curl-devel boost-devel cairo-devel libiconv-devel"
+export BUILDDEPENDS="freetype-devel libjpeg-devel zlib-devel libpng-devel libtiff-devel curl-devel boost-devel cairo-devel libiconv-devel openjpeg-devel openjpeg-tools"
+
+set -x
 
 source ../../../scripts/build-helpers
 
 startlog
 
 [ -f $P-$V.tar.xz ] || wget https://poppler.freedesktop.org/$P-$V.tar.xz
-[ -f ../CMakeLists.txt ] || tar -C .. -xJf $P-$V.tar.xz --xform "s,^$P-$V,.,"
-[ -f patched ] || {
-	patch -d .. -p1 --dry-run <diff
-	patch -d .. -p1 <diff
-	touch patched
+[ -f ../CMakeLists.txt ] || tar -C .. -xJf $P-$V.tar.xz
+[ -f ../$P-$V/patched ] || {
+	patch -d ../$P-$V -p1 --dry-run <diff
+	patch -d ../$P-$V -p1 <diff
+	touch ../$P-$V/patched
 }
 
+[ -f poppler-test.tar.gz ] || wget -O poppler-test.tar.gz https://github.com/freedesktop/poppler-test/archive/refs/heads/master.tar.gz
+[ -d poppler-test-master ] || tar xzf poppler-test.tar.gz
+
 p=$P-data
-v=0.4.9
+v=0.4.11
 [ -f $p-$v.tar.gz ] || wget https://poppler.freedesktop.org/$p-$v.tar.gz
 [ -d $p ] || tar -xzf $p-$v.tar.gz --xform "s,^$p-$v,$p,"
 
@@ -53,8 +58,9 @@ cmake -G Ninja \
 	-D ENABLE_QT5=OFF \
 	-D ENABLE_QT6=OFF \
 	-D ENABLE_GLIB=OFF \
-	-D ENABLE_LIBOPENJPEG=none \
+	-D ENABLE_RELOCATABLE=OFF \
 	-D ENABLE_UNSTABLE_API_ABI_HEADERS=ON \
+	-D OpenJPEG_DIR=$(cygpath -am ../osgeo4w/lib/openjpeg-2.4) \
 	-D FREETYPE_INCLUDE_DIRS=$(cygpath -am ../osgeo4w/include/freetype2) \
 	-D FREETYPE_LIBRARY=$(cygpath -am ../osgeo4w/lib/freetype.lib) \
         -D ZLIB_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
@@ -70,13 +76,12 @@ cmake -G Ninja \
 	-D Boost_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/boost-1_74) \
         -D CAIRO_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
         -D CAIRO_LIBRARY=$(cygpath -am ../osgeo4w/lib/cairo.lib) \
-	-D PKG_CONFIG_EXECUTABLE=$(cygpath -am $(type -p pkg-config)) \
         -D ICONV_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
         -D ICONV_LIBRARIES=$(cygpath -am ../osgeo4w/lib/iconv.dll.lib) \
-	../..
+	-D TESTDATADIR=$(cygpath -am ../poppler-test-master) \
+	../../$P-$V
 ninja
 ninja install
-
 cd ..
 
 export R=$OSGEO4W_REP/x86_64/release/$P
@@ -106,7 +111,6 @@ EOF
 tar -C install -cjf $R/$P-tools/$P-tools-$V-$B.tar.bz2 \
 	--exclude "*.dll" \
 	share/man \
-	share/poppler \
 	bin
 
 cat <<EOF >$R/$P-devel/setup.hint
@@ -120,12 +124,11 @@ EOF
 
 tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	lib \
-	include \
-	share/pkgconfig
+	include
 
-cp ../COPYING $R/$P-$V-$B.txt
-cp ../COPYING $R/$P-tools/$P-tools-$V-$B.txt
-cp ../COPYING $R/$P-devel/$P-devel-$V-$B.txt
+cp ../$P-$V/COPYING $R/$P-$V-$B.txt
+cp ../$P-$V/COPYING $R/$P-tools/$P-tools-$V-$B.txt
+cp ../$P-$V/COPYING $R/$P-devel/$P-devel-$V-$B.txt
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/diff
 

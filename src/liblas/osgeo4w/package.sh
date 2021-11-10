@@ -9,7 +9,12 @@ source ../../../scripts/build-helpers
 startlog
 
 [ -f libLAS-$V.tar.bz2 ] || wget http://download.osgeo.org/$P/libLAS-$V.tar.bz2
-[ -f ../CMakeLists.txt ] || tar -C .. -xjf  libLAS-$V.tar.bz2 --xform "s,^libLAS-$V,.,"
+[ -f ../libLAS-$V/CMakeLists.txt ] || tar -C .. -xjf  libLAS-$V.tar.bz2
+[ -f ../libLAS-$V/patched ] || {
+	patch -p1 -d ../libLAS-$V --dry-run <patch
+	patch -p1 -d ../libLAS-$V <patch
+	touch ../libLAS-$V/patched
+}
 
 (
 	fetchenv osgeo4w/bin/o4w_env.bat
@@ -25,7 +30,8 @@ startlog
 		-D CMAKE_INSTALL_PREFIX=../install \
 		-D WITH_TESTS=OFF \
 		-D BUILD_OSGEO4W=OFF \
-		../..
+		-D JPEG_LIBRARY=$(cygpath -am ../osgeo4w/lib/jpeg_i.lib) \
+		../../libLAS-$V
 	ninja
 	ninja install
 )
@@ -45,7 +51,7 @@ EOF
 tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
 	bin doc
 
-cp ../LICENSE.txt $R/$P-$V-$B.txt
+cp ../libLAS-$V/LICENSE.txt $R/$P-$V-$B.txt
 
 cat <<EOF >$R/$P-devel/setup.hint
 sdesc: "The libLAS commandline development files"
@@ -59,7 +65,7 @@ EOF
 tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	include lib cmake
 
-cp ../LICENSE.txt $R/$P-devel/$P-devel-$V-$B.txt
+cp ../libLAS-$V/LICENSE.txt $R/$P-devel/$P-devel-$V-$B.txt
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 

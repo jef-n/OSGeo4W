@@ -20,6 +20,8 @@ cd build-$V
 
 export INCLUDE="$INCLUDE;$(cygpath -aw osgeo4w/include)"
 export LIB="$LIB;$(cygpath -aw osgeo4w/lib)"
+export PATH="$PATH:$OSGEO4W_PWD/osgeo4w/bin"
+type sqlite3
 
 cmake -G Ninja \
 	-D CMAKE_BUILD_TYPE=Release \
