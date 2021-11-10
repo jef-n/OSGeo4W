@@ -81,6 +81,7 @@ if(defined $releasename) {
 		$ereleasename = eval { encode("windows-$c", $r, Encode::FB_CROAK) };
 		next unless defined $ereleasename;
 		$codepage = $c;
+		last;
 	}
 
 	die "No encoding for releasename $releasename found" unless defined $codepage;
