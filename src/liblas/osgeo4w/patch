@@ -1,24 +1,24 @@
-diff -ur ../libLAS-1.8.1/include/liblas/detail/binary.hpp libLAS-1.8.1/include/liblas/detail/binary.hpp
---- ../libLAS-1.8.1/include/liblas/detail/binary.hpp	2021-11-11 14:18:41.664068500 +0100
-+++ libLAS-1.8.1/include/liblas/detail/binary.hpp	2016-08-22 15:06:34.000000000 +0200
+diff -ur libLAS-1.8.1/include/liblas/detail/binary.hpp ../libLAS-1.8.1/include/liblas/detail/binary.hpp
+--- libLAS-1.8.1/include/liblas/detail/binary.hpp	2016-08-22 15:06:34.000000000 +0200
++++ ../libLAS-1.8.1/include/liblas/detail/binary.hpp	2021-11-11 14:18:41.664068500 +0100
 @@ -25,7 +25,7 @@
  
  #include <boost/config.hpp>
  #include <boost/static_assert.hpp>
--#include <liblas/detail/endian.hpp>
-+#include <boost/detail/endian.hpp>
+-#include <boost/detail/endian.hpp>
++#include <liblas/detail/endian.hpp>
  #include <boost/type_traits/is_signed.hpp>
  
  #if CHAR_BIT != 8
-diff -ur ../libLAS-1.8.1/src/c_api.cpp libLAS-1.8.1/src/c_api.cpp
---- ../libLAS-1.8.1/src/c_api.cpp	2021-11-11 14:27:24.492297600 +0100
-+++ libLAS-1.8.1/src/c_api.cpp	2016-08-22 15:06:34.000000000 +0200
+diff -ur libLAS-1.8.1/src/c_api.cpp ../libLAS-1.8.1/src/c_api.cpp
+--- libLAS-1.8.1/src/c_api.cpp	2016-08-22 15:06:34.000000000 +0200
++++ ../libLAS-1.8.1/src/c_api.cpp	2021-11-11 14:27:24.492297600 +0100
 @@ -498,7 +498,7 @@
          
          transforms.erase( std::remove_if( transforms.begin(), 
                                    transforms.end(),
--                                  boost::bind( &IsReprojectionTransform, boost::placeholders::_1 ) ),
-+                                  boost::bind( &IsReprojectionTransform, _1 ) ),
+-                                  boost::bind( &IsReprojectionTransform, _1 ) ),
++                                  boost::bind( &IsReprojectionTransform, boost::placeholders::_1 ) ),
                    transforms.end());
          
          liblas::TransformPtr srs_transform = liblas::TransformPtr(new liblas::ReprojectionTransform(in_ref, *out_ref, &h));
@@ -26,20 +26,20 @@ diff -ur ../libLAS-1.8.1/src/c_api.cpp libLAS-1.8.1/src/c_api.cpp
          
          transforms.erase( std::remove_if( transforms.begin(), 
                                    transforms.end(),
--                                  boost::bind( &IsReprojectionTransform, boost::placeholders::_1 ) ),
-+                                  boost::bind( &IsReprojectionTransform, _1 ) ),
+-                                  boost::bind( &IsReprojectionTransform, _1 ) ),
++                                  boost::bind( &IsReprojectionTransform, boost::placeholders::_1 ) ),
                    transforms.end());
          
          liblas::TransformPtr srs_transform = liblas::TransformPtr(new liblas::ReprojectionTransform(in_ref, *out_ref, &h));
-diff -ur ../libLAS-1.8.1/src/header.cpp libLAS-1.8.1/src/header.cpp
---- ../libLAS-1.8.1/src/header.cpp	2021-11-11 14:27:11.217059200 +0100
-+++ libLAS-1.8.1/src/header.cpp	2016-08-22 15:06:34.000000000 +0200
+diff -ur libLAS-1.8.1/src/header.cpp ../libLAS-1.8.1/src/header.cpp
+--- libLAS-1.8.1/src/header.cpp	2016-08-22 15:06:34.000000000 +0200
++++ ../libLAS-1.8.1/src/header.cpp	2021-11-11 14:27:11.217059200 +0100
 @@ -610,7 +610,7 @@
  
      m_vlrs.erase( std::remove_if( m_vlrs.begin(),
                                    m_vlrs.end(),
--                                  boost::bind( &SameVLRs, name, id, boost::placeholders::_1 ) ),
-+                                  boost::bind( &SameVLRs, name, id, _1 ) ),
+-                                  boost::bind( &SameVLRs, name, id, _1 ) ),
++                                  boost::bind( &SameVLRs, name, id, boost::placeholders::_1 ) ),
                    m_vlrs.end());
  
      m_recordsCount = static_cast<uint32_t>(m_vlrs.size());
