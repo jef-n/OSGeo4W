@@ -23,11 +23,13 @@ jobs:
       run: |
        echo on
        cd \
-       mkdir %BASE%
+       if not exist %TEMP% mkdir %TEMP%
+       if not exist %BASE% mkdir %BASE%
        rd %GITHUB_WORKSPACE%
        cmd /c mklink /j %GITHUB_WORKSPACE% %BASE%
        echo >%GITHUB_WORKSPACE%\foo.txt
        if not exist %BASE%\foo.txt (echo junction not active & exit /b 1)
+       del %BASE%\foo.txt
 
     - name: keep original line endings
       run: git config --global core.autocrlf false
