@@ -19,25 +19,20 @@ jobs:
       BASE: c:\workspace
 
     steps:
-    - name: override
+    - name: use workspace on C
       shell: cmd
       run: |
        echo on
        cd \
        mkdir %BASE%
-       dir D:\a\OSGeo4W
        rd %GITHUB_WORKSPACE%
-       dir D:\a\OSGeo4W
        cmd /c mklink /j %GITHUB_WORKSPACE% %BASE%
-       dir D:\a\OSGeo4W
-       echo %GITHUB_WORKSPACE% >%GITHUB_WORKSPACE%\test.txt
-       dir %GITHUB_WORKSPACE%  %BASE% 
+       echo >%GITHUB_WORKSPACE%\foo.txt
+       if not exist %BASE%\foo.txt (echo junction not active & exit /b 1)
 
-    - name: changed?
+    - name: Working
       shell: cmd
       run: |
-        echo GITHUB_WORKSPACE=%GITHUB_WORKSPACE%
-        dir /s /b %GITHUB_WORKSPACE%
-        dir /s /b %BASE%
+        dir /s /b %GITHUB_WORKSPACE% %BASE%
 
 # vim: set nowrap :
