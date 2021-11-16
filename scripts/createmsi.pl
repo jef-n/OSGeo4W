@@ -333,7 +333,7 @@ unless(-d "unpacked" ) {
 
 		$p =~ s#^.*/##;
 
-		unless( -r $p ) {
+		unless( -r "packages/$p" ) {
 			print "Package $p not found.\n" if $verbose;
 			next;
 		}
