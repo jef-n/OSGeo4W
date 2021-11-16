@@ -22,6 +22,8 @@ jobs:
     - name: override
       shell: cmd
       run: |
+       echo on
+       dir c: d:
        echo TEMP:%TEMP%
        echo BASE:%TEMP%
        mkdir %BASE%
