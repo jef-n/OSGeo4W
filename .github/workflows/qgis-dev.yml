@@ -15,9 +15,20 @@ jobs:
 
     env:
       TEMP: c:\temp
-      BUILDBASE: c:\temp
+      BASE: c:\w
 
     steps:
+    - name: use workspace on C
+      shell: cmd
+      run: |
+       echo on
+       cd \
+       mkdir %BASE%
+       rd %GITHUB_WORKSPACE%
+       cmd /c mklink /j %GITHUB_WORKSPACE% %BASE%
+       echo >%GITHUB_WORKSPACE%\foo.txt
+       if not exist %BASE%\foo.txt (echo junction not active & exit /b 1)
+
     - name: keep original line endings
       run: git config --global core.autocrlf false
 
@@ -34,33 +45,19 @@ jobs:
         rmdir /s /q "%ProgramFiles(x86)%\Windows Kits\10\redist\wdf"
         rmdir /s /q "%ProgramFiles(x86)%\Windows Kits\10\Tools"
 
-    - name: 'Download cygwin Installer'
-      shell: cmd
-      run: curl --output c:\setup-x86_64.exe https://cygwin.com/setup-x86_64.exe
-
-    - name: 'Installing cygwin'
-      shell: cmd
-      run: c:\setup-x86_64.exe -qnNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/temp/cygwin -P "bison,flex,poppler,doxygen,git,unzip,tar,diffutils,patch,ssh,curl,wget,flip,p7zip"
-
-    - name: 'Building nightlies'
+    - name: 'Install cygwin'
       shell: cmd
       run: |
-        wmic logicaldisk get size, freespace, caption
-        fsutil volume diskfree c:
-        fsutil volume diskfree d:
+         curl --output c:\setup-x86_64.exe https://cygwin.com/setup-x86_64.exe
+         c:\setup-x86_64.exe -qnNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/temp/cygwin -P "bison,flex,poppler,doxygen,git,unzip,tar,diffutils,patch,ssh,curl,wget,flip,p7zip"
+
+    - name: 'Building...'
+      shell: cmd
+      run: |
         rmdir /s /q "c:/temp/cygwin"
-
-        wmic logicaldisk get size, freespace, caption
-        fsutil volume diskfree c:
-        fsutil volume diskfree d:
-
         set OSGEO4W_REP=%GITHUB_WORKSPACE%
         path c:\cygwin\bin;c:\cygwin\usr\bin
         cd %GITHUB_WORKSPACE%\src\qgis-dev\osgeo4w
         bash package.sh
-
-        wmic logicaldisk get size, freespace, caption
-        fsutil volume diskfree c:
-        fsutil volume diskfree d:
 
 # vim: set nowrap :

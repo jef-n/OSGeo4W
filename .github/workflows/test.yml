@@ -16,7 +16,7 @@ jobs:
     runs-on: windows-latest
 
     env:
-      BASE: c:\workspace
+      BASE: c:\w
 
     steps:
     - name: use workspace on C
