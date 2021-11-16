@@ -23,13 +23,7 @@ jobs:
       shell: cmd
       run: |
        echo on
-       dir c: d:
-       echo TEMP:%TEMP%
-       echo BASE:%TEMP%
-       mkdir %BASE%
-       dir /s /b %GITHUB_WORKSPACE%
-       echo CD:%CD%
-       dir %GITHUB_ENV%
+       cd \
        dir D:\a\OSGeo4W
        rd %GITHUB_WORKSPACE%
        dir D:\a\OSGeo4W
