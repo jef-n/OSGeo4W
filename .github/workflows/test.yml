@@ -23,8 +23,9 @@ jobs:
     - name: override
       shell: cmd
       run: |
+       dir /s /b %GITHUB_WORKSPACE%
+       dir %GITHUB_WORKSPACE%
        echo CD:%CD%
-       echo GITHUB_WORKSPACE=%GITHUB_WORKSPACE%
        dir %GITHUB_ENV%
        mkdir %BUILDBASE%
        echo "GITHUB_WORKSPACE=%BUILDBASE%" >> %GITHUB_ENV%
