@@ -8,6 +8,10 @@ source ../../../scripts/build-helpers
 
 startlog
 
-wheel=https://download.lfd.uci.edu/pythonlibs/w4tscw6k/scipy-1.6.0-cp39-cp39-win_amd64.whl packagewheel
+cat <<EOF >pip.env
+unset PIP_NO_BINARY
+EOF
+
+packagewheel
 
 endlog

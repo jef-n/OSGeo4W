@@ -13,11 +13,6 @@
  *
  */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: FindVisitor.cc,v 2.3 2013/07/03 19:31:11 corinna Exp $\n";
-#endif
-
 #include "FindVisitor.h"
 #include "find.h"
 

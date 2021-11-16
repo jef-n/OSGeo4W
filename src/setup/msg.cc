@@ -16,11 +16,6 @@
 /* The purpose of this file is to centralize all the message
    functions. */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: msg.cc,v 2.9 2008/08/07 22:59:17 davek Exp $\n";
-#endif
-
 #include "msg.h"
 
 #include "LogSingleton.h"
@@ -45,7 +40,7 @@ msg (const char *fmt, ...)
   OutputDebugString (buf.data());
 }
 
-static int
+int
 mbox (HWND owner, const char *name, int type, int id, va_list args)
 {
   char buf[1000], fmt[1000];

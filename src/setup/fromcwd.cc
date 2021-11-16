@@ -25,11 +25,6 @@
    (otherwise, why would you have asked to install it?).  Note
    that we search recursively. */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: fromcwd.cc,v 2.35 2013/07/22 05:46:26 cgf Exp $\n";
-#endif
-
 #include "win32.h"
 
 #include <stdio.h>
@@ -57,7 +52,7 @@ public:
   virtual void visitFile(const std::string& basePath,
                          const WIN32_FIND_DATA *theFile)
     {
-      if (!casecompare (SETUP_INI_FILENAME, theFile->cFileName) && 
+      if (!casecompare (SETUP_INI_FILENAME, theFile->cFileName) &&
 	  (theFile->nFileSizeLow || theFile->nFileSizeHigh))
 	{
 	  /* Check if base dir ends in SETUP_INI_DIR. */
@@ -79,7 +74,7 @@ protected:
 private:
   bool found;
 };
-  
+
 bool
 do_fromcwd (HINSTANCE h, HWND owner)
 {

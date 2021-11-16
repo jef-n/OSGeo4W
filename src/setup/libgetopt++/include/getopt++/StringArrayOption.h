@@ -24,12 +24,12 @@ class StringArrayOption : public Option
 public:
   StringArrayOption(char shortopt, char const *longopt = 0,
 	     std::string const &shorthelp = std::string(),
-	     OptionSet *owner = 0 );
+	     OptionSet &owner=GetOption::GetInstance());
   virtual ~ StringArrayOption ();
   virtual std::string const shortOption () const;
   virtual std::string const longOption () const;
   virtual std::string const shortHelp () const;
-  virtual Result Process (char const *);
+  virtual Result Process (char const *, int);
   virtual Argument argument () const;
   operator std::vector<std::string> () const;
 

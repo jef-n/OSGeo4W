@@ -116,7 +116,7 @@ int main(int argc, char* argv[])
 
   while (i->a)
   {
-    cout << setw(10) << i->a << ", " << setw(10) << i->b << " : " 
+    cout << setw(10) << i->a << ", " << setw(10) << i->b << " : "
       << version_compare(i->a, i->b) << ", " << version_compare(i->b, i->a)
       << endl;
     i++;

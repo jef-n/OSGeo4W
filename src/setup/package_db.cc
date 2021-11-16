@@ -18,10 +18,6 @@
  * installed ones.
  */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: package_db.cc,v 2.50 2013/07/25 12:05:36 corinna Exp $\n";
-#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -106,7 +102,7 @@ packagedb::packagedb ()
 		      //die badly
 		    }
 
-		  packageversion binary = 
+		  packageversion binary =
 		    cygpackage::createInstance (pkgname, inst, f.ver,
 	    					package_installed,
 	    					package_binary);
@@ -149,11 +145,11 @@ packagedb::flush ()
 	{
 	  /* size here is irrelevant - as we can assume that this install source
 	   * no longer exists, and it does not correlate to used disk space
-	   * also note that we are writing a fictional install source 
-	   * to keep cygcheck happy.               
+	   * also note that we are writing a fictional install source
+	   * to keep cygcheck happy.
 	   */
 	  std::string line;
-	  line = pkgm.name + " " + pkgm.name + "-" + 
+	  line = pkgm.name + " " + pkgm.name + "-" +
 	    std::string(pkgm.installed.Canonical_version()) + ".tar.bz2 0\n";
 	  ndb->write (line.c_str(), line.size());
 	}
@@ -240,7 +236,7 @@ void
 ConnectedLoopFinder::doIt()
 {
   /* XXX this could be done using a class to hold both the visitedInIteration and the package
-   * meta reference. Then we could use a range, not an int loop. 
+   * meta reference. Then we could use a range, not an int loop.
    */
   /* We have to expect dependency loops.  These loops break the topological
      sorting which would be a result of the below algorithm looking for
@@ -348,7 +344,7 @@ packagedb::connectedBegin()
       ConnectedLoopFinder doMe;
       doMe.doIt();
       std::string s = "Dependency order of packages: ";
-      
+
       for (std::vector<packagemeta *>::iterator i =
            dependencyOrderedPackages.begin();
            i != dependencyOrderedPackages.end(); ++i)
@@ -379,13 +375,13 @@ void
 packagedb::setExistence ()
 {
   /* binary packages */
-  /* Remove packages that are in the db, not installed, and have no 
+  /* Remove packages that are in the db, not installed, and have no
      mirror info and are not cached for both binary and source packages. */
   packagedb::packagecollection::iterator i = packages.begin ();
   while (i != packages.end ())
     {
       packagemeta & pkg = *(i->second);
-      if (!pkg.installed && !pkg.accessible() && 
+      if (!pkg.installed && !pkg.accessible() &&
           !pkg.sourceAccessible() )
         {
           packagemeta *pkgm = (*i).second;

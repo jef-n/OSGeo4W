@@ -1,5 +1,5 @@
 export P=pdal
-export V=2.2
+export V=2.3
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="gdal-devel libgeotiff-devel zlib-devel curl-devel libxml2-devel hdf5-devel openssl-devel zstd-devel laszip-devel"
@@ -9,7 +9,7 @@ source ../../../scripts/build-helpers
 startlog
 
 [ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://github.com/${P^^}/${P^^}/archive/$V-maintenance.tar.gz
-[ -f ../CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz --xform "s,^${P^^}-$V-maintenance,.,"
+[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz --xform "s,^${P^^}-$V-maintenance,$P-$V,"
 
 (
 	set -e
@@ -27,7 +27,7 @@ startlog
 	cmake -G Ninja \
 		-D CMAKE_BUILD_TYPE=Release \
 		-D CMAKE_INSTALL_PREFIX=../install \
-		../..
+		../../$P-$V
 	ninja
 	ninja install
 
@@ -53,7 +53,7 @@ tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
 	--exclude "bin/*.dll" \
 	bin
 
-cp ../LICENSE.txt $R/$P-$V-$B.txt
+cp ../$P-$V/LICENSE.txt $R/$P-$V-$B.txt
 
 cat <<EOF >$R/$P-libs/setup.hint
 sdesc: "PDAL: Point Data Abstraction Library (Runtime)"
@@ -83,7 +83,7 @@ tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	--exclude "bin/pdal.exe" \
 	bin include lib
 
-cp ../LICENSE.txt $R/$P-devel/$P-devel-$V-$B.txt
+cp ../$P-$V/LICENSE.txt $R/$P-devel/$P-devel-$V-$B.txt
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 

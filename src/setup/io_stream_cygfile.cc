@@ -13,11 +13,6 @@
  *
  */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: io_stream_cygfile.cc,v 2.23 2006/04/16 21:35:57 maxb Exp $\n";
-#endif
-
 #include "win32.h"
 #include "mklink2.h"
 #include "filemanip.h"

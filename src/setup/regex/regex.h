@@ -31,16 +31,16 @@
 # ifdef BUILD_REGEX_DLL
 #  define REGEX_DLL_IMPEXP	__DLL_EXPORT__
 # elif defined(REGEX_STATIC)
-#  define REGEX_DLL_IMPEXP	 
+#  define REGEX_DLL_IMPEXP
 # elif defined (USE_REGEX_DLL)
 #  define REGEX_DLL_IMPEXP	__DLL_IMPORT__
 # elif defined (USE_REGEX_STATIC)
-#  define REGEX_DLL_IMPEXP 	 
+#  define REGEX_DLL_IMPEXP
 # else /* assume USE_REGEX_DLL */
 #  define REGEX_DLL_IMPEXP	__DLL_IMPORT__
 # endif
 #else /* __WIN32__ */
-# define REGEX_DLL_IMPEXP	 
+# define REGEX_DLL_IMPEXP
 #endif
 
 /* Allow the use in C++ code.  */

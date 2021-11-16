@@ -14,13 +14,8 @@
  */
 
 /* this is the parent class for all package source (not source code - installation
- * source as in http/ftp/disk file) operations. 
+ * source as in http/ftp/disk file) operations.
  */
-
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: package_source.cc,v 2.10 2006/04/17 16:13:17 maxb Exp $\n";
-#endif
 
 #include <stdlib.h>
 #ifdef HAVE_STRINGS_H
@@ -32,7 +27,7 @@ static const char *cvsid =
 site::site (const std::string& newkey) : key(newkey)
 {
 }
-  
+
 void
 packagesource::set_canonical (char const *fn)
 {

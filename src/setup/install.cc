@@ -20,10 +20,6 @@
    handling two tasks in one thread.  We also create or update all the
    files in /etc/setup/\* and create the mount points. */
 
-#if 0
-static const char *cvsid = "\n%%% $Id: install.cc,v 2.108 2013/07/24 08:26:06 jturney Exp $\n";
-#endif
-
 #include "getopt++/BoolOption.h"
 #include "csu_util/MD5Sum.h"
 #include "LogSingleton.h"

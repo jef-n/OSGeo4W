@@ -11,15 +11,11 @@ startlog
 major=$(sed -ne "s/# *define *GDAL_VERSION_MAJOR *//p" osgeo4w/include/gdal_version.h)
 minor=$(sed -ne "s/# *define *GDAL_VERSION_MINOR *//p" osgeo4w/include/gdal_version.h)
 
-cat <<EOF >gdal-config.bat
-@echo off
-if "%1"=="--libs" echo -L$(cygpath -am osgeo4w/lib) -lgdal_i
-if "%1"=="--cflags" echo -I$(cygpath -am osgeo4w/include)
-if "%1"=="--version" echo $major.$minor
-EOF
-
 cat <<EOF >pip.env
-export GDAL_CONFIG=$(cygpath -am gdal-config.bat)
+export GDAL_VERSION=$major.$minor
+export INCLUDE="$(cygpath -am osgeo4w/include);\$INCLUDE"
+export LINK="$(cygpath -am osgeo4w/lib/gdal_i.lib)"
+export PIP_USE_PEP517=0
 EOF
 
 adddepends="$RUNTIMEDEPENDS" packagewheel

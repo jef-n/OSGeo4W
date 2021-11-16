@@ -44,7 +44,8 @@ private:
   bool isOption(std::string::size_type) const;
   void doOption(std::string &option, std::string::size_type const &pos);
   bool doNoArgumentOption(std::string &option, std::string::size_type const &pos);
-  Option * findOption(std::string &option, std::string::size_type const &pos) const;
+  void findOption(std::string &option, std::string::size_type const &pos,
+                  Option *&theOption, int & prefixIndex) const;
   std::vector<Option *> options;
   std::vector<std::string> argv;
   std::vector<std::string> nonoptions;

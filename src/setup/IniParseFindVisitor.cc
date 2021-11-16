@@ -13,11 +13,6 @@
  *
  */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: IniParseFindVisitor.cc,v 2.15 2013/07/22 05:46:26 cgf Exp $\n";
-#endif
-
 #include "IniParseFindVisitor.h"
 
 #include "csu_util/rfc1738.h"
@@ -60,7 +55,7 @@ IniParseFindVisitor::visitFile(const std::string& basePath,
     return;
 
   current_ini_name = basePath + theFile->cFileName;
-  
+
   io_stream *ini_file = io_stream::open("file://" + current_ini_name, "rb");
 
   if (!ini_file)
@@ -72,17 +67,17 @@ IniParseFindVisitor::visitFile(const std::string& basePath,
       throw new runtime_error ("IniParseFindVisitor: failed to open ini file, which should never happen");
       return;
     }
-  
+
   _feedback.babble("Found ini file - " + current_ini_name);
   _feedback.iniName (current_ini_name);
-  
+
   /* Copy leading part of path to temporary buffer and unescape it */
-  
+
   size_t pos = baseLength + 1;
   size_t len = basePath.size () - (pos + strlen (SETUP_INI_DIR) + 1);
   _Builder.parse_mirror = len <= 0 ? "" : rfc1738_unescape (basePath.substr (pos, len));
   ini_init (ini_file, &_Builder, _feedback);
-  
+
   /*yydebug = 1; */
 
   if (yyparse () || yyerror_count > 0)
@@ -103,7 +98,7 @@ IniParseFindVisitor::iniCount() const
   return local_ini;
 }
 
-unsigned int 
+unsigned int
 IniParseFindVisitor::timeStamp () const
 {
   return setup_timestamp;

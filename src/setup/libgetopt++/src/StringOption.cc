@@ -15,45 +15,41 @@
 
 #include <getopt++/StringOption.h>
 
-using namespace std;
-
-StringOption::StringOption(string const defaultvalue, char shortopt,
-		       char const *longopt, string const &shorthelp,
-		       bool const optional, OptionSet *owner ) :
+StringOption::StringOption(std::string const defaultvalue, char shortopt,
+		       char const *longopt, std::string const &shorthelp,
+		       bool const optional, OptionSet &owner) :
 		       _value (defaultvalue) , _shortopt(shortopt),
 		       _longopt (longopt), _shorthelp (shorthelp)
 {
-  if (!owner)
-    owner = GetOption::GetInstance();
   if (!optional)
     _optional = Required;
   else
     _optional = Optional;
-  owner->Register (this);
-};
+  owner.Register (this);
+}
 
 StringOption::~ StringOption () {};
 
-string const
+std::string const
 StringOption::shortOption () const
 {
-  return string() + _shortopt + ":";
+  return std::string() + _shortopt + ":";
 }
 
-string const
+std::string const
 StringOption::longOption () const
 {
   return _longopt;
 }
 
-string const
+std::string const
 StringOption::shortHelp () const
 {
   return _shorthelp;
 }
 
 Option::Result
-StringOption::Process (char const *optarg)
+StringOption::Process (char const *optarg, int prefixIndex)
 {
   if (optarg)
     _value = optarg;
@@ -62,7 +58,7 @@ StringOption::Process (char const *optarg)
   return Failed;
 }
 
-StringOption::operator string () const
+StringOption::operator const std::string& () const
 {
   return _value;
 }

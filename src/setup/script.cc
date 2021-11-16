@@ -17,11 +17,6 @@
 /* The purpose of this file is to provide functions for the invocation
    of install scripts. */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: script.cc,v 2.41 2013/06/26 09:16:52 corinna Exp $\n";
-#endif
-
 #include "win32.h"
 #include <stdlib.h>
 #include <unistd.h>
@@ -43,7 +38,7 @@ init_run_script ()
 {
   extern void get_startmenu(std::string &target);  // FIXME
   extern void get_desktop(std::string &target);  // FIXME
-  
+
   char old_path[1024];
   if ( GetEnvironmentVariable ("PATH", old_path, sizeof old_path) >= sizeof old_path )
   {
@@ -69,10 +64,6 @@ init_run_script ()
   SetEnvironmentVariable ("PATH", backslash (cygpath ("/bin") + ";" + old_path).c_str());
   SetEnvironmentVariable ("OSGEO4W_ROOT", get_root_dir ().c_str());
 
-  char portnum[10];
-  snprintf(portnum, sizeof portnum, "%d", apache_port_number ? apache_port_number : 80 );
-  SetEnvironmentVariable ("APACHE_PORT", portnum);
-
   std::string startmenu;
   get_startmenu(startmenu);
   SetEnvironmentVariable ("OSGEO4W_STARTMENU", startmenu.c_str());
@@ -94,7 +85,7 @@ init_run_script ()
   {
       if( path2[i] == '\\' )
           path2[i] = '/';
-  } 
+  }
 
   SetEnvironmentVariable ("OSGEO4W_ROOT_MSYS", path2.c_str() );
 
@@ -170,7 +161,7 @@ OutputLog::out_to(std::ostream &out)
   DWORD num;
   FlushFileBuffers (_handle);
   SetFilePointer(_handle, 0, NULL, FILE_BEGIN);
-  
+
   while (ReadFile(_handle, buf, BUFLEN-1, &num, NULL) && num != 0)
     {
       buf[num] = '\0';
@@ -309,7 +300,6 @@ Script::isAScript (const std::string& file)
 
 Script::Script (const std::string& fileName) : scriptName (fileName)
 {
-  
 }
 
 std::string

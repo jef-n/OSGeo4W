@@ -41,7 +41,7 @@ class PropertyPage:public Window
 
   // For setting the back/finish buttons properly.
   bool IsFirst, IsLast;
-  
+
   static INT_PTR CALLBACK FirstDialogProcReflector (HWND hwnd, UINT message,
 						 WPARAM wParam,
 						 LPARAM lParam);
@@ -55,29 +55,29 @@ class PropertyPage:public Window
   typedef struct
     {
       // the URL to load when clicked
-      std::string url;             
+      std::string url;
 
       // location of the control's original winproc that we are subclassing
       WNDPROC origWinProc;
 
       // font handle; note: it's our responsibility to DeleteObject() this
       HFONT font;
-      
+
       // handle to the brush we return in response to WM_CTLCOLORSTATIC
       HBRUSH brush;
     } ClickableURL;
-    
+
   // the list of controls that we have modified to be clickable is
   // stored in the following which maps the ID to the above data
   static std::map <int, ClickableURL> urls;
-    
+
   // subclass the static control with this winproc
   static LRESULT CALLBACK urlWinProc (HWND hwnd, UINT uMsg, WPARAM wParam,
               LPARAM lParam);
-  
+
 protected:
   SizeProcessor sizeProcessor;
-  
+
   virtual INT_PTR CALLBACK DialogProc (UINT message, WPARAM wParam,
                                        LPARAM lParam);
   virtual INT_PTR CALLBACK OnMouseWheel (UINT message, WPARAM wParam,
@@ -136,7 +136,7 @@ public:
   virtual long OnUnattended () { return -2; }
 
   PropSheet *GetOwner () const { return OurSheet; }
-  
+
   void makeClickable (int id, std::string link);
 };
 

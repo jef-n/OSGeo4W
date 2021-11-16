@@ -13,10 +13,6 @@
  *
  */
 
-#if 0
-static const char *cvsid = "\n%%% $Id: PackageSpecification.cc,v 2.4 2006/04/15 21:21:25 maxb Exp $\n";
-#endif
-
 #include "PackageSpecification.h"
 #include <iostream>
 #include "package_version.h"
@@ -49,7 +45,7 @@ PackageSpecification::satisfies (packageversion const &aPackage) const
 {
   if (casecompare(_packageName, aPackage.Name()) != 0)
     return false;
-  if (_operator && _version.size() 
+  if (_operator && _version.size()
       && !_operator->satisfies (aPackage.Canonical_version (), _version))
     return false;
   return true;

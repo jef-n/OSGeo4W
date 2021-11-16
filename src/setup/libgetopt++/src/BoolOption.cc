@@ -15,43 +15,68 @@
 
 #include <getopt++/BoolOption.h>
 
-using namespace std;
-
 BoolOption::BoolOption(bool const defaultvalue, char shortopt,
-		       char const *longopt, string const &shorthelp,
-		       OptionSet *owner) : _value (defaultvalue),
-		       _ovalue (defaultvalue), _shortopt(shortopt),
-		       _longopt (longopt), _shorthelp (shorthelp)
+                       char const *longopt, std::string const &shorthelp,
+                       BoolOptionType type, OptionSet &owner) :
+  _value (defaultvalue), _ovalue (defaultvalue), _shortopt(shortopt),
+  _longopt (longopt), _shorthelp (shorthelp), _type(type)
 {
-  if( !owner )
-	owner = GetOption::GetInstance();
-  owner->Register (this);
+  owner.Register (this);
 }
 
 BoolOption::~ BoolOption () {};
 
-string const
+std::string const
 BoolOption::shortOption () const
 {
-  return string() + _shortopt;
+  return std::string() + _shortopt;
 }
 
-string const
+std::string const
 BoolOption::longOption () const
 {
   return _longopt;
 }
 
-string const
+std::vector<std::string> const &
+BoolOption::longOptionPrefixes () const
+{
+  static std::vector<std::string> able = {"enable-", "disable-"};
+  static std::vector<std::string> no = {"", "no-"};
+  static std::vector<std::string> simple = {""};
+
+  switch (_type)
+    {
+    case BoolOption::BoolOptionType::pairedAble:
+      return able;
+    case BoolOption::BoolOptionType::pairedNo:
+      return no;
+    case BoolOption::BoolOptionType::simple:
+    default:
+      return simple;
+    }
+}
+
+std::string const
 BoolOption::shortHelp () const
 {
   return _shorthelp;
 }
 
 Option::Result
-BoolOption::Process (char const *)
+BoolOption::Process (char const *, int prefixIndex)
 {
-  _value = !_ovalue;
+  switch (_type)
+    {
+    default:
+    case BoolOption::BoolOptionType::simple:
+      _value = !_ovalue;
+    case BoolOption::BoolOptionType::pairedAble:
+      _value = (prefixIndex == 0);
+    case BoolOption::BoolOptionType::pairedNo:
+      _value = (prefixIndex == 0);
+    }
+
   return Ok;
 }
 

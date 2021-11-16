@@ -37,6 +37,9 @@ void note (HWND owner, int id, ...);
 /* returns IDYES or IDNO, otherwise same as note() */
 int yesno (HWND owner, int id, ...);
 
+/* general MessageBox() wrapper which understands unattended mode */
+int mbox (HWND owner, const char *name, int type, int id, va_list args);
+
 class debugScope {
   const char *mFunction;
 public:
@@ -55,7 +58,5 @@ public:
 };
 #define ENTER debugScope( __FILE__, __LINE__, __FUNCTION__ );
 #define LOG debugScope::scopeLog( __FILE__, __LINE__, __FUNCTION__ );
-
-
 
 #endif /* SETUP_MSG_H */

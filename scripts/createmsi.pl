@@ -22,6 +22,7 @@ use RTF::Writer;
 use File::Copy;
 use File::Basename;
 use Cwd qw/abs_path/;
+use Encode;
 
 my $ug = Data::UUID->new;
 
@@ -33,7 +34,7 @@ my $releasename;
 my $shortname = "qgis";
 my $version;
 my $binary;
-my $root = "http://download.osgeo.org/osgeo4w/testing";
+my $root = "http://download.osgeo.org/osgeo4w/v2";
 my $ininame = "setup.ini";
 my $signwith;
 my $signpass;
@@ -41,6 +42,7 @@ my $help;
 my $manufacturer = "QGIS.org";
 my $background;
 my $banner;
+my $arpicon;
 
 my $BASEDIR = dirname(__FILE__);
 $BASEDIR = `cygpath -am '$BASEDIR'`;
@@ -61,11 +63,29 @@ my $result = GetOptions(
 		"mirror=s" => \$root,
 		"banner=s" => \$banner,
 		"background=s" => \$background,
+		"arpicon=s" => \$arpicon,
 		"mirror=s" => \$root,
 		"help" => \$help
 	);
 
 die "certificate not found" if defined $signwith && ! -f $signwith;
+
+my $ereleasename;
+my $codepage = "1252";
+
+if(defined $releasename) {
+	my $r = decode_utf8($releasename);
+
+	undef $codepage;
+	for my $c (qw/1252 1250/) {
+		$ereleasename = eval { encode("windows-$c", $r, Encode::FB_CROAK) };
+		next unless defined $ereleasename;
+		$codepage = $c;
+		last;
+	}
+
+	die "No encoding for releasename $releasename found" unless defined $codepage;
+}
 
 if(defined $banner) {
 	die "banner $banner not found" unless -r $banner;
@@ -83,6 +103,15 @@ if(defined $background) {
 	$background = '<WixVariable Id="WixUIDialogBmp" Value="' . $background . '" />';
 } else {
 	$background = "";
+}
+
+if(defined $arpicon) {
+	die "arpicon $arpicon not found" unless -r $arpicon;
+	$arpicon = `cygpath -am '$arpicon'`;
+	chomp $arpicon;
+	$arpicon = '<Icon Id="icon.ico" SourceFile="' . $arpicon . '" /> <Property Id="ARPPRODUCTICON" Value="icon.ico" />';
+} else {
+	$arpicon = "";
 }
 
 pod2usage(1) if $help;
@@ -121,7 +150,7 @@ my %sdesc;
 my %md5;
 my $package;
 
-system "wget $wgetopt -O setup.ini $root/x86_64/$ininame";
+system "wget $wgetopt --no-cache -O setup.ini $root/x86_64/$ininame";
 die "download of setup.ini failed" if $?;
 open F, "setup.ini" || die "setup.ini not found";
 while(<F>) {
@@ -302,9 +331,9 @@ unless(-d "unpacked" ) {
 			next;
 		}
 
-		$p =~ s#^.*/#packages/#;
+		$p =~ s#^.*/##;
 
-		unless( -r $p ) {
+		unless( -r "packages/$p" ) {
 			print "Package $p not found.\n" if $verbose;
 			next;
 		}
@@ -312,8 +341,8 @@ unless(-d "unpacked" ) {
 		print O "$pn $p 0\n";
 
 		print "Unpacking $p...\n" if $verbose;
-		system "bash -c 'tar $taropt -C unpacked -xjvf $p | gzip -c >unpacked/etc/setup/$pn.lst.gz && [ \${PIPESTATUS[0]} == 0 -a \${PIPESTATUS[1]} == 0 ]'";
-		die "unpacking of $p failed" if $?;
+		system "bash -c 'tar $taropt -C unpacked -xjvf packages/$p | gzip -c >unpacked/etc/setup/$pn.lst.gz && [ \${PIPESTATUS[0]} == 0 -a \${PIPESTATUS[1]} == 0 ]'";
+		die "unpacking of packages/$p failed" if $?;
 	}
 
 	close O;
@@ -328,8 +357,8 @@ unless(-d "unpacked" ) {
 }
 
 unless( defined $binary ) {
-	if( -f "binary-$version" ) {
-		open P, "binary-$version";
+	if( -f ".$shortname.$version.binary" ) {
+		open P, ".$shortname.$version.binary";
 		$binary = <P>;
 		close P;
 		$binary++;
@@ -344,13 +373,11 @@ unless( defined $binary ) {
 
 open F, ">packages/postinstall.bat";
 
-my $l = "\"%OSGEO4W_ROOT%\\var\\log\\postinstall.log\"";
-my $r = ">>$l 2>&1";
 my $b = "\"%OSGEO4W_ROOT%\\etc\\preremove-conf.bat\"";
 my $c = ">>$b";
 
 print F <<EOF;
-\@echo off
+echo on
 set OSGEO4W_ROOT=%~dp0
 set OSGEO4W_ROOT=%OSGEO4W_ROOT:~0,-4%
 set OSGEO4W_STARTMENU=%~1
@@ -371,9 +398,7 @@ if not %OSGEO4W_MENU_LINKS%==0 if not exist "%OSGEO4W_STARTMENU%" mkdir "%OSGEO4
 set OSGEO4W_ROOT_MSYS=%OSGEO4W_ROOT:\\=/%
 if "%OSGEO4W_ROOT_MSYS:~1,1%"==":" set OSGEO4W_ROOT_MSYS=/%OSGEO4W_ROOT_MSYS:~0,1%/%OSGEO4W_ROOT_MSYS:~3%
 
-if not exist "%OSGEO4W_ROOT%\\var\\log" mkdir "%OSGEO4W_ROOT%\\var\\log"
-
-if exist $b del $b$r
+if exist $b del $b
 echo set OSGEO4W_ROOT=%OSGEO4W_ROOT%$c
 echo set OSGEO4W_ROOT_MSYS=%OSGEO4W_ROOT_MSYS%$c
 echo set OSGEO4W_STARTMENU=%OSGEO4W_STARTMENU%$c
@@ -381,14 +406,13 @@ echo set OSGEO4W_DESKTOP=%OSGEO4W_DESKTOP%$c
 echo set OSGEO4W_MENU_LINKS=^%OSGEO4W_MENU_LINKS%$c
 echo set OSGEO4W_DESKTOP_LINKS=^%OSGEO4W_DESKTOP_LINKS%$c
 
-if exist $l del $l$r
-echo.$r
-echo %DATE% %TIME%: Running postinstall$r
-echo --------------------------------------------------------------------------------$r
-type $b$r
+\@echo.
+\@echo %DATE% %TIME%: Running postinstall
+\@echo --------------------------------------------------------------------------------
+type $b
 
-PATH %OSGEO4W_ROOT%\\bin;%PATH%$r
-cd /d %OSGEO4W_ROOT%$r
+PATH %OSGEO4W_ROOT%\\bin;%PATH%
+cd /d %OSGEO4W_ROOT%
 EOF
 
 chdir "unpacked";
@@ -397,14 +421,16 @@ for my $p (<etc/postinstall/*.bat>) {
 	my($dir,$file) = $p =~ /^(.+)\\([^\\]+)$/;
 
 	print F <<EOF;
-echo.$r
-echo %DATE% %TIME%: Running postinstall $file...$r
-echo --------------------------------------------------------------------------------$r
-%COMSPEC% /c "%OSGEO4W_ROOT%\\$p"$r
-ren "%OSGEO4W_ROOT%\\$p" $file.done$r
-echo --------------------------------------------------------------------------------$r
-echo %DATE% %TIME%: Done postinstall $file.$r
-echo.$r
+\@echo.
+\@echo %DATE% %TIME%: Running postinstall $file...
+\@echo --------------------------------------------------------------------------------
+%COMSPEC% /c "%OSGEO4W_ROOT%\\$p"
+set e=%errorlevel%
+ren "%OSGEO4W_ROOT%\\$p" $file.done
+\@echo --------------------------------------------------------------------------------
+\@echo %DATE% %TIME%: Done postinstall $file [%e%].
+\@echo.
+
 EOF
 }
 chdir "..";
@@ -415,20 +441,18 @@ EOF
 
 close F;
 
-$r = ">>\"%TEMP%\\$packagename-OSGeo4W-$version-$binary-preremove.log\" 2>&1\r\n";
-
 open F, ">packages/preremove.bat";
 print F <<EOF;
-\@echo off
-echo %DATE% %TIME%: Running preremove...$r
-echo --------------------------------------------------------------------------------$r
-call "%~dp0\\etc\\preremove-conf.bat"$r
-echo OSGEO4W_ROOT=%OSGEO4W_ROOT%$r
-echo OSGEO4W_ROOT_MSYS=%OSGEO4W_ROOT_MSYS%$r
-echo OSGEO4W_STARTMENU=%OSGEO4W_STARTMENU%$r
-echo OSGEO4W_DESKTOP=%OSGEO4W_DESKTOP%$r
-PATH %OSGEO4W_ROOT%\\bin;%PATH%$r
-cd /d \"%OSGEO4W_ROOT%\"$r
+\@echo on
+\@echo %DATE% %TIME%: Running preremove...
+\@echo --------------------------------------------------------------------------------
+call "%~dp0\\preremove-conf.bat"
+\@echo OSGEO4W_ROOT=%OSGEO4W_ROOT%
+\@echo OSGEO4W_ROOT_MSYS=%OSGEO4W_ROOT_MSYS%
+\@echo OSGEO4W_STARTMENU=%OSGEO4W_STARTMENU%
+\@echo OSGEO4W_DESKTOP=%OSGEO4W_DESKTOP%
+call "%OSGEO4W_ROOT%\\bin\\o4w_env.bat"
+cd /d \"%OSGEO4W_ROOT%\"
 EOF
 
 chdir "unpacked";
@@ -437,25 +461,29 @@ for my $p (<etc/preremove/*.bat>) {
 	my($dir,$file) = $p =~ /^(.+)\\([^\\]+)$/;
 
 	print F <<EOF;
-echo Running preremove $file...$r
-echo %DATE% %TIME%: Running preremove $file...$r
-echo --------------------------------------------------------------------------------$r
-%COMSPEC% /c $p$r
-echo --------------------------------------------------------------------------------$r
-echo %DATE% %TIME%: Done preremove $file.$r
+\@echo Running preremove $file...
+\@echo %DATE% %TIME%: Running preremove $file...
+\@echo --------------------------------------------------------------------------------
+%COMSPEC% /c $p
+set e=%errorlevel%
+\@echo --------------------------------------------------------------------------------
+\@echo %DATE% %TIME%: Done preremove $file [%e%].
+
 EOF
 }
 
 chdir "..";
 
 print F <<EOF;
-rmdir /s /q "%OSGEO4W_STARTMENU%"$r
-rmdir /s /q "%OSGEO4W_DESKTOP%"$r
-del "%OSGEO4W_ROOT%\\etc\\postinstall.bat"$r
-del "%OSGEO4W_ROOT%\\etc\\preremove.bat"$r
-del "%OSGEO4W_ROOT%\\etc\\preremove-conf.bat"$r
-echo --------------------------------------------------------------------------------$r
-echo %DATE% %TIME%: Done preremove$r
+rmdir /s /q "%OSGEO4W_STARTMENU%"
+rmdir /s /q "%OSGEO4W_DESKTOP%"
+del "%OSGEO4W_ROOT%\\etc\\postinstall\\*.done"
+del "%OSGEO4W_ROOT%\\etc\\postinstall.bat"
+del "%OSGEO4W_ROOT%\\etc\\preremove.bat"
+del "%OSGEO4W_ROOT%\\etc\\preremove-conf.bat"
+del "%OSGEO4W_ROOT%\\var\\log\\postinstall.log"
+echo --------------------------------------------------------------------------------
+echo %DATE% %TIME%: Done preremove
 EOF
 
 close F;
@@ -472,7 +500,9 @@ for my $l ( ( "unpacked/apps/$shortname/doc/LICENSE", "../COPYING", "./Installer
 warn "no QGIS license found" unless defined $lic;
 
 my $rtf = RTF::Writer->new_to_file("packages/license.temp");
-open O, ">packages/license.txt";
+
+my $license = "packages/license.txt";
+open O, ">$license";
 
 sub out {
 	my $m = shift;
@@ -519,31 +549,21 @@ for my $l (@lic) {
 
 $rtf->close();
 undef $rtf;
-system "cp packages/license.temp packages/license.rtf";
 close O;
 
-my $license = "packages/license.txt";
-if( -f "unpacked/apps/$shortname/doc/LICENSE" ) {
-	open O, ">unpacked/apps/$shortname/doc/LICENSE";
-	open I, "packages/license.txt";
-	while(<I>) {
-		print O;
-	}
-	close O;
-	close I;
-
-	$license = "unpacked/apps/$shortname/doc/LICENSE";
-}
+system "cp $license unpacked/apps/$shortname/doc/LICENSE" if -f "unpacked/apps/$shortname/doc/LICENSE";
+system "cp packages/license.temp packages/license.rtf";
 
 my $installer = "$packagename-OSGeo4W-$version-$binary";
 
 my $run = $^O eq "cygwin" ? "" : "wine";
 
-my $productuuid        = getuuid(".$shortname.$version.product");
-my $upgradeuuid        = getuuid(".$shortname.$version.upgrade");
-my $postinstalluuid    = getuuid(".$shortname.$version.postinstall");
-my $preremoveuuid      = getuuid(".$shortname.$version.preremove");
-my $linkfolders        = getuuid(".$shortname.$version.linkfolders");
+my $productuuid     = getuuid(".$shortname.$version.product");
+my $upgradeuuid     = getuuid(".$shortname.$version.upgrade");
+my $postinstalluuid = getuuid(".$shortname.$version.postinstall");
+my $preremoveuuid   = getuuid(".$shortname.$version.preremove");
+my $linkfolders     = getuuid(".$shortname.$version.linkfolders");
+my $varloguuid      = getuuid(".$shortname.$version.varlog");
 
 my $fn = 0;
 unless($keep && -f "packages/files1.wxs") {
@@ -601,7 +621,7 @@ EOF
 			open $f, ">../packages/files" . ++$fn . ".wxs";
 
 			print $f <<EOF;
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="windows-$codepage"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
  <Fragment>
   <DirectoryRef Id="INSTALLDIR">
@@ -675,15 +695,26 @@ EOF
 # WixUIBannerBmp: Top banner							493 × 58
 # WixUIDialogBmp: Background bitmap used on the welcome and completion dialogs	493 × 312
 
+my $productname = "$packagename $version";
+$productname .= " '$ereleasename'" if defined $ereleasename;
+
+open F, ">packages/lang.wxl";
+print F <<EOF;
+<?xml version="1.0" encoding="windows-$codepage"?>
+<WixLocalization Culture="en-us" Codepage="$codepage" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+</WixLocalization>
+EOF
+close F;
+
 open F, ">packages/installer.wxs";
 print F <<EOF;
-<?xml version="1.0" encoding="windows-1252"?>
+<?xml version="1.0" encoding="windows-$codepage"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Name="$packagename $version"
+  <Product Name="$productname"
      Manufacturer="$manufacturer"
      Id='$productuuid'
      UpgradeCode="$upgradeuuid"
-     Language="1033" Codepage="1252" Version="$version">
+     Language="1033" Codepage="$codepage" Version="$version">
 
     <Package Id="*" Keywords="Installer" Description="$packagename $version Installer"
       Comments="QGIS is a registered trademark of QGIS.org"
@@ -691,7 +722,8 @@ print F <<EOF;
       InstallerVersion="200"
       Languages="1033"
       Compressed="yes"
-      SummaryCodepage="1252" />
+      SummaryCodepage="$codepage"
+      InstallScope="perMachine" />
 
     <Media Id="1" EmbedCab="yes" CompressionLevel="high" Cabinet="application.cab" />
     <Property Id="DiskPrompt" Value="$packagename $version Installation [1]" />
@@ -702,13 +734,18 @@ print F <<EOF;
     <UIRef Id="QGISUI_InstallDir" />
     <UIRef Id="WixUI_ErrorProgressText" />
 
-    <WixVariable Id="WixUILicenseRtf" Value="license.rtf"/>
+    <WixVariable Id="WixUILicenseRtf" Value="license.rtf" />
     $banner
     $background
+    $arpicon
 
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFiles64Folder">
         <Directory Id="INSTALLDIR" Name="$packagename $version">
+          <Directory Id="var" Name="var">
+             <Directory Id="varlog" Name="log">
+	     </Directory>
+	  </Directory>
 	  <Directory Id="ETC" Name="etc">
             <Component Id="postinstall.bat" Guid="$postinstalluuid">
               <File Id="postinstall.bat" Name="postinstall.bat" Source="postinstall.bat" />
@@ -727,8 +764,15 @@ print F <<EOF;
       </Directory>
     </Directory>
 
+    <DirectoryRef Id="varlog">
+      <Component Id="varlog" Guid="$varloguuid" KeyPath="yes">
+        <CreateFolder />
+      </Component>
+    </DirectoryRef>
+
     <Feature Id="$packagename" Title="$packagename" Level="1">
       <ComponentRef Id="postinstall.bat" />
+      <ComponentRef Id="varlog" />
 EOF
 
 for(my $i=1; $i <= $fn; $i++) {
@@ -739,10 +783,10 @@ print F <<EOF;
       <ComponentRef Id="preremove.bat" />
     </Feature>
 
-    <SetProperty Id="postinstall" Value="&quot;[#postinstall.bat]&quot; &quot;[ApplicationProgramMenuFolder]&quot; &quot;[ApplicationDesktopFolder]&quot; &quot;[INSTALLDESKTOPSHORTCUTS]&quot; &quot;[INSTALLMENUSHORTCUTS]&quot;" Before="postinstall" Sequence='execute' />
+    <SetProperty Id="postinstall" Value="&quot;[#postinstall.bat]&quot; &quot;[ApplicationProgramMenuFolder]&quot; &quot;[ApplicationDesktopFolder]&quot; &quot;[INSTALLDESKTOPSHORTCUTS]&quot; &quot;[INSTALLMENUSHORTCUTS]&quot; &gt;&quot;[varlog]\\postinstall.log&quot; 2&gt;&amp;1" Before="postinstall" Sequence='execute' />
     <CustomAction Id="postinstall" BinaryKey="WixCA" DllEntry="WixQuietExec64" Execute="deferred" Return="ignore" Impersonate="no" />
 
-    <SetProperty Id="preremove" Value="&quot;[#preremove.bat]&quot;" Before="preremove" Sequence='execute' />
+    <SetProperty Id="preremove" Value="&quot;[#preremove.bat]&quot; &gt;&quot;[TempFolder]\\$packagename-OSGeo4W-$version-$binary-preremove.log&quot; 2&gt;&amp;1" Before="preremove" Sequence='execute' />
     <CustomAction Id="preremove" BinaryKey="WixCA" DllEntry="WixQuietExec64" Execute="deferred" Return="ignore" Impersonate="no" />
 
     <InstallExecuteSequence>
@@ -785,7 +829,7 @@ print "Running light...\n" if $verbose;
 # warning LGHT1076 : ICE60: The file filXXX is not a Font, and its version is not a companion file reference. It should have a language specified in the Language column.
 #
 # ICE64: complains about the desktop and start menu folder
-my $cmd = "$run ./wix/light.exe -nologo -ext WixUIExtension -ext WixUtilExtension -out $installer.msi -sice:ICE09 -sice:ICE32 -sice:ICE60 -sice:ICE61 -sice:ICE64 -b ../unpacked " . join(" ", @wixobj);
+my $cmd = "$run ./wix/light.exe -nologo -ext WixUIExtension -ext WixUtilExtension -loc lang.wxl -out $installer.msi -sice:ICE09 -sice:ICE32 -sice:ICE60 -sice:ICE61 -sice:ICE64 -b ../unpacked " . join(" ", @wixobj);
 print "EXEC: $cmd\n" if $verbose;
 system $cmd;
 die "light failed" if $?;
@@ -813,7 +857,7 @@ sub sign {
 
 sign "$installer" if $signwith;
 
-open P, ">../binary-$version";
+open P, ">../.$shortname.$version.binary";
 print P $binary;
 close P;
 

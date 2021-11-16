@@ -26,11 +26,6 @@
    those don't count, although they could).  Replace the IDD_S_* with
    IDD_* if you create a real dialog for those steps. */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: main.cc,v 2.73 2013/06/22 20:02:01 cgf Exp $\n";
-#endif
-
 #undef _WIN32_WINNT
 #define _WIN32_WINNT 0x0501
 #include "win32.h"
@@ -260,7 +255,7 @@ WinMain (HINSTANCE h, HINSTANCE hPrevInstance, LPSTR cmdline, int cmd_show)
     GetCurrentDirectory (MAX_PATH, cwd);
     local_dir = std::string (cwd);
 
-    if (!GetOption::GetInstance()->Process (__argc, __argv, NULL))
+    if (!GetOption::GetInstance().Process (__argc, __argv, NULL))
       exit (1);
 
     if (!((string) Arch).size ())
@@ -326,7 +321,7 @@ WinMain (HINSTANCE h, HINSTANCE hPrevInstance, LPSTR cmdline, int cmd_show)
     log (LOG_PLAIN) << "using locales " << locale << endLog;
 
     if (HelpOption)
-      GetOption::GetInstance ()->ParameterUsage (log (LOG_PLAIN)
+      GetOption::GetInstance ().ParameterUsage (log (LOG_PLAIN)
 						<< "\nCommand Line Options:\n");
     else
       {

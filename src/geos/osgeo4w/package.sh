@@ -1,5 +1,5 @@
 export P=geos
-export V=3.9.1
+export V=3.10.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
@@ -8,8 +8,11 @@ source ../../../scripts/build-helpers
 
 startlog
 
-[ -f geos-$V.tar.bz2 ] || wget https://download.osgeo.org/geos/geos-$V.tar.bz2
-[ -f ../CMakeLists.txt ] || tar -C .. -xjf geos-$V.tar.bz2 --xform s,geos-$V,.,
+[ -f $P-$V.tar.bz2 ] || wget https://download.osgeo.org/$P/$P-$V.tar.bz2
+[ -d ../$P-$V ] || {
+	tar -C .. -xjf $P-$V.tar.bz2
+	rm -fr build
+}
 
 vs2019env
 cmakeenv
@@ -21,7 +24,7 @@ cd build
 cmake -G Ninja \
         -D CMAKE_BUILD_TYPE=Release \
         -D CMAKE_INSTALL_PREFIX=../install \
-        ../..
+        ../../$P-$V
 ninja
 ninja install
 
@@ -47,8 +50,8 @@ external-source: $P
 Maintainer: $MAINTAINER
 EOF
 
-cp ../COPYING $R/$P-$V-$B.txt
-cp ../COPYING $R/$P-devel/$P-devel-$V-$B.txt
+cp ../$P-$V/COPYING $R/$P-$V-$B.txt
+cp ../$P-$V/COPYING $R/$P-devel/$P-devel-$V-$B.txt
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 

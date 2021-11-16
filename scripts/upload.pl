@@ -108,26 +108,55 @@ sub getver {
 }
 
 sub compare_versions {
-	my($a, $b) = @_;
+        my($a, $b) = @_;
 
-	my @a = split /\./, $a;
-	my @b = split /\./, $b;
+        my @a = split /\./, $a;
+        my @b = split /\./, $b;
 
-	my $n = @a < @b ? @a : @b;
+        while( @a && @b ) {
+                my $a = shift @a;
+                my $b = shift @b;
+                next if $a eq $b;
 
-	while( @a && @b ) {
-		my $a = shift @a;
-		my $b = shift @b;
+		# a
+		# 1
+		# 1a
+		# 1rc1
+		while($a && $b) {
+			# print "a:$a b:$b\n";
+			my ($an) = $a =~ /^(\d+)/;
+			my ($bn) = $b =~ /^(\d+)/;
 
-		next if $a eq $b;
+			if(defined $an && defined $bn) {
+				# print "N: $an <=> $bn\n";
+				return $an <=> $bn unless $an == $bn;
+				$a =~ s/^\d+//;
+				$b =~ s/^\d+//;
+			} elsif($an || $bn) {
+				warn "Invalid version compare: $a vs $b";
+				return undef;
+			}
 
-		my ($an, $ann) = $a =~ /^(\d+)(\D.*)?$/;
-		my ($bn, $bnn) = $b =~ /^(\d+)(\D.*)?$/;
+			($an) = $a =~ /^(\D+)/;
+			($bn) = $b =~ /^(\D+)/;
 
-		return defined $an && defined $bn ? $an <=> $bn : $an cmp $bn;
-	}
+			if($an && $bn) {
+				# print "L: $an <=> $bn\n";
+				return $an cmp $bn unless $an eq $bn;
+				$a =~ s/^\D+//;
+				$b =~ s/^\D+//;
+			} elsif($an || $bn) {
+				return -1 if $an =~ /^-?rc$/i;	# rc* < ""
+				return 1 if $bn =~ /^-?rc$/i;	# "" > rc*
+				return $an ? 1 : -1;		# a > ""  | "" < a
+			}
+		}
 
-	return @a ? 1 : @b ? -1 : 0;
+		return 1 if $a;
+		return -1 if $b;
+        }
+
+        return @a ? 1 : @b ? -1 : 0;
 }
 
 system("/usr/bin/rsync $ENV{'MASTER_SCP'}/x86_64/setup.ini /tmp/setup-master.ini") == 0 or die "Could not download setup.ini";
@@ -155,6 +184,7 @@ while(<H>) {
 close H;
 
 my $tdir = File::Temp->newdir(CLEANUP => 0);
+print STDERR "Temporary directory: $tdir\n";
 
 foreach my $p (sort keys %packages) {
 	my @v;
@@ -188,15 +218,15 @@ foreach my $p (sort keys %packages) {
 
 		# Skip already remotely available versions
 		for my $sec (qw/curr prev/) {
-			next V if defined $remote{$p}->{$sec}{version} && $remote{$p}->{$sec}{version} eq $v;
+			next V if defined $remote{$p}->{$sec}->{version} && $remote{$p}->{$sec}->{version} eq $v;
 		}
 
 		push @uploads, $v;
 	}
 
 	undef @v;
-	push @v, $local{$p}->{test}{version};
-	push @v, $remote{$p}->{test}{version};
+	push @v, $local{$p}->{test}->{version};
+	push @v, $remote{$p}->{test}->{version};
 
 	undef %v;
 	@v = grep { defined && !$v{$_}++ } @v;
@@ -206,13 +236,17 @@ foreach my $p (sort keys %packages) {
 	if(@v) {
 		$test = $v[0];
 
-		if(!defined $remote{$p}->{test}{version} || $remote{$p}->{test}{version} ne $test) {
+		if(!defined $remote{$p}->{test}->{version} || $remote{$p}->{test}->{version} ne $test) {
 			push @uploads, $test;
 		}
 	}
 
 	die "Hint for $p not found" unless exists $shints{$p};
 	my $d = $shints{$p};
+
+	die "$p: curr $curr equals test $test\nLocal:" . Dumper($local{$p})  . "\nRemote: " . Dumper($remote{$p}) if defined $curr && defined $test && $curr eq $test;
+	die "$p: curr $curr equals prev $prev\nLocal:" . Dumper($local{$p})  . "\nRemote: " . Dumper($remote{$p}) if defined $curr && defined $prev && $curr eq $prev;
+	die "$p: prev $prev equals test $test\nLocal:" . Dumper($local{$p})  . "\nRemote: " . Dumper($remote{$p}) if defined $prev && defined $test && $prev eq $test;
 
 	make_path("$tdir/$d/$p") unless -d "$tdir/$d/$p";
 	die "Could not created " unless -d "$tdir/$d/$p";
@@ -232,27 +266,43 @@ foreach my $p (sort keys %packages) {
 
 	close O;
 
+	my $uploads = 0;
 	for my $u (@uploads) {
 		for my $f (qw/install source license/ ) {
-			$files{ $local{$p}->{$u}->{$f}->{file} } = 1 if exists $local{$p}->{$u}->{$f}->{file};
+			next unless exists $local{$p}->{$u}->{$f}->{file};
+			$files{ $local{$p}->{$u}->{$f}->{file} } = 1;
+			$uploads = 1;
 		}
+	}
+
+	if($uploads) {
+		my @v;
+		push @v, "c:$curr" if defined $curr;
+		push @v, "p:$prev" if defined $prev;
+		push @v, "t:$test" if defined $test;
+		print STDERR "updated hint: $tdir/$d/$p/setup.hint [" . join(" ", @v) . "]\n";
+	} else {
+		unlink "$tdir/$d/$p/setup.hint";
 	}
 }
 
 unless(keys %files) {
 	print STDERR "No files to update\n";
+	unlink ".uploading";
 	exit 0;
 }
 
+my $opt = $ENV{OSGEO4W_RSYNC_OPT} || "";
+
 my($host,$path) = $ENV{MASTER_SCP} =~ /^(.*):(.*)$/;
 
-open F, "| /usr/bin/rsync -vtuO --chmod=D775,F664 --files-from=- '$ENV{OSGEO4W_REP}' '$ENV{MASTER_SCP}'";
+open F, "| /usr/bin/rsync $opt -vtuO --chmod=D775,F664 --files-from=- '$ENV{OSGEO4W_REP}' '$ENV{MASTER_SCP}'";
 for my $file (sort keys %files) {
 	print F "$file\n";
 }
 close F or die "Update of files failed: $!";
 
-if( system("/usr/bin/rsync -vtuO --chmod=D775,F664 -r '$tdir/' '$ENV{MASTER_SCP}/'") != 0 ) {
+if( system("/usr/bin/rsync $opt -vtuO --chmod=D775,F664 -r '$tdir/' '$ENV{MASTER_SCP}/'") != 0 ) {
 	die "Update of hints failed: $!";
 }
 

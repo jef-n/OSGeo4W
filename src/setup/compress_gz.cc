@@ -13,7 +13,7 @@
  *
  */
 
-/* 
+/*
  * Portions copyright under the zlib licence - this class was derived from
  * gzio.c in that library.
  */
@@ -82,7 +82,7 @@ compress_gz::construct (io_stream * parent, const char *openmode)
       z_err = Z_STREAM_ERROR;
       return;
     }
-  
+
   do
     {
       if (*p == 'r')
@@ -163,7 +163,7 @@ compress_gz::construct (io_stream * parent, const char *openmode)
       /* We use 10L instead of ftell(s->file) to because ftell causes an
        * fflush on some systems. This version of the library doesn't use
        * startpos anyway in write mode, so this initialization is not
-       * necessary. 
+       * necessary.
        */
     }
   else

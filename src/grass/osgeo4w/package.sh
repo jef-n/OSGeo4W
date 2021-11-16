@@ -1,8 +1,8 @@
 export P=grass
-export V=7.8.5
+export V=7.8.6
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="gdal-devel proj-devel geos-devel libjpeg-devel libpng-devel libpq-devel libtiff-devel sqlite3-devel zstd-devel python3-core python3-six liblas-devel cairo-devel freetype-devel python3-wxpython"
+export BUILDDEPENDS="gdal-devel proj-devel geos-devel libjpeg-devel libpng-devel libpq-devel libtiff-devel sqlite3-devel zstd-devel python3-core python3-six python3-pywin32 liblas-devel python3-wxpython"
 
 source ../../../scripts/build-helpers
 
@@ -13,15 +13,15 @@ startlog
 MM=${V%.*}
 MM=${MM//./}
 
-[ -f $P-$V.tar.gz ] || wget http://download.osgeo.org/$P/${P}$MM/source/$P-$V.tar.gz
+[ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://github.com/OSGeo/$P/archive/refs/tags/$V.tar.gz
 [ -f ../$P-$V/configure ] || tar -C .. -xzf $P-$V.tar.gz
-[ -f patched ] || {
-	patch -l -d ../$P-$V -p1 --dry-run <patch
-	patch -l -d ../$P-$V -p1 <patch
-	touch patched
+[ -f ../$P-$V/patched ] || {
+	patch -d ../$P-$V -p1 --dry-run <patch
+	patch -d ../$P-$V -p1 <patch
+	touch ../$P-$V/patched
 }
 
-msysarch=msys2-base-x86_64-20200903.tar.xz
+msysarch=msys2-base-x86_64-20210604.tar.xz
 
 [ -f $msysarch ] || wget http://repo.msys2.org/distrib/x86_64/$msysarch
 [ -d msys64 ] || tar xJf $msysarch
@@ -46,7 +46,7 @@ msysarch=msys2-base-x86_64-20200903.tar.xz
 	}
 
 	cmd.exe /c pacman --noconfirm -Syuu --needed
-	cmd.exe /c pacman --noconfirm -S --needed \
+	cmd="pacman --noconfirm -S --needed \
 		diffutils \
 		flex \
 		bison \
@@ -65,7 +65,10 @@ msysarch=msys2-base-x86_64-20200903.tar.xz
 		mingw-w64-x86_64-libwinpthread-git \
 		mingw-w64-x86_64-libpng \
 		mingw-w64-x86_64-pcre \
-		mingw-w64-x86_64-fftw
+		mingw-w64-x86_64-fftw \
+		mingw-w64-x86_64-cairo
+	"
+	cmd.exe /c "$cmd" || cmd.exe /c "$cmd" || cmd.exe /c "$cmd"
 
 	cd ../$P-$V
 
@@ -82,10 +85,14 @@ cat <<EOF >$R/setup.hint
 sdesc: "GRASS GIS"
 ldesc: "Geographic Resources Analysis Support System (GRASS GIS)"
 category: Desktop
-requires: liblas $RUNTIMEDEPENDS avce00 gpsbabel gs python3-gdal python3-matplotlib libtiff python3-wxpython python3-pillow python3-pip python3-ply python3-pyopengl cairo python3-psycopg2-binary python3-six zstd python3-pywin32 freetype
+requires: liblas $RUNTIMEDEPENDS avce00 gpsbabel python3-gdal python3-matplotlib libtiff python3-wxpython python3-pillow python3-pip python3-ply python3-pyopengl python3-psycopg2-binary python3-six zstd python3-pywin32 gs
 maintainer: $MAINTAINER
 EOF
 
+appendversions $R/setup.hint
+
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/patch
+
+rm -f osgeo4w/etc/postinstall/grass.bat
 
 endlog

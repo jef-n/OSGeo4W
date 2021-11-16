@@ -1,5 +1,5 @@
 export P=openssl
-export V=1.1.1h
+export V=1.1.1l
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
@@ -13,7 +13,7 @@ source ../../../scripts/build-helpers
 startlog
 
 [ -f $P-$V.tar.gz ] || wget https://www.openssl.org/source/$P-$V.tar.gz
-[ -f ../CMakeLists.txt ] || tar -C .. -xzf  $P-$V.tar.gz --xform "s,^$P-$V,.,"
+[ -d ../$P-$V ] || tar -C .. -xzf  $P-$V.tar.gz
 
 if ! [ -d nasm-$NASM ]; then
 	wget -c https://www.nasm.us/pub/nasm/releasebuilds/$NASM/win64/nasm-$NASM-win64.zip
@@ -35,44 +35,48 @@ vs2019env
 	export PATH=$PATH:$(cygpath -a nasm-$NASM)
 
 	if ! [ -f built ]; then
-		cd ..
+		cd ../$P-$V
 
-		perl Configure VC-WIN64A --prefix=$(cygpath -aw osgeo4w/install) --openssldir=$(cygpath -aw osgeo4w/install/apps/openssl)
+		perl Configure VC-WIN64A --prefix=$(cygpath -aw ../osgeo4w/install) --openssldir=$(cygpath -aw ../osgeo4w/install/apps/openssl)
 
 		nmake clean
 		nmake
 		nmake test
 		nmake install
 
-		cd osgeo4w
+		cd ../osgeo4w
 
 		touch built
 	fi
 )
 
 export R=$OSGEO4W_REP/x86_64/release/$P
-mkdir -p $R/$P-devel $R/$P-doc install/etc/postinstall install/etc/ini
+mkdir -p $R/$P-devel $R/$P-doc install/etc/postinstall install/etc/ini install/apps/$P/certs
 
 cat <<EOF >install/etc/postinstall/$P.bat
 dllupdate -oite -copy -reboot "%OSGEO4W_ROOT%\\bin\\libcrypto-1_1-x64.dll"
 dllupdate -oite -copy -reboot "%OSGEO4W_ROOT%\\bin\\libssl-1_1-x64.dll"
+exit /b 0
 EOF
 
 cat <<EOF >install/etc/ini/$P.bat
 set OPENSSL_ENGINES=%OSGEO4W_ROOT%\\lib\\engines-1_1
+set SSL_CERT_FILE=%OSGEO4W_ROOT%\\bin\\curl-ca-bundle.crt
+set SSL_CERT_DIR=%OSGEO4W_ROOT%\\apps\\$P\\certs
 EOF
 
 cat <<EOF >$R/setup.hint
 sdesc: "OpenSSL Cryptography (Runtime)"
 ldesc: "OpenSSL Cryptography (Runtime)"
 category: Libs
-requires: base msvcrt2019
+requires: base msvcrt2019 curl-ca-bundle
 maintainer: $MAINTAINER
 EOF
 
-cp ../LICENSE $R/$P-$V-$B.txt
+cp ../$P-$V/LICENSE $R/$P-$V-$B.txt
 
 tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
+	apps/openssl/certs \
 	bin/libcrypto-1_1-x64.dll \
 	bin/libssl-1_1-x64.dll \
 	lib/engines-1_1/capi.dll \
@@ -83,7 +87,7 @@ tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 \
 	osgeo4w/package.sh
 
-cp ../LICENSE $R/$P-devel/$P-$V-$B.txt
+cp ../$P-$V/LICENSE $R/$P-devel/$P-$V-$B.txt
 
 cat <<EOF >$R/$P-devel/setup.hint
 sdesc: "OpenSSL Cryptography (Development)"
@@ -95,6 +99,7 @@ maintainer: $MAINTAINER
 EOF
 
 tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
+	--exclude "apps/openssl/certs" \
 	apps/openssl \
 	bin/c_rehash.pl \
 	bin/openssl.exe \
@@ -115,6 +120,7 @@ maintainer: $MAINTAINER
 EOF
 
 tar -C install -cjf $R/$P-doc/$P-doc-$V-$B.tar.bz2 \
+	--xform s,^html,apps/$P/html, \
 	html
 
 endlog

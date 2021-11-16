@@ -39,8 +39,7 @@ extern bool rebootneeded;
 extern bool test_mode;
 extern bool safe_mode;
 
-extern int express_mode_option;
-extern int apache_port_number;
+extern int splash_mode;
 extern int source;
 
 extern std::string local_dir;

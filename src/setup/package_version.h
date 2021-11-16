@@ -16,7 +16,7 @@
 #ifndef SETUP_PACKAGE_VERSION_H
 #define SETUP_PACKAGE_VERSION_H
 
-/* This is a package version abstrct class, that should be able to 
+/* This is a package version abstrct class, that should be able to
  * arbitrate acceess to cygwin binary packages, cygwin source package,
  * and the rpm and deb equivalents of the same.
  */
@@ -25,8 +25,8 @@
  * Name (ie mutt
  * Vendor Version (ie 2.5.1)
  * Package Version (ie 16)
- * Stability 
- * Files 
+ * Stability
+ * Files
  */
 
 /* For non installed files, this class can be populated via information about
@@ -38,7 +38,7 @@
  */
 
 class CategoryList;
- 
+
 /*Required for parsing */
 #include "package_source.h"
 #include "PackageSpecification.h"
@@ -79,7 +79,7 @@ package_type_t;
 class _packageversion;
 class packagemeta;
 
-/* This class has pointer semantics 
+/* This class has pointer semantics
    Specifically: a=b does not alter the value of *a.
    */
 class packageversion
@@ -88,7 +88,7 @@ public:
   packageversion (); /* creates an empty packageversion */
   packageversion (_packageversion *); /* used when creating an instance */
   packageversion (packageversion const &);
-  ~packageversion (); 
+  ~packageversion ();
   packageversion &operator= (packageversion const &);
   bool operator ! () const; /* true if the package is invalid. (i.e.
 			       uninitialised */
@@ -100,7 +100,7 @@ public:
   bool operator > (packageversion const &) const;
   bool operator >= (packageversion const &) const;
 
-  const std::string Name () const; 
+  const std::string Name () const;
   const std::string Vendor_version () const;
   const std::string Package_version () const;
   const std::string Canonical_version () const;
@@ -113,7 +113,7 @@ public:
   void set_sdesc (const std::string& );
   const std::string LDesc () const;
   const std::string License () const;
-  
+
   void set_ldesc (const std::string& );
   void set_autodep (const std::string& );
   void set_license (const std::string& );
@@ -123,15 +123,15 @@ public:
   void setSourcePackageSpecification (PackageSpecification const &);
 
   /* invariant: these never return NULL */
-  std::vector <std::vector <PackageSpecification *> *> *depends(), *predepends(), 
+  std::vector <std::vector <PackageSpecification *> *> *depends(), *predepends(),
   *recommends(), *suggests(), *replaces(), *conflicts(), *provides(), *binaries();
-  const std::vector <std::vector <PackageSpecification *> *> *depends() const; 
+  const std::vector <std::vector <PackageSpecification *> *> *depends() const;
 
   bool picked() const;   /* true if this version is to be installed */
   void pick(bool, packagemeta *); /* trigger an install/reinsall */
   bool HasLicense() const; /* return true if this package has a license*/
-  void set_hasLicense(bool); 
-  
+  void set_hasLicense(bool);
+
   void uninstall ();
   /* invariant: never null */
   packagesource *source(); /* where can we source the file from */
@@ -189,25 +189,25 @@ public:
   virtual void set_ldesc (const std::string& ) = 0;
   virtual void set_autodep (const std::string& ) = 0;
   virtual void set_license (const std::string& ) = 0;
-  
+
   /* only semantically meaningful for binary packages */
   /* direct link to the source package for this binary */
   /* if multiple versions exist and the source doesn't discriminate
-     then the most recent is used 
+     then the most recent is used
      */
   virtual packageversion sourcePackage ();
   virtual PackageSpecification & sourcePackageSpecification ();
   virtual void setSourcePackageSpecification (PackageSpecification const &);
-  
+
   std::vector <std::vector <PackageSpecification *> *> depends, predepends, recommends,
   suggests, replaces, conflicts, provides, binaries;
-  
+
   virtual void pick(bool const &newValue) { picked = newValue;}
   bool picked;	/* non zero if this version is to be installed */
 		/* This will also trigger reinstalled if it is set */
-  virtual void set_hasLicense(bool const &has) { hasLic = has;} 
+  virtual void set_hasLicense(bool const &has) { hasLic = has; }
   bool hasLic;
-  
+
   virtual void uninstall () = 0;
   std::vector<packagesource> sources; /* where can we source the files from */
 

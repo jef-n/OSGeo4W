@@ -16,12 +16,12 @@
 #ifndef SETUP_CYGPACKAGE_H
 #define SETUP_CYGPACKAGE_H
 
-/* This is a cygwin specific package class, that should be able to 
+/* This is a cygwin specific package class, that should be able to
  * arbitrate acceess to cygwin binary packages amd cygwin source packages
  */
 
 /* for MAX_PATH */
-#include "win32.h" 
+#include "win32.h"
 
 #include "package_version.h"
 
@@ -63,9 +63,9 @@ public:
                                         const package_type_t type);
 
   static packageversion createInstance (const std::string& ,
-                                        const std::string& , 
                                         const std::string& ,
-					package_status_t const, 
+                                        const std::string& ,
+					package_status_t const,
 					package_type_t const);
 
 private:

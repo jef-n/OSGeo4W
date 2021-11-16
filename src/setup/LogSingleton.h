@@ -50,7 +50,7 @@ public:
   virtual std::ostream &operator() (enum log_level level) = 0;
 
   friend std::ostream& endLog(std::ostream& outs);
-  
+
 protected:
   LogSingleton(std::streambuf* aStream); // Only child classs can be created.
   LogSingleton (LogSingleton const &); // no copy constructor

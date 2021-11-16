@@ -111,7 +111,7 @@ PickCategoryLine::click (int const myrow, int const ClickedRow, int const x)
       if ((size_t) x >= spin_x)
 	{
 	  ++current_default;
-	  
+
 	  return set_action (current_default);
 	}
       else

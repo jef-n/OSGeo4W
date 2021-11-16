@@ -1,14 +1,15 @@
 set -e
 
 export MASTER_HOST=download.osgeo.org
-export MASTER_BASE=osgeo4w/testing
+export MASTER_BASE=osgeo4w/v2
 export MASTER_REPO=http://$MASTER_HOST/$MASTER_BASE
-export MASTER_REGEN_URI=http://$MASTER_HOST/cgi-bin/osgeo4w-regen-testing.sh
+export MASTER_REGEN_URI=http://$MASTER_HOST/cgi-bin/osgeo4w-regen-v2.sh
 export MASTER_SCP=$MASTER_HOST:/osgeo/download/$MASTER_BASE
 export OSGEO4W_SCRIPTS=$(cygpath -a "$( dirname "${BASH_SOURCE[0]}" )")
 export OSGEO4W_PWD=$PWD
 
 export PYTHON=Python39
+export OSGEO4W_HINTS=0
 
 savelog() {
 	local f=$1
@@ -56,7 +57,12 @@ declare -x runtimedepends
 
 endlog() {
 	local r=$?
-	if [ $r == 0 ]; then
+
+	if [ "$OSGEO4W_BUILDMODE" = "test" -a $OSGEO4W_HINTS -eq 0 ]; then
+		log "WARNING: test build without hints"
+	fi
+
+	if [ $r -eq 0 ]; then
 		log "Local repository updates:"
 		regen
 
@@ -70,6 +76,7 @@ endlog() {
 			perl $OSGEO4W_SCRIPTS/upload.pl
 		fi
 	fi
+
 	trap "" EXIT
 	finishlog
 	return $r
@@ -172,8 +179,9 @@ declare -x cmakeenv
 ninjaenv() {
 	if ! [ -x "$OSGEO4W_SCRIPTS/ninja.exe" ]; then
 		(
+			cd /tmp
+			curl --remote-name -L https://github.com/ninja-build/ninja/releases/download/v1.10.2/ninja-win.zip
 			cd $OSGEO4W_SCRIPTS
-			curl -L --output /tmp/ninja.zip https://github.com/ninja-build/ninja/releases/download/v1.10.1/ninja-win.zip
 			unzip /tmp/ninja.zip
 
 			chmod a+rx ninja.exe
@@ -193,6 +201,7 @@ regen() {
 		# update local package repository
 		mkdir -p $OSGEO4W_REP/x86_64/release
 		cd $OSGEO4W_REP
+		[ -d x86_64/release ] || mkdir -p x86_64/release
 		! [ -f x86_64/setup.ini ] || cp x86_64/setup.ini x86_64/setup.ini.prev
 		perl $OSGEO4W_SCRIPTS/genini --arch=x86_64 --output=x86_64/setup.ini.tmp --recursive x86_64/release
 		mv x86_64/setup.ini.tmp x86_64/setup.ini
@@ -256,8 +265,6 @@ fetchdeps() {
 	cmd="$cmd --only-site"
 	cmd="$cmd --safe"
 	cmd="$cmd --no-shortcuts"
-	cmd="$cmd --no-startmenu"
-	cmd="$cmd --no-desktop"
 	cmd="$cmd -s $(cygpath -am $OSGEO4W_REP)"
 	cmd="$cmd -s $MASTER_REPO"
 	cmd="$cmd -l $(cygpath -am $OSGEO4W_REP/package-cache)"
@@ -267,7 +274,12 @@ fetchdeps() {
 	done
 
 	log "OSGEO4W:$cmd"
-	$cmd
+	if ! $cmd; then
+		log "OSGeo4W failed"
+		for i in osgeo4w/setup.log osgeo4w/setup.log.full osgeo4w/var/log/setup.log osgeo4w/var/log/setup.log.full; do
+			[ -f $i ] && cat $i
+		done
+	fi
 
 	missing=
 	for p in "$@"; do
@@ -282,9 +294,6 @@ fetchdeps() {
 		return 0
 	else
 		log "Missing dependencies:$missing"
-		for i in osgeo4w/setup.log osgeo4w/setup.log.full osgeo4w/var/log/setup.log osgeo4w/var/log/setup.log.full; do
-			[ -f $i ] && cat $i
-		done
 		return 1
 	fi
 }
@@ -361,6 +370,8 @@ appendversions() {
 	[ -z "$version_curr" ] || echo "curr: $version_curr-$binary_curr" >>$hint
 	[ -z "$version_prev" ] || echo "prev: $version_prev-$binary_prev" >>$hint
 	[ -z "$version_test" ] || echo "test: $version_test-$binary_test" >>$hint
+
+	(( OSGEO4W_HINTS++ )) || true
 }
 declare -x appendversions
 
@@ -372,6 +383,12 @@ nextbinary() {
 		p=$1
 	fi
 
+	case "$V" in
+	*[rR][cC][0-9]*)
+		: ${OSGEO4W_BUILDMODE:=test}
+		;;
+	esac
+
 	availablepackageversions $p
 
 	if [ "$OSGEO4W_BUILDMODE" = "test" ]; then
@@ -381,6 +398,7 @@ nextbinary() {
 			binary_test=1
 		fi
 		B=$binary_test
+		log "Building test version $V-$B"
 	else
 		version_prev=$version_curr
 		binary_prev=$binary_curr
@@ -393,6 +411,7 @@ nextbinary() {
 		fi
 
 		B=$binary_curr
+		log "Building production version $V-$B"
 	fi
 }
 declare -x nextbinary
@@ -409,8 +428,11 @@ packagewheel() {
 	(
 		cd $OSGEO4W_PWD
 
-		mkdir -p build
-		export TEMP=$(cygpath -aw build)
+		# mkdir -p build
+		# export TEMP=$(cygpath -aw build)
+		# PATH too long
+		mkdir -p /c/TEMP/
+		export TEMP=/c/TEMP/
 
 		fetchenv osgeo4w/bin/o4w_env.bat
 		vs2019env
@@ -469,7 +491,6 @@ init() {
 		echo "Builds are supposed to be run outside of OSGeo4W" >&2
 		exit 1
 	fi
-
 
 	# Verify that a repository is set
 	if ! [ -d "$OSGEO4W_REP" ]; then

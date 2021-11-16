@@ -16,11 +16,6 @@
 /* The purpose of this file is to run all the post-install scripts
    in their various forms. */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: postinstall.cc,v 2.29 2010/11/20 13:03:58 jturney Exp $\n";
-#endif
-
 #include "dialog.h"
 #include "find.h"
 #include "mount.h"

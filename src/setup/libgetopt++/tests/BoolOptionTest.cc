@@ -18,17 +18,20 @@
 #include "getopt++/BoolOption.h"
 
 #include <iostream>
+#include <string.h>
 
-static BoolOption testoption (false, 't', "testoption", "Tests the use of boolean options");
 int
 main (int anargc, char **anargv)
 {
+  BoolOption helpoption (false, 'h', "help", "Tests the use of help output.");
+  BoolOption helpoption2 (false, 'o', "help2", "Tests the use of help output.");
+  BoolOption ableoption (false, '\0', "foo", "Tests the use of paired option.", BoolOption::BoolOptionType::pairedAble);
+
   int argc=2;
   char *argv[4];
   argv[0] = strdup("BoolOptionTest");
   argv[1] = strdup("-h");
     {
-      BoolOption helpoption (false, 'h', "help", "Tests the use of help output.");
       if (!GetOption::GetInstance().Process (argc, argv, NULL))
 	{
 	  std::cout << "Failed to process options" << std::endl;
@@ -43,17 +46,31 @@ main (int anargc, char **anargv)
       argc = 0;
     }
     {
-      BoolOption helpoption (false, 'h', "help", "Tests the use of help output.");
       if (!GetOption::GetInstance().Process (argc, argv, NULL))
 	{
 	  std::cout << "Failed to process options (2) " << std::endl;
 	  return 1;
 	}
-      if (helpoption)
+      if (helpoption2)
 	{
-	  std::cout << "Recieved unexpected  help option" << std::endl;
+	  std::cout << "Received unexpected help option" << std::endl;
 	  return 1;
 	}
+    }
+  argc=2;
+  argv[0] = strdup("BoolOptionTest");
+  argv[1] = strdup("--enable-foo");
+    {
+      if (!GetOption::GetInstance().Process (argc, argv, NULL))
+        {
+          std::cout << "Failed to process options (3) " << std::endl;
+          return 1;
+        }
+      if (!ableoption)
+        {
+          std::cout << "Did not receive expected enable-foo option" << std::endl;
+          return 1;
+        }
     }
   return 0;
 }

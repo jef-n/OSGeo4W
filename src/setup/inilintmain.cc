@@ -13,11 +13,6 @@
  *
  */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: inilintmain.cc,v 2.5 2007/04/19 22:53:26 maxb Exp $\n";
-#endif
-
 #include "getopt++/GetOption.h"
 #include <iostream>
 #include <sstream>
@@ -35,7 +30,7 @@ yyerror (const std::string& s)
   buf << "setup.ini line " << yylineno << ": ";
   buf << s << endl;
   cout << buf;
-  error_buf << buf; 
+  error_buf << buf;
   error_count++;
   /* TODO: is return 0 correct? */
   return 0;

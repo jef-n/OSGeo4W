@@ -46,7 +46,7 @@ enum ControlPosition {
 class ControlDimension
 {
   public:
-    ControlDimension(long &anInt1, long &anInt2) : 
+    ControlDimension(long &anInt1, long &anInt2) :
       left(anInt1), right (anInt2){}
     long &left;
     long &right;
@@ -68,7 +68,7 @@ public:
     private:
       void adjust (ControlPosition const &how, ControlDimension &where, int by) const;
   };
-  
+
   /*
     Adjust all the controls.
     'controlInfo' an array with the moving information.
@@ -86,9 +86,9 @@ class SizeProcessor
   RECTWrapper lastRect;
 public:
   SizeProcessor ();
-  
+
   void AddControlInfo (const ControlAdjuster::ControlInfo* controlInfo);
   void UpdateSize (HWND dlg);
 };
 
-#endif // SETUP_CONTROLADJUSTER_H 
+#endif // SETUP_CONTROLADJUSTER_H

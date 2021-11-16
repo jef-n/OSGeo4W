@@ -68,7 +68,7 @@ casecompare (const std::string& a, const std::string& b, size_t limit)
       return 1;
 
   // Hit the comparison limit without finding a difference
-  if (limit && i == limit) 
+  if (limit && i == limit)
     return 0;
 
   if (a.length() < b.length())
@@ -86,7 +86,7 @@ replace(const std::string& haystack, const std::string& needle,
   std::string rv(haystack);
   size_t n_len = needle.length(), r_len = replacement.length(),
          search_start = 0;
-  
+
   while (true)
   {
     size_t pos = rv.find(needle, search_start);

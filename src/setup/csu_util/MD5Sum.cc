@@ -90,7 +90,7 @@ MD5Sum::operator std::string() const
   {
     int hexdigit = 2 * i;
     char tmp;
-    
+
     tmp = digest[i] >> 4;
     hexdigest[hexdigit] =     (tmp < 10) ? (tmp + '0') : (tmp + 'a' - 10);
 

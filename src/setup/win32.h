@@ -104,7 +104,7 @@ class HANDLEWrapper {
 class TokenGroupCollection {
   public:
     TokenGroupCollection (DWORD aSize, HANDLEWrapper &aHandle) :
-                         populated_(false), buffer(new char[aSize]), 
+                         populated_(false), buffer(new char[aSize]),
                          bufferSize(aSize), token(aHandle) {}
     ~TokenGroupCollection () { if (buffer) delete[] buffer; }
 
@@ -124,7 +124,7 @@ class TokenGroupCollection {
 class NTSecurity
 {
 public:
-  NTSecurity () : everyOneSID (), administratorsSID (), usid (), token (), 
+  NTSecurity () : everyOneSID (), administratorsSID (), usid (), token (),
                   failed_ (false) {}
   ~NTSecurity() {}
 
@@ -153,13 +153,17 @@ class VersionInfo
 {
   public:
      VersionInfo ();
-     bool isNT () { return (v.dwPlatformId == VER_PLATFORM_WIN32_NT); }
+     DWORD major () const { return v.dwMajorVersion; }
+     DWORD minor () const { return v.dwMinorVersion; }
+     DWORD buildNumber () const { return v.dwBuildNumber; }
   private:
      OSVERSIONINFO v;
 };
 
 VersionInfo& GetVer ();
 
-#define IsWindowsNT() (GetVer ().isNT ())
+#define OSMajorVersion() (GetVer ().major ())
+#define OSMinorVersion() (GetVer ().minor ())
+#define OSBuildNumber() (GetVer ().buildNumber ())
 
 #endif /* SETUP_WIN32_H */

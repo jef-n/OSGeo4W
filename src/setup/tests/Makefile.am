@@ -29,11 +29,11 @@ AM_CPPFLAGS = -I. -I$(srcdir) -I$(top_srcdir)
 check_PROGRAMS = \
 	UserSettingTest \
 	UserSettingsTest
-	
+
 TESTS = \
 	UserSettingTest \
 	UserSettingsTest
-	
+
 UserSettingTest_SOURCES = UserSettingTest.cc
 UserSettingTest_CXXFLAGS = -DASTEST
 UserSettingTest_LDADD = \
@@ -41,7 +41,7 @@ UserSettingTest_LDADD = \
 	$(top_builddir)/UserSetting.o \
 	$(top_builddir)/UserSettings.o \
 	$(top_builddir)/String++.o
-	
+
 UserSettingsTest_SOURCES = UserSettingsTest.cc UserSettingTest.cc
 UserSettingsTest_LDADD = \
 	$(top_builddir)/Exception.o \

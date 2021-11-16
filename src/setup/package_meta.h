@@ -81,7 +81,7 @@ public:
   void uninstall ();
   int set_requirements (trusts deftrust, size_t depth);
   // explicit separation for generic programming.
-  int set_requirements (trusts deftrust) 
+  int set_requirements (trusts deftrust)
     { return set_requirements (deftrust, 0); }
   void set_message (const std::string& message_id, const std::string& message_string)
   {
@@ -107,12 +107,12 @@ public:
   bool isManuallyWanted() const;
   /* true if package was deleted on command-line. */
   bool isManuallyDeleted() const;
-  /* SDesc is global in theory, across all package versions. 
+  /* SDesc is global in theory, across all package versions.
      LDesc is not: it can be different per version */
   const std::string SDesc () const;
   const std::string PathLicense() const;
   const bool HasLicense() const;
-  
+
   /* what categories does this package belong in. Note that if multiple versions
    * of a package disagree.... the first one read in will take precedence.
    */
@@ -133,9 +133,9 @@ public:
   /* What version does the user want ? */
   packageversion desired;
 
-  /* What platform is this for ? 
+  /* What platform is this for ?
    * i386 - linux i386
-   * cygwin - cygwin for 32 bit MS Windows 
+   * cygwin - cygwin for 32 bit MS Windows
    * All - no binary code, or a version for every platform
    */
   std::string architecture;

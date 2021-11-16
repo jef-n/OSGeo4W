@@ -16,11 +16,6 @@
 /* The purpose of this file is to get the network configuration
    information from the user. */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: net.cc,v 2.20 2009/06/28 03:50:43 cgf Exp $\n";
-#endif
-
 #include "net.h"
 
 #include "LogSingleton.h"
@@ -42,30 +37,30 @@ extern ThreeBarProgressPage Progress;
 
 static StringOption ProxyOption ("", 'p', "proxy", "HTTP/FTP proxy (host:port)", false);
 
-static int rb[] = { IDC_NET_IE5, IDC_NET_DIRECT, IDC_NET_PROXY, 0 };
+static int rb[] = { IDC_NET_PRECONFIG, IDC_NET_DIRECT, IDC_NET_PROXY, 0 };
 static bool doing_loading = false;
 
 void
 NetPage::CheckIfEnableNext ()
 {
-  int e = 0, p = 0, pu = 0;
+  int e = 0, p = 0;
   DWORD ButtonFlags = PSWIZB_BACK;
 
-  if (NetIO::net_method == IDC_NET_IE5)
-    pu = 1;
-  if (NetIO::net_method == IDC_NET_IE5 || NetIO::net_method == IDC_NET_DIRECT)
+  if (NetIO::net_method == IDC_NET_PRECONFIG ||
+      NetIO::net_method == IDC_NET_DIRECT)
     e = 1;
   else if (NetIO::net_method == IDC_NET_PROXY)
     {
-      p = pu = 1;
+      p = 1;
       if (NetIO::net_proxy_host && NetIO::net_proxy_port)
-	e = 1;
+        e = 1;
     }
-	if (e)
-	{
-		// There's something in the proxy and port boxes, enable "Next".
-		ButtonFlags |= PSWIZB_NEXT;
-	}
+
+  if (e)
+    {
+      // There's something in the proxy and port boxes, enable "Next".
+      ButtonFlags |= PSWIZB_NEXT;
+    }
 
   GetOwner ()->SetButtons (ButtonFlags);
 
@@ -116,7 +111,7 @@ NetPage::OnInit ()
   std::string proxyString (ProxyOption);
 
   if (!NetIO::net_method)
-    NetIO::net_method = IDC_NET_DIRECT;
+    NetIO::net_method = IDC_NET_PRECONFIG;
 
   if (proxyString.size ())
   {
@@ -135,13 +130,9 @@ NetPage::OnInit ()
   CheckIfEnableNext();
 
   // Check to see if any radio buttons are selected. If not, select a default.
-  if ((!SendMessage (GetDlgItem (IDC_NET_IE5), BM_GETCHECK, 0, 0) ==
-       BST_CHECKED)
-      && (!SendMessage (GetDlgItem (IDC_NET_PROXY), BM_GETCHECK, 0, 0)
-	  == BST_CHECKED))
-    {
-      SendMessage (GetDlgItem (IDC_NET_DIRECT), BM_CLICK, 0, 0);
-    }
+  if (SendMessage (GetDlgItem (IDC_NET_DIRECT), BM_GETCHECK, 0, 0) != BST_CHECKED
+      && SendMessage (GetDlgItem (IDC_NET_PROXY), BM_GETCHECK, 0, 0) != BST_CHECKED)
+    SendMessage (GetDlgItem (IDC_NET_PRECONFIG), BM_CLICK, 0, 0);
 }
 
 long
@@ -149,9 +140,7 @@ NetPage::OnNext ()
 {
   save_dialog (GetHWND ());
 
-  log (LOG_PLAIN) << "net: "
-    << ((NetIO::net_method == IDC_NET_IE5) ? "IE5" :
-        (NetIO::net_method == IDC_NET_DIRECT) ? "Direct" : "Proxy") << endLog;
+  log (LOG_PLAIN) << "net: " << NetIO::net_method_name() << endLog;
 
   Progress.SetActivateTask (WM_APP_START_SITE_INFO_DOWNLOAD);
   return IDD_INSTATUS;
@@ -175,7 +164,7 @@ NetPage::OnMessageCmd (int id, HWND hwndctl, UINT code)
 {
   switch (id)
     {
-    case IDC_NET_IE5:
+    case IDC_NET_PRECONFIG:
     case IDC_NET_DIRECT:
     case IDC_NET_PROXY:
     case IDC_PROXY_HOST:

@@ -18,6 +18,7 @@
 #include "getopt++/StringOption.h"
 
 #include <iostream>
+#include <string.h>
 
 class StringCollector : public Option
 {
@@ -35,17 +36,17 @@ class StringCollector : public Option
        {
 	 return "";
        }
-     virtual Option::Result Process(const char * value);
+     virtual Option::Result Process(const char * value, int index);
      virtual Option::Argument argument() const
        {
 	 return Required;
        }
-		      
+
      std::vector<std::string> values;
 };
 
 Option::Result
-StringCollector::Process(const char * value)
+StringCollector::Process(const char * value, int index)
 {
     values.push_back(value);
     if (values.size() == 1)
@@ -150,7 +151,7 @@ main (int anargc, char **anargv)
 	    std::cout << "Failed processing with a valueed value requiring argument.(2)" << std::endl;
 	    return 1;
 	}
-	
+
 	StringOption testoptionalstring ("default", 'o', "optional", "A string with optional parameter", true);
 	argv[argc] = strdup ("-ot");
 	++argc;
@@ -208,7 +209,7 @@ main (int anargc, char **anargv)
 	    std::cout << "Incorrect number of remaining argv elements. " << GetOption::GetInstance().remainingArgv().size()  <<std::endl;
 	    return 1;
 	}
-	
+
 	std::vector<std::string> subparms = GetOption::GetInstance().remainingArgv();
 	StringCollector strings2;
 	if (!GetOption::GetInstance().Process(subparms, &strings2)) {
@@ -225,7 +226,7 @@ main (int anargc, char **anargv)
 		std::cout << *i << std::endl;
 	    return 1;
 	}
-	
+
       }
     return 0;
 }

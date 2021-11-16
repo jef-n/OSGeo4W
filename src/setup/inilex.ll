@@ -92,7 +92,7 @@ STR	[!a-zA-Z0-9_./:\+~-]+
 "Binary:"		return BINARYPACKAGE;
 "Build-Depends:"	return BUILDDEPENDS;
 "Build-Depends-Indep:"	return BUILDDEPENDS; /* technicallyincorrect :[ */
-"Standards-Version:"	return STANDARDSVERSION; 
+"Standards-Version:"	return STANDARDSVERSION;
 "Format:"		return FORMAT;
 "Directory:"		return DIRECTORY;
 "Files:"		return FILES;
@@ -217,9 +217,9 @@ yyerror (const std::string& s)
 {
   char tmp[16];
   sprintf (tmp, "%d", yylineno - (!!YY_AT_BOL ()));
-  
+
   std::string e = current_ini_name + " line " + tmp + ": " + s;
-  
+
   if (!yyerror_messages.empty ())
     yyerror_messages += "\n";
 

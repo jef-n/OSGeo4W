@@ -21,7 +21,7 @@
 /* The read/write the archive stream to get the archive data is flawed.
  * The problem is that you then need a *different* gzip etc class to be able
  * to ungzip a gzip from within an archive.
- * The correct way is to 
+ * The correct way is to
  * 1) retrieve the file name.
  * 2) the user creates their own output object.
  * 3) the user calls extract_file (output strea,).
@@ -62,12 +62,12 @@ public:
 				       const std::string&,
 				       const std::string = std::string());
 
-  /* 
+  /*
    * To create a stream that will be compressed, you should open the url, and then get a new stream
-   * from compress::compress. 
+   * from compress::compress.
    */
-  /* read data - not valid for archives (duh!) 
-   * Could be made valid via the read-child-directly model 
+  /* read data - not valid for archives (duh!)
+   * Could be made valid via the read-child-directly model
    */
 //  virtual ssize_t read(void *buffer, size_t len) {return -1;};
   /* provide data to (double duh!) */

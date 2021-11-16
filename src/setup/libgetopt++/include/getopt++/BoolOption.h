@@ -23,17 +23,25 @@
 class BoolOption : public Option
 {
 public:
+  enum class BoolOptionType
+    {
+     simple,
+     pairedAble,
+     pairedNo,
+    };
+
   BoolOption(bool const defaultvalue, char shortopt, char const *longopt = 0,
-	     std::string const &shorthelp = std::string(), 
-	     OptionSet *owner = 0 );
+             std::string const &shorthelp = std::string(),
+             BoolOptionType type = BoolOptionType::simple,
+             OptionSet &owner=GetOption::GetInstance());
   virtual ~ BoolOption ();
   virtual std::string const shortOption () const;
   virtual std::string const longOption () const;
+  virtual std::vector<std::string> const & longOptionPrefixes () const;
   virtual std::string const shortHelp () const;
-  virtual Result Process (char const *);
+  virtual Result Process (char const *, int);
   virtual Argument argument () const;
   operator bool () const;
- 
 
 private:
   bool _value;
@@ -41,6 +49,7 @@ private:
   char _shortopt;
   char const *_longopt;
   std::string _shorthelp;
+  BoolOptionType _type;
 };
 
 #endif // _BOOLOPTION_H_

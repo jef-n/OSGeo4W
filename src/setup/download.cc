@@ -16,11 +16,6 @@
 /* The purpose of this file is to download all the files we need to
    do the installation. */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: download.cc,v 2.56 2012/11/08 19:12:16 yselkowitz Exp $\n";
-#endif
-
 #include "csu_util/rfc1738.h"
 
 #include "download.h"
@@ -171,14 +166,14 @@ download_one (packagesource & pkgsource, HWND owner)
               rename ((local + ".tmp").c_str(), local.c_str());
               success = 1;
               pkgsource.set_cached ("file://" + local);
-              // FIXME: move the downloaded file to the 
+              // FIXME: move the downloaded file to the
               //  original locations - without the mirror site dir in the way
               continue;
             }
           else
             {
               log (LOG_PLAIN) << "Download " << local << " wrong size (" <<
-                size << " actual vs " << pkgsource.size << " expected)" << 
+                size << " actual vs " << pkgsource.size << " expected)" <<
                 endLog;
               remove ((local + ".tmp").c_str());
               continue;

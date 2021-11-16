@@ -274,7 +274,7 @@ static void Usage()
 	    " -oite: only copy if target dll exists\n"
 	    " -copy: enable copy/update (default is info only)\n"
 	    " -reboot: create %%OSGEO4W_ROOT%%/etc/reboot if the update needs a reboot\n"
-	    " -unlink: decrement reference count and remove target dll if 0\n"
+	    " -unref: decrement reference count and remove target dll if 0\n"
 	    " source_dll: The full path to the source dll\n"
 	    " target_directory: path to target dir, default is %%WINDIR%%\\system32\n" );
     exit( 1 );

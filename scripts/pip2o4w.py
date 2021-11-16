@@ -234,7 +234,7 @@ while packages:
                     preremove = open("preremove.bat", "wb")
 
                 postinstall.write(str.encode("textreplace -std -t {}\r\n".format(prefix.sub('', f))))
-                preremove.write(str.encode("del {}\r\n".format(prefix.sub('', f))))
+                preremove.write(str.encode("del {}\r\n".format(prefix.sub('', f).replace('/', '\\'))))
 
                 f += ".tmpl"
 
@@ -259,7 +259,7 @@ while packages:
     if preremove:
         if has3py:
             preremove.write(str.encode("call %OSGEO4W_ROOT%\\bin\\py3_env.bat\n"))
-            preremove.write(str.encode("python -B %PYTHONHOME%\\Scripts\\preremove-cached.py {}\n".format(pname)))
+            preremove.write(str.encode("python -B \"%PYTHONHOME%\\Scripts\\preremove-cached.py\" {}\n".format(pname)))
 
         preremove.close()
         tf.add("preremove.bat", "etc/preremove/{}.bat".format(pname))

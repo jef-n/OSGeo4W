@@ -1,6 +1,4 @@
 /*
-	   
-	   
  * Copyright (c) 2000, 2001, Red Hat, Inc.
  *
  *     This program is free software; you can redistribute it and/or modify
@@ -18,11 +16,6 @@
 /* The purpose of this file is to act as a pretty interface to
    netio.cc.  We add a progress dialog and some convenience functions
    (like collect to string or file */
-
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: geturl.cc,v 2.28 2013/01/17 13:34:12 jturney Exp $\n";
-#endif
 
 #include "win32.h"
 #include "commctrl.h"
@@ -156,11 +149,11 @@ io_stream *
 get_url_to_membuf (const string &_url, HWND owner, bool nocache)
 {
   io_stream_memory *membuf = new io_stream_memory ();
-  try 
+  try
     {
       log (LOG_BABBLE) << "get_url_to_membuf " << _url << endLog;
       getUrlToStream (_url, membuf, nocache);
-      
+
       if (membuf->seek (0, IO_SEEK_SET))
     	{
     	  if (membuf)

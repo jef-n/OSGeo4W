@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2001, Robert Collins 
+ * Copyright (c) 2001, Robert Collins
  *
  *     This program is free software; you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -14,10 +14,6 @@
  */
 
 /* An individual stream from a tar archive. */
-
-#if 0
-static const char *cvsid = "\n%%% $Id: archive_tar_file.cc,v 2.15 2011/04/24 11:19:48 jturney Exp $\n";
-#endif
 
 #include <errno.h>
 #include <algorithm>
@@ -130,7 +126,7 @@ archive_tar_file::tell ()
 int
 archive_tar_file::seek (long where, io_stream_seek_t whence)
 {
-  /* nothing needs seeking here yet. Implement when needed 
+  /* nothing needs seeking here yet. Implement when needed
    */
   state.lasterr = EINVAL;
   return -1;

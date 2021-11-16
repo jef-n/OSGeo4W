@@ -21,8 +21,8 @@
 
 /* this is a stream class that simply abstracts the issue of maintaining
  * amemory buffer.
- * It's not as efficient as if can be, but that can be fixed without affecting 
- * the API. 
+ * It's not as efficient as if can be, but that can be fixed without affecting
+ * the API.
  */
 
 class memblock
@@ -84,7 +84,7 @@ public:
 
     return 0;
   }
-    
+
   /* try guessing this one */
   virtual int error ();
 //  virtual const char* next_file_name() = NULL;

@@ -17,11 +17,6 @@
    user choose the source of the install - from the net, from the
    current directory, or to just download files. */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: source.cc,v 2.22 2010/04/17 12:36:45 davek Exp $\n";
-#endif
-
 #include "source.h"
 
 #include "LogSingleton.h"
@@ -59,7 +54,7 @@ save_dialog (HWND h)
      that records the mode we're running in is fine here (and conversely,
      would be A Bad Thing if we did it again after the first time we
      construct a packagedb object; see package_db.h for details).  */
-  packagedb::task = 
+  packagedb::task =
     source == IDC_SOURCE_DOWNLOAD ? PackageDB_Download : PackageDB_Install;
 }
 

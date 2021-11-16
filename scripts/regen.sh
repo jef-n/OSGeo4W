@@ -12,3 +12,8 @@ if [ -z "$OSGEO4W_REP" ]; then
 fi
 
 regen
+
+(
+	cd $OSGEO4W_REP
+	diff -u x86_64/setup.ini.prev x86_64/setup.ini || true
+)

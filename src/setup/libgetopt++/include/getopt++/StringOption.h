@@ -25,14 +25,14 @@ class StringOption : public Option
 public:
   StringOption(std::string const defaultvalue, char shortopt, char const *longopt = 0,
 	     std::string const &shorthelp = std::string(), bool const optional = true,
-	     OptionSet *owner = 0);
+	     OptionSet &owner=GetOption::GetInstance());
   virtual ~ StringOption ();
   virtual std::string const shortOption () const;
   virtual std::string const longOption () const;
   virtual std::string const shortHelp () const;
-  virtual Result Process (char const *);
+  virtual Result Process (char const *, int);
   virtual Argument argument () const;
-  operator std::string () const;
+  operator const std::string& () const;
 
 private:
   Argument _optional;

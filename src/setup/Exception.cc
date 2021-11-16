@@ -13,7 +13,7 @@
  *
  */
 
-#include "Exception.h" 
+#include "Exception.h"
 
 Exception::Exception (char const *where, char const *message, int _appErrNo) : _message (message), appErrNo (_appErrNo)
 {

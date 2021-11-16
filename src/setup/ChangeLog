@@ -295,7 +295,7 @@
 	departure of 'class String' from this world. setup.exe can now
 	happily claim to follow the sane path of using just one general
 	purpose string class throughout :-)
-	
+
 2006-04-17  Max Bowsher  <maxb1@ukf.net>
 
 	* cygpackage.cc, cygpackage.h, package_version.cc, package_version.h:
@@ -362,7 +362,7 @@
 
 	* String++.cc, String++.h
 	(new_cstr_char_array, format_1000s): Migrate String to std::string.
-	(casecompare_lt_op, std::string operator+): New. 
+	(casecompare_lt_op, std::string operator+): New.
 
 2006-04-06  Max Bowsher  <maxb1@ukf.net>
 
@@ -410,7 +410,7 @@
 	archive_tar.cc (archive_tar::next_file_name),
 	cygpackage.cc (cygpackage::setCanonicalVersion):
 	Make explicit and call out with a FIXME some bizarre behaviour.
-	
+
 	* ScanFindVisitor.cc (ScanFindVisitor::visitFile),
 	filemanip.cc (base), iniparse.y,
 	threebar.cc (ThreeBarProgressPage::SetBar2):
@@ -473,7 +473,7 @@
 	    Max Bowsher  <maxb1@ukf.net>
 
 	Provide indication of site that a file is being downloaded from.
-	
+
 	* geturl.cc: Use std::string instead of String throughout.
 	(init_dialog): Put more information into GUI.
 	Remove unused 'owner' parameter and change all callers.
@@ -482,7 +482,7 @@
 	* res.rc (IDD_INSTATUS): Use SS_ENDELLIPSIS.
 
 2006-03-09  Max Bowsher  <maxb1@ukf.net>
-	
+
 	* Makefile.am (EXTRA_DIST): Add tree-minus.bmp and tree-plus.bmp.
 
 2006-01-20  Bryan Thrall  <bryan.thrall@flightsafety.com>
@@ -625,9 +625,9 @@
 	* PickPackageLine.h (PickPackageLine::DrawIcon): Add prototype.
 	(PickPackageLine::paint): Update prototype.
 	(PickPackageLine::DrawCheck): Remove.
-	* PickView.cc (pkg_headers): Remove unused 'slen' field, add new 
+	* PickView.cc (pkg_headers): Remove unused 'slen' field, add new
 	'needs_clip' field to signify if clipping is necessary for this column.
-	(PickView::note_width): Fold long line.  Refactor slightly for 
+	(PickView::note_width): Fold long line.  Refactor slightly for
 	simplicity.
 	(PickView::set_view_mode): Remove.
 	(PickView::cycleViewMode): New function.
@@ -639,7 +639,7 @@
 	(PickView::insert_pkg): Do not show obsolete packages.  Move
 	declaration of 'db' lower.  Fix whitespace.
 	(PickView::insert_category): Do not show obsolete packages.
-	(PickView::clear_view): Remove.  Moved logic into 'setViewMode'. 
+	(PickView::clear_view): Remove.  Moved logic into 'setViewMode'.
 	(PickView::scroll): Add additional parameter 'howmany' with default
 	value of 1.  Scroll by 'howmany' lines for SB_LINEDOWN and SB_LINEUP.
 	(NUM_CATEGORY_COL_WIDTH): Define.
@@ -743,11 +743,11 @@
 	Use prefixPath for link target on hardlinks.
 
 2005-05-14  Max Bowsher  <maxb@ukf.net>
-	
+
 	Hopefully, solve the "preremove DLL dependency" bug, by running all
 	preremove scripts before actually removing any files.
 
-	* install.cc 
+	* install.cc
 	(Installer::preremoveOne): New method. Run preremove scripts here.
 	(Installer::replaceOne): Remove method.
 	(num_replacements): Remove variable.
@@ -802,13 +802,13 @@
 	reflect same argument name as function.
 
 	* proppage.cc (PropertyPage::DialogProc): Remove redundant 'break'
-	statements that follow 'return's.  Add missing braces to case 
+	statements that follow 'return's.  Add missing braces to case
 	statements.  Call handler for TTN_GETDISPINFO.
 
 	* res.rc (IDS_TRUSTKEEP_TOOLTIP): Add new STRINGTABLE entry for
 	tooltip	text.
 	(IDS_TRUSTPREV_TOOLTIP): Ditto.
-	(IDS_TRUSTCURR_TOOLTIP): Ditto. 
+	(IDS_TRUSTCURR_TOOLTIP): Ditto.
 	(IDS_TRUSTEXP_TOOLTIP): Ditto.
 	(IDS_TRUSTPREV_TOOLTIP): Ditto.
 	(IDS_VIEWBUTTON_TOOLTIP): Ditto.
@@ -823,7 +823,7 @@
 	(Window::SetTooltipState): Ditto.
 	(Window::AddTooltip): Ditto.
 	(Window::TooltipNotificationHandler): Ditto.
-	
+
 	* window.cc (Window::Window): Initialize handle to NULL.
 	(Window::~Window): Call DestroyWindow on tooltip control if it was
 	activated.
@@ -851,11 +851,11 @@
 
 	* root.cc (dialog_cmd): Remove.  Use OnMessageCmd instead.
 	(RootPage::Create): Accomodate above change.
-	
+
 	* root.h (class RootPage): Add prototype for OnMessageCmd.
-	
+
 	* res.rc (IDD_ROOT): Fix broken button groups.  Correct the order of
-	the controls and use of WS_GROUP so that the radio buttons act 
+	the controls and use of WS_GROUP so that the radio buttons act
 	correctly.
 
 2005-05-05  Max Bowsher  <maxb@ukf.net>
@@ -929,19 +929,19 @@
 	* ControlAdjuster.h (enum ControlPosition): Declare new resizing
 	methods CP_STRETCH_LEFTHALF and CP_STRETCH_RIGHTHALF, and their
 	TOP/BOTTOM aliases.
-	
+
 	* ControlAdjuster.cc (ControlAdjuster::ControlInfo::adjust):
 	Implement CP_STRETCH_LEFTHALF and CP_STRETCH_RIGHTHALF, which are
 	designed to resize elements in a two-column layout.
-	
+
 	* localdir.h (class LocalDirPage): Remove constructor implementation
 	from here...
-	
+
 	* localdir.cc (LocalDirPage::LocalDirPage): ...to here, and call
 	AddControlsInfo on initialization.
 	(static	LocaldirControlsInfo): Add.  Define sizing rules for dialog
 	elements.
-	
+
 	* proppage.h: Add includes.
 	(PropertyPage::ClickableURL):
 	Declare new storage type for internal use by class.
@@ -964,7 +964,7 @@
 	IDC_MODE_TEXT, IDC_MODE_BIN, IDC_LOCALDIR_GRP, IDC_SPLASH_TEXT,
 	IDC_SPLASH_ICON, IDC_SPLASH_COPYR): Add. Replaces anonymous
 	IDC_STATIC ids, so that controls can be referenced by the resizer.
-	
+
 	* res.rc (IDD_LOCAL_DIR): Rearrange controls to match top-down order
 	in the dialog.  Fold long lines.  Replace anonymous IDC_STATIC ids.
 	(IDD_ROOT): Reorder in same manner.  Replace anonymous IDC_STATIC ids.
@@ -975,25 +975,25 @@
 	(IDD_SPLASH): Reorder elements to match top-down order of dialog, fold
 	long lines. Add descriptive paragraph, remove anonymous ids.  Update
 	copyright text, replace sources.redhat.com with cygwin.com.
-	
+
 	* root.h (class RootPage): Remove constructor implementation from
 	here...
-	
+
 	* root.cc: ...to here, and call AddControlInfo.
 	(static RootControlsInfo): Add.  Populate with resizing data.
 	(RootPage::OnInit): Make text a clickable hyperlink.
-	
+
 	* splash.h (class SplashPage): Likewise, move constructor from
 	here...
-	
+
 	* splash.cc: ...to here.  Call AddControlInfo.
 	(static SplashControlsInfo): Add and populate.
 	(SplashPage::Create): Make link on splash page a clickable hyperlink.
-	
+
 	* window.h: Add include.
 	(class Window): Store allocated fonts with a vector instead of fixed
 	array.  Change indentation of setParent to be consistent.
-	
+
 	* window.cc (Window::Window): Remove FontCounter.
 	(Window::~Window): Likewise.  Iterate over vector of fonts instead.
 	(Window::SetDlgItemFont): Use vector.
@@ -1014,7 +1014,7 @@
 	4px vertically.  Adjust other controls to accomodate.
 	(CREATEPROCESS_MANIFEST_RESOURCE_ID): Define so that manifest is
 	included in the binary.
-	
+
 	* setup.exe.manifest: New file.  Results in common controls with
 	themed appearance on modern versions of Windows.
 
@@ -1063,7 +1063,7 @@
 	Add a missing "packagedb.markUnVisited ()".
 
 2005-05-03  Max Bowsher  <maxb@ukf.net>
-	
+
 	* PickCategoryLine.cc (PickCategoryLine::click):
 	* PickPackageLine.cc (PickPackageLine::click):
 	Abandon use of trivial packagemeta::PrepareForVisit() wrapper.
@@ -1134,7 +1134,7 @@
 
 	* bz2lib/: Remove.
 	* zlib/: Remove.
-	* Makefile.am (DIST_SUBDIRS, SUBDIRS): 
+	* Makefile.am (DIST_SUBDIRS, SUBDIRS):
 	* configure.in: Remove AC_CONFIG_SUBDIRS for removed subdirs.
 	* compress_bz.h: Remove complex _WIN32 preprocessor conditional.
 	* compress_gz.h: Fix #include file name.
@@ -1287,7 +1287,7 @@
 	(RunFindVisitor): Exclude items with the extension ".done".
 	(do_postinstall_thread): Remove overcomplicated exclusion of items
 	with the extension ".done".
-	
+
 2004-12-24  Max Bowsher  <maxb@ukf.net>
 
 	* String++.cc, String++.h: Remove unused and incomplete code.
@@ -1327,7 +1327,7 @@
 2004-11-20  Max Bowsher  <maxb@ukf.net>
 
 	Repair the broken detection of wrongly-sized package files.
-	
+
 	* download.cc (validateCachedPackage): Make static, since not used
 	elsewhere. Improve logging. Migrate file-size tests to here, alongside
 	the MD5 tests.
@@ -1416,7 +1416,7 @@
 	* libmd5-rfc/md5main.c: New file.
 	* Makefile.ami (setup_SOURCES): Edit file paths.
 	* download.cc, install.cc: Edit include paths.
-	
+
 2004-11-11  Max Bowsher  <maxb@ukf.net>
 
 	* dialog.cc (fatal): Make capable of handling a passed-in error code,
@@ -1531,7 +1531,7 @@
 
 2004-08-29  Max Bowsher  <maxb@ukf.net>
 
-	* Exception.h: Reformatting, #include more, remove incorrect and 
+	* Exception.h: Reformatting, #include more, remove incorrect and
 	less-than-useful comments.
 	(TOPLEVEL_CATCH): New preprocessor macro.
 
@@ -1570,7 +1570,7 @@
 
 2004-08-18  Max Bowsher  <maxb@ukf.net>
 
-	"librsync is not wire-compatible with rsync 2.x, and is not likely 
+	"librsync is not wire-compatible with rsync 2.x, and is not likely
 	to be in the future." -- librsync.sourceforge.net
 
 	So, it is of no practical use to setup. Therefore, removing all
@@ -1611,8 +1611,8 @@
 
 2003-10-31  Frank Richter  <frichter@gmx.li>
 
-	* localdir.cc (OnNext): When SelectDirectoryA() fails, display a 
-	message with the error returned from the system instead of just 
+	* localdir.cc (OnNext): When SelectDirectoryA() fails, display a
+	message with the error returned from the system instead of just
 	'could not change dir'. Also, offer the user to 'Retry', 'Ignore' the
 	error or 'Abort' the directory change.
 
@@ -1657,8 +1657,8 @@
 
 2003-10-16  Frank Richter  <frichter@gmx.li>
 
-	* ControlAdjuster.cc: New file, helper to move elements of a dialog 
-	along when the it's resized. 
+	* ControlAdjuster.cc: New file, helper to move elements of a dialog
+	along when the it's resized.
 	* ControlAdjuster.h: Ditto.
 	* Makefile.am: Add new source files.
 	* proppage.cc (PropertyPage::DialogProc): Adjust some common
@@ -1675,10 +1675,10 @@
 	(PropSheet::AdjustPageSize): New. Adjust the metrics of a single page
 	to fit nicely into the property sheet. Part of resize logic.
 	* res.rc (All dialogs): The top-right Cygwin icon and top separator
-	now have IDs distinct from IDC_STATIC, so their metrics can be 
+	now have IDs distinct from IDC_STATIC, so their metrics can be
 	adjusted upon a resize. Also, all those Cygwin icons are at the exact
 	same spot now.
-	* choose.cc (ChooserPage::ChooserPage): Now the controls on the 
+	* choose.cc (ChooserPage::ChooserPage): Now the controls on the
 	chooser page move/size when the page size is changed.
 	* choose.h: Dito.
 
@@ -1695,7 +1695,7 @@
 
 	* win32.h: Define NOMINMAX only if not already defined - because
 	libstdc++-v3 3.3.1 defines NOMINMAX itself.
-	
+
 2003-08-03  Max Bowsher  <maxb@ukf.net>
 
 	* ChangeLog: Fix broken line-wrapping throughout. Clarify that
@@ -1715,7 +1715,7 @@
 	(PropSheet::NumPropPages): Remove.
 
 2003-08-02  Gary R. Van Sickle  <g.r.vansickle@worldnet.att.net>
-	
+
 	Changes modified by Max Bowsher  <maxb@ukf.net>
 	* splash.cc (Copyright): Update copyright dates.
 	(SplashPage::OnInit): Remove call to SetDlgItemFont().  Now handled in
@@ -1788,7 +1788,7 @@
 	* net.cc: Hold a ConnectionSetting instance to trigger the logic.
 	(NetPage::OnInit): Don't force net_method to any value.
 	* Makefile.am: Add new source files.
-	
+
 2003-07-30  Robert Collins  <rbtcollins@hotmail.com>
 
 	* SourceSetting.cc: New file, persist source selection.
@@ -1813,7 +1813,7 @@
 
 2003-07-30  Robert Collins  <rbtcollins@hotmail.com>
 
-	* PickView.cc: Adjust ::GetClientRect(..) to the inherited one 
+	* PickView.cc: Adjust ::GetClientRect(..) to the inherited one
 	throughout.
 
 2003-07-29  Max Bowsher  <maxb@ukf.net>
@@ -1854,7 +1854,7 @@
 
 2003-07-29  Robert Collins  <rbtcollins@hotmail.com>
 
-	* choose.cc (ChooserPage::createListView): Remove unneeded 
+	* choose.cc (ChooserPage::createListView): Remove unneeded
 	parameter.
 	* choose.h: Ditto.
 
@@ -1871,7 +1871,7 @@
 	* package_db.h (packagedb::fillMissingCategory): Move from ChooserPage.
 	* choose.h (ChooserPage::fillMissingCategory): Delete.
 	* package_db.cc (packagedb::fillMissingCategory): Move from ChooserPage.
-	* choose.cc (ChooserPage::fillMissingCategory): Delete and adjust 
+	* choose.cc (ChooserPage::fillMissingCategory): Delete and adjust
 	callers.
 
 2003-07-29  Robert Collins  <rbtcollins@hotmail.com>
@@ -1901,32 +1901,32 @@
 2003-07-28  Robert Collins  <rbtcollins@hotmail.com>
 
 	* package_meta.h (packagemeta::addToCategoryAll): Declare.
-	* package_meta.cc (packagemeta::addToCategoryAll): New method, 
+	* package_meta.cc (packagemeta::addToCategoryAll): New method,
 	separated to allow clear iteration.
 	* choose.cc (ChooserPage::fillMissingCategory): BUGFIX: "all" is
 	meant to be added unconditionally.
-	
+
 2003-07-27  Robert Collins  <rbtcollins@hotmail.com>
 
 	* Generic.h: New file, home for generic programming tools.
 	(visit_if): Move here from package_meta.cc.
 	Adjust to be fully parameterised.
-	* package_meta.h (packagemeta::hasNoCategories): Query for generic 
+	* package_meta.h (packagemeta::hasNoCategories): Query for generic
 	programming.
 	(packagemeta::setDefaultCategories): set categories for packages
 	with none.
-	* package_meta.cc: Move visit_if out. Adjust users for 
+	* package_meta.cc: Move visit_if out. Adjust users for
 	full paramterised operation.
 	(packagemeta::hasNoCategories): Implement.
 	(packagemeta::setDefaultCategories): Implement.
 	* choose.cc (ChooserPage::fillMissingCategory): Use visit_if to
 	reduce duplicate code.
 	(ChooserPage::setExistence): Delete.
-	* choose.h (ChooserPage::setExistence): Rename to 
+	* choose.h (ChooserPage::setExistence): Rename to
 	packagedb::setExistence.
 	* package_db.h (packagedb::setExistence): Declare.
 	* package_db.cc (packagedb::setExistence): Copy from choose.cc
-	
+
 2003-07-27  Robert Collins  <rbtcollins@hotmail.com>
 
 	* localdir.h (LocalDirPage::OnInit): Remove.
@@ -1935,7 +1935,7 @@
 	(LocalDirSetting::load): Copied from LocalDirPage::OnInit.
 	* site.h (SitePage::OnInit): Remove.
 	(SitePage::getSavedSites): New member, replaces get_saved_sites.
-	(SitePage::registerSavedSite): New member, replaces 
+	(SitePage::registerSavedSite): New member, replaces
 	register_saved_site.
 	* site.cc (SitePage::OnInit): Move to SiteSetting::load().
 	(SiteSetting::load): Copied from SitePage::OnInit.
@@ -1943,14 +1943,14 @@
 	(SitePage::registerSavedSite): Renamed from register_saved_site.
 	(do_download_site_info_thread): Don't look at the list size for
 	determining if the download was successful.
-	
+
 2003-07-27  Robert Collins  <rbtcollins@hotmail.com>
 
-	* choose.h (ChooserPage::setViewMode): Remove HWND from 
+	* choose.h (ChooserPage::setViewMode): Remove HWND from
 	signature.
 	(ChooserPage::defaultTrust): Ditto.
 	Move to PickView.
-	(ChooserPage::ifChecked): Use Window helper function 
+	(ChooserPage::ifChecked): Use Window helper function
 	IsButtonChecked.
 	* choose.cc (ChooserPage::setViewMode): Use chooser->GetHWND()
 	throughout.
@@ -1965,7 +1965,7 @@
 	* PickView.h (PickView::lv): Eliminate.
 	* PickView.cc (PickView::init): Replace use of lv with
 	GetHWND().
-	(PickView::list_click): Ditto. 
+	(PickView::list_click): Ditto.
 	* choose.h (ChooserPage::lv): Eliminate.
 	* choose.cc: Replace lv with chooser->GetHWND()
 	throughout.
@@ -1984,7 +1984,7 @@
 	(PickView::paint): Ditto.
 	* choose.cc (Chooser::createListView): Eliminate use
 	of PickView::chooser.
-	
+
 2003-07-27  Robert Collins  <rbtcollins@hotmail.com>
 
 	* PickView.h (PickView): Inherit from Window.
@@ -1995,7 +1995,7 @@
 	(PickView::list_hscroll): Ditto.
 	(PickView::list_vscroll): Ditto.
 	(PickView::lv): Ditto.
-	(PickView::chooser): Ditto.	
+	(PickView::chooser): Ditto.
 	(PickView::Create): Override Windows::Create as we migrate.
 	(PickView::registerWindowClass): Renamed RegisterWindows.
 	(PickView::WindowClassAtom): Prevent double registration.
@@ -2008,19 +2008,19 @@
 	(PickView::list_hscroll): Ditto.
 	(PickView::list_vscroll): Ditto.
 	(PickView::lv): Ditto.
-	(PickView::chooser): Ditto.	
+	(PickView::chooser): Ditto.
 	(PickView::Create): Introduce stub.
 	(PickView::RegisterWindows): Rename
 	(PickView::init): Extracted from constructor to allow
 	reordering.
-	* chooser.h (ChooserPage::registerWindows): Rename to 
+	* chooser.h (ChooserPage::registerWindows): Rename to
 	PickView::RegisterWindows.
 	(ChooserPage::listview_proc): Likewise.
 	(ChooserPage::paint): Ditto.
 	(ChooserPage::list_click): Ditto.
 	(ChooserPage::list_hscroll): Ditto.
 	(ChooserPage::list_vscroll): Ditto.
-	(ChooserPage::lv): Duplicate into PickView, observe 
+	(ChooserPage::lv): Duplicate into PickView, observe
 	as non-static.
 	(ChooserPage::chooser): Ditto.
 	* chooser.cc (ChooserPage::registerWindows): Delete.
@@ -2030,7 +2030,7 @@
 	(ChooserPage::list_hscroll): Ditto.
 	(ChooserPage::list_vscroll): Ditto.
 	(ChooserPage::createListView): Create() on PickView.
-	* window.h (Window::RegisterWindowClass): Make virtual 
+	* window.h (Window::RegisterWindowClass): Make virtual
 	to allow Create to become a Template Method, and rename
 	to registerWindowClass as it's not static.
 	* window.cc (Window::registerWindowClass): Ditto.
@@ -2059,26 +2059,26 @@
 	(ChooserPage::listview_proc): Declare.
 	(ChooserPage::paint): Declare.
 	(ChooserPage::list_click): Declare.
-	(ChooserPage::list_hscroll): Declare.	
+	(ChooserPage::list_hscroll): Declare.
 	(ChooserPage::list_vscroll): Declare.
 	(ChooserPage::lv): Declare.
 	(ChooserPage::chooser): Declare.
-	
+
 2003-07-27  Robert Collins  <rbtcollins@hotmail.com>
 
-	* choose.cc (create_listview): Use for_each instead of explicit 
+	* choose.cc (create_listview): Use for_each instead of explicit
 	iteration.
 	(create_listview): Rename to ChooserPage::createListview.
 	* package_meta.h (packagemeta::set_requirements): Explicitly separate
 	the 1 and 2 parameter versions.
-	
+
 2003-07-27  Robert Collins  <rbtcollins@hotmail.com>
 
 	* String++.h (String::operator !=): Declare for char * and String.
 	* String++.cc (String::operator !=): Implement.
 	* package_meta.cc(StringConcatenator): Move above all users.
 	(_visit_if): Predicate support for visitors.
-	(packagemeta::getReadableCategoryList): Refactor to use 
+	(packagemeta::getReadableCategoryList): Refactor to use
 	StringConcatenator with a predicate.
 	* choose.h: Remove unneeded c++ guards.
 
@@ -2119,7 +2119,7 @@
 	(packagemeta::action_caption): Make const.
 	* package_version.cc(packageversion::sourcePackage): Make const.
 	* package_version.h(packageversion::sourcePackage): Make const.
-	
+
 2003-07-26  Robert Collins  <rbtcollins@hotmail.com>
 
 	* choose.cc: Update copyright.
@@ -2145,7 +2145,7 @@
 
 2003-07-26  Robert Collins  <rbtcollins@hotmail.com>
 
-	Save used site from initial run of setup, so the user doesn't need to 
+	Save used site from initial run of setup, so the user doesn't need to
 	retype it.
 	* main.cc (main): Load and save all user settings.
 	* site.cc (SiteSetting::save): Migrate logic from save_site_url.
@@ -2173,7 +2173,7 @@
 	* site.h (ChosenSite): Ditto.
 	* bz2lib/: Ran automake.
 	* zlib/: Ran automake.
-	
+
 2003-07-23  Max Bowsher  <maxb@ukf.net>
 
 	* desktop.cc (DesktopSetupPage::OnBack): Remove obsolete use of NEXT().
@@ -2182,7 +2182,7 @@
 	* install.cc (do_install_thread): Remove obsolete use of next_dialog.
 	* main.cc (main): Ditto.
 	* postinstall.cc (do_postinstall_thread): Ditto.
-	
+
 2003-07-23  Max Bowsher  <maxb@ukf.net>
 
 	* dialog.h (do_choose, do_desktop, do_local_dir, do_net, do_other)
@@ -2313,7 +2313,7 @@
 	are about to perform a visit.
 	* PickPackageLine.cc (PickPackageLine::click): Tell packagemeta we
 	are about to perform a visit.
-	* package_db.cc (packagedb::markUnVisited): Convenience wrapper - 
+	* package_db.cc (packagedb::markUnVisited): Convenience wrapper -
 	mark all packages as unvisited.
 	* package_db.h (packagedb::markUnVisited): Declare.
 	* package_meta.cc (packagemeta::PrepareForVisit): New static method
@@ -2343,22 +2343,22 @@
 
 	* main.cc (NTSecurity::setDefaultDACL): Use MS calculations for ACL
 	buffer sizing.
-	
+
 2003-04-02  Robert Collins  <rbtcollins@hotmail.com>
 
 	* main.cc (NTSecurity::setDefaultDACL): Sanity check memory allocation.
-	
+
 2003-04-02  Robert Collins  <rbtcollins@hotmail.com>
 
 	* main.cc (NTSecurity::setDefaultDACL): Adjust commented code for
 	auto_ptr use.
-	
+
 2003-04-02  Robert Collins  <rbtcollins@hotmail.com>
 
 	* main.cc (NTSecurity::NoteFailedAPI): Helper function.
 	Use throughout NTSecurity routines.
 	(NTSecurity::setDefaultDACL): Use dynamic memory for ACL storage.
-	
+
 2003-04-02  Robert Collins  <rbtcollins@hotmail.com>
 
 	* main.cc (NTSecurity::setDefaultDACL): Disable ~ 50% of remaining
@@ -2368,7 +2368,7 @@
 
 	* main.cc (NTSecurity::GroupInfo): Extract group query code.
 	(NTSecurity::setDefaultDACL): Disable ~ 50% of code.
-	
+
 2003-04-02  Robert Collins  <rbtcollins@hotmail.com>
 
 	* main.cc (NTSecurity::setDefaultSecurity): Disable ~ 50% of security
@@ -2380,7 +2380,7 @@
 	sz. User TokenGroupCollection to abstract token searching logic,
 	eliminate isadmin and isuser temporary variables.
 	(TokenGroupCollection): New class for querying token group information.
-	
+
 2003-04-01  Robert Collins  <rbtcollins@hotmail.com>
 
 	* main.cc (NTSecurity::setDefaultSecurity): Extract esid initialisation.
@@ -2468,7 +2468,7 @@
 
 2003-03-20  Robert Collins  <rbtcollins@hotmail.com>
 
-	* package_meta.cc (packagemeta::set_action): The logic 
+	* package_meta.cc (packagemeta::set_action): The logic
 	test for the default action was reversed.
 
 2003-03-18  Igor Pechtchanski  <pechtcha@cs.nyu.edu>
@@ -2494,8 +2494,8 @@
 
 	* package_db.h (PackageDBConnectedIterator): Typedef
 	for connected loop detection collection iterator.
-	* package_db.cc (ConnectedLoopDetector): An 
-	implementation of R.E. Tarjans strongly connected 
+	* package_db.cc (ConnectedLoopDetector): An
+	implementation of R.E. Tarjans strongly connected
 	set visitor algorithm.
 	* postinstall.cc (do_postinstall): Use the new iterator
 	for visiting postinstall scripts.
@@ -2508,22 +2508,22 @@
 	(standard_dirs): Rename to Installer::StandardDirs.
 	(uninstall_one): Rename to Installer::uninstallOne.
 	(replace_one): Rename to Installer::replaceOne.
-	(log_ror_failure): Rename to 
+	(log_ror_failure): Rename to
 	Installer::replaceOnRebootFailed.
-	(log_ror_success): Rename to 
+	(log_ror_success): Rename to
 	Installer::replaceOnRebootSucceeded.
 	(install_one_source): Rename to Installer::installOneSource.
 	Note script files as they are installed.
 	* package_version.cc (packageversion::addScript): Implement.
 	(packageversion::scripts): Implement.
-	* package_version.h (packageversion::addScript): Record the 
+	* package_version.h (packageversion::addScript): Record the
 	presence of a script.
 	* script.h (Script): New class to track scripts.
 	* postinstall.cc (do_postinstall): Iterate through the
 	package listed scripts before searching for scripts.
-	* String++.cc (String::substr): Second argument needed to 
+	* String++.cc (String::substr): Second argument needed to
 	be signed.
-	* String++.h (String::substr): Second argument needed to 
+	* String++.h (String::substr): Second argument needed to
 	be signed.
 
 2003-03-16  Max Bowsher  <maxb@ukf.net>
@@ -2542,7 +2542,7 @@
 2003-03-15  Igor Pechtchanski <pechtcha@cs.nyu.edu>
 
 	* script.cc (run): Close unneeded handles.
-	
+
 2003-03-15  Robert Collins  <rbtcollins@hotmail.com>
 
 	* configure: Remove.
@@ -2572,7 +2572,7 @@
 
 2003-03-14  Robert Collins  <rbtcollins@hotmail.com>
 
-	* choose.cc (ChooserPage::OnNext): Fix iterator bug. Reported by 
+	* choose.cc (ChooserPage::OnNext): Fix iterator bug. Reported by
 	Igor Pechtchanski  <pechtcha@cs.nyu.edu>.
 
 2003-03-13  Max Bowsher  <maxb@ukf.net>
@@ -2586,7 +2586,7 @@
 
 2003-03-09  Pavel Tsekov  <ptsekov@gmx.net>
 
-	* install.cc (do_install_thread): Use IDS_SKIP_PACKAGE 
+	* install.cc (do_install_thread): Use IDS_SKIP_PACKAGE
 	instead of IDS_CORRUPT_PACKAGE when asking the user to take
 	action if the hash verification check fails for a source package.
 	Do not increase the value of 'total_bytes' variable if the
@@ -2636,10 +2636,10 @@
 
 2003-02-16  Pavel Tsekov  <ptsekov@gmx.net>
 
-	* install.cc (install_one_source): Remove the MD5 verification 
+	* install.cc (install_one_source): Remove the MD5 verification
 	code.
 	Delay the creation of the package listing file.
-	(do_install_thread): Check the hashes for packages which need 
+	(do_install_thread): Check the hashes for packages which need
 	to be installed before the uninstall step. Allow the user to
 	skip over packages, which fail the hash verification.
 	(md5_one): Define new function.
@@ -2830,7 +2830,7 @@
 
 	* package_meta.h (packagemeta::logAllVersions): Declare.
 	(packagemeta::trustLabel): Ditto.
-	* choose.cc (ChooserPage::OnNext): Get each package to log all it's 
+	* choose.cc (ChooserPage::OnNext): Get each package to log all it's
 	versions.
 	* package_meta.cc (packagemeta::logAllVersions): Implement.
 	(packagemeta::trustLabel): Ditto.
@@ -2901,8 +2901,8 @@
 
 2002-11-04  Max Bowsher  <maxb@ukf.net>
 
-	* compress_bz.h: #undef small before including bzlib.h - if we are 
-	going to hide the fact that we are _WIN32 from bzlib, then we need 
+	* compress_bz.h: #undef small before including bzlib.h - if we are
+	going to hide the fact that we are _WIN32 from bzlib, then we need
 	to #undef small for it as well (bad windows.h clash).
 
 2002-11-10  Robert Collins  <rbtcollins@hotmail.com>
@@ -3028,15 +3028,15 @@
 	* IniDBBuilder.h (IniDBBuilder::buildSourceFile): Ditto.
 	* IniDBBuilderPackage.h (IniDBBuilder::buildSourceFile): Ditto.
 	* IniDBBuilder.cc (IniDBBuilder::buildSourceFile): Ditto.
-	* IniDBBuilderPackage.cc (IniDBBuilder::buildSourceFile): Implement a 
+	* IniDBBuilderPackage.cc (IniDBBuilder::buildSourceFile): Implement a
 	stub as preparation.
 
 2002-07-13  Robert Collins  <rbtcollins@hotmail.com>
 
-	* PickPackageLine.cc (PickPackageLine::click): Set requirements for 
+	* PickPackageLine.cc (PickPackageLine::click): Set requirements for
 	packages under all circumstances - slightly higher overheader, simpler
 	code.
-	* download.cc (do_download_thread): Correctly download source 
+	* download.cc (do_download_thread): Correctly download source
 	packages.
 	* package_meta.cc (checkForInstalled): Remove.
 	(checkForUpgradeable): Ditto.
@@ -3095,7 +3095,7 @@
 
 	* PickView.cc (PickView::PickView): Set font of package list header to
 	the same as used in the rest of the package list.
-		
+
 2002-07-08  Robert Collins  <rbtcollins@hotmail.com>
 
 	* install.cc (NoReplaceOnReboot): New command line option to prevent
@@ -3105,10 +3105,10 @@
 
 2002-07-08  Robert Collins  <rbtcollins@hotmail.com>
 
-	* PickCategoryLine.cc: Change bucket to use STL container syntax 
+	* PickCategoryLine.cc: Change bucket to use STL container syntax
 	throughout.
 	(PickCategoryLine::paint): Use new Category type syntax.
-	* PickCategoryLine.h: Use STL vectors rather than custom containers 
+	* PickCategoryLine.h: Use STL vectors rather than custom containers
 	throughout.
 	* IniDBBuilderPackage.cc (IniDBBuilderPackage::buildPackageCategory):
 	Use new add_category syntax.
@@ -3116,7 +3116,7 @@
 	(PickView::insert_category): Ditto.
 	(PickView::init_headers): Ditto.
 	* category.cc: Trim obsolete code.
-	* category.h: Replace interconnecting class with a typedef to 
+	* category.h: Replace interconnecting class with a typedef to
 	facilitate leveraging STL maps.
 	* choose.cc (fill_missing_category): Use updated pkg.add_category
 	syntax.
@@ -3173,7 +3173,7 @@
 	(IniDBBuilderPackage::process_src): Ditto.
 	* PickPackageLine.cc (PickPackageLine::click): Use the packageversion
 	accessible() call to abstract package availability.
-	* choose.cc (scanAVersion): Use STL collections for download site 
+	* choose.cc (scanAVersion): Use STL collections for download site
 	collections.
 	* download.cc (check_for_cached): Ditto.
 	(download_one): Ditto.
@@ -3245,14 +3245,14 @@
 2002-07-03  Robert Collins  <rbtcollins@hotmail.com>
 
 	* package_meta.cc (packagemeta::set_requirements): Automatically select
-	version of dependent packages that satisfies the requirements. 
+	version of dependent packages that satisfies the requirements.
 	Use processOneDependency to trigger the install of those packages.
 	(checkForInstalled): Check that the package remains installed.
 	(processOneDependency): Helper function for dependent packages.
 	* IniDBBuilderPackage.cc (IniDBBuilderPackage::buildPackage): Add more
 	debug information.
 	Clear out all current state on new packages.
-	(IniDBBuilderPackage::add_correct_version): Copy the dependency list 
+	(IniDBBuilderPackage::add_correct_version): Copy the dependency list
 	across.
 
 2002-07-02  Robert Collins  <rbtcollins@hotmail.com>
@@ -3287,7 +3287,7 @@
 	(IniDBBuilderPackage::buildPackageSource): Move source package logic
 	out from process_src, as it now occurs at separate times.
 	(IniDBBuilderPackage::buildPackageRequirement): Remove.
-	(IniDBBuilderPackage::buildSourceName): Use renamed package 
+	(IniDBBuilderPackage::buildSourceName): Use renamed package
 	specifiation accessor for clarity.
 	(IniDBBuilderPackage::buildSourceNameVersion): Ditto.
 	(IniDBBuilderPackage::add_correct_version): Use STL iterators rather
@@ -3315,15 +3315,15 @@
 	to the new reference calls. (i.e. -> to .) throughout.
 	Use new split out source package logic.
 	* choose.cc: Don't depend on a specific package type.
-	Adjust packageversion accessors to the new reference calls. (i.e. -> to 
+	Adjust packageversion accessors to the new reference calls. (i.e. -> to
 	.) throughout.
 	(set_existence): Use accessible () for clarity.
 	(default_trust): Simplify a little.
-	(scanAVersion): Factored out code from scan_downloaded_files for 
+	(scanAVersion): Factored out code from scan_downloaded_files for
 	clarity.
 	(scan_downloaded_files): Factor out inner loop for clarity.
 	(ChooserPage::OnNext): Don't dump the dependency list,
-	it's parsing is robust now!. 
+	it's parsing is robust now!.
 	* cygpackage.cc (createInstance): Use a factory method to create new
 	objects.
 	(cygpackage::cygpackage): Make this private for use by the factory.
@@ -3356,7 +3356,7 @@
 	Use the STL algorithms.
 	(packagemeta::packagemeta): Create a copy constructor to allowing
 	cloning binary package metadata to source package metadata.
-	(packagemeta::~packagemeta): Use the STL coleltion code rather than 
+	(packagemeta::~packagemeta): Use the STL coleltion code rather than
 	custom	collection code.
 	(packagemeta::add_version): Ditto.
 	(packagemeta::set_installed): Ditto.
@@ -3439,7 +3439,7 @@
 	(_packageversion::src): Remove.
 	(_packageversion::accessible): New method.
 	(_packageversion::references): Allow reference counting.
-	(_packageversion::sourceVersion): Cached the best-match source 
+	(_packageversion::sourceVersion): Cached the best-match source
 	package version.
 
 2002-06-27  Robert Collins  <rbtcollins@hotmail.com>
@@ -3494,7 +3494,7 @@
 	(IniDBBuilder::buildSourceName): What source package should be used to
 	install the source for this binary package?
 	(IniDBBuilder::buildSourceNameVersion): Is a specific version needed?
-	(IniDBBuilder::buildPackageListAndNode): Add another AND clause to a 
+	(IniDBBuilder::buildPackageListAndNode): Add another AND clause to a
 	list of package specifications.
 	(IniDBBuilder::buildPackageListOrNode): Add another OR clause.
 	(IniDBBuilder::buildPackageListOperator): Add a versioning operator
@@ -3504,7 +3504,7 @@
 	* IniDBBuilder.h: Declare all the IniDBBuilder.cc changes.
 	* IniDBBuilderPackage.cc: As for IniDBBuilder.cc.
 	(IniDBBuilderPackage::IniDBBuilderPackage): Iniitialize new members.
-	(IniDBBuilderPackage::process_src): Streamline and split out 
+	(IniDBBuilderPackage::process_src): Streamline and split out
 	functionality.
 	(IniDBBuilderPackage::setSourceSize): From process_src.
 	* IniDBBuilderPackage.h: Declare the IniDBBuilderPackage.cc changes.
@@ -3516,7 +3516,7 @@
 	(IniParseFeedback::iniName): Tell what ini filename we are currently
 	processing.
 	* IniParseFeedback.h: Declare IniParseFeedback.cc changes.
-	* IniParseFindVisitor.cc (IniParseFindVisitor::IniParseFindVisitor): 
+	* IniParseFindVisitor.cc (IniParseFindVisitor::IniParseFindVisitor):
 	Make the feedback object non-const to allow mutating methods which are
 	needed when the object has state.
 	(IniParseFindVisitor::visitFile): Tell the caller the name of each
@@ -3536,10 +3536,10 @@
 	identifying the bug.
 	(cygpackage::getnextfile): Ditto.
 	* download.cc: Use LogSIngletion calls throughout.
-	(validateCachedPackage): A refactoring of the 
+	(validateCachedPackage): A refactoring of the
 	check_for_cached code to eliminate duplciation.
 	(check_for_cached): Use validateCachedPackage to check packages.
-	* ini.cc (GuiParseFeedback): Provide gui feedback on ini name and 
+	* ini.cc (GuiParseFeedback): Provide gui feedback on ini name and
 	parsing progress.
 	(do_remote_ini): Ditto.
 	* ini.h (ini_init): Pass a IniParseFeedback to the parser, to allow
@@ -3552,13 +3552,13 @@
 	* io_stream_file.cc: Always include mkdir.h.
 	* list.h: Factor index location into a private routine.
 	(list::findindex): Implement this.
-	* mkdir.cc (mkdir_p): Make the use of WIN32 code conditional on mingw 
+	* mkdir.cc (mkdir_p): Make the use of WIN32 code conditional on mingw
 	builds. NB: This breaks cygwin build functionality still.
 	* package_meta.cc: Use the LogSingleton calls throughout.
 	(packagemeta::set_requirements): Adjust for object changes in
 	dependencies.
 	* package_meta.h (packagemeta::packagemeta): Initialise new members.
-	(packagemeta::architecture): What platform does this package run on? 
+	(packagemeta::architecture): What platform does this package run on?
 	This may need to move in the future to a per packagefile object.
 	(packagemeta::priority): What priority does this package have?
 	* package_source.h (packagesource::packagesource): Initialise new
@@ -3566,7 +3566,7 @@
 	(packagesource::installedSize): How much space does the package need?
 	(packagesource::setInstalledSize): Tell the amount.
 	(packagesource::_installedSize): And store it.
-	* package_version.cc (packageversion::sourcePackage): return the 
+	* package_version.cc (packageversion::sourcePackage): return the
 	source package.
 	(packageversion::setSourcePackage): And set it.
 	* package_version.h: Declare the package_version.cc changes.
@@ -3599,7 +3599,7 @@
 2002-06-10  Robert Collins  <rbtcollins@hotmail.com>
 
 	* IniParseFindVisitor (IniParseFindVisitor::visitFile): Apply Max
-	Bowshers fix for the crash with a root level setup.ini. 
+	Bowshers fix for the crash with a root level setup.ini.
 	* README: Update todos.
 
 2002-05-26 Ralf Habacker  <ralf.habacker@freenet.de>
@@ -3609,7 +3609,7 @@
 
 2002-05-27  Robert Collins  <rbtcollins@hotmail.com>
 
-	* IniParseFindVisitor.cc (IniParseFindVisitor::visitFile): Don't 
+	* IniParseFindVisitor.cc (IniParseFindVisitor::visitFile): Don't
 	unescape 0 length strings.
 
 2002-05-20  Robert Collins  <rbtcollins@hotmail.com>
@@ -3622,7 +3622,7 @@
 
 	* IniDBBuilderPackage.cc (IniDBBuilderPackage::IniDBBuilderPackage): New
 	method.
-	(IniDBBuilderPackage::buildVersion): Provide a warning when a newer 
+	(IniDBBuilderPackage::buildVersion): Provide a warning when a newer
 	setup version created the ini file.
 	* IniDBBuilderPackage.h (IniDBBuilderPackage::IniDBBuilderPackage): New
 	method.
@@ -3637,7 +3637,7 @@
 
 	* io_stream_file.cc (io_stream_file::remove): Use the SetFileAttributes
 	trick to delete read only files.
-	* io_stream_cygfile.cc (io_stream_cygfile::remove): Use file:// to 
+	* io_stream_cygfile.cc (io_stream_cygfile::remove): Use file:// to
 	remove files.
 	* Makefile.am (release): Tweak to be more helpful.
 	* Makefile.in: Regenerate.
@@ -3646,7 +3646,7 @@
 
 	* Makefile.am (release): Tweak to be more helpful.
 	* Makefile.in: Regenerate.
-		
+
 2002-05-19  Robert Collins  <rbtcollins@hotmail.com>
 
 	* Makefile.am (release): Tweak to be more helpful.
@@ -3654,7 +3654,7 @@
 
 2002-05-19  Robert Collins  <rbtcollins@hotmail.com>
 
-	* choose.cc (scan_downloaded_files): When a non-installed version 
+	* choose.cc (scan_downloaded_files): When a non-installed version
 	has neither bin nor src cached files for local installs,
 	remove the version from availability.
 
@@ -3680,7 +3680,7 @@
 	* FindVisitor.h: New file, interface for visiting a file system
 	aggregate.
 	* IniParseFindVisitor.cc: New file.
-	* IniParseFindVisitor.h: New file, concrete FindVisitor that parses 
+	* IniParseFindVisitor.h: New file, concrete FindVisitor that parses
 	found setup.ini's.
 	* README: Update TODO's.
 	* String++.cc (String::String): New constructor for <string> inter-
@@ -3916,13 +3916,13 @@
 	(do_local_ini): Ditto.
 	(do_remote_ini): Ditto.
 	* ini.h: Use IniDBBuilder to initialise parsing.
-	* inilex.l (MD5): Parse the MD5 string correctly, we had the nibbles 
+	* inilex.l (MD5): Parse the MD5 string correctly, we had the nibbles
 	swapped.
 	(ini_init): Use an IniDBBuilder rather than static variables.
 	* iniparse.y: Hand off all the object creation to a builder, rather
-	than hardcoding the behaviour. This allows run-time configured 
+	than hardcoding the behaviour. This allows run-time configured
 	behaviour.
-	* io_stream_cygfile.h (io_stream_cygfile): Remove get_next_filename 
+	* io_stream_cygfile.h (io_stream_cygfile): Remove get_next_filename
 	method, it's not needed.
 	* io_stream_file.h (io_stream_file): Ditto.
 	* mount.cc (cygpath): Return String() for missing mounts.
@@ -3931,7 +3931,7 @@
 	* package_meta.h (trusts): Remove - replaced by PackageTrust.h.
 	(packagemeta::packagemeta): Fix incorrect syntax in String constructor
 	usage.
-	* cygpackage.cc (cygpackage::cygpackage): Fix incorrect syntax in 
+	* cygpackage.cc (cygpackage::cygpackage): Fix incorrect syntax in
 	String constructor usage.
 	* site.h (site_list_type): Ditto.
 
@@ -3963,7 +3963,7 @@
 	* ini.h (ini_init): Adjust parameters to include state object.
 	* inilex.l: Declare parser state variable.
 	(ini_init): Adjust parameters to include state object.
-	* iniparse.y: Remove obsolete setup_timestamp and setup_version 
+	* iniparse.y: Remove obsolete setup_timestamp and setup_version
 	declarations.
 	(setup_header): Use new state variable to track time and version.
 	(add_correct_version): Ditto.
@@ -4016,7 +4016,7 @@
 
 2002-05-01  Robert Collins  <rbtcollins@hotmail.com>
 
-	* Makefile.am (AM_CFLAGS): Remove -mwindows, it's a linker flag. 
+	* Makefile.am (AM_CFLAGS): Remove -mwindows, it's a linker flag.
 	Remove -fno-rtti, we need it for exceptions.
 	(AM_CXXFLAGS): Ditto.
 	(WARNONLY_CFLAGS): Ditto.
@@ -4036,7 +4036,7 @@
 	* ini.cc (find_routine): Reverse escape the URL to correctly identify
 	the site URL.
 	* inilex.l (MD5): Provide a parsing rule (note: lowercase is required).
-	* iniparse.y: Allow calculation of MD5 sums, and allow src only 
+	* iniparse.y: Allow calculation of MD5 sums, and allow src only
 	packages.
 	(process_src): New helper function.
 	* isntall.cc (install_one_source): Check MD5 sums when possible.
@@ -4066,24 +4066,24 @@
 	portable).
 	* configure: Regenerate.
 	* configure.in: Check for mingw32/cygwin specific headers and libraries.
-	* cygpackage.h: Include the win32.h header to get correct macro 
+	* cygpackage.h: Include the win32.h header to get correct macro
 	definitions in all situations.
 	* download.cc (do_download_reflector): Make into a Win32 thread routine.
 	Use ExitThread.
 	(do_download): Use Win32 threads.
 	* ini.cc: Ditto.
 	* install.cc: Ditto.
-	* (WinMain): Adjust to build valid command line using application 
+	* (WinMain): Adjust to build valid command line using application
 	under both mingw32 and cygwin.
-	* mount.cc (set)cygdrive_flags): Create new system flags if the 
+	* mount.cc (set)cygdrive_flags): Create new system flags if the
 	user requests system and the value does not exist.
 	* nio-http.cc: Define a _strnicmp for cygwin.
 	* package_db.cc: Include <errno.h> if it exists.
-	* site.cc (do_download_site_info_thread): Make into a Win32 thread 
+	* site.cc (do_download_site_info_thread): Make into a Win32 thread
 	routine.
 	Use ExitThread.
 	(do_download_site-Info): Use Win32 threads.
-	* state.cc: Explicity declare variables to avoid header conflicts 
+	* state.cc: Explicity declare variables to avoid header conflicts
 	caused by '#define extern" on cygwin.
 	* win32.h: Include <alloca.h> if it exists.
 	(_MAX_PATH): Define as MAX_PATH when not defined by windows.h.
@@ -4126,7 +4126,7 @@
 2002-04-26  Robert Collins  <rbtcollins@hotmail.com>
 
 	* aclocal.m4: New file, cached macros.
-	* bootstrap.sh: New file, calls required autotools in appropriate 
+	* bootstrap.sh: New file, calls required autotools in appropriate
 	order.
 	* Makefile.am: New file, input Makefile for automake.
 	* Makefile,in: Now a generated file - regenerate.
@@ -4144,12 +4144,12 @@
 	* getopt.c: Ditto.
 	* bz2lib: New directory, contains copy of bz2lib.
 	* cfgaux: New directory, contains autotool helper scripts.
-	* Makefile,in: Adjust library and target definitions for building 
+	* Makefile,in: Adjust library and target definitions for building
 	outside the sourceware tree.
 	* compress_bz.h: Use new bz2lib header location.
 	* mount.cc: Import key defines and enums to be independent of cygwin
 	headers.
-	* configure.in: Update to autoconf 2.53, and to be sourceware 
+	* configure.in: Update to autoconf 2.53, and to be sourceware
 	independent.
 	* configure: Regenerate.
 
@@ -4157,7 +4157,7 @@
 
 	* mklink2.cc (make_link_2): Tweak to work with current w32api
 	headers.
-		
+
 2002-04-10  Pavel Tsekov  <ptsekov@gmx.net>
 
 	* version.cc (canonicalize_version): Fix a call delete[]
@@ -4218,7 +4218,7 @@
 2003-03-26  Robert Collins  <rbtcollins@hotmail.com>
 
 	* package_meta.cc (package_meta::~package_meta): Remove duplicate.
-	(CategoryPackage::~CategoryPackage): Ditto. (Thanks to Ton van 
+	(CategoryPackage::~CategoryPackage): Ditto. (Thanks to Ton van
 	Overbeek for the report).
 	* mklink2.cc: Moved from mklink2.c to avoid 'not a prototype error'.
 	Make g++ compatible.
@@ -4326,7 +4326,7 @@
 	* README: Update TODO list.
 	* install.cc (install_one): Fix src package location.
 	(do_install_thread): Fix creating directories.
-		
+
 2002-02-19  Robert Collins <rbtcollins@hotmail.com>
 
 	* choose.cc: Include cygpackage.h for scan2 use.
@@ -4351,7 +4351,7 @@
 
 	* desktop.cc (make_passwd_group): Don't create passwd-grp.bat
 	unnecessarily.
-	
+
 2002-02-18  Michael A Chase <mchase@ix.netcom.com>
 
 	* log.cc (log_save): Put "\n" at end of log lines instead of "'".
@@ -4364,7 +4364,7 @@
 2002-02-05  Jason Tishler  <jason@tishler.net>
 
 	* download.cc (do_download_thread): Fix off-by-one error.
-	
+
 2002-02-19  Robert Collins  <rbtcollins@hotmail.com>
 
 	* configure.in (CXXFLAGS): Substitute at configure time, not runtime.
@@ -4768,7 +4768,7 @@
 	(canonicalize_version): Update for String usage.
 	* version.h: Update includes for String usage.
 	(canonicalize_version): Update for String usage.
-	
+
 2002-02-15  Christopher Faylor  <cgf@redhat.com>
 
 	* filemanip.c (parse_filename): Revert previous change.

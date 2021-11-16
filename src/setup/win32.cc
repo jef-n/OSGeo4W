@@ -13,19 +13,12 @@
  *
  */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: win32.cc,v 2.3 2007/02/28 00:55:04 briand Exp $\n";
-#endif
-
 #include <malloc.h>
 #include <sys/stat.h>
 #include <memory>
 #include "win32.h"
 #include "state.h"
 #include "LogFile.h"
-
-
 
 void
 TokenGroupCollection::populate ()
@@ -73,11 +66,11 @@ NTSecurity::initialiseEveryOneSID ()
 void
 NTSecurity::setDefaultDACL ()
 {
-  /* To assure that the created files have a useful ACL, the 
+  /* To assure that the created files have a useful ACL, the
      default DACL in the process token is set to full access to
      everyone. This applies to files and subdirectories created
      in directories which don't propagate permissions to child
-     objects. 
+     objects.
      To assure that the files group is meaningful, a token primary
      group of None is changed to Users or Administrators.  */
 
@@ -123,7 +116,7 @@ NTSecurity::setDefaultDACL ()
     }
 
   /* Set the default DACL to the above computed ACL. */
-  if (!SetTokenInformation (token.theHANDLE(), TokenDefaultDacl, &dacl, 
+  if (!SetTokenInformation (token.theHANDLE(), TokenDefaultDacl, &dacl,
                             (DWORD) bufferSize))
     {
       NoteFailedAPI ("SetTokenInformation");
@@ -142,14 +135,14 @@ NTSecurity::setDefaultSecurity ()
     return;
 
   /* Get the user */
-  if (!GetTokenInformation (token.theHANDLE (), TokenUser, &osid, 
+  if (!GetTokenInformation (token.theHANDLE (), TokenUser, &osid,
 			    sizeof osid, &size))
     {
       NoteFailedAPI ("GetTokenInformation");
       return;
     }
   /* Make it the owner */
-  if (!SetTokenInformation (token.theHANDLE (), TokenOwner, &osid, 
+  if (!SetTokenInformation (token.theHANDLE (), TokenOwner, &osid,
 			    sizeof osid))
     {
       NoteFailedAPI ("SetTokenInformation");
@@ -158,7 +151,7 @@ NTSecurity::setDefaultSecurity ()
 
   SID_IDENTIFIER_AUTHORITY sid_auth = { SECURITY_NT_AUTHORITY, };
   /* Get the SID for "Administrators" S-1-5-32-544 */
-  if (!AllocateAndInitializeSid (&sid_auth, 2, SECURITY_BUILTIN_DOMAIN_RID, 
+  if (!AllocateAndInitializeSid (&sid_auth, 2, SECURITY_BUILTIN_DOMAIN_RID,
 				 DOMAIN_ALIAS_RID_ADMINS, 0, 0, 0, 0, 0, 0,
 				 &administratorsSID.theSID ()))
     {
@@ -166,7 +159,7 @@ NTSecurity::setDefaultSecurity ()
       return;
     }
   /* Get the SID for "Users" S-1-5-32-545 */
-  if (!AllocateAndInitializeSid (&sid_auth, 2, SECURITY_BUILTIN_DOMAIN_RID, 
+  if (!AllocateAndInitializeSid (&sid_auth, 2, SECURITY_BUILTIN_DOMAIN_RID,
 			DOMAIN_ALIAS_RID_USERS, 0, 0, 0, 0, 0, 0,
 			&usid.theSID ()))
     {
@@ -206,9 +199,9 @@ VersionInfo::VersionInfo ()
   v.dwOSVersionInfoSize = sizeof (OSVERSIONINFO);
   if (GetVersionEx (&v) == 0)
     {
-      log (LOG_PLAIN) << "GetVersionEx () failed: " << GetLastError () 
+      log (LOG_PLAIN) << "GetVersionEx () failed: " << GetLastError ()
                       << endLog;
-      
+
       /* If GetVersionEx fails we really should bail with an error of some kind,
          but for now just assume we're on NT and continue.  */
       v.dwPlatformId = VER_PLATFORM_WIN32_NT;

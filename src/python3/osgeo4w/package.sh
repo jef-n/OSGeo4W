@@ -1,5 +1,5 @@
 export P=python3
-export V=3.9.0
+export V=3.9.6
 export B="next $P-core"
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
@@ -34,8 +34,14 @@ PKG=python-$V-amd64.exe
 [ -f $PKG ] || wget https://www.python.org/ftp/python/$V/$PKG
 chmod a+rx $PKG
 
+d=$(cygpath -aw install)
+
+if [ -d install ]; then
+	./$PKG /quiet /uninstall TargetDir=${d//\\/\\\\}
+	rm -fr install
+fi
+
 if ! [ -d install ]; then
-	d=$(cygpath -aw install)
 	./$PKG /quiet TargetDir=${d//\\/\\\\} AssociateFiles=0 Shortcuts=0 SimpleInstall=1
 fi
 
@@ -81,7 +87,6 @@ install/DLLs/_testimportmultiple.pyd
 install/DLLs/_testmultiphase.pyd
 install/Lib/ctypes/test
 install/Lib/distutils/tests
-install/Lib/doctest.py
 install/Lib/idlelib/idle_test
 install/Lib/lib2to3/tests
 install/Lib/sqlite3/test
@@ -101,9 +106,6 @@ install/Lib/site-packages/pip-$PIPV.dist-info
 EOF
 
 cat <<EOF >setuptools.lst
-easy_install-$VM.exe.tmpl
-easy_install.exe.tmpl
-install/Lib/site-packages/easy_install.py
 install/Lib/site-packages/setuptools
 install/Lib/site-packages/setuptools-$STV.dist-info
 EOF
@@ -139,12 +141,22 @@ for cachedir in sorted(cachedirs.keys(), reverse=True):
         pass
 EOF
 
+cat <<EOF >sitecustomize.py
+import os
+
+for p in os.getenv("PATH").split(";"):
+    if os.path.exists(p):
+        os.add_dll_directory(p)
+EOF
+
 #
 # core
 #
 
 cat <<EOF >ini.bat
 SET PYTHONHOME=%OSGEO4W_ROOT%\\apps\\Python$MM
+SET PYTHONPATH=
+SET PYTHONUTF8=1
 PATH %OSGEO4W_ROOT%\\apps\\Python$MM\Scripts;%PATH%
 EOF
 
@@ -156,7 +168,7 @@ EOF
 cat <<EOF >core-preremove.bat
 del "%OSGEO4W_ROOT%\\apps\\Python$MM\\DLLs\\libssl-1_1.dll"
 del "%OSGEO4W_ROOT%\\apps\\Python$MM\\DLLs\\libcrypto-1_1.dll"
-python -B %OSGEO4W_ROOT%\\apps\\Python$MM\\Scripts\\preremove-cached.py $P-core
+python -B "%OSGEO4W_ROOT%\\apps\\Python$MM\\Scripts\\preremove-cached.py" $P-core
 EOF
 
 mkdir -p install/bin install/$PREFIX
@@ -173,6 +185,7 @@ cp ./install/python$MM.dll install/$PREFIX/python$MM.dll
 
 tar -cjf $R/$P-core/$P-core-$V-$B.tar.bz2 \
 	--xform "s,preremove-cached.py,${PREFIX}Scripts/preremove-cached.py," \
+	--xform "s,sitecustomize.py,${PREFIX}Lib/site-packages/sitecustomize.py," \
 	--xform "s,core-postinstall.bat,etc/postinstall/$P-core.bat," \
 	--xform "s,core-preremove.bat,etc/preremove/$P-core.bat," \
 	--xform "s,^install/python$MM.dll,bin/python$MM.dll," \
@@ -191,6 +204,7 @@ tar -cjf $R/$P-core/$P-core-$V-$B.tar.bz2 \
 	--exclude-from setuptools.lst \
 	--exclude-from tools.lst \
 	preremove-cached.py \
+	sitecustomize.py \
 	core-postinstall.bat \
 	core-preremove.bat \
 	ini.bat \
@@ -261,7 +275,7 @@ external-source: $P
 EOF
 
 cat <<EOF >test-preremove.bat
-python -B %OSGEO4W_ROOT%\\apps\\Python$MM\\Scripts\\preremove-cached.py $P-test
+python -B "%OSGEO4W_ROOT%\\apps\\Python$MM\\Scripts\\preremove-cached.py" $P-test
 EOF
 
 tar -cjf $R/$P-test/$P-test-$V-$B.tar.bz2 \
@@ -285,7 +299,7 @@ external-source: $P
 EOF
 
 cat <<EOF >tcltk-preremove.bat
-python -B %OSGEO4W_ROOT%\\apps\\Python$MM\\Scripts\\preremove-cached.py $P-tcltk
+python -B "%OSGEO4W_ROOT%\\apps\\Python$MM\\Scripts\\preremove-cached.py" $P-tcltk
 EOF
 
 tar -cjf $R/$P-tcltk/$P-tcltk-$V-$B.tar.bz2 \
@@ -310,7 +324,7 @@ external-source: $P
 EOF
 
 cat <<EOF >tools-preremove.bat
-python -B %OSGEO4W_ROOT%\\apps\\Python$MM\\Scripts\\preremove-cached.py $P-tools
+python -B "%OSGEO4W_ROOT%\\apps\\Python$MM\\Scripts\\preremove-cached.py" $P-tools
 EOF
 
 tar -cjf $R/$P-tools/$P-tools-$V-$B.tar.bz2 \
@@ -329,7 +343,7 @@ tar -cjf $R/$P-tools/$P-tools-$V-$B.tar.bz2 \
 rm -f pip-postinstall.bat
 
 cat <<EOF >pip-preremove.bat
-python -B %OSGEO4W_ROOT%\\apps\\Python$MM\\Scripts\\preremove-cached.py $P-pip
+python -B "%OSGEO4W_ROOT%\\apps\\Python$MM\\Scripts\\preremove-cached.py" $P-pip
 EOF
 
 exetmpl install/Scripts/pip.exe pip
@@ -360,14 +374,9 @@ tar -cjf $R/$P-pip/$P-pip-$PIPV-$B.tar.bz2 \
 # setuptools
 #
 
-rm -f setuptools-postinstall.bat
-
 cat <<EOF >setuptools-preremove.bat
-python -B %OSGEO4W_ROOT%\\apps\\Python$MM\\Scripts\\preremove-cached.py $P-setuptools
+python -B "%OSGEO4W_ROOT%\\apps\\Python$MM\\Scripts\\preremove-cached.py" $P-setuptools
 EOF
-
-exetmpl install/Scripts/easy_install-$VM.exe setuptools
-exetmpl install/Scripts/easy_install.exe setuptools
 
 cat <<EOF >$R/$P-setuptools/setup.hint
 sdesc: "setuptools - Easily download, build, install, upgrade, and uninstall Python packages"
@@ -378,15 +387,26 @@ requires: base $P-core $P-devel
 EOF
 
 tar -cjf $R/$P-setuptools/$P-setuptools-$STV-$B.tar.bz2 \
-	--xform "s,^setuptools-postinstall.bat,etc/postinstall/$P-setuptools.bat," \
 	--xform "s,^setuptools-preremove.bat,etc/preremove/$P-setuptools.bat," \
-	--xform "s,^easy_install-$VM.exe.tmpl,${PREFIX}Scripts/easy_install-$VM.exe.tmpl," \
-	--xform "s,^easy_install.exe.tmpl,${PREFIX}Scripts/easy_install.exe.tmpl," \
 	--xform "s,^install/,$PREFIX," \
 	--exclude "__pycache__" \
-	setuptools-postinstall.bat \
 	setuptools-preremove.bat \
 	-T setuptools.lst
+
+if [ "$OSGEO4W_BUILDMODE" = "test" ]; then
+	v=version_test
+else
+	v=version_curr
+fi
+
+eval $v=$V appendversions $R/$P-core/setup.hint
+eval $v=$V appendversions $R/$P-help/setup.hint
+eval $v=$V appendversions $R/$P-devel/setup.hint
+eval $v=$V appendversions $R/$P-test/setup.hint
+eval $v=$V appendversions $R/$P-tcltk/setup.hint
+eval $v=$V appendversions $R/$P-tools/setup.hint
+eval $v=$PIPV appendversions $R/$P-pip/setup.hint
+eval $v=$STV appendversions $R/$P-setuptools/setup.hint
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 cp $R/$P-$V-$B-src.tar.bz2 $R/$P-setuptools/$P-setuptools-$STV-$B-src.tar.bz2
@@ -419,7 +439,7 @@ fi
 # OpenSSL shipped in openssl
 # sqlite3 in sqlite3
 # python*.dll moved to bin
-# pip / easy_install to .tmpl
+# pip to .tmpl
 # msvcrt runtime in msvcrt2019
 if egrep -v \
 	-f <(sed -e 's/:.*$//; /\.pyc$/d; s#^'$PREFIX'##; s/[/+.$]/\\&/g; s/(dev)/\\(dev\\)/; s/$/$/;' /tmp/$P-packaged.lst) \
@@ -432,8 +452,6 @@ python$M.dll
 python$MM.dll
 python.exe
 pythonw.exe
-Scripts/easy_install-${V%.*}.exe
-Scripts/easy_install.exe
 Scripts/pip.exe
 Scripts/pip${V%.*}.exe
 Scripts/pip$M.exe
@@ -448,7 +466,7 @@ fi
 
 # whitelist generate files
 # moved python.exe
-# pip/easy_install templates
+# pip templates
 # preremoved-cached.py
 # dlls in bin
 # postinstall/preremove scripts
@@ -458,12 +476,11 @@ if egrep -v \
 	fgrep -v -x -f <(cat <<EOF
 apps/Python$MM/python$M.exe
 apps/Python$MM/pythonw$M.exe
-apps/Python$MM/Scripts/easy_install-${V%.*}.exe.tmpl
-apps/Python$MM/Scripts/easy_install.exe.tmpl
 apps/Python$MM/Scripts/pip.exe.tmpl
 apps/Python$MM/Scripts/pip${V%.*}.exe.tmpl
 apps/Python$MM/Scripts/pip$M.exe.tmpl
 apps/Python$MM/Scripts/preremove-cached.py
+apps/Python$MM/Lib/site-packages/sitecustomize.py
 bin/python$M.dll
 bin/python$M.exe
 bin/python$MM.dll

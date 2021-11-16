@@ -7,11 +7,6 @@
 #include "Window.h"
 #include <vector>
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: mklink2.cc,v 2.14 2013/03/05 10:47:10 yselkowitz Exp $\n";
-#endif
-
 /* This part of the code must be in C because the C++ interface to COM
 doesn't work. */
 

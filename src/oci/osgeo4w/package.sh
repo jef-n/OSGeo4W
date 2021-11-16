@@ -9,6 +9,7 @@ source ../../../scripts/build-helpers
 startlog
 
 wget -q -c https://download.oracle.com/otn_software/nt/instantclient/instantclient-basiclite-windows.zip
+rm -fr basic
 mkdir -p basic
 unzip -q -o -d basic instantclient-basiclite-windows.zip
 
@@ -46,7 +47,9 @@ EOF
 
 tar -cjf $R/$P-$V-$B.tar.bz2 \
 	--xform "s,basic/instantclient_${V//./_},bin," \
-	basic/instantclient_${V//./_}/oci.dll
+	basic/instantclient_${V//./_}/oci.dll \
+	basic/instantclient_${V//./_}/oraociicus19.dll \
+	basic/instantclient_${V//./_}/oraons.dll
 
 tar -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	--xform "s,sdk/instantclient_${V//./_}/sdk/lib/msvc,lib," \

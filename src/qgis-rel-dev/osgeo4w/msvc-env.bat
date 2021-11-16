@@ -56,8 +56,8 @@ if not defined GRASS7 (echo GRASS7 not found & goto error)
 for /f "usebackq tokens=1" %%a in (`%GRASS7% --config path`) do set GRASS_PREFIX=%%a
 
 set PYTHONPATH=
-if exist "%PROGRAMFILES%\CMake\bin" path %PATH%;%PROGRAMFILES%\CMake\bin
-if exist "%PF86%\CMake\bin" path %PATH%;%PF86%\CMake\bin
+if exist "%PROGRAMFILES%\CMake\bin" path %PROGRAMFILES%\CMake\bin;%PATH%
+if exist "%PF86%\CMake\bin" path %PF86%\CMake\bin;%PATH%
 if exist c:\cygwin64\bin path %PATH%;c:\cygwin64\bin
 if exist c:\cygwin\bin path %PATH%;c:\cygwin\bin
 

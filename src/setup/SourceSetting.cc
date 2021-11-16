@@ -13,11 +13,6 @@
  *
  */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: SourceSetting.cc,v 2.6 2009/06/30 04:03:12 cgf Exp $\n";
-#endif
-
 #include "SourceSetting.h"
 #include "UserSettings.h"
 #include "io_stream.h"

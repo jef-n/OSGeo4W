@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 3.16)
 
 PROJECT(osgeo4w-setup)
 
+SET(BZIP2_SRC "" CACHE PATH "bzip2 source path")
+SET(ZLIB_SRC "" CACHE PATH "zlib source path")
+SET(OSGEO4W_MIRROR_URL "https://download.osgeo.org/osgeo4w/ssl/mirrors.lst" CACHE STRING "osgeo4w mirror url")
+
+
 SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
 # TODO: retrieve from ChangeLog
@@ -23,14 +28,14 @@ INCLUDE_DIRECTORIES(
   ${CMAKE_SOURCE_DIR}
 )
 
+ADD_DEFINITIONS(-DOSGEO4W_MIRROR_URL="${OSGEO4W_MIRROR_URL}")
+
 IF(MSVC)
   ADD_DEFINITIONS(
     -DNOMINMAX
     -D_CRT_SECURE_NO_WARNINGS
     -DHAVE_STRING_H
     -Dstrcasecmp=_stricmp
-    # -Dsnprintf=_snprintf
-    -DOSGEO4W_MIRROR_URL="http://download.osgeo.org/osgeo4w/testing/mirrors.lst"
     -wd4996 # 'function': was declared deprecated
   )
   SET_SOURCE_FILES_PROPERTIES(PickView.cc
@@ -88,9 +93,6 @@ SET(SRCS
   msg.cc
   net.cc
   netio.cc
-  nio-file.cc
-  nio-ftp.cc
-  nio-http.cc
   nio-ie5.cc
   package_db.cc
   package_meta.cc
@@ -108,7 +110,6 @@ SET(SRCS
   root.cc
   ScanFindVisitor.cc
   script.cc
-  simpsock.cc
   source.cc
   SourceSetting.cc
   splash.cc

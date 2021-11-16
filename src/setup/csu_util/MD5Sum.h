@@ -56,5 +56,5 @@ class MD5Sum
     unsigned char digest[16];
     libmd5_rfc::md5_state_s* internalData;
 };
-    
+
 #endif /* SETUP_MD5SUM_H */

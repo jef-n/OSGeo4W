@@ -30,8 +30,8 @@ public:
   ~PackageSpecification () {}
 
   class _operators;
- 
-  const std::string& packageName() const; 
+
+  const std::string& packageName() const;
   void setOperator (_operators const &);
   void setVersion (const std::string& );
 

@@ -12,7 +12,7 @@ LANGUAGE  LANG_RUSSIAN, SUBLANG_DEFAULT
 // this topic is at:
 //   http://sources.redhat.com/ml/cygwin-apps/2003-05/msg00177.html
 
-IDD_SOURCE DIALOG DISCARDABLE  0, 0, 339, 179
+IDD_SOURCE DIALOG  0, 0, 339, 179
 STYLE DS_MODALFRAME | DS_CENTER | WS_CHILD | WS_CAPTION | WS_SYSMENU
 CAPTION "Установка OSGeo4W - Выберите режим установки"
 FONT 8, "MS Shell Dlg"
@@ -35,7 +35,7 @@ BEGIN
                     IDC_STATIC, 21, 9, 239, 16, NOT WS_GROUP
 END
 
-IDD_VIRUS DIALOG DISCARDABLE  0, 0, 339, 179
+IDD_VIRUS DIALOG  0, 0, 339, 179
 STYLE DS_MODALFRAME | DS_CENTER | WS_CHILD | WS_CAPTION | WS_SYSMENU
 CAPTION "Установка OSGeo4W - Отключить антивирусное сканирование?"
 FONT 8, "MS Shell Dlg"
@@ -54,7 +54,7 @@ BEGIN
                     IDC_STATIC,21,32,239,24,NOT WS_GROUP
 END
 
-IDD_LOCAL_DIR DIALOG DISCARDABLE  0, 0, 339, 179
+IDD_LOCAL_DIR DIALOG  0, 0, 339, 179
 STYLE DS_MODALFRAME | DS_CENTER | WS_CHILD | WS_CAPTION | WS_SYSMENU
 CAPTION "Установка OSGeo4W - Выберите локальный каталог пакетов"
 FONT 8, "MS Shell Dlg"
@@ -75,7 +75,7 @@ BEGIN
     EDITTEXT        IDC_MENUNAME_TEXT,13,125,235,14,ES_AUTOHSCROLL | WS_GROUP
 END
 
-IDD_ROOT DIALOG DISCARDABLE  0, 0, 339, 179
+IDD_ROOT DIALOG  0, 0, 339, 179
 STYLE DS_MODALFRAME | DS_CENTER | WS_CHILD | WS_CAPTION | WS_SYSMENU
 CAPTION "Установка OSGeo4W - Выберите целевой каталог установки"
 FONT 8, "MS Shell Dlg"
@@ -109,7 +109,7 @@ BEGIN
 		    IDC_ROOT_MENU,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,170,130,150,8
 END
 
-IDD_SITE DIALOG DISCARDABLE  0, 0, 339, 179
+IDD_SITE DIALOG  0, 0, 339, 179
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE |
     WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_CONTROLPARENT
@@ -133,15 +133,15 @@ BEGIN
 		    IDC_BUTTON_ADD_URL,255,160,145,14
 END
 
-IDD_NET DIALOG DISCARDABLE  0, 0, 317, 179
+IDD_NET DIALOG  0, 0, 317, 179
 STYLE DS_MODALFRAME | DS_CENTER | WS_CHILD | WS_CAPTION | WS_SYSMENU
 CAPTION "Установка OSGeo4W - Выберите тип интернет-соединения"
 FONT 8, "MS Shell Dlg"
 BEGIN
-    CONTROL         "&Прямое соединение",
-		    IDC_NET_DIRECT,"Button", BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,60,55,88,10
     CONTROL         "Используются настройки &IE 5.0:",
-		    IDC_NET_IE5,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,60,70,132,10
+		    IDC_NET_PRECONFIG,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,60,55,132,10
+    CONTROL         "&Прямое соединение",
+		    IDC_NET_DIRECT,"Button", BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,60,70,88,10
     CONTROL         "Используются настройки прокси &HTTP/FTP:",
 		    IDC_NET_PROXY,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,60,85,168,10
     EDITTEXT        IDC_PROXY_HOST,120,105,120,12,ES_AUTOHSCROLL | WS_DISABLED | WS_GROUP
@@ -159,7 +159,7 @@ BEGIN
                     IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
 END
 
-IDD_INSTATUS DIALOG DISCARDABLE  0, 0, 339, 179
+IDD_INSTATUS DIALOG  0, 0, 339, 179
 STYLE DS_MODALFRAME | DS_CENTER | WS_CHILD | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 CAPTION "установка OSGeo4W"
 FONT 8, "MS Shell Dlg"
@@ -190,7 +190,7 @@ BEGIN
 		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
 END
 
-IDD_PROXY_AUTH DIALOG DISCARDABLE  0, 0, 215, 95
+IDD_PROXY_AUTH DIALOG  0, 0, 215, 95
 STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Требуется авторизация прокси"
 FONT 8, "MS Shell Dlg"
@@ -210,7 +210,7 @@ BEGIN
 		    IDCANCEL,165,75,45,15
 END
 
-IDD_NET_AUTH DIALOG DISCARDABLE  0, 0, 215, 95
+IDD_NET_AUTH DIALOG  0, 0, 215, 95
 STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Требуется авторизация сервера"
 FONT 8, "MS Shell Dlg"
@@ -230,7 +230,7 @@ BEGIN
 		    IDCANCEL,165,75,45,15
 END
 
-IDD_SPLASH DIALOG DISCARDABLE  0, 0, 339, 179
+IDD_SPLASH DIALOG  0, 0, 339, 179
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE |
     WS_CAPTION | WS_SYSMENU
 CAPTION "Установка OSGeo4W"
@@ -240,16 +240,14 @@ BEGIN
                     IDC_STATIC_WELCOME_TITLE,35,1,195,24
     LTEXT           "Данная программа установки необходима для первичной инсталляции рабочей среды OSGeo4W и необходима для всех последующих обновлений. Постарайтесь запомнить куда вы ее сохраняете.\r\n\r\nНа следующих страницах содержится информация по установке. Необходимо заметить что OSGeo4W содержит большое число пакетов, решающих широкий круг задач. По умолчанию устанавливается только базовый пакет. Вы можете использовать данную программу в дальнейшем для добавления, удаления или изменения содержимого пакетов при необходимости.",
 		    IDC_SPLASH_TEXT,35,25,265,90
-    CONTROL         "Стандартная Desktop установка",
-		    IDC_EXPRESS_D,"Button", BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,60,104,172,10
-    CONTROL         "Стандартная Web-GIS установка",
-		    IDC_EXPRESS_I,"Button", BS_AUTORADIOBUTTON | WS_TABSTOP,60,124,172,10
+    CONTROL         "Стандартная установка",
+		    IDC_EXPRESS,"Button", BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,60,104,172,10
     CONTROL         "Расширенная установка",
 		    IDC_ADVANCED,"Button", BS_AUTORADIOBUTTON | WS_TABSTOP,60,144,97,10
     ICON         IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
 END
 
-IDD_DESKTOP DIALOG DISCARDABLE  0, 0, 339, 179
+IDD_DESKTOP DIALOG  0, 0, 339, 179
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 CAPTION "Установка OSGeo4W - Состояние установки и создание ярлыков"
 FONT 8, "MS Shell Dlg"
@@ -266,7 +264,7 @@ BEGIN
 		    IDC_STATUS,21,169,239,16,NOT WS_GROUP
 END
 
-IDD_FTP_AUTH DIALOG DISCARDABLE  0, 0, 215, 95
+IDD_FTP_AUTH DIALOG  0, 0, 215, 95
 STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Требуется авторизация FTP"
 FONT 8, "MS Shell Dlg"
@@ -286,7 +284,7 @@ BEGIN
 		    IDCANCEL,165,75,45,15
 END
 
-IDD_CHOOSE DIALOG DISCARDABLE  0, 0, 339, 179
+IDD_CHOOSE DIALOG  0, 0, 339, 179
 STYLE DS_MODALFRAME | DS_3DLOOK | WS_CHILD | WS_VISIBLE | WS_CAPTION |
     WS_SYSMENU
 CAPTION "Установка OSGeo4W - Выберите пакеты"
@@ -319,7 +317,7 @@ BEGIN
     LTEXT           "",IDC_CHOOSE_VIEWCAPTION,270,33,40,10
 END
 
-IDD_PREREQ DIALOG DISCARDABLE  0, 0, 339, 179
+IDD_PREREQ DIALOG  0, 0, 339, 179
 STYLE DS_MODALFRAME | DS_3DLOOK | WS_CHILD | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 CAPTION "Установка OSGeo4W - Решение проблем с зависимостями"
 FONT 8, "MS Shell Dlg"
@@ -337,7 +335,7 @@ BEGIN
                     ES_AUTOVSCROLL
 END
 
-IDD_DROPPED DIALOG DISCARDABLE  0, 0, 339, 142
+IDD_DROPPED DIALOG  0, 0, 339, 142
 STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Установка OSGeo4W - Использовать старые зеркала?"
 FONT 8, "MS Shell Dlg"
@@ -359,7 +357,7 @@ BEGIN
 		    IDNO,265,120,45,15
 END
 
-IDD_POSTINSTALL DIALOG DISCARDABLE  0, 0, 339, 142
+IDD_POSTINSTALL DIALOG  0, 0, 339, 142
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE |
     WS_CAPTION | WS_SYSMENU
 CAPTION "OSGeo4W Setup - Running postinstall scripts"
@@ -378,35 +376,26 @@ BEGIN
 
 END
 
-IDD_EXP_PACKAGES DIALOG DISCARDABLE  0, 0, 339, 179
+IDD_EXP_PACKAGES DIALOG  0, 0, 339, 179
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE |
     WS_CAPTION | WS_SYSMENU
 CAPTION "Установка OSGeo4W - Экспресс-установка пакетов"
 FONT 8, "MS Shell Dlg"
 BEGIN
-    CONTROL         "MapServer",IDC_PKG_MAPSERVER,"Button",
-                    BS_AUTOCHECKBOX,108,48,100,8
     CONTROL         "QGIS",IDC_PKG_QGIS,"Button",
+                    BS_AUTOCHECKBOX,108,48,100,8
+    CONTROL         "QGIS LTR",IDC_PKG_QGIS_LTR,"Button",
                     BS_AUTOCHECKBOX,108,63,100,8
     CONTROL         "GDAL",IDC_PKG_GDAL,"Button",
                     BS_AUTOCHECKBOX,108,78,100,8
-    CONTROL         "Apache",IDC_PKG_APACHE,"Button",
-                    BS_AUTOCHECKBOX,108,93,100,8
-    CONTROL         "uDig",IDC_PKG_UDIG,"Button",
-                    BS_AUTOCHECKBOX,108,108,100,8
-    CONTROL         "OpenEV",IDC_PKG_OPENEV,"Button",
-                    BS_AUTOCHECKBOX,108,123,100,8
     CONTROL         "GRASS GIS",IDC_PKG_GRASS,"Button",
-                    BS_AUTOCHECKBOX,108,138,100,8
+                    BS_AUTOCHECKBOX,108,93,100,8
     ICON            IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
-    LTEXT           "Порт:",
-		    IDC_APACHE_PORT_LABEL,154,90,50,15,SS_CENTERIMAGE, WS_EX_RIGHT
-    EDITTEXT        IDC_APACHE_PORT,210,90,25,12,ES_AUTOHSCROLL
     LTEXT           "Выберите пакет",
 		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
 END
 
-IDD_LICENSE DIALOG DISCARDABLE  0, 0, 339, 179
+IDD_LICENSE DIALOG  0, 0, 339, 179
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE |
     WS_CAPTION | WS_SYSMENU
 CAPTION "Установка OSGeo4W - Agreement of Restrictive Package"
@@ -429,7 +418,7 @@ END
 // String Table
 //
 
-STRINGTABLE DISCARDABLE
+STRINGTABLE
 BEGIN
     IDS_ROOT_SLASH          "Внимание: Мы не рекомендуем использовать корневой каталог жесткого диска как корневой каталог OSGeo4W. Продолжить?"
     IDS_ROOT_SPACE          "Не рекомендуется использовать пути включающие пробелы в названиях папок. Продолжить?"
@@ -497,4 +486,5 @@ BEGIN
     IDS_LICENSE_EMPTYPATH	"Файл лицензии %s отсутствует на удаленном сервере"
     IDS_NOTHING_TO_INSTALL_OR_UPGRADE "Ничего не выбрано для установки/обновления"
     IDS_NOTHING_TO_DOWNLOAD	"Nothing to Download"
+    IDS_INTERNET_ERR		"Internet error: %s"
 END

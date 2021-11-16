@@ -17,26 +17,20 @@
    methods known to setup.  To add a new method, create a pair of
    nio-*.[ch] files and add the logic to NetIO::open here */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: netio.cc,v 2.16 2012/08/30 22:32:14 yselkowitz Exp $\n";
-#endif
-
 #include "netio.h"
 
-#include "LogSingleton.h"
+#include "LogFile.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include <shlwapi.h>
+
 #include "resource.h"
 #include "state.h"
 #include "msg.h"
-#include "nio-file.h"
 #include "nio-ie5.h"
-#include "nio-http.h"
-#include "nio-ftp.h"
 #include "dialog.h"
 
 int NetIO::net_method;
@@ -50,121 +44,49 @@ char *NetIO::net_proxy_passwd;
 char *NetIO::net_ftp_user;
 char *NetIO::net_ftp_passwd;
 
-NetIO::NetIO (char const *Purl)
-{
-  set_url (Purl);
-}
-
-NetIO::~NetIO ()
-{
-  if (url)
-    delete[] url;
-  if (proto)
-    delete[] proto;
-  if (host)
-    delete[] host;
-  if (path)
-    delete[] path;
-}
-
-void
-NetIO::set_url (char const *Purl)
-{
-  char *bp, *ep, c;
-
-  file_size = 0;
-  url = new char[strlen (Purl) + 1];
-  strcpy (url, Purl);
-  proto = 0;
-  host = 0;
-  port = 0;
-  path = 0;
-
-  bp = url;
-  ep = strstr (bp, "://");
-  if (!ep)
-    {
-      path = strdup (url);
-      return;
-    }
-
-  *ep = 0;
-  proto = new char [strlen (bp)+1];
-  strcpy (proto, bp);
-  *ep = ':';
-  bp = ep + 3;
-
-  ep = bp + strcspn (bp, ":/");
-  c = *ep;
-  *ep = 0;
-  host = new char [strlen (bp) + 1];
-  strcpy (host, bp);
-  *ep = c;
-
-  if (*ep == ':')
-    {
-      port = atoi (ep + 1);
-      ep = strchr (ep, '/');
-    }
-
-  if (*ep)
-    {
-      path = new char [strlen (ep)+1];
-      strcpy (path, ep);
-    }
-}
-
-#if 0
-int
-NetIO::ok ()
-{
-  return 0;
-}
-
-int
-NetIO::read (char *buf, int nbytes)
-{
-  return 0;
-}
-#endif
-
 NetIO *
-NetIO::open (char const *url, bool nocache)
+NetIO::open (char const *url, bool cachable)
 {
   NetIO *rv = 0;
+  std::string file_url;
+
   enum
-  { http, ftp, file }
+  { http, https, ftp, ftps, file }
   proto;
   if (strncmp (url, "http://", 7) == 0)
     proto = http;
+  else if (strncmp (url, "https://", 8) == 0)
+    proto = https;
   else if (strncmp (url, "ftp://", 6) == 0)
     proto = ftp;
-  else
-    proto = file;
-
-  if (proto == file)
-    rv = new NetIO_File (url);
-  else if (net_method == IDC_NET_IE5)
-    rv = new NetIO_IE5 (url);
-  else if (net_method == IDC_NET_PROXY)
-    rv = new NetIO_HTTP (url, nocache);
-  else if (net_method == IDC_NET_DIRECT)
+  else if (strncmp (url, "ftps://", 7) == 0)
+    proto = ftps;
+  else if (strncmp (url, "file://", 7) == 0)
     {
-      switch (proto)
-	{
-	case http:
-	  rv = new NetIO_HTTP (url, nocache);
-	  break;
-	case ftp:
-	  rv = new NetIO_FTP (url);
-	  break;
-	case file:
-	  rv = new NetIO_File (url);
-	  break;
-	}
+      proto = file;
+
+      // WinInet expects a 'legacy' file:// URL
+      // (i.e. a windows path with "file://" prepended)
+      // https://blogs.msdn.microsoft.com/freeassociations/2005/05/19/the-bizarre-and-unhappy-story-of-file-urls/
+      char path[MAX_PATH];
+      DWORD len = MAX_PATH;
+      if (S_OK == PathCreateFromUrl(url, path, &len, 0))
+        {
+          file_url = std::string("file://") + path;
+          url = file_url.c_str();
+        }
+    }
+  else
+    // treat everything else as a windows path
+    {
+      proto = file;
+      file_url = std::string("file://") + url;
+      url = file_url.c_str();
     }
 
-  if (!rv->ok ())
+  rv = new NetIO_IE5 (url, proto == file ? false : cachable);
+
+  if (rv && !rv->ok ())
     {
       delete rv;
       return 0;
@@ -203,7 +125,7 @@ save_dialog (HWND h)
   *passwd = eget (h, IDC_NET_PASSWD, *passwd);
   if (! *passwd) {
     *passwd = new char[1];
-    passwd[0] = '\0';
+    (*passwd)[0] = '\0';
   }
 }
 
@@ -285,9 +207,23 @@ NetIO::get_ftp_auth (HWND owner)
       delete[] net_ftp_passwd;
       net_ftp_passwd = NULL;
     }
-  if (!ftp_auth)
-    return IDCANCEL;
   user = &net_ftp_user;
   passwd = &net_ftp_passwd;
   return auth_common (hinstance, IDD_FTP_AUTH, owner);
+}
+
+const char *
+NetIO::net_method_name ()
+{
+  switch (net_method)
+    {
+    case IDC_NET_PRECONFIG:
+      return "Preconfig";
+    case IDC_NET_DIRECT:
+      return "Direct";
+    case IDC_NET_PROXY:
+      return "Proxy";
+    default:
+      return "Unknown";
+    }
 }

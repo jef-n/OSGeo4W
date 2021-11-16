@@ -7,7 +7,6 @@ DATADIR			= $(GDAL_HOME)\share\gdal
 # HTMLDIR		= $(GDAL_HOME)\share\gdal\html
 
 EXTRAFLAGS		= $(EXTRAFLAGS) -DFRMT_zlib
-EXTRA_LINKER_FLAGS	= /FORCE
 
 MSVC_VER		= 1923
 WIN64			= 1
@@ -15,9 +14,8 @@ WIN64			= 1
 OPTFLAGS		= /nologo /MD /EHsc /Ox /D_CRT_SECURE_NO_DEPRECATE /D_CRT_NONSTDC_NO_DEPRECATE /DNDEBUG /DIPPJ_HUFF /Z7 /DH5_BUILT_AS_DYNAMIC_LIB
 CPPFLAGS		= $(CFLAGS)
 
-SETARGV			= "$(VCDIR)\lib\x64\setargv.obj"
-
-# JPEG_DIR		= $(OSGEO4W)/include
+# JPEG_EXTERNAL_LIB	= 1
+# JPEGDIR		= $(OSGEO4W)/include
 # JPEG_LIB		= $(OSGEO4W)/lib/jpeg_i.lib $(OSGEO4W)/lib/jpeg12_i.lib
 
 PNG_EXTERNAL_LIB	= 1
@@ -49,7 +47,7 @@ XERCES_INCLUDE		= -I$(XERCES_DIR)\include\xercesc -I$(XERCES_DIR)\include
 XERCES_LIB		= $(XERCES_DIR)/lib/xerces-c_3.lib
 
 OPENJPEG_ENABLED	= YES
-OPENJPEG_CFLAGS		= -I$(OSGEO4W)\include\openjpeg-2.3
+OPENJPEG_CFLAGS		= -I$(OPENJPEG_INCLUDE)
 OPENJPEG_LIB		= $(OSGEO4W)\lib\openjp2.lib
 
 HDF4_DIR		= $(OSGEO4W)
@@ -58,7 +56,7 @@ HDF4_INCLUDE		= $(OSGEO4W)\include
 
 HDF5_PLUGIN		= YES
 HDF5_DIR		= $(OSGEO4W)
-HDF5_LIB		= $(OSGEO4W)\lib\hdf5.lib 
+HDF5_LIB		= $(OSGEO4W)\lib\hdf5.lib
 
 PG_INC_DIR		= $(OSGEO4W)\include -DPG_ENABLED
 PG_LIB			= $(OSGEO4W)\lib\libpq.lib wsock32.lib
@@ -69,7 +67,7 @@ MYSQL_LIB		= $(OSGEO4W)\lib\libmysql.lib advapi32.lib
 SQLITE_INC		   = -I$(OSGEO4W)\include -DHAVE_SPATIALITE
 SQLITE_LIB		   = $(OSGEO4W)\lib\sqlite3_i.lib $(OSGEO4W)\lib\spatialite_i.lib
 SPATIALITE_412_OR_LATER    = yes
-SQLITE_HAS_COLUMN_METADATA = yes 
+SQLITE_HAS_COLUMN_METADATA = yes
 
 FREEXL_CFLAGS		= -I$(OSGEO4W)\include
 FREEXL_LIBS		= $(OSGEO4W)\lib\freexl_i.lib
@@ -87,7 +85,7 @@ PROJ_LIBRARY		= $(OSGEO4W)\lib\proj.lib
 CURL_INC		= -I$(OSGEO4W)\include
 CURL_LIB		= $(OSGEO4W)/lib/libcurl.lib wsock32.lib wldap32.lib winmm.lib
 
-GEOS_CFLAGS		= -DHAVE_GEOS -I$(OSGEO4W)\include 
+GEOS_CFLAGS		= -DHAVE_GEOS -I$(OSGEO4W)\include
 GEOS_LIB		= $(OSGEO4W)\lib\geos_c.lib
 
 LIBICONV_DIR		= $(OSGEO4W)
@@ -119,7 +117,7 @@ SOSI_LIBS		= $(OSGEO4W)/Lib/GM.lib $(OSGEO4W)/Lib/UT.lib $(OSGEO4W)/Lib/FYBA.lib
 MSODBCSQL_VERSION	= 17
 MSODBCSQL_DIR		= $(OSGEO4W)/include
 MSODBCSQL_LIB		= $(OSGEO4W)/lib/msodbcsql$(MSODBCSQL_VERSION).lib
-MSODBCSQL_INCLUDE	= -I$(OSGEO4W)/include -DMSODBCSQL_VERSION=$(MSODBCSQL_VERSION) -DMSSQL_BCP_SUPPORTED=1
+MSODBCSQL_INCLUDE	= -I$(OSGEO4W)/include -DMSODBCSQL_VERSION=$(MSODBCSQL_VERSION)
 
 # enables mssql plugin
 SQLNCLI_LIB		= $(OSGEO4W)/lib/msodbcsql$(MSODBCSQL_VERSION).lib
@@ -127,8 +125,6 @@ SQLNCLI_LIB		= $(OSGEO4W)/lib/msodbcsql$(MSODBCSQL_VERSION).lib
 ILI_ENABLED		= YES
 
 POPPLER_ENABLED		= YES
-POPPLER_MAJOR_VERSION   = 20
-POPPLER_MINOR_VERSION   = 20
 POPPLER_CFLAGS		= -I$(OSGEO4W)/include -I$(OSGEO4W)/include/poppler
 POPPLER_LIBS		= $(OSGEO4W)/lib/poppler.lib $(OSGEO4W)/lib/freetype.lib advapi32.lib gdi32.lib
 
@@ -155,7 +151,6 @@ WEBP_ENABLED		= YES
 WEBP_CFLAGS		= -I$(OSGEO4W)/include
 WEBP_LIBS		= $(OSGEO4W)/lib/webp.lib
 
-HAVE_LERC		= 1
+HAVE_LERC		= internal
 
-# sneak in for building internal mssqlspatial
-JASPER_LIB		= $(MSODBCSQL_LIB)
+ADD_LIBS		= $(MSODBCSQL_LIB)

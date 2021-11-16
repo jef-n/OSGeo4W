@@ -17,11 +17,6 @@
 /* The purpose of this file is to doa recursive find on a given
    directory, calling a given function for each file found. */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: find.cc,v 2.12 2013/07/03 19:31:11 corinna Exp $\n";
-#endif
-
 #include "find.h"
 
 #include "FindVisitor.h"
@@ -34,7 +29,7 @@ Find::Find(const std::string& starting_dir)
 {
   _start_dir = starting_dir;
   size_t l = _start_dir.size ();
-  
+
   /* Ensure that _start_dir has a trailing slash if it doesn't already.  */
   if (l < 1 || (starting_dir[l - 1] != '/' && starting_dir[l - 1] != '\\'))
     _start_dir += '/';
@@ -64,8 +59,8 @@ Find::accept (FindVisitor &aVisitor, int level)
 	  || strcmp (wfd.cFileName, "..") == 0)
 	continue;
 
-      /* TODO: make a non-win32 file and dir info class and have that as the 
-       * visited node 
+      /* TODO: make a non-win32 file and dir info class and have that as the
+       * visited node
        */
       if (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 	aVisitor.visitDirectory (_start_dir, &wfd, level);

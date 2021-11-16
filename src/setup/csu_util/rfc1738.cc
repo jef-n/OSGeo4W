@@ -8,14 +8,14 @@
  * - The #includes have been modified.
  * - The escaping code has been modified to not use a static buffer
  *   (which was thread-unsafe)
- * - A C++ std::string layer has been wrapped on top of the original C code.  
+ * - A C++ std::string layer has been wrapped on top of the original C code.
  *
  */
 
 /*
  * #Id: rfc1738.c,v 1.26 2003/12/19 06:12:40 wessels Exp #
  *
- * DEBUG: 
+ * DEBUG:
  * AUTHOR: Harvest Derived
  *
  * SQUID Web Proxy Cache          http://www.squid-cache.org/
@@ -34,12 +34,12 @@
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
  *  (at your option) any later version.
- *  
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111, USA.
@@ -51,7 +51,7 @@
 
 #include "rfc1738.h"
 
-/*  
+/*
  *  RFC 1738 defines that these characters should be escaped, as well
  *  any non-US-ASCII character or anything between 0x00 - 0x1F.
  */
@@ -89,7 +89,7 @@ static char rfc1738_reserved_chars[] =
 };
 
 /*
- *  rfc1738_escape - Returns a "new char[]" that contains the RFC 1738 
+ *  rfc1738_escape - Returns a "new char[]" that contains the RFC 1738
  *  compliant, escaped version of the given url.
  */
 static char *
@@ -132,7 +132,7 @@ rfc1738_do_escape(const char *url, int encode_reserved)
 	    do_escape = 1;
 	}
 	/* RFC 1738 says any non-US-ASCII are encoded */
-	if (((unsigned char) *p >= (unsigned char) 0x80)) { 
+	if (((unsigned char) *p >= (unsigned char) 0x80)) {
 	    do_escape = 1;
 	}
 	/* Do the triplet encoding, or just copy the char */
@@ -181,7 +181,7 @@ rfc1738_escape_part(const char *url)
 }
 
 /*
- *  rfc1738_unescape() - Converts escaped characters (%xy numbers) in 
+ *  rfc1738_unescape() - Converts escaped characters (%xy numbers) in
  *  given the string.  %% is a %. %ab is the 8-bit hexadecimal number "ab"
  */
 void
@@ -229,7 +229,7 @@ rfc1738_escape_part(const std::string &url)
 std::string
 rfc1738_unescape(const std::string &s)
 {
-  size_t bytes = s.length() + 1; 
+  size_t bytes = s.length() + 1;
   char *tmp = new char[bytes];
   memcpy(tmp, s.c_str(), bytes);
   rfc1738_unescape(tmp);

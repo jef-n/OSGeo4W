@@ -1,5 +1,5 @@
 export P=proj
-export V=8.0.0
+export V=8.2.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="sqlite3-devel libtiff-devel curl-devel"
@@ -15,11 +15,13 @@ vs2019env
 cmakeenv
 ninjaenv
 
-mkdir -p build install
-cd build
+mkdir -p build-$V install
+cd build-$V
 
 export INCLUDE="$INCLUDE;$(cygpath -aw osgeo4w/include)"
 export LIB="$LIB;$(cygpath -aw osgeo4w/lib)"
+export PATH="$PATH:$OSGEO4W_PWD/osgeo4w/bin"
+type sqlite3
 
 cmake -G Ninja \
 	-D CMAKE_BUILD_TYPE=Release \
@@ -77,6 +79,10 @@ requires: $P
 maintainer: $MAINTAINER
 external-source: $P
 EOF
+
+appendversions $R/setup.hint
+appendversions $R/$P$abi-runtime/setup.hint
+appendversions $R/$P-devel/setup.hint
 
 cp ../$P-${V%RC*}/COPYING $R/$P-$V-$B.txt
 

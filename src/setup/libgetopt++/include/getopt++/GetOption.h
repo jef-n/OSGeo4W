@@ -23,9 +23,10 @@ class Option;
 class GetOption : public OptionSet
 {
 public:
-  static GetOption *GetInstance ();
+  static GetOption & GetInstance ();
 private:
   static GetOption *Instance;
+  void Init ();
 };
 
 #endif // _GETOPTION_H_

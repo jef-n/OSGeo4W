@@ -13,11 +13,6 @@
  *
  */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: IniParseFeedback.cc,v 2.3 2006/04/15 21:21:25 maxb Exp $\n";
-#endif
-
 #include "IniParseFeedback.h"
 
 IniParseFeedback::~IniParseFeedback(){}

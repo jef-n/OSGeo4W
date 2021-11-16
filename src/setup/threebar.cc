@@ -251,7 +251,7 @@ ThreeBarProgressPage::OnMessageApp (UINT uMsg, WPARAM wParam, LPARAM lParam)
         {
           if (lParam)
           {
-            if( express_mode_option )
+            if( splash_mode == IDC_EXPRESS )
               GetOwner ()->SetActivePageByID (IDD_EXP_PACKAGES);
             else
               GetOwner ()->SetActivePageByID (IDD_CHOOSE);

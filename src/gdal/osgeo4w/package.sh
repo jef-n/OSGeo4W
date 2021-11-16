@@ -1,8 +1,8 @@
 export P=gdal
-export V=3.2.1
+export V=3.4.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-devel libjpeg12-devel"
+export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-devel libjpeg12-devel python3-setuptools"
 
 source ../../../scripts/build-helpers
 
@@ -12,14 +12,24 @@ export PYTHON=Python39
 
 startlog
 
-[ -f $P-$V.tar.gz ] || wget -q http://download.osgeo.org/gdal/${V%rc*}/$P-$V.tar.gz
-[ -f ../$P-$V/makefile.vc ] || tar -C .. -xzf $P-$V.tar.gz
-[ -f patched ] || {
-	patch -p1 --dry-run -d../$P-$V <patch
-	patch -p1 -d../$P-$V <patch
+[ -f $P-$V.tar.gz ] || {
+	wget -q http://download.osgeo.org/gdal/${V%rc*}/$P-$V.tar.gz
+	rm -f ../$P-${V%rc*}/{makefile.vc,patched}
+}
+[ -f ../$P-${V%rc*}/makefile.vc ] || tar -C .. -xzf $P-$V.tar.gz
+[ -f ../$P-${V%rc*}/patched ] || {
+	cd ../$P-${V%rc*}
+	patch -p1 --dry-run <../osgeo4w/patch
+	patch -p1 <../osgeo4w/patch
 	touch patched
+	cd ../osgeo4w
 }
 
+[ -f osgeo4w/apps/Python39/Lib/site-packages/setuptools/command/patched ] || {
+	patch -p0 --dry-run <easy_install.diff
+	patch -p0 <easy_install.diff
+	touch osgeo4w/apps/Python39/Lib/site-packages/setuptools/command/patched
+}
 
 #
 # Download MrSID, ECW and filegdb dependencies
@@ -87,7 +97,7 @@ mkdir -p $R/$P-{devel,oracle,filegdb,ecw,mrsid,sosi,mss,hdf5} $R/$P$abi-runtime 
 
 if [ -f $R/$P-$V-$B-src.tar.bz2 ]; then
 	echo "$R/$P-$V-$B-src.tar.bz2 already exists - skipping"
-	continue
+	exit 1
 fi
 
 export EXT_NMAKE_OPT=$(cygpath -am $PWD/nmake.opt)
@@ -104,25 +114,29 @@ mkdir -p $DESTDIR/etc/ini
 mkdir -p $DESTDIR/share/gdal
 mkdir -p $PYDESTDIR/etc/{postinstall,preremove}
 
-cd ../$P-$V
+cd ../$P-${V%rc*}
 
 (
 	fetchenv ../osgeo4w/osgeo4w/bin/o4w_env.bat
 	vs2019env
 	export PATH=$PATH:/bin
 
+	pv=$(sed -ne 's/#define POPPLER_VERSION "\([0-9]*\)\.\([0-9]*\)\..*$/\1:\2/p' ../osgeo4w/osgeo4w/include/poppler/poppler-config.h)
+
 	for i in clean default install devinstall; do
 		[ -f ../osgeo4w/no$i ] && continue
 
-
 		nmake /f makefile.vc \
+			POPPLER_MAJOR_VERSION=${pv%:*} \
+			POPPLER_MINOR_VERSION=${pv#*:} \
+			OPENJPEG_INCLUDE=$(cygpath -aw ../osgeo4w/osgeo4w/include/openjpeg-*) \
 			OSGEO4W=$(cygpath -aw ../osgeo4w/osgeo4w) \
 			EXT_NMAKE_OPT=$(cygpath -aw ../osgeo4w/nmake.opt) \
 			GDAL_HOME=$(cygpath -aw $DESTDIR) \
 			ECWDIR=$(cygpath -aw $ECW_SDK) \
 			FGDB_SDK=$(cygpath -aw $FGDB_SDK) \
 			MRSID_SDK=$(cygpath -aw $MRSID_SDK) \
-			VCDIR="$VCToolsInstallDir" \
+			SETARGV="\"$VCToolsInstallDir\\lib\\x64\\setargv.obj\"" \
 			$i
 	done
 
@@ -154,13 +168,13 @@ cd swig/python
 >$PYDESTDIR/etc/preremove/python3-$P.bat
 
 expytmpl=
-for i in scripts/*.py; do
+for i in $PYDESTDIR/apps/$PYTHON/Scripts/*.py; do
 	b=$(basename "$i" .py)
 
 	cat <<EOF >$PYDESTDIR/apps/$PYTHON/Scripts/$b.bat
 @echo off
 call "%OSGEO4W_ROOT%\\bin\\o4w_env.bat"
-python "%OSGEO4W_ROOT%\\apps\\$PYTHON\\$(cygpath -w "$i")" %*
+python "%OSGEO4W_ROOT%\\apps\\$PYTHON\\Scripts\\$b.py" %*
 EOF
 	(
 		echo "#! @osgeo4w@\\apps\\$PYTHON\\python3.exe"
@@ -173,7 +187,9 @@ EOF
 	expytmpl="$expytmpl --exclude apps/$PYTHON/Scripts/$b.py"
 done
 
-echo -e "python -B %PYTHONHOME%\\Scripts\\preremove-cached.py python3-$P\r" >>$PYDESTDIR/etc/preremove/python3-$P.bat
+echo $(basename "$PYDESTDIR/apps/$PYTHON/lib/site-packages/GDAL"*.egg) >$PYDESTDIR/apps/$PYTHON/lib/site-packages/python3-$P.pth
+
+echo -e "python -B \"%PYTHONHOME%\\Scripts\\preremove-cached.py\" python3-$P\r" >>$PYDESTDIR/etc/preremove/python3-$P.bat
 
 cd ../../../osgeo4w
 
@@ -287,13 +303,25 @@ requires: $P$abi-runtime hdf5
 external-source: $P
 EOF
 
-cp ../$P-$V/LICENSE.TXT $R/$P-$V-$B.txt
-cp ../$P-$V/LICENSE.TXT $R/$P-oracle/$P-oracle-$V-$B.txt
-cp ../$P-$V/LICENSE.TXT $R/$P$abi-runtime/$P$abi-runtime-$V-$B.txt
-cp ../$P-$V/LICENSE.TXT $R/$P-devel/$P-devel-$V-$B.txt
-cp ../$P-$V/LICENSE.TXT $R/$P-mss/$P-mss-$V-$B.txt
-cp ../$P-$V/LICENSE.TXT $R/$P-sosi/$P-sosi-$V-$B.txt
-cp ../$P-$V/LICENSE.TXT $R/python3-$P/python3-$P-$V-$B.txt
+appendversions $R/setup.hint
+appendversions $R/$P$abi-runtime/setup.hint
+appendversions $R/$P-devel/setup.hint
+appendversions $R/python3-$P/setup.hint
+appendversions $R/$P-oracle/setup.hint
+appendversions $R/$P-filegdb/setup.hint
+appendversions $R/$P-ecw/setup.hint
+appendversions $R/$P-mrsid/setup.hint
+appendversions $R/$P-sosi/setup.hint
+appendversions $R/$P-mss/setup.hint
+appendversions $R/$P-hdf5/setup.hint
+
+cp ../$P-${V%rc*}/LICENSE.TXT $R/$P-$V-$B.txt
+cp ../$P-${V%rc*}/LICENSE.TXT $R/$P-oracle/$P-oracle-$V-$B.txt
+cp ../$P-${V%rc*}/LICENSE.TXT $R/$P$abi-runtime/$P$abi-runtime-$V-$B.txt
+cp ../$P-${V%rc*}/LICENSE.TXT $R/$P-devel/$P-devel-$V-$B.txt
+cp ../$P-${V%rc*}/LICENSE.TXT $R/$P-mss/$P-mss-$V-$B.txt
+cp ../$P-${V%rc*}/LICENSE.TXT $R/$P-sosi/$P-sosi-$V-$B.txt
+cp ../$P-${V%rc*}/LICENSE.TXT $R/python3-$P/python3-$P-$V-$B.txt
 cp $FGDB_SDK/license/userestrictions.txt $R/$P-filegdb/$P-filegdb-$V-$B.txt
 catdoc $ECW_SDK/\$TEMP/ecwjp2_sdk/Server_Read-Only_EndUser.rtf | sed -e "1,/^[^ ]/ { /^$/d }" >$R/$P-ecw/$P-ecw-$V-$B.txt
 pdftotext -layout -enc ASCII7 $MRSID_SDK/LICENSE.pdf - >$R/$P-mrsid/$P-mrsid-$V-$B.txt
@@ -388,7 +416,8 @@ fi
 tar -C .. -cjvf $R/$P-$V-$B-src.tar.bz2 \
 	osgeo4w/package.sh \
 	osgeo4w/nmake.opt \
-	osgeo4w/patch
+	osgeo4w/patch \
+	osgeo4w/easy_install.diff
 
 rm -f no*
 

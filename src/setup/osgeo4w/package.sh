@@ -1,5 +1,5 @@
 export P=setup
-export V=1.0.9
+export V=1.1.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
@@ -21,6 +21,7 @@ ninjaenv
 [ -d bzip2-${BZIP2_VER} ] || tar xzf bzip2-${BZIP2_VER}.tar.gz
 
 mkdir -p build install
+rm -f install/bin/osgeo4w-setup.exe
 cd build
 
 CONF=MinSizeRel
@@ -73,7 +74,10 @@ cat <<EOF >install/bin/setup.bat.tmpl
 @start /B "Running Setup" "@osgeo4w@\bin\osgeo4w-setup-work.exe" -R "@osgeo4w@" %*
 EOF
 
+rm -f install/bin/osgeo4w-setup.exe
+
 if [ -f OSGeo_DigiCert_Signing_Cert.p12 -a -f OSGeo_DigiCert_Signing_Cert.pass ]; then
+
 	osslsigncode sign \
 		-pkcs12 OSGeo_DigiCert_Signing_Cert.p12 \
 		-pass $(<OSGeo_DigiCert_Signing_Cert.pass) \
@@ -86,6 +90,7 @@ if [ -f OSGeo_DigiCert_Signing_Cert.p12 -a -f OSGeo_DigiCert_Signing_Cert.pass ]
 
 	[ -n "$OSGEO4W_SKIP_UPLOAD" ] || rsync -v install/bin/osgeo4w-setup.exe $MASTER_SCP
 else
+	rm install/bin/osgeo4w-setup.exe
 	cp build/osgeo4w-setup.exe install/bin/osgeo4w-setup.exe
 fi
 

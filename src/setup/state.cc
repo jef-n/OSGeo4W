@@ -15,11 +15,6 @@
 
 /* All we do here is instantiate the extern'd variables from state.h */
 
-#if 0
-static const char *cvsid =
-  "\n%%% $Id: state.cc,v 2.7 2010/02/15 00:45:01 davek Exp $\n";
-#endif
-
 #include "state.h"
 #include "resource.h"
 
@@ -28,9 +23,8 @@ bool rebootneeded;
 bool test_mode;
 bool safe_mode;
 
-int express_mode_option;
+int splash_mode = IDC_ADVANCED;
 int source;
-int apache_port_number=80;
 
 std::string local_dir;
 std::string menu_name;

@@ -179,11 +179,13 @@ while True:
         break
     b += 1
 
-tf = tarfile.open(tn, "w:bz2")
+tf = tarfile.open(tn, "w:bz2", format=tarfile.GNU_FORMAT)
 
 postinstall = None
 preremove = None
 haspy = False
+
+scriptspath = abspath(join(props['Location'], '..\\..\\Scripts')).replace(sep,'/') + "/"
 
 for f in map( lambda x: abspath(join(props['Location'], x)).replace(sep,'/'), props['Files']):
     if f.endswith(".pyc"):
@@ -196,20 +198,23 @@ for f in map( lambda x: abspath(join(props['Location'], x)).replace(sep,'/'), pr
     if f.endswith(".py"):
         haspy = True
 
+    isscript = f.startswith(scriptspath)
+
     f = GetLongPathName(f)
 
-    if f.endswith(".exe") and pkg in ['pip', 'setuptools']:
+    if isscript:
         exe = open(f, "rb")
         data = exe.read()
         exe.close()
 
         data2 = re.sub(
             b"#!.*\\\\python.?\\.exe",
-            str.encode("#!@osgeo4w@\\\\bin\\\\{}".format('python3.exe')),
+            str.encode("#!@osgeo4w@\\\\bin\\\\python3.exe"),
             data
         )
 
         if data != data2:
+            print("{}: Script {} patched".format(pkg, f))
             if not postinstall:
                 postinstall = open("postinstall.bat", "wb")
 
@@ -217,7 +222,7 @@ for f in map( lambda x: abspath(join(props['Location'], x)).replace(sep,'/'), pr
                 preremove = open("preremove.bat", "wb")
 
             postinstall.write(str.encode("textreplace -std -t {}\r\n".format(prefix.sub('', f))))
-            preremove.write(str.encode("del {}\r\n".format(prefix.sub('', f))))
+            preremove.write(str.encode("del {}\r\n".format(prefix.sub('', f).replace('/', '\\'))))
 
             f += ".tmpl"
 
@@ -241,7 +246,7 @@ if haspy and not preremove:
 
 if preremove:
     if haspy:
-        preremove.write(str.encode("python3 -B %PYTHONHOME%\\Scripts\\preremove-cached.py {}\n".format(pname)))
+        preremove.write(str.encode("python3 -B \"%PYTHONHOME%\\Scripts\\preremove-cached.py\" {}\n".format(pname)))
 
     preremove.close()
     tf.add("preremove.bat", "etc/preremove/{}.bat".format(pname))
