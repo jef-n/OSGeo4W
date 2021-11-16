@@ -30,10 +30,11 @@ jobs:
        dir /s /b %GITHUB_WORKSPACE%
        echo CD:%CD%
        dir %GITHUB_ENV%
-       mkdir %BASE%
-       dir %BASE%
        rd %GITHUB_WORKSPACE%
+       if not exist %GITHUB_WORKSPACE% echo REMOVED
        cmd /c mklink /j %GITHUB_WORKSPACE% %BASE%
+       if exist %GITHUB_WORKSPACE% ( echo junction exists ) else ( echo junction missing )
+       dir %GITHUB_WORKSPACE% 
 
     - name: changed?
       shell: cmd
