@@ -24,12 +24,12 @@ jobs:
       run: |
        echo on
        cd \
+       mkdir %BASE%
        dir D:\a\OSGeo4W
        rd %GITHUB_WORKSPACE%
        dir D:\a\OSGeo4W
        cmd /c mklink /j %GITHUB_WORKSPACE% %BASE%
        dir D:\a\OSGeo4W
-       if exist %GITHUB_WORKSPACE% ( echo junction exists ) else ( echo junction missing )
        echo %GITHUB_WORKSPACE% >%GITHUB_WORKSPACE%\test.txt
        dir %GITHUB_WORKSPACE%  %BASE% 
 
