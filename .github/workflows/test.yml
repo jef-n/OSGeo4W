@@ -20,9 +20,13 @@ jobs:
       BUILDBASE: c:\temp
 
     steps:
-    - run: set
-    - run: mkdir %MYWORKSPACE%
-    - run: echo "GITHUB_WORKSPACE=c:/workspace/" >> %GITHUB_ENV%
-    - run: set
+    - name: override
+      run: |
+       set
+       mkdir %MYWORKSPACE%
+       echo "GITHUB_WORKSPACE=c:/workspace/" >> %GITHUB_ENV%
+
+    - name: changed?
+      run: set
 
 # vim: set nowrap :
