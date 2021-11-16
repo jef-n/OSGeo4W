@@ -16,22 +16,22 @@ jobs:
     runs-on: windows-latest
 
     env:
-      TEMP: c:\t
-      BASE: c:\a
+      BASE: c:\workspace
 
     steps:
     - name: override
       shell: cmd
       run: |
+       echo TEMP:%TEMP%
+       echo BASE:%TEMP%
        mkdir %BASE%
        dir /s /b %GITHUB_WORKSPACE%
-       dir %GITHUB_WORKSPACE%
        echo CD:%CD%
        dir %GITHUB_ENV%
        mkdir %BASE%
        dir %BASE%
        rd %GITHUB_WORKSPACE%
-       mklink /j %GITHUB_WORKSPACE% %BASE%
+       cmd /c mklink /j %GITHUB_WORKSPACE% %BASE%
 
     - name: changed?
       shell: cmd
