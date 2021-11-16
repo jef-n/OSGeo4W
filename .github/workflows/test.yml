@@ -1,0 +1,18 @@
+name: test
+
+on:
+#  schedule:
+#  - cron: '2 0 * * * *'
+#
+  push:
+    branches:
+    - workflows
+
+jobs:
+  test:
+    - run: set
+    - run: mkdir %MYWORKSPACE%
+    - run: echo "GITHUB_WORKSPACE=c:/workspace/" >> $GITHUB_ENV
+    - run: set
+
+# vim: set nowrap :
