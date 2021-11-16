@@ -34,7 +34,8 @@ jobs:
        if not exist %GITHUB_WORKSPACE% echo REMOVED
        cmd /c mklink /j %GITHUB_WORKSPACE% %BASE%
        if exist %GITHUB_WORKSPACE% ( echo junction exists ) else ( echo junction missing )
-       dir %GITHUB_WORKSPACE% 
+       echo %GITHUB_WORKSPACE% >%GITHUB_WORKSPACE%\test.txt
+       dir %GITHUB_WORKSPACE%  %BASE% 
 
     - name: changed?
       shell: cmd
