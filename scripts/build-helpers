@@ -182,7 +182,7 @@ ninjaenv() {
 			cd /tmp
 			curl --remote-name -L https://github.com/ninja-build/ninja/releases/download/v1.10.2/ninja-win.zip
 			cd $OSGEO4W_SCRIPTS
-			unzip /tmp/ninja.zip
+			unzip /tmp/ninja-win.zip
 
 			chmod a+rx ninja.exe
 		)
