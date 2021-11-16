@@ -16,23 +16,23 @@ jobs:
     runs-on: windows-latest
 
     env:
-      TEMP: c:\temp
-      BUILDBASE: c:\temp
+      TEMP: c:\t
+      BASE: c:\a
 
     steps:
     - name: override
       shell: cmd
       run: |
        echo CD:%CD%
-       mkdir %MYWORKSPACE%
        echo GITHUB_WORKSPACE=%GITHUB_WORKSPACE%
        dir %GITHUB_ENV%
-       echo "GITHUB_WORKSPACE=c:/workspace/" >> %GITHUB_ENV%
+       mkdir %BUILDBASE%
+       echo "GITHUB_WORKSPACE=%BUILDBASE%" >> %GITHUB_ENV%
        dir c:
        dir d:
 
     - name: changed?
       shell: cmd
-      run: echo GITHUB_WORKSPACE=
+      run: echo GITHUB_WORKSPACE=%GITHUB_WORKSPACE%
 
 # vim: set nowrap :
