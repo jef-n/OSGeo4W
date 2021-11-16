@@ -8,11 +8,21 @@ on:
     branches:
     - workflows
 
+
+
 jobs:
-  test:
+ build:
+    name: test
+    runs-on: windows-latest
+
+    env:
+      TEMP: c:\temp
+      BUILDBASE: c:\temp
+
+    steps:
     - run: set
     - run: mkdir %MYWORKSPACE%
-    - run: echo "GITHUB_WORKSPACE=c:/workspace/" >> $GITHUB_ENV
+    - run: echo "GITHUB_WORKSPACE=c:/workspace/" >> %GITHUB_ENV%
     - run: set
 
 # vim: set nowrap :
