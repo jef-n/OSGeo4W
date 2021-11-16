@@ -23,17 +23,21 @@ jobs:
     - name: override
       shell: cmd
       run: |
+       mkdir %BASE%
        dir /s /b %GITHUB_WORKSPACE%
        dir %GITHUB_WORKSPACE%
        echo CD:%CD%
        dir %GITHUB_ENV%
-       mkdir %BUILDBASE%
-       echo "GITHUB_WORKSPACE=%BUILDBASE%" >> %GITHUB_ENV%
-       dir c:
-       dir d:
+       mkdir %BASE%
+       dir %BASE%
+       rd %GITHUB_WORKSPACE%
+       mklink /j %GITHUB_WORKSPACE% %BASE%
 
     - name: changed?
       shell: cmd
-      run: echo GITHUB_WORKSPACE=%GITHUB_WORKSPACE%
+      run: |
+        echo GITHUB_WORKSPACE=%GITHUB_WORKSPACE%
+        dir /s /b %GITHUB_WORKSPACE%
+        dir /s /b %BASE%
 
 # vim: set nowrap :
