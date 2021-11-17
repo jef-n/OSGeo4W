@@ -73,9 +73,9 @@ jobs:
         path: x86_64/
         retension-days: 1
 
+    # Build MSI for PKGS
     - name: 'Create MSI'
       shell: cmd
-        # Build MSI for PKGS
         bash scripts/msis.sh
 
     - uses: actions/upload-artifact@v2
