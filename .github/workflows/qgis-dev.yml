@@ -76,7 +76,7 @@ jobs:
     # Build MSI for PKGS
     - name: 'Create MSI'
       shell: cmd
-        bash scripts/msis.sh
+      run: bash scripts/msis.sh
 
     - uses: actions/upload-artifact@v2
       with:
