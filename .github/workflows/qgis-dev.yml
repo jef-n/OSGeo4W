@@ -10,15 +10,15 @@ on:
 
 jobs:
   build:
-    name: qgis-dev
     runs-on: windows-latest
 
     env:
       TEMP: c:\temp
       BASE: c:\w
+      PKG: qgis-dev
 
     steps:
-    - name: use workspace on C
+    - name: Link workspace to C drive
       shell: cmd
       run: |
        echo on
@@ -50,18 +50,40 @@ jobs:
     - name: 'Install cygwin'
       shell: cmd
       run: |
-         curl --output c:\setup-x86_64.exe https://cygwin.com/setup-x86_64.exe
-         c:\setup-x86_64.exe -qnNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/temp/cygwin -P "bison,flex,poppler,doxygen,git,unzip,tar,diffutils,patch,ssh,curl,wget,flip,p7zip"
+        curl --output c:\setup-x86_64.exe https://cygwin.com/setup-x86_64.exe
+        c:\setup-x86_64.exe -qnNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/temp/cygwin -P "bison,flex,poppler,doxygen,git,unzip,tar,diffutils,patch,ssh,curl,wget,flip,p7zip"
+        path c:\cygwin\bin;c:\cygwin\usr\bin
+        for /f "delims=" %%i in ('cygpath -a %GITHUB_WORKSPACE%') do set OSGEO4W_REP=%%i
+        echo PATH=c:\cygwin\bin;c:\cygwin\usr\bin>>%GITHUB_ENV%
+        echo OSGEO4W_REP=%OSGEO4W_REP%>>%GITHUB_ENV%
+        echo PKGS=%PKG%>>%GITHUB_ENV%
+        rmdir /s /q "c:/temp/cygwin"
 
-    - name: 'Building...'
+    - name: 'Build'
       shell: cmd
       run: |
-        echo on
-        rmdir /s /q "c:/temp/cygwin"
-        path c:\cygwin\bin;c:\cygwin\usr\bin
-        cygpath -a %GITHUB_WORKSPACE%
-        for /f "delims=" %%i in ('cygpath -a %GITHUB_WORKSPACE%') do set OSGEO4W_REP=%%i
-        cd %GITHUB_WORKSPACE%\src\qgis-dev\osgeo4w
+        cd %GITHUB_WORKSPACE%\src\%PKG%\osgeo4w
         bash package.sh
+      env:
+        OSGEO4W_SKIP_UPLOAD: 1
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: osgeo4w-repo
+        path: x86_64/
+        retension-days: 1
+
+    - name: 'Create MSI'
+      shell: cmd
+        # Build MSI for PKGS
+        bash scripts/msis.sh
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: msi
+        path: |
+          tmp/packages/*.msi
+          tmp/packages/*.sha256sum
+        retension-days: 1
 
 # vim: set nowrap :
