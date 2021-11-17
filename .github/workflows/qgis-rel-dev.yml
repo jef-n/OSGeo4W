@@ -57,8 +57,8 @@ jobs:
       shell: cmd
       run: |
         rmdir /s /q "c:/temp/cygwin"
-        set OSGEO4W_REP=%GITHUB_WORKSPACE%
         path c:\cygwin\bin;c:\cygwin\usr\bin
+        for /f "delims=" %i in ('cygpath -a %GITHUB_WORKSPACE%') do set OSGEO4W_REP=%i
         cd %GITHUB_WORKSPACE%\src\qgis-rel-dev\osgeo4w
         bash package.sh
 
