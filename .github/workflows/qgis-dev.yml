@@ -59,24 +59,25 @@ jobs:
         echo PKGS=%PKG%>>%GITHUB_ENV%
         rmdir /s /q "c:/temp/cygwin"
 
-    - name: 'Build'
-      shell: cmd
-      run: |
-        cd %GITHUB_WORKSPACE%\src\%PKG%\osgeo4w
-        bash package.sh
-      env:
-        OSGEO4W_SKIP_UPLOAD: 1
+#    - name: 'Build'
+#      shell: cmd
+#      run: |
+#        cd %GITHUB_WORKSPACE%\src\%PKG%\osgeo4w
+#        bash package.sh
+#      env:
+#        OSGEO4W_SKIP_UPLOAD: 1
 
-    - uses: actions/upload-artifact@v2
-      with:
-        name: osgeo4w-repo
-        path: x86_64/
-        retention-days: 1
+#    - uses: actions/upload-artifact@v2
+#      with:
+#        name: osgeo4w-repo
+#        path: x86_64/
+#        retention-days: 1
 
     # Build MSI for PKGS
     - name: 'Create MSI'
       shell: cmd
       run: |
+        path
         echo | cpan
         cpan install RTF::Writer
         bash scripts/msis.sh
