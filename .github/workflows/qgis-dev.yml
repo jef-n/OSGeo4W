@@ -71,7 +71,7 @@ jobs:
       with:
         name: osgeo4w-repo
         path: x86_64/
-        retension-days: 1
+        retention-days: 1
 
     # Build MSI for PKGS
     - name: 'Create MSI'
@@ -84,6 +84,6 @@ jobs:
         path: |
           tmp/packages/*.msi
           tmp/packages/*.sha256sum
-        retension-days: 1
+        retention-days: 1
 
 # vim: set nowrap :
