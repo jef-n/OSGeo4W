@@ -51,7 +51,7 @@ jobs:
       shell: cmd
       run: |
         curl --output c:\setup-x86_64.exe https://cygwin.com/setup-x86_64.exe
-        c:\setup-x86_64.exe -qnNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/temp/cygwin -P "bison,flex,poppler,doxygen,git,unzip,tar,diffutils,patch,ssh,curl,wget,flip,p7zip"
+        c:\setup-x86_64.exe -qnNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/temp/cygwin -P "bison,flex,poppler,doxygen,git,unzip,tar,diffutils,patch,ssh,curl,wget,flip,p7zip,perl-Data-UUID"
         path c:\cygwin\bin;c:\cygwin\usr\bin
         for /f "delims=" %%i in ('cygpath -a %GITHUB_WORKSPACE%') do set OSGEO4W_REP=%%i
         echo PATH=c:\cygwin\bin;c:\cygwin\usr\bin>>%GITHUB_ENV%
@@ -59,19 +59,19 @@ jobs:
         echo PKGS=%PKG%>>%GITHUB_ENV%
         rmdir /s /q "c:/temp/cygwin"
 
-    - name: 'Build'
-      shell: cmd
-      run: |
-        cd %GITHUB_WORKSPACE%\src\%PKG%\osgeo4w
-        bash package.sh
-      env:
-        OSGEO4W_SKIP_UPLOAD: 1
+#    - name: 'Build'
+#      shell: cmd
+#      run: |
+#        cd %GITHUB_WORKSPACE%\src\%PKG%\osgeo4w
+#        bash package.sh
+#      env:
+#        OSGEO4W_SKIP_UPLOAD: 1
 
-    - uses: actions/upload-artifact@v2
-      with:
-        name: osgeo4w-repo
-        path: x86_64/
-        retention-days: 1
+#    - uses: actions/upload-artifact@v2
+#      with:
+#        name: osgeo4w-repo
+#        path: x86_64/
+#        retention-days: 1
 
     # Build MSI for PKGS
     - name: 'Create MSI'
