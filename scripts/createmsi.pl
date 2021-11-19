@@ -226,10 +226,10 @@ unless(@ARGV) {
 	push @ARGV, "qgis-full";
 }
 
-($version) = $version{$ARGV[0]} =~ /^(\d+\.\d+\.\d+)-/ unless defined $version;
+($version) = $version{$ARGV[0]} =~ /^(.*)-\d+$/ unless defined $version;
 
 die "no version specified" unless defined $version;
-die "invalid version $version" unless $version =~ /^\d+\.\d+\.\d+$/;
+die "invalid version $version" unless $version =~ /^\d+\.\d+\.\d+/;
 
 getDeps($_) for @ARGV;
 
@@ -706,6 +706,8 @@ print F <<EOF;
 EOF
 close F;
 
+my ($nversion) = $version =~ /^(\d+\.\d+\.\d+)/;
+
 open F, ">packages/installer.wxs";
 print F <<EOF;
 <?xml version="1.0" encoding="windows-$codepage"?>
@@ -714,7 +716,7 @@ print F <<EOF;
      Manufacturer="$manufacturer"
      Id='$productuuid'
      UpgradeCode="$upgradeuuid"
-     Language="1033" Codepage="$codepage" Version="$version">
+     Language="1033" Codepage="$codepage" Version="$nversion">
 
     <Package Id="*" Keywords="Installer" Description="$packagename $version Installer"
       Comments="QGIS is a registered trademark of QGIS.org"
