@@ -1,0 +1,89 @@
+name: QGIS release builds
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    env:
+      TEMP: c:\temp
+      BASE: c:\w
+
+    strategy:
+      matrix:
+        PKG: [qgis, qgis-ltr]
+
+    steps:
+    - name: Link workspace to C drive
+      shell: cmd
+      run: |
+       echo on
+       cd \
+       if not exist %TEMP% mkdir %TEMP%
+       if not exist %BASE% mkdir %BASE%
+       rd %GITHUB_WORKSPACE%
+       cmd /c mklink /j %GITHUB_WORKSPACE% %BASE%
+       echo >%GITHUB_WORKSPACE%\foo.txt
+       if not exist %BASE%\foo.txt (echo junction not active & exit /b 1)
+       del %BASE%\foo.txt
+
+    - name: keep original line endings
+      run: git config --global core.autocrlf false
+
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 120
+
+    # WDF kills MSVC batch's own detection of SDKs…
+    - name: Clean WDF
+      shell: cmd
+      run: |
+        rmdir /s /q "%ProgramFiles(x86)%\Windows Kits\10\lib\wdf"
+        rmdir /s /q "%ProgramFiles(x86)%\Windows Kits\10\include\wdf"
+        rmdir /s /q "%ProgramFiles(x86)%\Windows Kits\10\redist\wdf"
+        rmdir /s /q "%ProgramFiles(x86)%\Windows Kits\10\Tools"
+
+    - name: 'Install cygwin'
+      shell: cmd
+      run: |
+        curl --output c:\setup-x86_64.exe https://cygwin.com/setup-x86_64.exe
+        c:\setup-x86_64.exe -qnNdO -R C:/cygwin -s http://cygwin.mirror.constant.com -l C:/temp/cygwin -P "bison,flex,poppler,doxygen,git,unzip,tar,diffutils,patch,ssh,curl,wget,flip,p7zip,make,perl-Data-UUID,perl-Module-Build"
+        path c:\cygwin\bin;c:\cygwin\usr\bin
+        for /f "delims=" %%i in ('cygpath -a %GITHUB_WORKSPACE%') do set OSGEO4W_REP=%%i
+        echo PATH=c:\cygwin\bin;c:\cygwin\usr\bin>>%GITHUB_ENV%
+        echo OSGEO4W_REP=%OSGEO4W_REP%>>%GITHUB_ENV%
+        echo PKGS=%PKG%>>%GITHUB_ENV%
+        rmdir /s /q "c:/temp/cygwin"
+
+    - name: 'Build'
+      shell: cmd
+      run: |
+        cd %GITHUB_WORKSPACE%\src\%PKG%\osgeo4w
+        bash package.sh
+      env:
+        OSGEO4W_SKIP_UPLOAD: 1
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: osgeo4w-repo
+        path: x86_64/
+        retention-days: 1
+
+    # Build MSI for PKGS
+    - name: 'Create MSI'
+      shell: cmd
+      run: |
+        echo | perl c:/cygwin/bin/cpan
+        perl c:/cygwin/bin/cpan install RTF::Writer
+        bash scripts/msis.sh
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: msi
+        path: |
+          tmp/packages/*.msi
+          tmp/packages/*.sha256sum
+        retention-days: 1
+
+# vim: set nowrap :
