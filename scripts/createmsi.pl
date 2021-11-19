@@ -226,7 +226,7 @@ unless(@ARGV) {
 	push @ARGV, "qgis-full";
 }
 
-($version) = $version{$ARGV[0]} =~ /^(.*)-\d+$/ unless defined $version;
+($version) = $version{$ARGV[0]} =~ /^(\d+\.\d+\.\d+)-/ unless defined $version;
 
 die "no version specified" unless defined $version;
 die "invalid version $version" unless $version =~ /^\d+\.\d+\.\d+$/;
