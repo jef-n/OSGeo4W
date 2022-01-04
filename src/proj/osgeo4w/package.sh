@@ -1,5 +1,5 @@
 export P=proj
-export V=8.2.0
+export V=8.2.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="sqlite3-devel libtiff-devel curl-devel"
