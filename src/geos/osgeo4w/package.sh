@@ -1,5 +1,5 @@
 export P=geos
-export V=3.10.0
+export V=3.10.2
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
