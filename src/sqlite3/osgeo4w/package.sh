@@ -1,5 +1,5 @@
 export P=sqlite3
-export V=3.35.2
+export V=3.37.2
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
@@ -8,7 +8,7 @@ export BUILDDEPENDS=none
 IFS=. read major minor patch < <(echo $V)
 
 export BASE=$(printf "sqlite-amalgamation-%d%02d%02d00" $major $minor $patch)
-export URL=https://sqlite.org/2021/$BASE.zip
+export URL=https://sqlite.org/2022/$BASE.zip
 
 source ../../../scripts/build-helpers
 
