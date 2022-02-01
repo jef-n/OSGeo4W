@@ -2,7 +2,7 @@ export P=qgis-dev
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-devel grass qt5-oci qt5-oci-debug sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt5 python3-sip python3-pyqt-builder python3-devel python3-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-devel qscintilla-devel qt5-devel qwt-devel libspatialite-devel oci-devel qtkeychain-devel zlib-devel opencl-devel exiv2-devel protobuf-devel pdal pdal-devel python3-setuptools zstd-devel oci-devel qtwebkit-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel python3-pyqt-builder"
+export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-devel grass8 qt5-oci qt5-oci-debug sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt5 python3-sip python3-pyqt-builder python3-devel python3-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-devel qscintilla-devel qt5-devel qwt-devel libspatialite-devel oci-devel qtkeychain-devel zlib-devel opencl-devel exiv2-devel protobuf-devel pdal pdal-devel python3-setuptools zstd-devel oci-devel qtwebkit-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel python3-pyqt-builder"
 
 : ${SITE:=qgis.org}
 : ${TARGET:=Nightly}
@@ -109,11 +109,11 @@ nextbinary
 
 	fetchenv msvc-env.bat
 
-	[ -f "$GRASS7" ]
+	[ -f "$GRASS" ]
 	[ -d "$GRASS_PREFIX" ]
 	[ -d "$DBGHLP_PATH" ]
 
-	export GRASS_VERSION=$(cmd /c $GRASS7 --config version | sed -e "s/\r//")
+	export GRASS_VERSION=$(cmd /c $GRASS --config version | sed -e "s/\r//")
 
 	cd $BUILDDIR
 
@@ -135,12 +135,12 @@ nextbinary
 		-D WITH_QSPATIALITE=TRUE \
 		-D WITH_SERVER=TRUE \
 		-D SERVER_SKIP_ECW=TRUE \
-		-D WITH_GRASS=TRUE \
 		-D WITH_3D=TRUE \
-		-D WITH_GRASS7=TRUE \
 		-D WITH_PDAL=TRUE \
 		-D WITH_HANA=TRUE \
-		-D GRASS_PREFIX7="$(cygpath -m $GRASS_PREFIX)" \
+		-D WITH_GRASS=TRUE \
+		-D WITH_GRASS8=TRUE \
+		-D GRASS_PREFIX8="$(cygpath -m $GRASS_PREFIX)" \
 		-D WITH_ORACLE=TRUE \
 		-D WITH_CUSTOM_WIDGETS=TRUE \
 		-D CMAKE_BUILD_TYPE=$BUILDCONF \
@@ -196,8 +196,8 @@ nextbinary
 		rm -rf "$TEMP"
 		mkdir -p $TEMP
 
-		export PATH="$PATH:$(cygpath -au $O4W_ROOT/apps/grass/$GRASS7_VERSION/lib)"
-		export GISBASE=$(cygpath -aw $O4W_ROOT/apps/grass/$GRASS7_VERSION)
+		export PATH="$PATH:$(cygpath -au $GRASS_PREFIX/lib)"
+		export GISBASE=$(cygpath -aw $GRASS_PREFIX)
 
 		export PATH=$PATH:$(cygpath -au $BUILDDIR/output/plugins)
 		export QT_PLUGIN_PATH="$(cygpath -au $BUILDDIR/output/plugins);$(cygpath -au $O4W_ROOT/apps/qt5/plugins)"
@@ -232,7 +232,7 @@ nextbinary
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       qgis.reg.tmpl    >install/bin/qgis.reg.tmpl
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                postinstall.bat  >install/etc/postinstall/$P.bat
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                preremove.bat    >install/etc/preremove/$P.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g" -e "s/@grasspath@/$(basename $GRASS_PREFIX)/g" qgis.bat         >install/bin/$P.bat
+	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g" -e "s/@grasspath@/$(basename $GRASS_PREFIX)/g" -e "s/@grassmajor@/${GRASS_VERSION%%.*}/" qgis.bat >install/bin/$P.bat
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       designer.bat     >install/bin/$P-designer.bat
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       process.bat      >install/bin/qgis_process-$P.bat
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       python.bat       >install/bin/python-$P.bat
@@ -296,7 +296,7 @@ sdesc: "QGIS nightly build of the $LABEL branch (metapackage with additional dep
 ldesc: "QGIS nightly build of the $LABEL branch (metapackage with additional dependencies)"
 maintainer: $MAINTAINER
 category: Desktop
-requires: $P proj python3-pyparsing python3-simplejson python3-shapely python3-matplotlib gdal-hdf5 gdal-ecw gdal-mrsid gdal-oracle gdal-sosi python3-pygments qt5-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-pillow python3-pandas python3-geographiclib grass saga
+requires: $P proj python3-pyparsing python3-simplejson python3-shapely python3-matplotlib gdal-hdf5 gdal-ecw gdal-mrsid gdal-oracle gdal-sosi python3-pygments qt5-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-pillow python3-pandas python3-geographiclib grass8 saga
 external-source: $P
 EOF
 

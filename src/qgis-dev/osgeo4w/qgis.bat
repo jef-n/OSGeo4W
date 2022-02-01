@@ -1,6 +1,6 @@
 @echo off
 call "%~dp0\o4w_env.bat"
-if not exist "%OSGEO4W_ROOT%\apps\@package@\bin\qgisgrass7.dll" goto nograss
+if not exist "%OSGEO4W_ROOT%\apps\@package@\bin\qgisgrass@grassmajor@.dll" goto nograss
 set savedpath=%PATH%
 call "%OSGEO4W_ROOT%\apps\grass\@grasspath@\etc\env.bat"
 path %OSGEO4W_ROOT%\apps\grass\@grasspath@\lib;%OSGEO4W_ROOT%\apps\grass\@grasspath@\bin;%savedpath%

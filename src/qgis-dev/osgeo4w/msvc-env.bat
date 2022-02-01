@@ -50,10 +50,10 @@ set VS160COMNTOOLS=%vcdir%\Common7\Tools
 call "%vcdir%\VC\Auxiliary\Build\vcvarsall.bat" %VCARCH% %VCSDK%
 path %path%;%vcdir%\VC\bin
 
-set GRASS7=
-if exist %OSGEO4W_ROOT%\bin\grass78.bat set GRASS7=%OSGEO4W_ROOT%\bin\grass78.bat
-if not defined GRASS7 (echo GRASS7 not found & goto error)
-for /f "usebackq tokens=1" %%a in (`%GRASS7% --config path`) do set GRASS_PREFIX=%%a
+set GRASS=
+if exist %OSGEO4W_ROOT%\bin\grass80.bat set GRASS=%OSGEO4W_ROOT%\bin\grass80.bat
+if not defined GRASS (echo GRASS not found & goto error)
+for /f "usebackq tokens=1" %%a in (`%GRASS% --config path`) do set GRASS_PREFIX=%%a
 
 set PYTHONPATH=
 if exist "%PROGRAMFILES%\CMake\bin" path %PROGRAMFILES%\CMake\bin;%PATH%
