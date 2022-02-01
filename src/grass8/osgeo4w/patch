@@ -1,0 +1,413 @@
+diff --git a/lib/gis/gisinit.c b/lib/gis/gisinit.c
+index 8f4a4c798..f75a74d7c 100644
+--- a/lib/gis/gisinit.c
++++ b/lib/gis/gisinit.c
+@@ -49,12 +49,14 @@ void G__gisinit(const char *version, const char *pgm)
+ 
+     G_set_program_name(pgm);
+ 
++#ifndef _WIN32
+     /* verify version of GRASS headers (and anything else in include) */
+     if (strcmp(version, GIS_H_VERSION) != 0)
+ 	G_fatal_error(_("Module built against version %s but "
+ 			"trying to use version %s. "
+ 			"You need to rebuild GRASS GIS or untangle multiple installations."),
+                         version, GIS_H_VERSION);
++#endif
+     
+     /* Make sure location and mapset are set */
+     G_location_path();
+diff --git a/mswindows/osgeo4w/env.bat.tmpl b/mswindows/osgeo4w/env.bat.tmpl
+index 157d622b3..6f3441b70 100644
+--- a/mswindows/osgeo4w/env.bat.tmpl
++++ b/mswindows/osgeo4w/env.bat.tmpl
+@@ -2,14 +2,13 @@ REM
+ REM Environmental variables for GRASS OSGeo4W installer
+ REM
+ 
+-call "%OSGEO4W_ROOT%\bin\py3_env.bat"
+-
+ set GISBASE=%OSGEO4W_ROOT%\apps\grass\grass@POSTFIX@
+ 
+ REM Uncomment if you want to use Bash instead of Cmd
+ REM Note that msys package must be also installed
+ REM set GRASS_SH=%OSGEO4W_ROOT%\apps\msys\bin\sh.exe
+ 
++set PYTHONPATH=%OSGEO4W_ROOT%\apps\grass\grass@POSTFIX@\etc\python;%PYTHONPATH%
+ set GRASS_PYTHON=%OSGEO4W_ROOT%\bin\python3.exe
+ set GRASS_PROJSHARE=%OSGEO4W_ROOT%\share\proj
+ 
+diff --git a/mswindows/osgeo4w/mklibs.sh b/mswindows/osgeo4w/mklibs.sh
+index 00a597afa..dafc2e0fe 100755
+--- a/mswindows/osgeo4w/mklibs.sh
++++ b/mswindows/osgeo4w/mklibs.sh
+@@ -1,31 +1,24 @@
+ #!/bin/sh
+ 
+ set -e
++set -x
+ 
+-if [ -z "$OSGEO4W_POSTFIX" ]; then
+-    OSGEO4W_POSTFIX=""
+-fi
+-
+-if [ "$OSGEO4W_POSTFIX" != "64" ]; then
+-    MACHINE=x86
++if [ "$CI" ] ; then
++	DUMPBIN_PATH=$(cygpath -ua "C:/Program Files (x86)\Microsoft Visual Studio/2019/Enterprise/VC/Tools/MSVC/14.29.30133/bin/HostX64/x64/")
++	export PATH="${DUMPBIN_PATH}:$PATH"
++	# dumpbin in GH actions does not support options starting with "-"
++	DUMPBIN_EXPORT="/EXPORTS"
+ else
+-    MACHINE=x64
++	DUMPBIN_EXPORT="-exports"
+ fi
+ 
+-PROGRAMFILES="/c/Program Files (x86)"
+-VSDIR="$PROGRAMFILES/Microsoft Visual Studio 14.0"
+-# add example for MS Visual Studio 2017 Community 64 bit
+-# VSDIR="$PROGRAMFILES/Microsoft Visual Studio/2017/Community"
+-PATH="$VSDIR/Common7/IDE:$PATH"
+-PATH="$VSDIR/VC/bin:$PATH"
+-# add example for MS Visual Studio 2017 Community 64 bit
+-# PATH="$VSDIR/VC/Tools/MSVC/14.12.25827/bin/Hostx64/x64:$PATH"
+-PATH="$VSDIR/Common7/Tools:$PATH"
+-PATH="$PATH:/c/OSGeo4W${OSGEO4W_POSTFIX}/bin"
+-export PATH
+ 
+ [ -d mswindows/osgeo4w/vc ] || mkdir mswindows/osgeo4w/vc
+ 
++if [ -n "$VCPATH" ]; then
++	PATH=$PATH:$VCPATH
++fi
++
+ for dllfile in "$@"; do
+ 	dlldir=${dllfile%/*}
+ 	dllfile=${dllfile##*/}
+@@ -38,11 +31,12 @@ for dllfile in "$@"; do
+ 
+  	echo "$dllfile => $dllname"
+ 
+-	(cd $dlldir; dumpbin -exports $dllfile) |
++	(cd $dlldir; dumpbin "$DUMPBIN_EXPORT" $dllfile) |
+ 		sed -nf mswindows/osgeo4w/mklibs.sed |
+ 		egrep -v "^[	 ]*(_+IMPORT_DESCRIPTOR_.*|_+NULL_IMPORT_DESCRIPTOR)$" >mswindows/osgeo4w/vc/${defname%$VERSION}
+ 
+ 	(cd mswindows/osgeo4w/vc ;
+-	    lib -nologo -def:${defname} -subsystem:windows -machine:${MACHINE}
++	    lib -nologo -def:${defname} -subsystem:windows -machine:x64
+ 	    lib -nologo $libname || exit)
+ done
++
+diff --git a/mswindows/osgeo4w/package.sh b/mswindows/osgeo4w/package.sh
+index c49d57974..fc6cf6f23 100755
+--- a/mswindows/osgeo4w/package.sh
++++ b/mswindows/osgeo4w/package.sh
+@@ -1,7 +1,5 @@
+ #!/usr/bin/bash
+ 
+-# osgeo4w-setup -g -k -a x86_64 -q -P gdal -P proj -P geos -P fftw -P libjpeg -P liblas-devel -P libpng -P libpq -P libtiff -P libxdr -P pdcurses -P regex-devel -P sqlite3 -P zstd-devel -P zstd -P laszip2 -P python3-core -P python3-six
+-
+ set -e
+ 
+ PWD="$(pwd)"
+@@ -29,19 +27,8 @@ if [ -z $PACKAGE_POSTFIX ]; then
+     PACKAGE_POSTFIX=""
+ fi
+ 
+-# OSGeo4W directory postfix
+-# eg. '64' for 64bit, empty for 32bit
+-if [ -z $OSGEO4W_POSTFIX ]; then
+-    OSGEO4W_POSTFIX=""
+-fi
+-if [ "$OSGEO4W_POSTFIX" = "64" ]; then
+-    MINGW_POSTFIX=64
+-else
+-    MINGW_POSTFIX=32
+-fi
+-
+-export OSGEO4W_ROOT_MSYS="/c/OSGeo4W${OSGEO4W_POSTFIX}"
+-export OSGEO4W_ROOT=$(cygpath -w "$OSGEO4W_ROOT_MSYS")
++[ -n "$OSGEO4W_ROOT_MSYS" ]
++echo "OSGEO4W_ROOT_MSYS:$OSGEO4W_ROOT_MSYS OSGEO4W_ROOT:$OSGEO4W_ROOT"
+ 
+ fetchenv() {
+     local IFS
+@@ -53,22 +40,16 @@ fetchenv() {
+     diffenv=$(mktemp /tmp/diffenv.XXXXXXXXXX)
+     args="$@"
+     cmd.exe //c set >$srcenv
+-    cmd.exe //c "call `cygpath -w $batch` $args \>nul 2\>nul \& set" >$dstenv
++    cmd.exe //c "call `cygpath -sw $batch` $args \>nul 2\>nul \& set" >$dstenv
+     diff -u $srcenv $dstenv | sed -f mswindows/osgeo4w/envdiff.sed >$diffenv
+     . $diffenv
+-    PATH=$PATH:/usr/bin:/mingw${MINGW_POSTFIX}/bin/:$PWD/mswindows/osgeo4w/lib:$PWD/mswindows/osgeo4w:/c/windows32/system32:/c/windows:/c/windows32/system32:/c/windows
++    PATH=$PATH:/usr/bin:/mingw64/bin/:$PWD/mswindows/osgeo4w/lib:$PWD/mswindows/osgeo4w:/c/windows32/system32:/c/windows:/c/windows32/system32:/c/windows
+     rm -f $srcenv $dstenv $diffenv
+ }
+ 
+-# Avoid GRASS' old msys
+-! [ -f $OSGEO4W_ROOT_MSYS/etc/ini/msys.bat ] || mv $OSGEO4W_ROOT_MSYS/etc/ini/msys.bat $OSGEO4W_ROOT_MSYS/etc/ini/msys.bat.off
+-
+ fetchenv $OSGEO4W_ROOT_MSYS/bin/o4w_env.bat
+-fetchenv $OSGEO4W_ROOT_MSYS/bin/py3_env.bat
+-
+-! [ -f $OSGEO4W_ROOT_MSYS/etc/ini/msys.bat.off ] || mv $OSGEO4W_ROOT_MSYS/etc/ini/msys.bat.off $OSGEO4W_ROOT_MSYS/etc/ini/msys.bat
+ 
+-PATH=/mingw${MINGW_POSTFIX}/lib/ccache/bin:$PATH
++PATH=/mingw64/lib/ccache/bin:$PATH
+ 
+ T0=$(date +%s)
+ LT=$T0
+@@ -125,42 +106,30 @@ fi
+ 
+ exec 3>&1 > >(tee mswindows/osgeo4w/package.log) 2>&1
+ 
+-if [ "$MINGW_POSTFIX" = "64" ]; then
+-	mingw_libgcc=libgcc_s_seh-1.dll
+-else
+-	mingw_libgcc=libgcc_s_dw2-1.dll
+-fi
+-
+-DLLS="/mingw${MINGW_POSTFIX}/bin/zlib1.dll
+-	/mingw${MINGW_POSTFIX}/bin/libbz2-1.dll
+-	/mingw${MINGW_POSTFIX}/bin/libiconv-2.dll
+-	/mingw${MINGW_POSTFIX}/bin/libexpat-1.dll
+-	/mingw${MINGW_POSTFIX}/bin/libfontconfig-1.dll
+-	/mingw${MINGW_POSTFIX}/bin/libintl-8.dll
+-	/mingw${MINGW_POSTFIX}/bin/libsystre-0.dll
+-	/mingw${MINGW_POSTFIX}/bin/libtre-5.dll
+-	/mingw${MINGW_POSTFIX}/bin/libwinpthread-1.dll
+-	/mingw${MINGW_POSTFIX}/bin/libcairo-2.dll
+-	/mingw${MINGW_POSTFIX}/bin/libpixman-1-0.dll
+-	/mingw${MINGW_POSTFIX}/bin/libpng16-16.dll
+-	/mingw${MINGW_POSTFIX}/bin/libfreetype-6.dll
+-	/mingw${MINGW_POSTFIX}/bin/libharfbuzz-0.dll
+-	/mingw${MINGW_POSTFIX}/bin/libglib-2.0-0.dll
+-	/mingw${MINGW_POSTFIX}/bin/libgraphite2.dll
+-	/mingw${MINGW_POSTFIX}/bin/libpcre-1.dll
+-	/mingw${MINGW_POSTFIX}/bin/libstdc++-6.dll
+-	/mingw${MINGW_POSTFIX}/bin/$mingw_libgcc"
+-
+-if [ "$MINGW_POSTFIX" = "64" ]; then
+-	conf_host=x86_64-w64-mingw32
+-	# https://trac.osgeo.org/osgeo4w/ticket/550
+-	conf_opts="--with-liblas=$PWD/mswindows/osgeo4w/liblas-config"
+-else
+-	conf_host=i386-w64-mingw32
+-	# https://trac.osgeo.org/osgeo4w/ticket/539
+-	#  LAS support hopefully only temporarily disabled on 32bit
+-	conf_opts=
+-fi
++DLLS="
++	/mingw64/bin/zlib1.dll
++	/mingw64/bin/libbz2-1.dll
++	/mingw64/bin/libiconv-2.dll
++	/mingw64/bin/libexpat-1.dll
++	/mingw64/bin/libfontconfig-1.dll
++	/mingw64/bin/libbrotlidec.dll
++	/mingw64/bin/libbrotlicommon.dll
++	/mingw64/bin/libintl-8.dll
++	/mingw64/bin/libsystre-0.dll
++	/mingw64/bin/libtre-5.dll
++	/mingw64/bin/libwinpthread-1.dll
++	/mingw64/bin/libcairo-2.dll
++	/mingw64/bin/libpixman-1-0.dll
++	/mingw64/bin/libpng16-16.dll
++	/mingw64/bin/libfreetype-6.dll
++	/mingw64/bin/libharfbuzz-0.dll
++	/mingw64/bin/libglib-2.0-0.dll
++	/mingw64/bin/libgraphite2.dll
++	/mingw64/bin/libpcre-1.dll
++	/mingw64/bin/libstdc++-6.dll
++	/mingw64/bin/libgcc_s_seh-1.dll
++	/mingw64/bin/libfftw3-3.dll
++"
+ 
+ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
+ 	if [ -e include/Make/Platform.make ] ; then
+@@ -171,33 +140,33 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
+ 	log remove old logs
+ 	rm -f mswindows/osgeo4w/package.log.*
+ 
+-	mkdir -p dist.$conf_host/bin
+-	cp -uv $DLLS dist.$conf_host/bin
++	mkdir -p dist.x86_64-w64-mingw32/bin
++	cp -uv $DLLS dist.x86_64-w64-mingw32/bin
+ 
+ 	mkdir -p mswindows/osgeo4w/lib
+ 	cp -uv $OSGEO4W_ROOT_MSYS/lib/libpq.lib mswindows/osgeo4w/lib/pq.lib
+-	cp -uv $OSGEO4W_ROOT_MSYS/lib/proj_i.lib mswindows/osgeo4w/lib/proj.lib
+ 	cp -uv $OSGEO4W_ROOT_MSYS/lib/sqlite3_i.lib mswindows/osgeo4w/lib/sqlite3.lib
+ 
+ 	log configure
+ 	./configure \
+-	        --host=$conf_host \
+-		--with-libs="$OSGEO4W_ROOT/lib" \
++		--host=x86_64-w64-mingw32 \
++		--with-libs="$OSGEO4W_ROOT_MSYS/lib" \
+ 		--with-includes=$OSGEO4W_ROOT_MSYS/include \
+-                --libexecdir=$OSGEO4W_ROOT_MSYS/bin \
+-                --prefix=$OSGEO4W_ROOT_MSYS/apps/grass \
+-                --bindir=$OSGEO4W_ROOT_MSYS/bin \
+-                --includedir=$OSGEO4W_ROOT_MSYS/include \
++		--libexecdir=$OSGEO4W_ROOT_MSYS/bin \
++		--prefix=$OSGEO4W_ROOT_MSYS/apps/grass \
++		--bindir=$OSGEO4W_ROOT_MSYS/bin \
++		--includedir=$OSGEO4W_ROOT_MSYS/include \
+ 		--without-x \
++	    --with-opengl=windows \
+ 		--with-cxx \
+ 		--enable-shared \
+ 		--enable-largefile \
+ 		--with-fftw \
+ 		--with-freetype \
+-		--with-freetype-includes=/mingw${MINGW_POSTFIX}/include/freetype2 \
++		--with-freetype-includes=/mingw64/include/freetype2 \
+ 		--with-proj-share=$OSGEO4W_ROOT_MSYS/share/proj \
+ 		--with-proj-includes=$OSGEO4W_ROOT_MSYS/include \
+-		--with-proj-libs=$PWD/mswindows/osgeo4w/lib \
++		--with-proj-libs=$OSGEO4W_ROOT_MSYS/lib \
+ 		--with-postgres \
+ 		--with-postgres-includes=$OSGEO4W_ROOT_MSYS/include \
+ 		--with-postgres-libs=$PWD/mswindows/osgeo4w/lib \
+@@ -206,15 +175,18 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
+ 		--with-sqlite \
+ 		--with-sqlite-includes=$OSGEO4W_ROOT_MSYS/include \
+ 		--with-sqlite-libs=$PWD/mswindows/osgeo4w/lib \
+-		--with-regex \
+ 		--with-nls \
+ 		--with-zstd \
+ 		--with-odbc \
+-	        --with-cairo \
+-	        --with-opengl=windows \
+-                --with-bzlib $conf_opts
+-# see #3047
+-#	        --with-mysql
++		--with-netcdf=${OSGEO4W_ROOT_MSYS}/bin/nc-config \
++		--with-blas \
++		--with-lapack-includes=/mingw64/include/lapack \
++		--with-openmp \
++		--with-wxwidgets \
++	    --with-cairo \
++		--with-cairo-includes=$OSGEO4W_ROOT_MSYS/include \
++		--with-cairo-ldflags="-L$PWD/mswindows/osgeo4w/lib -lcairo -lfontconfig" \
++		--with-bzlib
+ 
+ 	touch mswindows/osgeo4w/configure-stamp
+ fi
+@@ -234,6 +206,8 @@ mv $OSGEO4W_ROOT_MSYS/apps/grass/grass$POSTFIX/include/grass/config.h \
+    $OSGEO4W_ROOT_MSYS/apps/grass/grass$POSTFIX/include/grass/config.h.mingw
+ cp mswindows/osgeo4w/config.h.switch $OSGEO4W_ROOT_MSYS/apps/grass/grass$POSTFIX/include/grass/config.h
+ cp mswindows/osgeo4w/config.h.vc $OSGEO4W_ROOT_MSYS/apps/grass/grass$POSTFIX/include/grass
++mv $OSGEO4W_ROOT_MSYS/apps/grass/grass$POSTFIX/etc/grass.py $OSGEO4W_ROOT_MSYS/apps/grass/grass$POSTFIX/etc/grass${POSTFIX}.py
++
+ mkdir -p $OSGEO4W_ROOT_MSYS/etc/preremove $OSGEO4W_ROOT_MSYS/etc/postinstall
+ sed -e "s#@POSTFIX@#$POSTFIX#g" \
+     mswindows/osgeo4w/grass.bat.tmpl >$OSGEO4W_ROOT_MSYS/bin/${GRASS_EXECUTABLE}.bat
+@@ -248,8 +222,7 @@ sed -e "s#@POSTFIX@#$POSTFIX#g" -e "s#@VERSION@#$VERSION#g" -e "s#@GRASS_EXECUTA
+ 
+ if [ -n "$PACKAGE_PATCH" ]; then
+     log building vc libraries
+-    OSGEO4W_POSTFIX=$OSGEO4W_POSTFIX sh \
+-        mswindows/osgeo4w/mklibs.sh $OSGEO4W_ROOT_MSYS/apps/grass/grass$POSTFIX/lib/*.${MAJOR}.${MINOR}.dll
++    sh mswindows/osgeo4w/mklibs.sh $OSGEO4W_ROOT_MSYS/apps/grass/grass$POSTFIX/lib/*.${MAJOR}.${MINOR}.dll
+     mv mswindows/osgeo4w/vc/grass*.lib $OSGEO4W_ROOT_MSYS/apps/grass/grass$POSTFIX/lib
+ 
+     log creating package
+@@ -265,19 +238,26 @@ if [ -n "$PACKAGE_PATCH" ]; then
+     unix2dos etc/postinstall/grass${PACKAGE_POSTFIX}.bat
+     unix2dos etc/preremove/grass${PACKAGE_POSTFIX}.bat
+ 
++    blas_dll=../msys64/mingw64/bin/libblas.dll
++    lapack_dll=../msys64/mingw64/bin/liblapack.dll
++    lapack_gcc=../msys64/mingw64/bin/libgcc_s_dw2-1.dll
+     # copy dependencies (TODO: to be reduced)
+     cp -uv $DLLS apps/grass/grass$POSTFIX/bin
+-    cp -uv /mingw${MINGW_POSTFIX}/etc/fonts/fonts.conf \
+-	apps/grass/grass$POSTFIX/etc
++    if [ -f "$blas_dll" ] ; then echo "Copying libblas.dll"; fi
++    if [ -f "$blas_dll" ] ; then cp -uv "$blas_dll" apps/grass/grass$POSTFIX/bin/ ; fi
++
++    if [ -f "$lapack_dll" ] ; then echo "Copying liblapack.dll"; fi
++    if [ -f "$lapack_dll" ] ; then cp -uv "$lapack_dll" apps/grass/grass$POSTFIX/bin/ ; fi
++    if [ -f "$lapack_gcc" ] ; then cp -uv "$lapack_gcc" apps/grass/grass$POSTFIX/bin/ ; fi
++    cp -uv /mingw64/etc/fonts/fonts.conf apps/grass/grass$POSTFIX/etc
+ 
+     # creating grass package
+     /bin/tar -cjf $PDIR/grass$PACKAGE_POSTFIX-$VERSION-$PACKAGE_PATCH.tar.bz2 \
+-	apps/grass/grass$POSTFIX \
+-	bin/${GRASS_EXECUTABLE}.bat \
+-	bin/python-${GRASS_EXECUTABLE}.bat \
+-	etc/postinstall/grass${PACKAGE_POSTFIX}.bat \
+-	etc/preremove/grass${PACKAGE_POSTFIX}.bat
+-
++    apps/grass/grass$POSTFIX \
++    bin/${GRASS_EXECUTABLE}.bat \
++    bin/python-${GRASS_EXECUTABLE}.bat \
++    etc/postinstall/grass${PACKAGE_POSTFIX}.bat \
++    etc/preremove/grass${PACKAGE_POSTFIX}.bat
+ fi
+ 
+ log
+diff --git a/mswindows/osgeo4w/postinstall.bat b/mswindows/osgeo4w/postinstall.bat
+index 0efcf3477..e9f75cecf 100644
+--- a/mswindows/osgeo4w/postinstall.bat
++++ b/mswindows/osgeo4w/postinstall.bat
+@@ -1,27 +1,29 @@
+-set ICON=%OSGEO4W_ROOT%\apps\grass\grass@POSTFIX@\gui\icons\grass_osgeo.ico
+-set BATCH=%OSGEO4W_ROOT%\bin\@GRASS_EXECUTABLE@.bat
+-textreplace -std -t "%BATCH%"
+-textreplace -std -t "%OSGEO4W_ROOT%"\apps\grass\grass@POSTFIX@\etc\fontcap
+-
+-if not %OSGEO4W_MENU_LINKS%==0 xxmklink "%OSGEO4W_STARTMENU%\GRASS GIS @VERSION@.lnk" "%BATCH%"  "--gui" \ "Launch GRASS GIS @VERSION@" 1 "%ICON%" 
+-if not %OSGEO4W_DESKTOP_LINKS%==0 xxmklink "%OSGEO4W_DESKTOP%\GRASS GIS @VERSION@.lnk" "%BATCH%"  "--gui" \ "Launch GRASS GIS @VERSION@" 1 "%ICON%" 
+-
+-rem run g.mkfontcap outside a GRASS session during
+-rem an OSGeo4W installation for updating paths to fonts
+-
+-rem set gisbase
+-set GISBASE=%OSGEO4W_ROOT%\apps\grass\grass@POSTFIX@
+-
+-rem set path to freetype dll and its dependencies
+-set FREETYPEBASE=%OSGEO4W_ROOT%\bin;%OSGEO4W_ROOT%\apps\msys\bin;%GISBASE%\lib
+-
+-rem set dependencies to path
+-set PATH=%FREETYPEBASE%;%PATH%
+-
+-rem GISRC must be set
+-set GISRC=dummy
+-
+-rem run g.mkfontcap outside a GRASS session
+-"%GISBASE%\bin\g.mkfontcap.exe" -o
+-
+-del "%BATCH%.tmpl
++set ICON=%OSGEO4W_ROOT%\apps\grass\grass@POSTFIX@\gui\icons\grass_osgeo.ico
++set BATCH=%OSGEO4W_ROOT%\bin\@GRASS_EXECUTABLE@.bat
++textreplace -std -t "%BATCH%"
++textreplace -std -t "%OSGEO4W_ROOT%\apps\grass\grass@POSTFIX@\etc\fontcap"
++
++for /F "tokens=* USEBACKQ" %%F IN (`getspecialfolder Documents`) do set DOCUMENTS=%%F
++
++if not %OSGEO4W_MENU_LINKS%==0 xxmklink "%OSGEO4W_STARTMENU%\GRASS GIS @VERSION@.lnk" "%BATCH%"  "--gui" "%DOCUMENTS%" "Launch GRASS GIS @VERSION@" 1 "%ICON%" 
++if not %OSGEO4W_DESKTOP_LINKS%==0 xxmklink "%OSGEO4W_DESKTOP%\GRASS GIS @VERSION@.lnk" "%BATCH%"  "--gui" "%DOCUMENTS%" "Launch GRASS GIS @VERSION@" 1 "%ICON%" 
++
++rem run g.mkfontcap outside a GRASS session during
++rem an OSGeo4W installation for updating paths to fonts
++
++rem set gisbase
++set GISBASE=%OSGEO4W_ROOT%\apps\grass\grass@POSTFIX@
++
++rem set path to freetype dll and its dependencies
++set FREETYPEBASE=%OSGEO4W_ROOT%\bin;%OSGEO4W_ROOT%\apps\msys\bin;%GISBASE%\lib
++
++rem set dependencies to path
++set PATH=%FREETYPEBASE%;%PATH%
++
++rem GISRC must be set
++set GISRC=dummy
++
++rem run g.mkfontcap outside a GRASS session
++"%GISBASE%\bin\g.mkfontcap.exe" -o
++
++del "%BATCH%.tmpl
