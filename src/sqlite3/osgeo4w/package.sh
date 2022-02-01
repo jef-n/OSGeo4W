@@ -4,7 +4,6 @@ export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
 
-
 IFS=. read major minor patch < <(echo $V)
 
 export BASE=$(printf "sqlite-amalgamation-%d%02d%02d00" $major $minor $patch)
@@ -72,8 +71,8 @@ uncontaminated with licensed code from other projects.
 EOF
 
 
-mkdir -p build
-cd build
+mkdir -p build-$V
+cd build-$V
 
 nmake /f ..\\makefile.vc INSTDIR=../install SRC=../../$BASE clean all install
 
@@ -83,6 +82,6 @@ tar -C install -cjf $R/$P-$V-$B.tar.bz2 bin
 
 tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 include lib
 
-tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/makefile.vc osgeo4w/nmake.opt
+tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/makefile.vc osgeo4w/nmake.opt osgeo4w/always.h
 
 endlog
