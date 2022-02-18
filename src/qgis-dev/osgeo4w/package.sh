@@ -2,7 +2,7 @@ export P=qgis-dev
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-devel grass8 qt5-oci qt5-oci-debug sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt5 python3-sip python3-pyqt-builder python3-devel python3-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-devel qscintilla-devel qt5-devel qwt-devel libspatialite-devel oci-devel qtkeychain-devel zlib-devel opencl-devel exiv2-devel protobuf-devel pdal pdal-devel python3-setuptools zstd-devel oci-devel qtwebkit-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel python3-pyqt-builder"
+export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-devel qt5-oci qt5-oci-debug sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt5 python3-sip python3-pyqt-builder python3-devel python3-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-devel qscintilla-devel qt5-devel qwt-devel libspatialite-devel oci-devel qtkeychain-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel oci-devel qtwebkit-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel python3-pyqt-builder pdal pdal-devel grass8"
 
 : ${SITE:=qgis.org}
 : ${TARGET:=Nightly}
@@ -30,7 +30,7 @@ if [ -d qgis ]; then
 	git clean -f
 	git reset --hard
 
-	git config pull.ff only
+	git config pull.rebase false
 	git pull
 else
 	git clone $REPO --branch master --single-branch qgis
@@ -146,12 +146,15 @@ nextbinary
 		-D CMAKE_BUILD_TYPE=$BUILDCONF \
 		-D CMAKE_CONFIGURATION_TYPES="$BUILDCONF" \
 		-D SETUPAPI_LIBRARY="$SETUPAPI_LIBRARY" \
+		-D PROJ_INCLUDE_DIR=$(cygpath -am $O4W_ROOT/include) \
 		-D GEOS_LIBRARY=$(cygpath -am "$O4W_ROOT/lib/geos_c.lib") \
 		-D SQLITE3_LIBRARY=$(cygpath -am "$O4W_ROOT/lib/sqlite3_i.lib") \
 		-D SPATIALITE_LIBRARY=$(cygpath -am "$O4W_ROOT/lib/spatialite_i.lib") \
 		-D SPATIALINDEX_LIBRARY=$(cygpath -am $O4W_ROOT/lib/spatialindex-64.lib) \
 		-D Python_EXECUTABLE=$(cygpath -am $O4W_ROOT/bin/python3.exe) \
 		-D SIP_MODULE_EXECUTABLE=$(cygpath -am $PYTHONHOME/Scripts/sip-module.exe) \
+		-D PYUIC_PROGRAM=$(cygpath -am $PYTHONHOME/Scripts/pyuic5.exe) \
+		-D PYRCC_PROGRAM=$(cygpath -am $PYTHONHOME/Scripts/pyrcc5.exe) \
 		-D PYTHON_INCLUDE_PATH=$(cygpath -am $PYTHONHOME/include) \
 		-D PYTHON_LIBRARY=$(cygpath -am $PYTHONHOME/libs/$(basename $PYTHONHOME).lib) \
 		-D QT_LIBRARY_DIR=$(cygpath -am $O4W_ROOT/lib) \
@@ -226,8 +229,10 @@ nextbinary
 
 	v=$MAJOR.$MINOR.$PATCH
 
-	sagadef=$(sed -rne "s/^REQUIRED_VERSION *= *('.*')$/\\1/p" install/apps/$P/python/plugins/sagaprovider/SagaAlgorithmProvider.py)
-	sed -e "s/^REQUIRED_VERSION *= *'.*'$/REQUIRED_VERSION = @saga@/" install/apps/$P/python/plugins/sagaprovider/SagaAlgorithmProvider.py >install/apps/$P/python/plugins/sagaprovider/SagaAlgorithmProvider.py.tmpl
+	SA=python/plugins/sagaprovider
+	SAP=$SA/SagaAlgorithmProvider.py
+	sagadef=$(sed -rne "s/^REQUIRED_VERSION *= *('.*')$/\\1/p" install/apps/$P/$SAP)
+	sed -e "s/^REQUIRED_VERSION *= *'.*'$/REQUIRED_VERSION = @saga@/" install/apps/$P/$SAP >install/apps/$P/$SAP.tmpl
 
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       qgis.reg.tmpl    >install/bin/qgis.reg.tmpl
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                postinstall.bat  >install/etc/postinstall/$P.bat
@@ -236,7 +241,37 @@ nextbinary
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       designer.bat     >install/bin/$P-designer.bat
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       process.bat      >install/bin/qgis_process-$P.bat
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       python.bat       >install/bin/python-$P.bat
-	sed -e "s/@package@/$P/g" -e "s/@sagadef@/$sagadef/g"                                                                                 saga-refresh.bat >install/apps/$P/saga-refresh.bat
+
+	cat <<EOF >install/apps/$P/saga-refresh.bat
+setlocal enabledelayedexpansion
+
+set SAGA_VER=$sagadef
+
+if exist "%OSGEO4W_ROOT%\\apps\\saga\\tools\\dev_tools.dll" (
+	if not exist "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\description.dist" (
+		ren "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\description" description.dist
+		ren "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\SagaNameDecorator.py" SagaNameDecorator.py.dist
+	)
+
+	"%OSGEO4W_ROOT%\\apps\\saga\\saga_cmd" dev_tools 7 -DIRECTORY "%OSGEO4W_ROOT%\\apps\\$P\\$SA" -CLEAR 0
+	for /f "tokens=3 usebackq" %%a in (`"%OSGEO4W_ROOT%\\apps\\saga\\saga_cmd" -v`) do set v=%%a
+	for /f "tokens=1,2 delims=." %%a in ("!v!") do set SAGA_VER='%%a.%%b.'
+	del "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\readme.txt"
+) else if exist "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\description.dist" (
+	rmdir /s /q "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\description"
+	del "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\SagaNameDecorator.py"
+
+	ren "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\description.dist" description
+	ren "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\SagaNameDecorator.py.dist" SagaNameDecorator.py.dist
+)
+
+textreplace ^
+	-sf "%OSGEO4W_ROOT%\\apps\\$P\\$SAP.tmpl" ^
+	-df "%OSGEO4W_ROOT%\\apps\\$P\\$SAP" ^
+	-map @saga@ "%SAGA_VER%"
+
+endlocal
+EOF
 
 	cp "$DBGHLP_PATH"/{dbghelp.dll,symsrv.dll} install/apps/$P
 
@@ -250,7 +285,7 @@ nextbinary
 	/bin/tar -cjf $R/$P-$V-$B.tar.bz2 \
 		--exclude-from exclude \
 		--exclude "*.pyc" \
-		--exclude "install/apps/$P/python/plugins/sagaprovider/SagaAlgorithmProvider.py" \
+		--exclude "install/apps/$P/$SAP" \
 		--xform "s,^qgis.vars,bin/$P-bin.vars," \
 		--xform "s,^osgeo4w/apps/qt5/plugins/,apps/$P/qtplugins/," \
 		--xform "s,^install/apps/$P/bin/qgis.exe,bin/$P-bin.exe," \
@@ -316,14 +351,14 @@ EOF
 	/bin/tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 \
 		osgeo4w/package.sh \
 		osgeo4w/msvc-env.bat \
-		osgeo4w/postinstall.bat \
-		osgeo4w/preremove.bat \
 		osgeo4w/process.bat \
 		osgeo4w/designer.bat \
 		osgeo4w/python.bat \
 		osgeo4w/qgis.bat \
+		osgeo4w/qgis.vars \
 		osgeo4w/qgis.reg.tmpl \
-		osgeo4w/qgis.vars
+		osgeo4w/postinstall.bat \
+		osgeo4w/preremove.bat
 )
 
 endlog

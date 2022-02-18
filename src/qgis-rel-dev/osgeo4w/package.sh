@@ -2,7 +2,7 @@ export P=qgis-rel-dev
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-devel grass qt5-oci qt5-oci-debug sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt5 python3-sip python3-pyqt-builder python3-devel python3-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-devel qscintilla-devel qt5-devel qwt-devel libspatialite-devel oci-devel qtkeychain-devel zlib-devel opencl-devel exiv2-devel protobuf-devel pdal pdal-devel python3-setuptools zstd-devel oci-devel qtwebkit-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel"
+export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-devel qt5-oci qt5-oci-debug sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt5 python3-sip python3-pyqt-builder python3-devel python3-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-devel qscintilla-devel qt5-devel qwt-devel libspatialite-devel oci-devel qtkeychain-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel oci-devel qtwebkit-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel python3-pyqt-builder pdal pdal-devel grass"
 
 : ${SITE:=qgis.org}
 : ${TARGET:=Nightly}
@@ -42,10 +42,14 @@ if [ -d qgis ]; then
 	git reset --hard
 
 	if [ "$(git branch --show-current)" != $RELBRANCH ]; then
-		git checkout $RELBRANCH || git switch $RELBRANCH
+		if ! git checkout $RELBRANCH; then
+			git remote set-branches --add origin $RELBRANCH
+			git fetch origin $LTRBRANCH:$RELBRANCH
+			git checkout $RELBRANCH
+		fi
 	fi
 
-	git config pull.ff only
+	git config pull.rebase false
 	git pull
 else
 	git clone $REPO --branch $RELBRANCH --single-branch --depth 1 qgis
@@ -127,11 +131,11 @@ nextbinary
 
 	fetchenv msvc-env.bat
 
-	[ -f "$GRASS7" ]
+	[ -f "$GRASS" ]
 	[ -d "$GRASS_PREFIX" ]
 	[ -d "$DBGHLP_PATH" ]
 
-	export GRASS_VERSION=$(cmd /c $GRASS7 --config version | sed -e "s/\r//")
+	export GRASS_VERSION=$(cmd /c $GRASS --config version | sed -e "s/\r//")
 
 	cd $BUILDDIR
 
@@ -153,22 +157,26 @@ nextbinary
 		-D WITH_QSPATIALITE=TRUE \
 		-D WITH_SERVER=TRUE \
 		-D SERVER_SKIP_ECW=TRUE \
-		-D WITH_GRASS=TRUE \
 		-D WITH_3D=TRUE \
-		-D WITH_GRASS7=TRUE \
 		-D WITH_PDAL=TRUE \
 		-D WITH_HANA=TRUE \
+		-D WITH_GRASS=TRUE \
+		-D WITH_GRASS7=TRUE \
 		-D GRASS_PREFIX7="$(cygpath -m $GRASS_PREFIX)" \
 		-D WITH_ORACLE=TRUE \
 		-D WITH_CUSTOM_WIDGETS=TRUE \
 		-D CMAKE_BUILD_TYPE=$BUILDCONF \
 		-D CMAKE_CONFIGURATION_TYPES="$BUILDCONF" \
 		-D SETUPAPI_LIBRARY="$SETUPAPI_LIBRARY" \
+		-D PROJ_INCLUDE_DIR=$(cygpath -am $O4W_ROOT/include) \
 		-D GEOS_LIBRARY=$(cygpath -am "$O4W_ROOT/lib/geos_c.lib") \
 		-D SQLITE3_LIBRARY=$(cygpath -am "$O4W_ROOT/lib/sqlite3_i.lib") \
 		-D SPATIALITE_LIBRARY=$(cygpath -am "$O4W_ROOT/lib/spatialite_i.lib") \
 		-D SPATIALINDEX_LIBRARY=$(cygpath -am $O4W_ROOT/lib/spatialindex-64.lib) \
 		-D Python_EXECUTABLE=$(cygpath -am $O4W_ROOT/bin/python3.exe) \
+		-D SIP_MODULE_EXECUTABLE=$(cygpath -am $PYTHONHOME/Scripts/sip-module.exe) \
+		-D PYUIC_PROGRAM=$(cygpath -am $PYTHONHOME/Scripts/pyuic5.exe) \
+		-D PYRCC_PROGRAM=$(cygpath -am $PYTHONHOME/Scripts/pyrcc5.exe) \
 		-D PYTHON_INCLUDE_PATH=$(cygpath -am $PYTHONHOME/include) \
 		-D PYTHON_LIBRARY=$(cygpath -am $PYTHONHOME/libs/$(basename $PYTHONHOME).lib) \
 		-D QT_LIBRARY_DIR=$(cygpath -am $O4W_ROOT/lib) \
@@ -213,8 +221,8 @@ nextbinary
 		rm -rf "$TEMP"
 		mkdir -p $TEMP
 
-		export PATH="$PATH:$(cygpath -au $O4W_ROOT/apps/grass/$GRASS7_VERSION/lib)"
-		export GISBASE=$(cygpath -aw $O4W_ROOT/apps/grass/$GRASS7_VERSION)
+		export PATH="$PATH:$(cygpath -au $GRASS_PREFIX/lib)"
+		export GISBASE=$(cygpath -aw $GRASS_PREFIX)
 
 		export PATH=$PATH:$(cygpath -au $BUILDDIR/output/plugins)
 		export QT_PLUGIN_PATH="$(cygpath -au $BUILDDIR/output/plugins);$(cygpath -au $O4W_ROOT/apps/qt5/plugins)"
@@ -364,16 +372,16 @@ EOF
 
 	/bin/tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 \
 		osgeo4w/package.sh \
-		osgeo4w/patch \
 		osgeo4w/msvc-env.bat \
-		osgeo4w/postinstall.bat \
-		osgeo4w/preremove.bat \
 		osgeo4w/process.bat \
 		osgeo4w/designer.bat \
 		osgeo4w/python.bat \
 		osgeo4w/qgis.bat \
+		osgeo4w/qgis.vars \
 		osgeo4w/qgis.reg.tmpl \
-		osgeo4w/qgis.vars
+		osgeo4w/postinstall.bat \
+		osgeo4w/preremove.bat \
+		osgeo4w/patch
 )
 
 endlog
