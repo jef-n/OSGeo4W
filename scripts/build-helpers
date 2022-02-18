@@ -84,7 +84,13 @@ endlog() {
 declare -x endlog
 
 faillog() {
-	log "FAILED: $?"
+	log "FAILED: $? AT $LINENO:"
+
+	i=0
+	while caller $i; do
+		(( i++ )) || true
+	done
+
 	finishlog
 	return 1
 }
@@ -99,31 +105,29 @@ declare -x finishlog
 # run a configuration batch file and source environment changes
 #
 fetchenv() {
-        local IFS
-        IFS=
-        batch=$1
-        shift
+	local IFS
+	IFS=
+	local batch=$1
+	shift
 
-        if ! [ -f "$batch" ]; then
-                echo "$batch not found"
-                return 1
-        fi
+	if ! [ -f "$batch" ]; then
+		echo "$batch not found"
+		return 1
+	fi
 
-        srcenv=$(mktemp /tmp/srcenv.XXXXXXXXXX)
-        dstenv=$(mktemp /tmp/dstenv.XXXXXXXXXX)
-        diffenv=$(mktemp /tmp/diffenv.XXXXXXXXXX)
-        envdiff=$(mktemp /tmp/envdiff.XXXXXXXXXX)
-        cmd /c set >$srcenv
-        cmd /c call $(cygpath -w $batch) "$@" \>nul 2\>nul \& set >$dstenv
-        cat <<EOF >$envdiff
+	local d=$(mktemp -d /tmp/fetchenv.XXXXXXXXXX)
+	cmd /c set >$d/srcenv || true
+	cmd /c call $(cygpath -w $batch) "$@" \>$(cygpath -w $d/envout) 2\>\&1 \& set >$d/dstenv || true
+	sleep 2
+	cat <<EOF >$d/envdiff
 /^+++/d;
 /^[^+]/d;
 s/^+//;
 # s/\\\\/\\\\\\\\/g;
 /^PATH=/ {
-        s/\\\\/\\//g;
-        s#\\([=;]\\)\\([a-zA-Z]\\):#\\1/cygdrive/\\2#g;
-        s/;/:/g;
+	s/\\\\/\\//g;
+	s#\\([=;]\\)\\([a-zA-Z]\\):#\\1/cygdrive/\\2#g;
+	s/;/:/g;
 }
 s/;/\\\\;/g;
 s/^/export /;
@@ -131,10 +135,10 @@ s/=/='/;
 s/\\\\r//g;
 s/\r$/'/;
 EOF
-        diff -u $srcenv $dstenv | sed -f $envdiff >$diffenv
-        . $diffenv
-        PATH=$PATH:/bin:/usr/bin:$(cygpath --sysdir):$(cygpath --windir)
-        rm -f $srcenv $dstenv $diffenv $envdiff
+	diff -u $d/srcenv $d/dstenv | sed -f $d/envdiff >$d/diffenv
+	. $d/diffenv
+	PATH=$PATH:/bin:/usr/bin:$(cygpath --sysdir):$(cygpath --windir)
+	rm -fr $d
 }
 declare -x fetchenv
 
@@ -257,7 +261,7 @@ fetchdeps() {
 	cmd="$OSGEO4W_SCRIPTS/osgeo4w-setup.exe"
 	cmd="$cmd --root $(cygpath -am $OSGEO4W_PWD/osgeo4w)"
 	cmd="$cmd --autoaccept"
-	cmd="$cmd --advanced"
+	# cmd="$cmd --advanced"
 	cmd="$cmd --arch x86_64"
 	[ -n "$OSGEO4W_INTERACTIVE" ] || cmd="$cmd --quiet-mode"
 	cmd="$cmd --upgrade-also"
@@ -436,7 +440,7 @@ packagewheel() {
 		fetchenv osgeo4w/bin/o4w_env.bat
 		vs2019env
 
-		python -m pip install pywin32
+		python3 -m pip install pywin32
 
 		export PIP_LOG=$(cygpath -am pip.log)
 		savelog $PIP_LOG
@@ -454,7 +458,7 @@ packagewheel() {
 
 		OSGEO4W_REP=$(cygpath -m "$OSGEO4W_REP") \
 		OSGEO4W_ROOT=$(cygpath -aw "$OSGEO4W_ROOT") \
-		python $(cygpath -am $OSGEO4W_SCRIPTS/pippkg.py) "$@"
+		python3 $(cygpath -am $OSGEO4W_SCRIPTS/pippkg.py) "$@"
 	)
 
 	! [ -f $OSGEO4W_PWD/pipped.env ] || source $OSGEO4W_PWD/pipped.env
