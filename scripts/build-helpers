@@ -117,7 +117,7 @@ fetchenv() {
 
 	local d=$(mktemp -d /tmp/fetchenv.XXXXXXXXXX)
 	cmd /c set >$d/srcenv || true
-	cmd /c call $(cygpath -w $batch) "$@" \>$(cygpath -w $d/envout) 2\>\&1 \& set >$d/dstenv || true
+	cmd /c call $(cygpath -w $batch) "$@" \>nul 2\>\&1 \& set >$d/dstenv || true
 	sleep 2
 	cat <<EOF >$d/envdiff
 /^+++/d;
@@ -138,7 +138,7 @@ EOF
 	diff -u $d/srcenv $d/dstenv | sed -f $d/envdiff >$d/diffenv
 	. $d/diffenv
 	PATH=$PATH:/bin:/usr/bin:$(cygpath --sysdir):$(cygpath --windir)
-	rm -fr $d
+	rm -fr $d || true
 }
 declare -x fetchenv
 
