@@ -40,8 +40,8 @@ else
 	cd qgis
 fi
 
-patch -p1 --dry-run <../osgeo4w/patch
-patch -p1 <../osgeo4w/patch
+git apply --check ../osgeo4w/patch
+git apply ../osgeo4w/patch
 
 SHA=$(git log -n1 --pretty=%h)
 
