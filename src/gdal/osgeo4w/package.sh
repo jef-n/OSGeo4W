@@ -217,7 +217,7 @@ sdesc: "The GDAL/OGR $V runtime library"
 ldesc: "The GDAL/OGR $V runtime library"
 maintainer: $MAINTAINER
 category: Libs Commandline_Utilities
-requires: msvcrt2019 libpng curl geos libmysql sqlite3 netcdf libpq expat xerces-c hdf4 ogdi libiconv openjpeg libspatialite freexl xz zstd poppler msodbcsql $RUNTIMEDEPENDS
+requires: msvcrt2019 libpng curl geos libmysql sqlite3 netcdf libpq expat xerces-c hdf4 ogdi libiconv openjpeg libspatialite freexl xz zstd poppler msodbcsql libjpeg libjpeg12 $RUNTIMEDEPENDS
 external-source: $P
 EOF
 
@@ -229,7 +229,6 @@ category: Libs Commandline_Utilities
 requires: $P$abi-runtime
 external-source: $P
 EOF
-# libjpeg libjpeg12
 
 cat <<EOF >$R/python3-$P/setup.hint
 sdesc: "The GDAL/OGR Python3 Bindings and Scripts"
