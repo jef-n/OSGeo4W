@@ -62,17 +62,14 @@ availablepackageversions $P
 
 V=$MAJOR.$MINOR.$PATCH
 
-build=1
 if [ -n "$version_curr" ]; then
-	v=$version_curr
-	version=${v%%-*}
-	v=${v#*-}
+	build=$binary_curr
 
-	build=${v%%-*}
-
-	if [ "$V" = "$version" ]; then
+	if [ "$V" = "$version_curr" ]; then
 		(( build++ )) || true
 	fi
+else
+	build=1
 fi
 
 nextbinary
