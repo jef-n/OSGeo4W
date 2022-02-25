@@ -1,5 +1,5 @@
 export P=grass8
-export V=8.0.0
+export V=8.0.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="gdal-devel proj-devel geos-devel netcdf-devel libjpeg-devel libpng-devel libpq-devel libtiff-devel sqlite3-devel zstd-devel python3-ply python3-core python3-six python3-pywin32 python3-wxpython wxwidgets-devel liblas-devel"
@@ -77,7 +77,7 @@ msysarch=msys2-base-x86_64-20210604.tar.xz
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R
 
-cp ../grass-$V/mswindows/osgeo4w/package/grass-$V-1.tar.bz2 $R/$P-$V-$B.tar.bz2
+cp ../grass-$V/mswindows/osgeo4w/package/$P-$V-1.tar.bz2 $R/$P-$V-$B.tar.bz2
 cp ../grass-$V/COPYING $R/$P-$V-$B.txt
 
 cat <<EOF >$R/setup.hint
