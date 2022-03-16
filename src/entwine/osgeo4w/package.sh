@@ -1,5 +1,5 @@
 export P=entwine
-export V=2.1.0
+export V=2.2.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="curl-devel openssl-devel pdal-devel python3-core"
@@ -28,9 +28,10 @@ cmake -Wno-dev -G Ninja \
 	-D BUILD_SHARED_LIBS=ON \
 	-D PYTHON_EXECUTABLE=$(cygpath -am ../osgeo4w/bin/python3.exe) \
 	-D CMAKE_CXX_FLAGS=/D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING \
+	-D WITH_TESTS=OFF \
 	../../$P-$V
-ninja
-ninja install
+cmake --build .
+cmake --build . --target install
 
 cd ..
 

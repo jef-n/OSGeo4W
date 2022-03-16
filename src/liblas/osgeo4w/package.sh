@@ -10,11 +10,6 @@ startlog
 
 [ -f libLAS-$V.tar.bz2 ] || wget http://download.osgeo.org/$P/libLAS-$V.tar.bz2
 [ -f ../libLAS-$V/CMakeLists.txt ] || tar -C .. -xjf  libLAS-$V.tar.bz2
-[ -f ../libLAS-$V/patched ] || {
-	patch -p1 -d ../libLAS-$V --dry-run <patch
-	patch -p1 -d ../libLAS-$V <patch
-	touch ../libLAS-$V/patched
-}
 
 (
 	fetchenv osgeo4w/bin/o4w_env.bat
@@ -32,8 +27,8 @@ startlog
 		-D BUILD_OSGEO4W=OFF \
 		-D JPEG_LIBRARY=$(cygpath -am ../osgeo4w/lib/jpeg_i.lib) \
 		../../libLAS-$V
-	ninja
-	ninja install
+	cmake --build .
+	cmake --build . --target install
 )
 
 export R=$OSGEO4W_REP/x86_64/release/$P
