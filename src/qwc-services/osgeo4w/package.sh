@@ -48,7 +48,7 @@ for repo in $REPOS; do
     fi
 done
 
-for i in qwc-ldap-auth qwc-config-generator; do
+for i in qwc-ldap-auth qwc-config-generator qwc-admin-gui; do
 	patch -d $i -p1 --dry-run <../osgeo4w/$i.diff
 	patch -d $i -p1 <../osgeo4w/$i.diff
 done
@@ -56,28 +56,39 @@ done
 cd ../osgeo4w
 
 cat <<EOF >postinstall.bat
+setlocal enabledelayedexpansion
+
 if exist "%OSGEO4W_ROOT%\\httpd.d\\httpd_qgis.conf" ren "%OSGEO4W_ROOT%\\httpd.d\\httpd_qgis.conf" httpd_qgis.conf.off-$P
 if exist "%OSGEO4W_ROOT%\\httpd.d\\httpd_qgis-ltr.conf" ren "%OSGEO4W_ROOT%\\httpd.d\\httpd_qgis-ltr.conf" httpd_qgis-ltr.conf.off-$P
 if not exist "%OSGEO4W_ROOT%\\apps\\$P\\projects" mkdir %OSGEO4W_ROOT%\\apps\\$P\\projects
 
 set QGIS_PKG=qgis-ltr
 
-textreplace -std ^
-        -map @osgeo4w@ "%OSGEO4W_ROOT%" ^
-        -map @o4wroot@ "%OSGEO4W_ROOT:\\=/%" ^
-        -map @windir@ "%WINDIR%" ^
-        -map @temp@ "%TEMP%" ^
-        -map @userprofile@ "%USERPROFILE%" ^
-	-map @qgispkg@ "%QGIS_PKG%" ^
-        -t "%OSGEO4W_ROOT%/httpd.d/httpd_$P.conf"
+if not exist "%OSGEO4W_ROOT%/httpd.d/httpd_$P.conf" (
+	for /f "usebackq tokens=1" %%a in (\`python3 -c "import secrets; print(secrets.token_urlsafe(36));"\`) do set JWT_SECURE_KEY=%%a
 
-textreplace -std ^
-        -map @o4wroot@ %OSGEO4W_ROOT:\\=/% ^
-        -t "%OSGEO4W_ROOT%/apps/$P/config/in/default/tenantConfig.json"
+	textreplace -std ^
+		-map @osgeo4w@ "%OSGEO4W_ROOT%" ^
+		-map @o4wroot@ "%OSGEO4W_ROOT:\\=/%" ^
+		-map @windir@ "%WINDIR%" ^
+		-map @temp@ "%TEMP%" ^
+		-map @userprofile@ "%USERPROFILE%" ^
+		-map @qgispkg@ "%QGIS_PKG%" ^
+		-map @securekey@ "!JWT_SECURE_KEY!" ^
+		-t "%OSGEO4W_ROOT%/httpd.d/httpd_$P.conf"
+)
 
-textreplace -std ^
-        -map @o4wroot@ %OSGEO4W_ROOT:\\=/% ^
-        -t "%OSGEO4W_ROOT%/apps/$P/config/in/default/adminGuiConfig.json"
+if not exist "%OSGEO4W_ROOT%/apps/$P/config/in/default/tenantConfig.json" (
+	textreplace -std ^
+		-map @o4wroot@ %OSGEO4W_ROOT:\\=/% ^
+		-t "%OSGEO4W_ROOT%/apps/$P/config/in/default/tenantConfig.json"
+)
+
+if not exist "%OSGEO4W_ROOT%/apps/$P/config/in/default/adminGuiConfig.json" (
+	textreplace -std ^
+		-map @o4wroot@ %OSGEO4W_ROOT:\\=/% ^
+		-t "%OSGEO4W_ROOT%/apps/$P/config/in/default/adminGuiConfig.json"
+)
 
 if not exist "%OSGEO4W_ROOT%\\apps\\$P\\config\\out\\default" mkdir "%OSGEO4W_ROOT%\\apps\\$P\\config\\out\\default"
 
@@ -87,9 +98,9 @@ textreplace -std ^
 net stop "$SERVICENAME"
 
 reg add "HKLM\\SYSTEM\\CurrentControlSet\\Services\\${SERVICENAME// /}" ^
- 	/v Environment ^
+	/v Environment ^
 	/t REG_MULTI_SZ ^
- 	/d "PATH=%OSGEO4W_ROOT%\\apps\\%QGIS_PKG%\\bin;%PATH%\\0PYTHONHOME=%OSGEO4W_ROOT%\\apps\\$PYTHON\0"
+	/d "PATH=%OSGEO4W_ROOT%\\apps\\%QGIS_PKG%\\bin;%PATH%\\0PYTHONHOME=%OSGEO4W_ROOT%\\apps\\$PYTHON\0"
 
 copy "%OSGEO4W_ROOT%\\bin\\libcrypto-1_1-x64.dll" "%OSGEO4W_ROOT%\\apps\\$PYTHON\\DLLs"
 copy "%OSGEO4W_ROOT%\\bin\\libssl-1_1-x64.dll" "%OSGEO4W_ROOT%\\apps\\$PYTHON\\DLLs"
@@ -98,6 +109,7 @@ net start "$SERVICENAME"
 
 REM curl -X POST "http://127.0.0.1/config/generate_configs?tenant=default"
 
+endlocal
 EOF
 
 cat <<EOF >preremove.bat
@@ -127,7 +139,7 @@ SetEnv AUTH_REQUIRED		1
 SetEnv PYTHONIOENCODING		utf-8
 SetEnv PGCLIENTENCODING		utf-8
 SetEnv PGSERVICEFILE		\${QWCS_DIR}/config/pg_service.conf
-SetEnv JWT_SECRET_KEY		"1KIToPGav4p0gtr5d9Kyu7CIzA0DWQe+PWgVSCB3Je3BcsVc"
+SetEnv JWT_SECRET_KEY		"@securekey@"
 SetEnv QWC_CONFIG_PATH		\${QWCS_DIR}/config/
 SetEnv INPUT_CONFIG_PATH	\${QWCS_DIR}/config/in/
 SetEnv OUTPUT_CONFIG_PATH	\${QWCS_DIR}/config/out/
@@ -1325,6 +1337,8 @@ for i in venv/Scripts/*.exe; do
 	exetmpl "$i"
 done
 
+wget -c "https://cdn.jsdelivr.net/npm/proj4@2.6.3/dist/proj4-src.min.js" "https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.4.3/build/ol.js"
+
 tar -cjf $R/$P/$P-$V-$B.tar.bz2 \
 	--exclude "*.pyc" \
 	--exclude "__pycache__" \
@@ -1351,6 +1365,8 @@ tar -cjf $R/$P/$P-$V-$B.tar.bz2 \
 	--xform "s,^adminGuiConfig.json.tmpl,apps/$P/config/in/default/adminGuiConfig.json.tmpl," \
 	--xform "s,^index.html,apps/$P/config/in/default/index.html," \
 	--xform "s,^venv,apps/$P/venv," \
+	--xform "s,ol.js,apps/$P/qwc-admin-gui/static/js/ol.js," \
+	--xform "s,proj4-src.min.js,apps/$P/qwc-admin-gui/static/js/proj4-src.min.js," \
 	../$P-core/* \
 	venv \
 	postinstall.bat  \
@@ -1360,13 +1376,16 @@ tar -cjf $R/$P/$P-$V-$B.tar.bz2 \
 	config.json \
 	tenantConfig.json.tmpl \
 	adminGuiConfig.json.tmpl \
-	index.html
+	index.html \
+	ol.js \
+	proj4-src.min.js
 
 tar -cjf $R/$P/$P-$V-$B-src.tar.bz2 \
 	-C .. \
 	osgeo4w/package.sh \
 	osgeo4w/diff \
 	osgeo4w/qwc-ldap-auth.diff \
-	osgeo4w/qwc-config-generator.diff
+	osgeo4w/qwc-config-generator.diff \
+	osgeo4w/qwc-admin-gui.diff
 
 endlog

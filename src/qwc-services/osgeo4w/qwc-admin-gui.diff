@@ -1,0 +1,82 @@
+diff --git a/plugins/themes/templates/wmslayer.html b/plugins/themes/templates/wmslayer.html
+index b17ff4d..ff8a273 100644
+--- a/plugins/themes/templates/wmslayer.html
++++ b/plugins/themes/templates/wmslayer.html
+@@ -3,7 +3,7 @@
+ 
+ {% block scripts %}
+ {{super()}}
+-  <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.4.3/build/ol.js"></script>
++  <script src="{{ url_for('static', filename='js/ol.js') }}"></script>
+   <script type="text/javascript">
+     // global object for storing bboxes in different crs per layer
+     var boundingboxes = {};
+@@ -37,7 +37,7 @@
+ 
+     // read capabilities from url and fill form
+     $('#btn-connect').click(function() {
+- 
++
+       // clear form
+       $('#url').val('');
+       $('#select-srs').find('option').remove();
+@@ -62,7 +62,7 @@
+         $('#url').val(url);
+       }
+ 
+-      // add cabilities url paramter 
++      // add capabilities url parameter
+       if(url.indexOf('?') > 0) {
+         var base = url.substring(0, url.indexOf('?'));
+         url = base + '?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities';
+@@ -115,12 +115,12 @@
+       var srs = $(this).find('option:selected').text();
+       var name = $('#name').val();
+ //       var bbox = boundingboxes[name].find(box => box.crs === srs).extent;
+-      $('#srs').val(srs); 
++      $('#srs').val(srs);
+ //       $('#bbox').val(bbox);
+     });
+     // format change
+     $('#select-format').change(function() {
+-      $('#format').val($(this).find('option:selected').text()); 
++      $('#format').val($(this).find('option:selected').text());
+     });
+   </script>
+ {% endblock %}
+diff --git a/plugins/themes/templates/wmtslayer.html b/plugins/themes/templates/wmtslayer.html
+index d06bb29..d4020da 100644
+--- a/plugins/themes/templates/wmtslayer.html
++++ b/plugins/themes/templates/wmtslayer.html
+@@ -3,8 +3,8 @@
+ 
+ {% block scripts %}
+ {{super()}}
+-  <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.4.3/build/ol.js"></script>
+-  <script src="https://cdn.jsdelivr.net/npm/proj4@2.6.3/dist/proj4-src.min.js"></script>
++  <script src="{{ url_for('static', filename='js/ol.js') }}"></script>
++  <script src="{{ url_for('static', filename='js/proj4-src.min.js') }}"></script>
+   <script type="text/javascript">
+     // TODO: add more proj4 defs
+     proj4.defs("EPSG:25832","+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
+@@ -44,7 +44,7 @@
+       }
+ 
+       // add http
+-      if(!url.match('^http')) { 
++      if(!url.match('^http')) {
+         url = "http://" + url
+       }
+ 
+diff --git a/server.py b/server.py
+index 8884a8d..ea2cb3c 100644
+--- a/server.py
++++ b/server.py
+@@ -35,6 +35,7 @@ app.secret_key = app.config['JWT_SECRET_KEY']
+ app.config['QWC_GROUP_REGISTRATION_ENABLED'] = os.environ.get(
+     'GROUP_REGISTRATION_ENABLED', 'True') == 'True'
+ app.config['IDLE_TIMEOUT'] = os.environ.get('IDLE_TIMEOUT', 0)
++app.config['BOOTSTRAP_SERVE_LOCAL'] = True
+ 
+ # enable CSRF protection
+ CSRFProtect(app)
