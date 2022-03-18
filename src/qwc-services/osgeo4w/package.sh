@@ -767,6 +767,7 @@ cat <<EOF >tenantConfig.json.tmpl
   "service": "config-generator",
   "config": {
     "tenant": "default",
+    "validate_schema": false,
     "default_qgis_server_url": "http://localhost:8001/wms/",
     "config_db_url": "postgresql:///?service=qwc_configdb",
     "permissions_default_allow": true,
