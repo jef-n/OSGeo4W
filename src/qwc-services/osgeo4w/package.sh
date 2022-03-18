@@ -64,7 +64,8 @@ if not exist "%OSGEO4W_ROOT%\\apps\\$P\\projects" mkdir %OSGEO4W_ROOT%\\apps\\$P
 
 set QGIS_PKG=qgis-ltr
 
-if not exist "%OSGEO4W_ROOT%/httpd.d/httpd_$P.conf" (
+if not exist "%OSGEO4W_ROOT%\\httpd.d\\httpd_$P.conf" (
+	call "%OSGEO4W_ROOT%\\bin\\o4w_env.bat"
 	for /f "usebackq tokens=1" %%a in (\`python3 -c "import secrets; print(secrets.token_urlsafe(36));"\`) do set JWT_SECURE_KEY=%%a
 
 	textreplace -std ^
@@ -78,13 +79,13 @@ if not exist "%OSGEO4W_ROOT%/httpd.d/httpd_$P.conf" (
 		-t "%OSGEO4W_ROOT%/httpd.d/httpd_$P.conf"
 )
 
-if not exist "%OSGEO4W_ROOT%/apps/$P/config/in/default/tenantConfig.json" (
+if not exist "%OSGEO4W_ROOT%\\apps\\$P\\config\\in\\default\\tenantConfig.json" (
 	textreplace -std ^
 		-map @o4wroot@ %OSGEO4W_ROOT:\\=/% ^
 		-t "%OSGEO4W_ROOT%/apps/$P/config/in/default/tenantConfig.json"
 )
 
-if not exist "%OSGEO4W_ROOT%/apps/$P/config/in/default/adminGuiConfig.json" (
+if not exist "%OSGEO4W_ROOT%\\apps\\$P\\config\\in\\default\\adminGuiConfig.json" (
 	textreplace -std ^
 		-map @o4wroot@ %OSGEO4W_ROOT:\\=/% ^
 		-t "%OSGEO4W_ROOT%/apps/$P/config/in/default/adminGuiConfig.json"
@@ -98,6 +99,7 @@ textreplace -std ^
 net stop "$SERVICENAME"
 
 reg add "HKLM\\SYSTEM\\CurrentControlSet\\Services\\${SERVICENAME// /}" ^
+	/f ^
 	/v Environment ^
 	/t REG_MULTI_SZ ^
 	/d "PATH=%OSGEO4W_ROOT%\\apps\\%QGIS_PKG%\\bin;%PATH%\\0PYTHONHOME=%OSGEO4W_ROOT%\\apps\\$PYTHON\0"
