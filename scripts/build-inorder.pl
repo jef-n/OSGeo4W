@@ -80,21 +80,36 @@ while(<F>) {
 }
 close F;
 
-open F, ">tmp/depends";
-foreach my $p (keys %fdep) {
-	print F "$p: " . join(" ", keys %{ $fdep{$p} }) . "\n";
+my @arg = grep !/-$/, @ARGV;
+
+my %skip;
+foreach (grep /-$/, @ARGV) {
+	s/-$//;
+	$skip{$_} = 1;
 }
-close F;
+
+my @todo;
+while(my $p = shift @arg) {
+	unless(exists $src{$p}) {
+		die "Source for $p not found" unless exists $src{$p};
+		$p = $src{$p};
+	}
+	push @todo, $p;
+}
 
 my %todo;
-$todo{$src{$_}} = 1 foreach @ARGV;
-my @todo = @ARGV;
-
 while(my $p = shift @todo) {
+	next if exists $skip{$p};
+
 	$todo{$p} = 1;
 
-	foreach my $d (keys %{ $rdep{$p} }) {
+	for my $d (keys %{ $rdep{$p} }) {
+		next if exists $skip{$d};
+		next if exists $todo{$d};
+
 		$todo{$d} = 1;
+
+		unshift @todo, $d;
 	}
 }
 
@@ -121,6 +136,6 @@ while(keys %todo) {
 	}
 }
 
-die "remaining:" . join("\n ", keys %todo) if keys %todo;
+push @inorder, keys %todo;
 
 print join(" ", @inorder) . "\n";
