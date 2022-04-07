@@ -1,5 +1,5 @@
 export P=zlib
-export V=1.2.11
+export V=1.2.12
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
@@ -9,7 +9,7 @@ source ../../../scripts/build-helpers
 startlog
 
 [ -f $P-$V.tar.gz ] || wget http://zlib.net/$P-$V.tar.gz
-[ -f ../CMakeLists.txt ] || tar -C .. -xzf  $P-$V.tar.gz --xform "s,^$P-$V,.,"
+[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf  $P-$V.tar.gz
 
 vs2019env
 cmakeenv
@@ -21,7 +21,7 @@ cd build
 cmake -G Ninja \
 	-D CMAKE_BUILD_TYPE=Release \
 	-D CMAKE_INSTALL_PREFIX=../install \
-	../..
+	../../$P-$V
 ninja
 ninja install
 
