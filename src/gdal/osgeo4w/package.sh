@@ -19,8 +19,8 @@ startlog
 [ -f ../$P-${V%rc*}/makefile.vc ] || tar -C .. -xzf $P-$V.tar.gz
 [ -f ../$P-${V%rc*}/patched ] || {
 	cd ../$P-${V%rc*}
-	patch -p1 --dry-run <../osgeo4w/patch
-	patch -p1 <../osgeo4w/patch
+	patch -p0 --dry-run <../osgeo4w/patch
+	patch -p0 <../osgeo4w/patch
 	touch patched
 	cd ../osgeo4w
 }
@@ -123,33 +123,39 @@ cd ../$P-${V%rc*}
 
 	pv=$(sed -ne 's/#define POPPLER_VERSION "\([0-9]*\)\.\([0-9]*\)\..*$/\1:\2/p' ../osgeo4w/osgeo4w/include/poppler/poppler-config.h)
 
-	for i in clean default install devinstall; do
-		[ -f ../osgeo4w/no$i ] && continue
+	targets=
+	[ -n "$OSGEO4W_SKIP_CLEAN" ] || targets="$targets clean"
+	targets="$targets default"
+	[ -n "$OSGEO4W_SKIP_INSTALL" ] || targets="$targets install devinstall"
 
-		nmake /f makefile.vc \
-			POPPLER_MAJOR_VERSION=${pv%:*} \
-			POPPLER_MINOR_VERSION=${pv#*:} \
-			OPENJPEG_INCLUDE=$(cygpath -aw ../osgeo4w/osgeo4w/include/openjpeg-*) \
-			OSGEO4W=$(cygpath -aw ../osgeo4w/osgeo4w) \
-			EXT_NMAKE_OPT=$(cygpath -aw ../osgeo4w/nmake.opt) \
-			GDAL_HOME=$(cygpath -aw $DESTDIR) \
-			ECWDIR=$(cygpath -aw $ECW_SDK) \
-			FGDB_SDK=$(cygpath -aw $FGDB_SDK) \
-			MRSID_SDK=$(cygpath -aw $MRSID_SDK) \
-			SETARGV="\"$VCToolsInstallDir\\lib\\x64\\setargv.obj\"" \
-			$i
-	done
-
-	[ -f ../osgeo4w/nopackage ] && exit
+	nmake /f makefile.vc \
+		POPPLER_MAJOR_VERSION=${pv%:*} \
+		POPPLER_MINOR_VERSION=${pv#*:} \
+		OPENJPEG_INCLUDE=$(cygpath -aw ../osgeo4w/osgeo4w/include/openjpeg-*) \
+		OSGEO4W=$(cygpath -aw ../osgeo4w/osgeo4w) \
+		EXT_NMAKE_OPT=$(cygpath -aw ../osgeo4w/nmake.opt) \
+		GDAL_HOME=$(cygpath -aw $DESTDIR) \
+		ECWDIR=$(cygpath -aw $ECW_SDK) \
+		FGDB_SDK=$(cygpath -aw $FGDB_SDK) \
+		MRSID_SDK=$(cygpath -aw $MRSID_SDK) \
+		SETARGV="\"$VCToolsInstallDir\\lib\\x64\\setargv.obj\"" \
+		$targets
 
 	cd swig
 
 	unset INCLUDE LIB
+
+	targets=
+	[ -n "$OSGEO4W_SKIP_CLEAN" ] || targets="$targets clean"
+	targets="$targets python"
+
 	nmake /f makefile.vc \
 		PYDIR=$(cygpath -aw ../../osgeo4w/osgeo4w/apps/$PYTHON) \
 		SWIG=$(cygpath -aw ../../osgeo4w/osgeo4w/bin/swig.bat) \
 		EXT_NMAKE_OPT=$(cygpath -aw ../../osgeo4w/nmake.opt) \
-		clean python
+		$targets
+
+	[ -z "$OSGEO4W_SKIP_INSTALL" ] || exit
 
 	cd python
 
