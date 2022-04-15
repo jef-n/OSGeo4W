@@ -37,20 +37,22 @@ if [ -d qgis ]; then
 	cd qgis
 	git config core.filemode false
 
-	git fetch origin $RELBRANCH
-	git clean -f
-	git reset --hard
+	if [ -z "$OSGEO4W_SKIP_CLEAN" ]; then
+		git fetch origin $RELBRANCH
+		git clean -f
+		git reset --hard
 
-	if [ "$(git branch --show-current)" != $RELBRANCH ]; then
-		if ! git checkout $RELBRANCH; then
-			git remote set-branches --add origin $RELBRANCH
-			git fetch origin $LTRBRANCH:$RELBRANCH
-			git checkout $RELBRANCH
+		if [ "$(git branch --show-current)" != $RELBRANCH ]; then
+			if ! git checkout $RELBRANCH; then
+				git remote set-branches --add origin $RELBRANCH
+				git fetch origin $LTRBRANCH:$RELBRANCH
+				git checkout $RELBRANCH
+			fi
 		fi
-	fi
 
-	git config pull.rebase false
-	git pull
+		git config pull.rebase false
+		git pull
+	fi
 else
 	git clone $REPO --branch $RELBRANCH --single-branch --depth 1 qgis
 	cd qgis
@@ -204,8 +206,10 @@ nextbinary
 	cmake --build $(cygpath -am $BUILDDIR) --target ${TARGET}Build --config $BUILDCONF
 	tag=$(head -1 $BUILDDIR/Testing/TAG | sed -e "s/\r//")
 	if grep -q "<Error>" $BUILDDIR/Testing/$tag/Build.xml; then
-		cat $BUILDDIR/Testing/Temporary/LastBuild_$tag.log
-		cmake --build $(cygpath -am $BUILDDIR) --target ${TARGET}Submit --config $BUILDCONF
+		sed -e '/src\\/ s#\\#/#g' $BUILDDIR/Testing/Temporary/LastBuild_$tag.log
+		if [ -z "$OSGEO4W_SKIP_CLEAN" ]; then
+			cmake --build $(cygpath -am $BUILDDIR) --target ${TARGET}Submit --config $BUILDCONF || echo SUBMISSION FAILED
+		fi
 		exit 1
 	fi
 
@@ -237,34 +241,35 @@ nextbinary
 
 	cmake --build $(cygpath -am $BUILDDIR) --target ${TARGET}Submit --config $BUILDCONF || echo SUBMISSION FAILED
 
-	rm -rf $INSTDIR
-	mkdir -p $INSTDIR
+	if [ -z "$OSGEO4W_SKIP_INSTALL" ]; then
+		rm -rf $INSTDIR
+		mkdir -p $INSTDIR
 
-	echo INSTALL: $(date)
-	cmake --build $(cygpath -am $BUILDDIR) --target install --config $BUILDCONF
+		echo INSTALL: $(date)
+		cmake --build $(cygpath -am $BUILDDIR) --target install --config $BUILDCONF
 
-	echo PACKAGE: $(date)
+		echo PACKAGE: $(date)
 
-	cd ..
+		cd ..
 
-	mkdir -p $INSTDIR/{etc/{postinstall,preremove},bin}
+		mkdir -p $INSTDIR/{etc/{postinstall,preremove},bin}
 
-	v=$MAJOR.$MINOR.$PATCH
+		v=$MAJOR.$MINOR.$PATCH
 
-	SA=python/plugins/sagaprovider
-	SAP=$SA/SagaAlgorithmProvider.py
-	sagadef=$(sed -rne "s/^REQUIRED_VERSION *= *('.*')$/\\1/p" install/apps/$P/$SAP)
-	sed -e "s/^REQUIRED_VERSION *= *'.*'$/REQUIRED_VERSION = @saga@/" install/apps/$P/$SAP >install/apps/$P/$SAP.tmpl
+		SA=python/plugins/sagaprovider
+		SAP=$SA/SagaAlgorithmProvider.py
+		sagadef=$(sed -rne "s/^REQUIRED_VERSION *= *('.*')$/\\1/p" install/apps/$P/$SAP)
+		sed -e "s/^REQUIRED_VERSION *= *'.*'$/REQUIRED_VERSION = @saga@/" install/apps/$P/$SAP >install/apps/$P/$SAP.tmpl
 
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       qgis.reg.tmpl    >install/bin/qgis.reg.tmpl
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                postinstall.bat  >install/etc/postinstall/$P.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                preremove.bat    >install/etc/preremove/$P.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g" -e "s/@grasspath@/$(basename $GRASS_PREFIX)/g" qgis.bat         >install/bin/$P.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       designer.bat     >install/bin/$P-designer.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       process.bat      >install/bin/qgis_process-$P.bat
-	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       python.bat       >install/bin/python-$P.bat
+		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       qgis.reg.tmpl    >install/bin/qgis.reg.tmpl
+		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                postinstall.bat  >install/etc/postinstall/$P.bat
+		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                preremove.bat    >install/etc/preremove/$P.bat
+		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g" -e "s/@grasspath@/$(basename $GRASS_PREFIX)/g" qgis.bat         >install/bin/$P.bat
+		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       designer.bat     >install/bin/$P-designer.bat
+		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       process.bat      >install/bin/qgis_process-$P.bat
+		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       python.bat       >install/bin/python-$P.bat
 
-	cat <<EOF >install/apps/$P/saga-refresh.bat
+		cat <<EOF >install/apps/$P/saga-refresh.bat
 setlocal enabledelayedexpansion
 
 set SAGA_VER=$sagadef
@@ -295,39 +300,40 @@ textreplace ^
 endlocal
 EOF
 
-	cp "$DBGHLP_PATH"/{dbghelp.dll,symsrv.dll} install/apps/$P
+		cp "$DBGHLP_PATH"/{dbghelp.dll,symsrv.dll} install/apps/$P
 
-	mkdir -p install/apps/$P/python
-	cp "$PYTHONHOME/Lib/site-packages/PyQt5/uic/widget-plugins/qgis_customwidgets.py" install/apps/$P/python
+		mkdir -p install/apps/$P/python
+		cp "$PYTHONHOME/Lib/site-packages/PyQt5/uic/widget-plugins/qgis_customwidgets.py" install/apps/$P/python
 
-	export R=$OSGEO4W_REP/x86_64/release/qgis/$P
-	mkdir -p $R/$P-{pdb,full,deps}
+		export R=$OSGEO4W_REP/x86_64/release/qgis/$P
+		mkdir -p $R/$P-{pdb,full-free,full,deps}
 
-	touch exclude
-	/bin/tar -cjf $R/$P-$V-$B.tar.bz2 \
-		--exclude-from exclude \
-		--exclude "*.pyc" \
-		--exclude "install/apps/$P/$SAP" \
-		--xform "s,^qgis.vars,bin/$P-bin.vars," \
-		--xform "s,^osgeo4w/apps/qt5/plugins/,apps/$P/qtplugins/," \
-		--xform "s,^install/apps/$P/bin/qgis.exe,bin/$P-bin.exe," \
-		--xform "s,^install/,," \
-		--xform "s,^install$,.," \
-		qgis.vars \
-		osgeo4w/apps/qt5/plugins/sqldrivers/qsqlocispatial.dll \
-		osgeo4w/apps/qt5/plugins/sqldrivers/qsqlspatialite.dll \
-		osgeo4w/apps/qt5/plugins/designer/qgis_customwidgets.dll \
-		install/
+		touch exclude
+		/bin/tar -cjf $R/$P-$V-$B.tar.bz2 \
+			--exclude-from exclude \
+			--exclude "*.pyc" \
+			--exclude "install/apps/$P/$SAP" \
+			--xform "s,^qgis.vars,bin/$P-bin.vars," \
+			--xform "s,^osgeo4w/apps/qt5/plugins/,apps/$P/qtplugins/," \
+			--xform "s,^install/apps/$P/bin/qgis.exe,bin/$P-bin.exe," \
+			--xform "s,^install/,," \
+			--xform "s,^install$,.," \
+			qgis.vars \
+			osgeo4w/apps/qt5/plugins/sqldrivers/qsqlocispatial.dll \
+			osgeo4w/apps/qt5/plugins/sqldrivers/qsqlspatialite.dll \
+			osgeo4w/apps/qt5/plugins/designer/qgis_customwidgets.dll \
+			install/
 
-	/bin/tar -C $BUILDDIR --remove-files -cjf $R/$P-pdb/$P-pdb-$V-$B.tar.bz2 \
-		apps/$P/pdb
+		/bin/tar -C $BUILDDIR --remove-files -cjf $R/$P-pdb/$P-pdb-$V-$B.tar.bz2 \
+			apps/$P/pdb
 
-	d=$(mktemp -d)
-	/bin/tar -C $d -cjf $R/$P-full/$P-full-$V-$B.tar.bz2 .
-	/bin/tar -C $d -cjf $R/$P-deps/$P-deps-$V-$B.tar.bz2 .
-	rmdir $d
+		d=$(mktemp -d)
+		/bin/tar -C $d -cjf $R/$P-full-free/$P-full-free-$V-$B.tar.bz2 .
+		/bin/tar -C $d -cjf $R/$P-full/$P-full-$V-$B.tar.bz2 .
+		/bin/tar -C $d -cjf $R/$P-deps/$P-deps-$V-$B.tar.bz2 .
+		rmdir $d
 
-	cat <<EOF >$R/setup.hint
+		cat <<EOF >$R/setup.hint
 sdesc: "QGIS nightly build of the $LABEL branch"
 ldesc: "QGIS nightly build of the $LABEL branch"
 maintainer: $MAINTAINER
@@ -335,9 +341,9 @@ category: Desktop
 requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl gdal libspatialite zlib libiconv fcgi libspatialindex oci qt5-libs qt5-qml qt5-tools qtwebkit-libs qca qwt-libs python3-sip python3-core python3-pyqt5 python3-psycopg2-binary python3-qscintilla python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-gdal python3-requests python3-plotly python3-pyproj python3-owslib qtkeychain-libs libzip opencl exiv2 hdf5 pdal pdal-libs
 EOF
 
-	appendversions $R/setup.hint
+		appendversions $R/setup.hint
 
-	cat <<EOF >$R/$P-pdb/setup.hint
+		cat <<EOF >$R/$P-pdb/setup.hint
 sdesc: "Debugging symbols for QGIS nightly build of the $LABEL branch"
 ldesc: "Debugging symbols for QGIS nightly build of the $LABEL branch"
 maintainer: $MAINTAINER
@@ -346,20 +352,31 @@ requires: $P
 external-source: $P
 EOF
 
-	appendversions $R/$P-pdb/setup.hint
+		appendversions $R/$P-pdb/setup.hint
 
-	cat <<EOF >$R/$P-full/setup.hint
-sdesc: "QGIS nightly build of the $LABEL branch (metapackage with additional dependencies)"
-ldesc: "QGIS nightly build of the $LABEL branch (metapackage with additional dependencies)"
+		cat <<EOF >$R/$P-full-free/setup.hint
+sdesc: "QGIS nightly build of the $LABEL branch (metapackage with additional free dependencies)"
+ldesc: "QGIS nightly build of the $LABEL branch (metapackage with additional free dependencies)"
 maintainer: $MAINTAINER
 category: Desktop
-requires: $P proj python3-pyparsing python3-simplejson python3-shapely python3-matplotlib gdal-hdf5 gdal-ecw gdal-mrsid gdal-oracle gdal-sosi python3-pygments qt5-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-pillow python3-pandas python3-geographiclib grass saga
+requires: $P proj python3-pyparsing python3-simplejson python3-shapely python3-matplotlib gdal-sosi python3-pygments qt5-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-pillow python3-pandas python3-geographiclib grass saga
 external-source: $P
 EOF
 
-	appendversions $R/$P-full/setup.hint
+		appendversions $R/$P-full-free/setup.hint
 
-	cat <<EOF >$R/$P-deps/setup.hint
+		cat <<EOF >$R/$P-full/setup.hint
+sdesc: "QGIS nightly build of the $LABEL branch (metapackage with additional dependencies including proprietary)"
+ldesc: "QGIS nightly build of the $LABEL branch (metapackage with additional dependencies including proprietary)"
+maintainer: $MAINTAINER
+category: Desktop
+requires: $P-full-free gdal-hdf5 gdal-ecw gdal-mrsid gdal-oracle
+external-source: $P
+EOF
+
+		appendversions $R/$P-full/setup.hint
+
+		cat <<EOF >$R/$P-deps/setup.hint
 sdesc: "QGIS build dependencies of nightly build of $LABEL branch (meta package)"
 ldesc: "QGIS build dependencies of nightly build of $LABEL branch (meta package)"
 maintainer: $MAINTAINER
@@ -368,20 +385,21 @@ requires: $BUILDDEPENDS
 external-source: $P
 EOF
 
-	appendversions $R/$P-deps/setup.hint
+		appendversions $R/$P-deps/setup.hint
 
-	/bin/tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 \
-		osgeo4w/package.sh \
-		osgeo4w/msvc-env.bat \
-		osgeo4w/process.bat \
-		osgeo4w/designer.bat \
-		osgeo4w/python.bat \
-		osgeo4w/qgis.bat \
-		osgeo4w/qgis.vars \
-		osgeo4w/qgis.reg.tmpl \
-		osgeo4w/postinstall.bat \
-		osgeo4w/preremove.bat \
-		osgeo4w/patch
+		/bin/tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 \
+			osgeo4w/package.sh \
+			osgeo4w/msvc-env.bat \
+			osgeo4w/process.bat \
+			osgeo4w/designer.bat \
+			osgeo4w/python.bat \
+			osgeo4w/qgis.bat \
+			osgeo4w/qgis.vars \
+			osgeo4w/qgis.reg.tmpl \
+			osgeo4w/postinstall.bat \
+			osgeo4w/preremove.bat \
+			osgeo4w/patch
+	fi
 )
 
 endlog

@@ -168,8 +168,10 @@ nextbinary
 	cmake --build $(cygpath -am $BUILDDIR) --config $BUILDCONF
 	tag=$(head -1 $BUILDDIR/Testing/TAG | sed -e "s/\r//")
 	if grep -q "<Error>" $BUILDDIR/Testing/$tag/Build.xml; then
-		cat $BUILDDIR/Testing/Temporary/LastBuild_$tag.log
-		cmake --build $(cygpath -am $BUILDDIR) --target ${TARGET}Submit --config $BUILDCONF
+		sed -e '/src\\/ s#\\#/#g' $BUILDDIR/Testing/Temporary/LastBuild_$tag.log
+		if [ -z "$OSGEO4W_SKIP_CLEAN" ]; then
+			cmake --build $(cygpath -am $BUILDDIR) --target ${TARGET}Submit --config $BUILDCONF || echo SUBMISSION FAILED
+		fi
 		exit 1
 	fi
 
@@ -278,7 +280,7 @@ EOF
 	mv osgeo4w/apps/Python*/Lib/site-packages/PyQt5/uic/widget-plugins/qgis_customwidgets.py install/apps/$P/python/PyQt5/uic/widget-plugins
 
 	export R=$OSGEO4W_REP/x86_64/release/qgis/$P
-	mkdir -p $R/$P-{pdb,full,deps,common,server,grass-plugin,oracle-provider,devel}
+	mkdir -p $R/$P-{pdb,full-free,full,deps,common,server,grass-plugin,oracle-provider,devel}
 
 	touch exclude
 
@@ -472,12 +474,23 @@ EOF
 		apps/$P/include/ \
 		apps/$P/lib/
 
-	cat <<EOF >$R/$P-full/setup.hint
-sdesc: "QGIS Full Desktop (meta package)"
-ldesc: "QGIS Full Desktop (meta package)"
+	cat <<EOF >$R/$P-full-free/setup.hint
+sdesc: "QGIS Desktop Full Free (meta package)"
+ldesc: "QGIS Desktop Full Free (meta package)
+without proprietary extensions"
 maintainer: $MAINTAINER
 category: Desktop
-requires: $P proj $P-grass-plugin $P-oracle-provider python3-pyparsing python3-simplejson python3-shapely python3-matplotlib gdal-hdf5 gdal-ecw gdal-mrsid gdal-oracle gdal-sosi python3-pygments qt5-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-setuptools python3-pillow python3-pandas python3-geographiclib saga
+requires: $P proj $P-grass-plugin python3-pyparsing python3-simplejson python3-shapely python3-matplotlib gdal-sosi python3-pygments qt5-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-setuptools python3-pillow python3-pandas python3-geographiclib saga
+external-source: $P
+EOF
+
+	cat <<EOF >$R/$P-full/setup.hint
+sdesc: "QGIS Desktop Full (meta package)"
+ldesc: "QGIS Desktop Full (meta package)
+including proprietary extensions"
+maintainer: $MAINTAINER
+category: Desktop
+requires: $P-full-free $P-oracle-provider gdal-hdf5 gdal-ecw gdal-mrsid gdal-oracle
 external-source: $P
 EOF
 
@@ -491,15 +504,17 @@ external-source: $P
 EOF
 
 	d=$(mktemp -d)
+	/bin/tar -C $d -cjf $R/$P-full-free/$P-full-free-$V-$B.tar.bz2 .
 	/bin/tar -C $d -cjf $R/$P-full/$P-full-$V-$B.tar.bz2 .
 	/bin/tar -C $d -cjf $R/$P-deps/$P-deps-$V-$B.tar.bz2 .
 	rmdir $d
 
-	appendversions $R/$P-deps/setup.hint
 	appendversions $R/setup.hint
+	appendversions $R/$P-deps/setup.hint
 	appendversions $R/$P-pdb/setup.hint
 	appendversions $R/$P-common/setup.hint
 	appendversions $R/$P-server/setup.hint
+	appendversions $R/$P-full-free/setup.hint
 	appendversions $R/$P-full/setup.hint
 	appendversions $R/$P-grass-plugin/setup.hint
 	appendversions $R/$P-oracle-provider/setup.hint
