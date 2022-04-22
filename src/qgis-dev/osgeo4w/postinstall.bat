@@ -1,4 +1,5 @@
 call "%OSGEO4W_ROOT%\bin\o4w_env.bat"
+call "%OSGEO4W_ROOT%\bin\gdal-dev-py-env.bat"
 
 if not defined OSGEO4W_DESKTOP for /F "tokens=* USEBACKQ" %%F IN (`getspecialfolder Desktop`) do set OSGEO4W_DESKTOP=%%F
 for /F "tokens=* USEBACKQ" %%F IN (`getspecialfolder Documents`) do set DOCUMENTS=%%F
@@ -28,6 +29,7 @@ REM Do not register extensions if release is installed
 if not exist "%OSGEO4W_ROOT%\apps\qgis-ltr\bin\qgis.reg" if not exist "%OSGEO4W_ROOT%\apps\qgis\bin\qgis.reg" "%WINDIR%\regedit" /s "%OSGEO4W_ROOT%\apps\@package@\bin\qgis.reg"
 
 call "%OSGEO4W_ROOT%\bin\o4w_env.bat"
+call "%OSGEO4W_ROOT%\bin\gdal-dev-py-env.bat"
 path %PATH%;%OSGEO4W_ROOT%\apps\@package@\bin
 set QGIS_PREFIX_PATH=%OSGEO4W_ROOT:\=/%/apps/@package@
 "%OSGEO4W_ROOT%\apps\@package@\crssync"

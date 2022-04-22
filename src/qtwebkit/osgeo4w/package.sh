@@ -120,7 +120,7 @@ cd install
 find apps -type f >/tmp/$P.installed
 
 for i in libs devel symbols; do
-	tar tjf $R/$P-$i/$P-$i-$V-$B.tar.bz2 | tee /tmp/$P-$i.packaged
+	tar tjf $R/$P-$i/$P-$i-$V-$B.tar.bz2 | grep -v "/$" | tee /tmp/$P-$i.packaged
 done >/tmp/$P.packaged
 
 sort /tmp/$P.packaged | uniq -d >/tmp/$P.dupes

@@ -1,10 +1,10 @@
 export P=openssl
-export V=1.1.1l
+export V=1.1.1o
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
 
-# perl also used in libpq
+# perl also used in libpq and qt5
 SBPERL=5.32.0.1
 NASM=2.15.05
 
@@ -56,6 +56,10 @@ mkdir -p $R/$P-devel $R/$P-doc install/etc/postinstall install/etc/ini install/a
 cat <<EOF >install/etc/postinstall/$P.bat
 dllupdate -oite -copy -reboot "%OSGEO4W_ROOT%\\bin\\libcrypto-1_1-x64.dll"
 dllupdate -oite -copy -reboot "%OSGEO4W_ROOT%\\bin\\libssl-1_1-x64.dll"
+if exist "%OSGEO4W_ROOT%\\apps\\Python39\\DLLs" (
+	copy "%OSGEO4W_ROOT%\\bin\\libcrypto-1_1-x64.dll" "%OSGEO4W_ROOT%\\apps\\Python39\\DLLs\\libcrypto-1_1.dll"
+	copy "%OSGEO4W_ROOT%\\bin\\libssl-1_1-x64.dll" "%OSGEO4W_ROOT%\\apps\\Python39\\DLLs\\libssl-1_1.dll"
+)
 exit /b 0
 EOF
 

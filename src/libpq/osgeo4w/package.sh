@@ -4,7 +4,7 @@ export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="openssl-devel zlib-devel libiconv-devel"
 
-# perl also used in openssl
+# perl also used in openssl and qt5
 SBPERL=5.32.0.1
 
 source ../../../scripts/build-helpers

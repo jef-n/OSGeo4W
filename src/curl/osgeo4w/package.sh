@@ -32,7 +32,7 @@ cat <<EOF >$R/setup.hint
 sdesc: "The CURL HTTP/FTP library and commandline utility (Runtime)"
 ldesc: "The CURL HTTP/FTP library and commandline utility (Runtime)"
 category: Libs Commandline_Utilities
-requires: msvcrt2019 openssl $P-ca-bundle
+requires: msvcrt2019 openssl $P-ca-bundle zlib
 maintainer: $MAINTAINER
 EOF
 

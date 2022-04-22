@@ -1,0 +1,10 @@
+--- osgeo4w/apps/Python39/Lib/site-packages/setuptools/command/easy_install.py	2021-06-22 22:44:55.001000000 +0200
++++ osgeo4w/apps/Python39/Lib/site-packages/setuptools/command/easy_install.py	2021-11-10 21:11:07.665132700 +0100
+@@ -582,6 +582,7 @@
+                     os.unlink(ok_file)
+                 if os.path.exists(pth_file):
+                     os.unlink(pth_file)
++                return False
+         if not self.multi_version:
+             log.warn("TEST FAILED: %s does NOT support .pth files", instdir)
+         return False

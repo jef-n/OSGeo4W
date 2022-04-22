@@ -1,8 +1,8 @@
-diff -ur qwt-6.1.3/qwtbuild.pri ../qwtbuild.pri
---- qwt-6.1.3/qwtbuild.pri	2016-06-13 09:14:23.029601000 +0200
-+++ ../qwtbuild.pri	2020-10-27 16:14:10.099187900 +0100
-@@ -27,8 +27,7 @@
-     # might need a debug version. 
+diff -ur qwt-6.1.6/qwtbuild.pri ../qwt-6.1.6/qwtbuild.pri
+--- qwt-6.1.6/qwtbuild.pri	2020-12-28 12:14:02.671245300 +0100
++++ ../qwt-6.1.6/qwtbuild.pri	2022-04-21 20:33:24.455480900 +0200
+@@ -29,8 +29,7 @@
+     # might need a debug version.
      # Enable debug_and_release + build_all if you want to build both.
  
 -    CONFIG           += debug_and_release
@@ -11,15 +11,15 @@ diff -ur qwt-6.1.3/qwtbuild.pri ../qwtbuild.pri
  }
  else {
  
-diff -ur qwt-6.1.3/qwtconfig.pri ../qwtconfig.pri
---- qwt-6.1.3/qwtconfig.pri	2016-06-13 09:14:23.031601000 +0200
-+++ ../qwtconfig.pri	2020-10-27 16:14:10.101189200 +0100
+diff -ur qwt-6.1.6/qwtconfig.pri ../qwt-6.1.6/qwtconfig.pri
+--- qwt-6.1.6/qwtconfig.pri	2020-12-28 12:14:02.675245400 +0100
++++ ../qwt-6.1.6/qwtconfig.pri	2022-04-21 20:34:24.554229200 +0200
 @@ -24,13 +24,13 @@
  }
  
  win32 {
 -    QWT_INSTALL_PREFIX    = C:/Qwt-$$QWT_VERSION
-+    QWT_INSTALL_PREFIX    = $$PWD/osgeo4w/install
++    QWT_INSTALL_PREFIX    = $$PWD/../osgeo4w/install
      # QWT_INSTALL_PREFIX = C:/Qwt-$$QWT_VERSION-qt-$$QT_VERSION
  }
  
@@ -50,7 +50,7 @@ diff -ur qwt-6.1.3/qwtconfig.pri ../qwtconfig.pri
  ######################################################################
  # Features
 @@ -63,8 +63,8 @@
- # with every Qt upgrade. 
+ # with every Qt upgrade.
  ######################################################################
  
 -QWT_INSTALL_FEATURES  = $${QWT_INSTALL_PREFIX}/features
@@ -63,7 +63,7 @@ diff -ur qwt-6.1.3/qwtconfig.pri ../qwtconfig.pri
 @@ -163,13 +163,3 @@
  
      QWT_CONFIG += QwtFramework
- }  
+ }
 -
 -######################################################################
 -# Create and install pc files for pkg-config
@@ -74,21 +74,21 @@ diff -ur qwt-6.1.3/qwtconfig.pri ../qwtconfig.pri
 -
 -    #QWT_CONFIG     += QwtPkgConfig
 -}
-diff -ur qwt-6.1.3/src/qwt_null_paintdevice.cpp ../src/qwt_null_paintdevice.cpp
---- qwt-6.1.3/src/qwt_null_paintdevice.cpp	2016-06-13 09:14:22.797596300 +0200
-+++ ../src/qwt_null_paintdevice.cpp	2020-10-27 16:29:05.561700400 +0100
-@@ -10,6 +10,7 @@
- #include "qwt_null_paintdevice.h"
+diff -ur qwt-6.1.6/src/qwt_null_paintdevice.cpp ../qwt-6.1.6/src/qwt_null_paintdevice.cpp
+--- qwt-6.1.6/src/qwt_null_paintdevice.cpp	2020-12-28 12:14:02.367238900 +0100
++++ ../qwt-6.1.6/src/qwt_null_paintdevice.cpp	2022-04-21 20:33:24.462482000 +0200
+@@ -11,6 +11,7 @@
  #include <qpaintengine.h>
+ #include <qpainterpath.h>
  #include <qpixmap.h>
 +#include <qpainterpath.h>
  
  class QwtNullPaintDevice::PrivateData
  {
-diff -ur qwt-6.1.3/src/qwt_painter.cpp ../src/qwt_painter.cpp
---- qwt-6.1.3/src/qwt_painter.cpp	2016-06-13 09:14:22.944599300 +0200
-+++ ../src/qwt_painter.cpp	2020-10-27 16:29:25.840991100 +0100
-@@ -27,6 +27,7 @@
+diff -ur qwt-6.1.6/src/qwt_painter.cpp ../qwt-6.1.6/src/qwt_painter.cpp
+--- qwt-6.1.6/src/qwt_painter.cpp	2020-12-28 12:14:02.555242800 +0100
++++ ../qwt-6.1.6/src/qwt_painter.cpp	2022-04-21 20:33:24.465482900 +0200
+@@ -28,6 +28,7 @@
  #include <qpaintengine.h>
  #include <qapplication.h>
  #include <qdesktopwidget.h>
@@ -96,9 +96,9 @@ diff -ur qwt-6.1.3/src/qwt_painter.cpp ../src/qwt_painter.cpp
  
  #if QT_VERSION >= 0x050000
  #include <qwindow.h>
-diff -ur qwt-6.1.3/src/qwt_painter.h ../src/qwt_painter.h
---- qwt-6.1.3/src/qwt_painter.h	2016-06-13 09:14:21.762575500 +0200
-+++ ../src/qwt_painter.h	2020-10-27 16:34:46.337705200 +0100
+diff -ur qwt-6.1.6/src/qwt_painter.h ../qwt-6.1.6/src/qwt_painter.h
+--- qwt-6.1.6/src/qwt_painter.h	2020-12-28 12:14:01.119212800 +0100
++++ ../qwt-6.1.6/src/qwt_painter.h	2022-04-21 20:33:24.468485500 +0200
 @@ -17,6 +17,7 @@
  #include <qpen.h>
  #include <qline.h>
@@ -115,57 +115,22 @@ diff -ur qwt-6.1.3/src/qwt_painter.h ../src/qwt_painter.h
  
  /*!
    \brief A collection of QPainter workarounds
-diff -ur qwt-6.1.3/src/qwt_painter_command.h ../src/qwt_painter_command.h
---- qwt-6.1.3/src/qwt_painter_command.h	2016-06-13 09:14:21.857577400 +0200
-+++ ../src/qwt_painter_command.h	2020-10-27 16:27:53.200387800 +0100
-@@ -15,8 +15,7 @@
- #include <qpixmap.h>
- #include <qimage.h>
- #include <qpolygon.h>
--
--class QPainterPath;
+diff -ur qwt-6.1.6/src/qwt_plot_renderer.cpp ../qwt-6.1.6/src/qwt_plot_renderer.cpp
+--- qwt-6.1.6/src/qwt_plot_renderer.cpp	2020-12-28 12:14:02.435240300 +0100
++++ ../qwt-6.1.6/src/qwt_plot_renderer.cpp	2022-04-21 20:33:24.470484500 +0200
+@@ -35,6 +35,7 @@
+ #endif
+ #endif
+ #endif
 +#include <qpainterpath.h>
  
- /*!
-   QwtPainterCommand represents the attributes of a paint operation
-diff -ur qwt-6.1.3/src/qwt_plot_glcanvas.h ../src/qwt_plot_glcanvas.h
---- qwt-6.1.3/src/qwt_plot_glcanvas.h	2016-06-13 09:14:21.725574700 +0200
-+++ ../src/qwt_plot_glcanvas.h	2020-10-27 16:39:10.118127100 +0100
-@@ -13,6 +13,7 @@
- #include "qwt_global.h"
- #include <qframe.h>
- #include <qgl.h>
-+#include <qpainterpath.h>
- 
- class QwtPlot;
- 
-diff -ur qwt-6.1.3/src/qwt_plot_panner.cpp ../src/qwt_plot_panner.cpp
---- qwt-6.1.3/src/qwt_plot_panner.cpp	2016-06-13 09:14:22.961599600 +0200
-+++ ../src/qwt_plot_panner.cpp	2020-10-27 16:33:46.282097300 +0100
+ #ifndef QT_NO_PRINTER
+ #define QWT_FORMAT_PDF 1
+diff -ur qwt-6.1.6/src/qwt_widget_overlay.cpp ../qwt-6.1.6/src/qwt_widget_overlay.cpp
+--- qwt-6.1.6/src/qwt_widget_overlay.cpp	2020-12-28 12:14:02.479241300 +0100
++++ ../qwt-6.1.6/src/qwt_widget_overlay.cpp	2022-04-21 20:33:24.472484600 +0200
 @@ -14,6 +14,7 @@
- #include <qbitmap.h>
- #include <qstyle.h>
- #include <qstyleoption.h>
-+#include <qpainterpath.h>
- 
- static QBitmap qwtBorderMask( const QWidget *canvas, const QSize &size )
- {
-diff -ur qwt-6.1.3/src/qwt_plot_renderer.cpp ../src/qwt_plot_renderer.cpp
---- qwt-6.1.3/src/qwt_plot_renderer.cpp	2016-06-13 09:14:22.847597300 +0200
-+++ ../src/qwt_plot_renderer.cpp	2020-10-27 16:33:19.204811100 +0100
-@@ -32,6 +32,7 @@
- #include <qsvggenerator.h>
- #endif
- #endif
-+#include <qpainterpath.h>
- 
- static QPainterPath qwtCanvasClip( 
-     const QWidget* canvas, const QRectF &canvasRect )
-diff -ur qwt-6.1.3/src/qwt_widget_overlay.cpp ../src/qwt_widget_overlay.cpp
---- qwt-6.1.3/src/qwt_widget_overlay.cpp	2016-06-13 09:14:22.880598000 +0200
-+++ ../src/qwt_widget_overlay.cpp	2020-10-27 16:32:24.439628200 +0100
-@@ -13,6 +13,7 @@
- #include <qpaintengine.h>
+ #include <qpainterpath.h>
  #include <qimage.h>
  #include <qevent.h>
 +#include <qpainterpath.h>

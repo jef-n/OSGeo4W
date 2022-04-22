@@ -1,15 +1,18 @@
 export P=qscintilla
-export V=2.11.5
+export V=2.13.1
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="qt5-devel python3-setuptools python3-pyqt5 python3-sip python3-pyqt5-sip"
+export BUILDDEPENDS="qt5-devel python3-setuptools python3-pyqt5 python3-pyqt-builder"
 
 source ../../../scripts/build-helpers
 
 startlog
 
-[ -f QScintilla-$V.tar.gz ] || wget https://www.riverbankcomputing.com/static/Downloads/QScintilla/$V/QScintilla-$V.tar.gz
-[ -d ../Qt4Qt5 ] || tar -C .. -xzf QScintilla-$V.tar.gz --xform s,QScintilla-$V,.,
+export qsc=QScintilla_src-$V
+
+[ -f $qsc.tar.gz ] || wget https://www.riverbankcomputing.com/static/Downloads/QScintilla/$V/$qsc.tar.gz
+[ -d ../$qsc/src ] || tar -C .. -xzf $qsc.tar.gz
+[ -d ../$qsc/src ]
 
 (
 	fetchenv osgeo4w/bin/o4w_env.bat
@@ -18,19 +21,15 @@ startlog
 	export LIB="$LIB;$(cygpath -am osgeo4w/lib)"
 	export INCLUDE="$INCLUDE;$(cygpath -am osgeo4w/include)"
 
-	cd ../Qt4Qt5
+	cd ../$qsc/src
 	qmake qscintilla.pro
 
-	nmake /f Makefile.Release clean
-	nmake /f Makefile.Release
+	[ -z "$OSGEO4W_SKIP_CLEAN" ] || nmake /f Makefile.Release clean
 	nmake /f Makefile.Release install
 
 	cd ../Python
-	python configure.py --verbose --pyqt=PyQt5 \
-
-	nmake clean
-	nmake
-	nmake install
+	cp pyproject-qt5.toml pyproject.toml
+	sip-install
 )
 
 export R=$OSGEO4W_REP/x86_64/release/qt5/$P
@@ -39,9 +38,9 @@ mkdir -p $R/{$P-devel,python3-$P}
 mv osgeo4w/apps/Qt5/lib/qscintilla2_qt5.dll osgeo4w/apps/Qt5/bin/qscintilla2_qt5.dll
 cp osgeo4w/apps/Qt5/lib/qscintilla2_qt5.lib osgeo4w/apps/Qt5/lib/qscintilla2.lib
 
-cp ../LICENSE $R/$P-$V-$B.txt
-cp ../LICENSE $R/$P-devel/$P-devel-$V-$B.txt
-cp ../LICENSE $R/python3-$P/python3-$P-$V-$B.txt
+cp ../$qsc/LICENSE $R/$P-$V-$B.txt
+cp ../$qsc/LICENSE $R/$P-devel/$P-devel-$V-$B.txt
+cp ../$qsc/LICENSE $R/python3-$P/python3-$P-$V-$B.txt
 
 cat <<EOF >$R/setup.hint
 sdesc: "Qt5 source code editing component."

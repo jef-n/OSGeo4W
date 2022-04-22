@@ -1,5 +1,5 @@
 export P=qtkeychain
-export V=0.11.1
+export V=0.13.2
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="qt5-devel"
@@ -9,7 +9,7 @@ source ../../../scripts/build-helpers
 startlog
 
 [ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://github.com/frankosterfeld/$P/archive/v$V.tar.gz
-[ -f ../CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz --xform "s,^$P-$V,.,"
+[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz
 
 (
 	fetchenv osgeo4w/bin/o4w_env.bat
@@ -33,7 +33,7 @@ startlog
 		-DCMAKE_INSTALL_LIBDIR=$INSTDIR/apps/Qt5/lib \
 		-DCMAKE_INSTALL_INCLUDEDIR=$INSTDIR/apps/Qt5/include \
 		-DPKGCONFIG_INSTALL_PREFIX=$INSTDIR/apps/Qt5/lib/pkgconfig \
-        	../..
+		../../$P-$V
 
 	cmake --build .
 	cmake --install .
@@ -44,7 +44,7 @@ mkdir -p $R
 
 for i in devel libs; do
 	mkdir -p $R/$P-$i
-	cp ../COPYING $R/$P-$i
+	cp ../$P-$V/COPYING $R/$P-$i
 done
 
 cat <<EOF >$R/$P-devel/setup.hint

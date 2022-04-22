@@ -1,5 +1,5 @@
 export P=gpsbabel
-export V=1.7.0
+export V=1.8.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="qt5-devel zlib-devel expat-devel gdal-devel"
@@ -9,8 +9,8 @@ source ../../../scripts/build-helpers
 startlog
 
 [ -f ${P}_${V//./_}.tar.gz ] || wget https://github.com/$P/$P/archive/${P}_${V//./_}.tar.gz
-[ -f ../CMakeLists.txt ] || tar -C .. -xzf ${P}_${V//./_}.tar.gz --xform "s,^$P-${P}_${V//./_},.,"
-
+[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf ${P}_${V//./_}.tar.gz --xform "s,${P}-${P}_${V//_/.},$P-$V,"
+[ -f ../$P-$V/CMakeLists.txt ]
 
 (
 	fetchenv osgeo4w/bin/o4w_env.bat
@@ -27,18 +27,8 @@ startlog
 	cmake -G Ninja \
 		-D CMAKE_BUILD_TYPE=Release \
 		-D CMAKE_INSTALL_PREFIX=$(cygpath -am ../install) \
-		../..
-	cmake --build .
-
-	cd ..
-
-	mkdir -p build-gui
-	cd build-gui
-
-	cmake -G Ninja \
-		-D CMAKE_BUILD_TYPE=Release \
-		-D CMAKE_INSTALL_PREFIX=$(cygpath -am ../install) \
-		../../gui
+		-D GPSBABEL_MAPPREVIEW=OFF \
+		../../$P-$V
 	cmake --build .
 )
 
@@ -91,13 +81,13 @@ tar -cvjf $R/$P-$V-$B.tar.bz2 \
 	build/gpsbabel.exe
 
 tar -cjf $R/$P-gui/$P-gui-$V-$B.tar.bz2 \
-	--xform "s,build-gui/GPSBabelFE.exe,bin/gpsbabelfe.exe," \
+	--xform "s,build/gui/GPSBabelFE.exe,bin/gpsbabelfe.exe," \
 	--xform "s,../gui/coretool/,apps/qt5/translations/," \
 	--xform "s,../gui/,apps/qt5/translations/," \
 	--xform "s,postinstall.bat,etc/postinstall/$P-gui.bat," \
 	--xform "s,preremove.bat,etc/preremove/$P-gui.bat," \
 	--xform "s,gui.bat,bin/$P-gui.bat," \
-	build-gui/GPSBabelFE.exe \
+	build/gui/GPSBabelFE.exe \
 	postinstall.bat \
 	preremove.bat \
 	gui.bat

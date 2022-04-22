@@ -24,6 +24,7 @@ export INSTDIR=$(cygpath -am install)
 (
 	vs2019env
 	cmakeenv
+	ninjaenv
 
 	export LIB="$LIB;$(cygpath -am osgeo4w/lib)"
 	export INCLUDE="$INCLUDE;$(cygpath -am osgeo4w/include)"

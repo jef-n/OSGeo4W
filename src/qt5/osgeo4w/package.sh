@@ -1,23 +1,49 @@
 export P=qt5
-export V=5.15.2
-export B="next qt5-libs"
+export V=tbd
+export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="openssl-devel sqlite3-devel zlib-devel libjpeg-devel libtiff-devel libpng-devel oci-devel libwebp-devel libmysql-devel zstd-devel libpq-devel icu-devel freetype-devel"
+export BUILDDEPENDS="openssl-devel sqlite3-devel zlib-devel libjpeg-devel libtiff-devel libpng-devel oci-devel libwebp-devel libmysql-devel zstd-devel libpq-devel icu-devel freetype-devel node"
+
+# perl also used in openssl and libpq
+SBPERL=5.32.0.1
+PY2=2.7.18
+export VCSDK=10.0.20348.0
 
 source ../../../scripts/build-helpers
 
 startlog
 
-[ -f qt-everywhere-src-$V.tar.xz ] || wget -q https://download.qt.io/archive/qt/${V%.*}/$V/single/qt-everywhere-src-$V.tar.xz
-[ -f ../configure.bat ] || tar -C .. -xJf qt-everywhere-src-$V.tar.xz --xform "s,^qt-everywhere-src-$V,.,"
+if ! [ -d ../qt5 ]; then
+	git clone https://invent.kde.org/qt/qt/qt5.git ../qt5
+	cd ../qt5
+	git checkout kde/5.15
+	perl init-repository
+else
+	cd ../qt5
+fi
 
-[ -f python-2.7.18.amd64.msi ] || wget -q https://www.python.org/ftp/python/2.7.18/python-2.7.18.amd64.msi
-[ -d py2 ] || cygstart --action=runas --wait msiexec /i $(cygpath -aw python-2.7.18.amd64.msi) /quiet /norestart TARGETDIR=$(cygpath -aw py2) ALLUSERS=0 ADDLOCAL=DefaultFeature
+export V=$(sed -ne "s/MODULE_VERSION *= *\([^ ]*\) *$/\1/p" qtbase/.qmake.conf)
+nextbinary qt5-libs
+
+cd ../osgeo4w
+
+[ -f python-$PY2.amd64.msi ] || wget -q https://www.python.org/ftp/python/$PY2/python-$PY2.amd64.msi
+[ -d py2 ] || cygstart --action=runas --wait msiexec /i $(cygpath -aw python-$PY2.amd64.msi) /quiet /norestart TARGETDIR=$(cygpath -aw py2) ALLUSERS=0 ADDLOCAL=DefaultFeature
 [ -d py2 ]
+
+if ! [ -d perl ]; then
+        wget -c http://strawberryperl.com/download/$SBPERL/strawberry-perl-$SBPERL-64bit-portable.zip
+        mkdir perl
+        cd perl
+        unzip ../strawberry-perl-$SBPERL-64bit-portable.zip
+        cd ..
+fi
 
 export PATH="$(cygpath -a py2):$PATH:/bin:/usr/bin"
 
 vs2019env
+cmakeenv
+ninjaenv
 
 # meet cute expectations
 cp osgeo4w/lib/jpeg_i.lib osgeo4w/lib/jpeg.lib
@@ -42,30 +68,34 @@ export LIB="$(cygpath -aw $O4W/lib);$LIB"
 # echo "LIB:;$LIB" | sed -e "s/;/\n  /g"
 
 [ -f ../installed ] || {
-	cmd /c ..\\..\\configure.bat -v \
-		-opensource \
-		-confirm-license \
-		-nomake tests \
-		-nomake examples \
-		-prefix $(cygpath -aw $APPDIR) \
-		-platform win32-msvc \
-		-system-zlib \
-		-system-libjpeg \
-		-system-libpng \
-		-system-webp \
-		-system-tiff \
-		-system-sqlite \
-		-system-freetype \
-		-openssl-linked \
-		-sql-odbc \
-		-sql-psql \
-		-plugin-sql-oci \
-		-plugin-sql-mysql \
-		-force-debug-info \
-		-icu \
-		-mp
-
 	(
+		fetchenv ../perl/portableshell.bat /SETENV
+
+		export PATH=$O4W/apps/node:$PATH
+
+		cmd /c ..\\..\\qt5\\configure.bat -v \
+			-opensource \
+			-confirm-license \
+			-nomake tests \
+			-nomake examples \
+			-prefix $(cygpath -aw $APPDIR) \
+			-platform win32-msvc \
+			-system-zlib \
+			-system-libjpeg \
+			-system-libpng \
+			-system-webp \
+			-system-tiff \
+			-system-sqlite \
+			-system-freetype \
+			-openssl-linked \
+			-sql-odbc \
+			-sql-psql \
+			-plugin-sql-oci \
+			-plugin-sql-mysql \
+			-force-debug-info \
+			-icu \
+			-mp
+
 		export PATH=$O4W/bin:$PATH
 
 		# build everything and maybe to the first error
@@ -105,15 +135,21 @@ while read f; do
 
         case "$e" in
         exe)
-		case "$f" in
+		case "${f,,}" in
 		apps/qt5/bin/assistant.exe|\
 		apps/qt5/bin/designer.exe|\
 		apps/qt5/bin/linguist.exe)
 			p=tools
 			;;
+
+		apps/qt5/bin/*process.exe)
+			p=libs
+			;;
+
 		apps/qt5/bin/qml*)
 			p=qml
 			;;
+
 		*)
 			p=devel
 			;;
@@ -444,7 +480,7 @@ tar -cjf $R/$P-$V-$B-src.tar.bz2 \
 #
 
 for i in devel qml qml-debug tools docs libs libs-symbols libs-debug libs-debug-symbols oci oci-debug; do
-	cp ../../LICENSE.GPLv3 $R/$P-$i/$P-$i-$V-$B.txt
+	cp ../../$P/LICENSE.GPLv3 $R/$P-$i/$P-$i-$V-$B.txt
 done
 
 #

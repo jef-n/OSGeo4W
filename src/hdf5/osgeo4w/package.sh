@@ -62,7 +62,7 @@ cat <<EOF >$R/$P-devel/setup.hint
 sdesc: "The HDF5 library for reading and writing HDF5 format (Development)"
 ldesc: "The HDF5 library for reading and writing HDF5 format (Development)"
 category: Libs
-requires: $P
+requires: $P-tools
 external-source: $P
 maintainer: $MAINTAINER
 EOF

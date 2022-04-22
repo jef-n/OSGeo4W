@@ -1,5 +1,5 @@
 export P=qwt
-export V=6.1.3
+export V=6.1.6
 export B="next qwt-libs"
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=qt5-devel
@@ -10,11 +10,11 @@ startlog
 
 set -e
 
-[ -f qwt-$V.tar.bz2 ] || wget https://deac-riga.dl.sourceforge.net/project/$P/$P/$V/$P-$V.tar.bz2
-[ -f ../qwtbuild.pri ] || tar -C .. -xjf $P-$V.tar.bz2 --xform "s,$P-$V,.,"
+[ -f qwt-$V.tar.bz2 ] || wget https://deac-ams.dl.sourceforge.net/project/$P/$P/$V/qwt-$V.tar.bz2
+[ -f ../$P-$V/qwtbuild.pri ] || tar -C .. -xjf $P-$V.tar.bz2
 [ -f patched ] || {
-	patch -d .. -p1 --dry-run <diff
-	patch -d .. -p1 <diff
+	patch -d ../$P-$V -p1 --dry-run <diff
+	patch -d ../$P-$V -p1 <diff
 	touch patched
 }
 
@@ -22,7 +22,9 @@ set -e
 	fetchenv osgeo4w/bin/o4w_env.bat
 	vs2019env
 
-	cd ..
+	mkdir -p install
+
+	cd ../$P-$V
 
 	[ -f Makefile ] && nmake distclean
 	qmake qwt.pro
@@ -35,7 +37,7 @@ export R=$OSGEO4W_REP/x86_64/release/qt5/$P
 
 for i in doc libs devel; do
 	mkdir -p $R/$P-$i
-	cp ../COPYING $R/$P-$i/$P-$i-$V-$B.txt
+	cp ../$P-$V/COPYING $R/$P-$i/$P-$i-$V-$B.txt
 done
 
 cat <<EOF >$R/$P-doc/setup.hint
