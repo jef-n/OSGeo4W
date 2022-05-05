@@ -33,6 +33,8 @@ if [ -z "$OSGEO4W_SKIP_CLEAN" ]; then
 	patch -p1 -d ../gdal <patch
 fi
 
+SHA=$(cd ../gdal; git log -n1 --pretty=%h)
+
 [ -f osgeo4w/apps/$PYTHON/Lib/site-packages/setuptools/command/patched ] || {
 	patch -p0 --dry-run <easy_install.diff
 	patch -p0 <easy_install.diff
@@ -94,12 +96,37 @@ mkdir -p ecw
 
 cd ..
 
-V=$(<../gdal/VERSION)
-nextbinary
+availablepackageversions $P
+# Version: $GDALVER-$BUILD-$SHA-$BINARY
 
+V=$(<../gdal/VERSION)
 major=${V%%.*}
 minor=${V#$major.}
 minor=${minor%%.*}
+
+build=1
+if [[ "$version_curr" =~ ^[^-]*-[^-]*-[^-]*$ ]]; then
+	v=$version_curr
+	version=${v%%-*}
+	v=${v#*-}
+
+	build=${v%%-*}
+	v=${v#*-}
+	sha=${v%%-*}
+
+	if [ "$SHA" = "$sha" -a -z "$OSGEO4W_FORCE_REBUILD" ]; then
+		echo "$SHA already built."
+		endlog
+		exit 0
+	fi
+
+	if [ "$V" = "$version" ]; then
+		(( build++ )) || true
+	fi
+fi
+
+V=$V-$build-$SHA
+nextbinary
 
 export abi=$(printf "%d%02d" $major $minor)
 
@@ -181,7 +208,13 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 		../../gdal
 
 	cmake --build .
-	cmake --build . --target install
+	if ! cmake --build . --target install; then
+		echo WTF?
+		if ! ninja install; then
+			echo Seriously?
+			exit 1
+		fi
+	fi
 )
 
 mkdir -p install/etc/{postinstall,preremove}
