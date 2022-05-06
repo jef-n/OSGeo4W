@@ -1,0 +1,33 @@
+diff -ur poppler-22.05.0/cmake/modules/FindNSS3.cmake ../poppler-22.05.0/cmake/modules/FindNSS3.cmake
+--- poppler-22.05.0/cmake/modules/FindNSS3.cmake	2022-05-03 22:31:50.000000000 +0200
++++ ../poppler-22.05.0/cmake/modules/FindNSS3.cmake	2022-05-06 17:39:48.194535300 +0200
+@@ -16,7 +16,7 @@
+ 
+ include(FindPackageHandleStandardArgs)
+ 
+-find_package(PkgConfig REQUIRED)
++#find_package(PkgConfig REQUIRED)
+ 
+ pkg_check_modules(NSS3 IMPORTED_TARGET "nss>=3.19")
+ 
+diff -ur poppler-22.05.0/CMakeLists.txt ../poppler-22.05.0/CMakeLists.txt
+--- poppler-22.05.0/CMakeLists.txt	2022-05-03 22:31:50.000000000 +0200
++++ ../poppler-22.05.0/CMakeLists.txt	2022-05-06 17:37:48.706554700 +0200
+@@ -18,7 +18,7 @@
+ set(CMAKE_TRY_COMPILE_CONFIGURATION "${_CMAKE_BUILD_TYPE_UPPER}")
+ 
+ include(MacroOptionalFindPackage)
+-find_package(PkgConfig)
++# find_package(PkgConfig)
+ include(TestBigEndian)
+ test_big_endian(WORDS_BIGENDIAN)
+ include(CheckFileOffsetBits)
+@@ -521,7 +521,7 @@
+ endif()
+ if(WIN32)
+   # use clean APIs
+-  add_definitions(-DWIN32_LEAN_AND_MEAN)
++  add_definitions(-DWIN32_LEAN_AND_MEAN -DQGLOBAL_H)
+   # gdi32 is needed under win32
+   set(poppler_LIBS ${poppler_LIBS} gdi32)
+ endif()

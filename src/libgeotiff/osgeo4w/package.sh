@@ -1,5 +1,5 @@
 export P=libgeotiff
-export V=1.6.0
+export V=1.7.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="proj-devel libtiff-devel"
@@ -26,8 +26,6 @@ cmake -G Ninja \
 	-D PROJ_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D TIFF_LIBRARY=$(cygpath -am ../osgeo4w/lib/tiff.lib) \
 	-D TIFF_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
-	-D OPENSSL_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/openssl) \
-	-D OPENSSL_CRYPTO_LIBRARY=$(cygpath -am ../osgeo4w/lib/libcrypto.lib) \
 	../../$P-$V
 ninja
 ninja install

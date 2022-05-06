@@ -219,8 +219,8 @@ requires: msvcrt2019 $P$abi-runtime
 EOF
 
 cat <<EOF >$R/$P$abi-runtime/setup.hint
-sdesc: "The GDAL/OGR $V runtime library"
-ldesc: "The GDAL/OGR $V runtime library"
+sdesc: "The GDAL/OGR $major.$minor runtime library"
+ldesc: "The GDAL/OGR $major.$minor runtime library"
 maintainer: $MAINTAINER
 category: Libs Commandline_Utilities
 requires: msvcrt2019 libpng curl geos libmysql sqlite3 netcdf libpq expat xerces-c hdf4 ogdi libiconv openjpeg libspatialite freexl xz zstd poppler msodbcsql libjpeg libjpeg12 $RUNTIMEDEPENDS

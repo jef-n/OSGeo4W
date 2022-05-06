@@ -126,7 +126,7 @@ SQLNCLI_LIB		= $(OSGEO4W)/lib/msodbcsql$(MSODBCSQL_VERSION).lib
 ILI_ENABLED		= YES
 
 POPPLER_ENABLED		= YES
-POPPLER_CFLAGS		= -I$(OSGEO4W)/include -I$(OSGEO4W)/include/poppler
+POPPLER_CFLAGS		= -I$(OSGEO4W)/include -I$(OSGEO4W)/include/poppler /std:c++17
 POPPLER_LIBS		= $(OSGEO4W)/lib/poppler.lib $(OSGEO4W)/lib/freetype.lib advapi32.lib gdi32.lib
 
 LIBKML_DIR		= $(OSGEO4W)

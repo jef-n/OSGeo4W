@@ -1,5 +1,5 @@
 export P=poppler
-export V=21.11.0
+export V=22.05.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="freetype-devel libjpeg-devel zlib-devel libpng-devel libtiff-devel curl-devel boost-devel cairo-devel libiconv-devel openjpeg-devel openjpeg-tools"
@@ -11,12 +11,15 @@ source ../../../scripts/build-helpers
 startlog
 
 [ -f $P-$V.tar.xz ] || wget https://poppler.freedesktop.org/$P-$V.tar.xz
-[ -f ../CMakeLists.txt ] || tar -C .. -xJf $P-$V.tar.xz
+[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xJf $P-$V.tar.xz
 [ -f ../$P-$V/patched ] || {
 	patch -d ../$P-$V -p1 --dry-run <diff
 	patch -d ../$P-$V -p1 <diff
 	touch ../$P-$V/patched
 }
+
+# should be fixed in openjpeg-devel…
+sed -i -e "s#set(INC_DIR .*)#set(INC_DIR \"$(cygpath -am osgeo4w/include/openjpeg-2.4)\")#i" osgeo4w/lib/openjpeg-2.4/OpenJPEGConfig.cmake
 
 [ -f poppler-test.tar.gz ] || wget -O poppler-test.tar.gz https://github.com/freedesktop/poppler-test/archive/refs/heads/master.tar.gz
 [ -d poppler-test-master ] || tar xzf poppler-test.tar.gz
@@ -58,6 +61,7 @@ cmake -G Ninja \
 	-D ENABLE_QT5=OFF \
 	-D ENABLE_QT6=OFF \
 	-D ENABLE_GLIB=OFF \
+	-D WITH_NSS3=OFF \
 	-D ENABLE_RELOCATABLE=OFF \
 	-D ENABLE_UNSTABLE_API_ABI_HEADERS=ON \
 	-D OpenJPEG_DIR=$(cygpath -am ../osgeo4w/lib/openjpeg-2.4) \

@@ -266,8 +266,8 @@ requires: msvcrt2019 $P$abi-runtime
 EOF
 
 cat <<EOF >$R/$P$abi-runtime/setup.hint
-sdesc: "The GDAL/OGR $V runtime library (nightly build)"
-ldesc: "The GDAL/OGR $V runtime library (nightly build)"
+sdesc: "The GDAL/OGR $major.$minor runtime library (nightly build)"
+ldesc: "The GDAL/OGR $major.$minor runtime library (nightly build)"
 maintainer: $MAINTAINER
 category: Libs Commandline_Utilities
 requires: msvcrt2019 libpng curl geos libmysql sqlite3 netcdf libpq expat xerces-c hdf4 ogdi libiconv openjpeg libspatialite freexl xz zstd poppler msodbcsql libjpeg libjpeg12 arrow-cpp thrift brotli $RUNTIMEDEPENDS
@@ -448,6 +448,11 @@ tar -C install -cjvf $R/$P-$V-$B.tar.bz2 \
 	apps/$P/bin \
 	apps/$P/share \
 	bin/$P-env.bat
+
+tar -C .. -cjvf $R/$P-$V-$B-src.tar.bz2 \
+	osgeo4w/package.sh \
+	osgeo4w/easy_install.diff \
+	osgeo4w/patch
 
 find install -type f | sed -e "s#^install/##" >/tmp/$P.installed
 
