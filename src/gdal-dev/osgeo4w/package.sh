@@ -208,13 +208,7 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 		../../gdal
 
 	cmake --build .
-	if ! cmake --build . --target install; then
-		echo WTF?
-		if ! ninja install; then
-			echo Seriously?
-			exit 1
-		fi
-	fi
+	cmake --build . --target install
 )
 
 mkdir -p install/etc/{postinstall,preremove}
@@ -285,7 +279,7 @@ sdesc: "The GDAL/OGR headers and libraries (nightly build)"
 ldesc: "The GDAL/OGR headers and libraries (nightly build)"
 maintainer: $MAINTAINER
 category: Libs Commandline_Utilities
-requires: $P$abi-runtime
+requires: $P
 external-source: $P
 EOF
 
