@@ -56,7 +56,7 @@ ldesc: "Qt5 source code editing component. (Development)"
 maintainer: $MAINTAINER
 category: Libs
 requires: $P
-external-source: qt5/$P
+external-source: $P
 EOF
 
 cat <<EOF >$R/python3-$P/setup.hint
@@ -65,7 +65,7 @@ ldesc: "Python3 bindings for Qt5 QScintilla"
 maintainer: $MAINTAINER
 category: Libs
 requires: python3-core python3-sip python3-pyqt5 $P
-external-source: qt5/$P
+external-source: $P
 EOF
 
 cd osgeo4w

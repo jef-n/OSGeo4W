@@ -62,6 +62,7 @@ ldesc: "Platform-independent Qt API for storing passwords securely."
 maintainer: $MAINTAINER
 category: Libs
 requires: qt5-libs
+external-source: $P
 EOF
 
 tar -C .. -cvjf $R/$P-$V-$B-src.tar.bz2 \

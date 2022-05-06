@@ -33,6 +33,7 @@ mkdir -p $R/$P-devel
 cat <<EOF >$R/setup.hint
 sdesc: "LERC compression (runtime)"
 ldesc: "LERC compression (runtime)"
+requires: 
 category: Libs
 maintainer: $MAINTAINER
 EOF
