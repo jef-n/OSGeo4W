@@ -26,7 +26,7 @@ startlog
 		-D BUILD_SHARED_LIBS=OFF \
 		../../$P-$V/build/cmake
 	cmake --build .
-	cmake --install . || cmake --install .
+	cmake --install .
 )
 
 export R=$OSGEO4W_REP/x86_64/release/$P

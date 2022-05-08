@@ -12,6 +12,6 @@ cat <<EOF >pip.env
 export PIP_NO_DEPENDENCIES=0
 EOF
 
-adddepends=qt5-libs packagewheel
+adddepends="qt5-libs qt5-devel" packagewheel
 
 endlog

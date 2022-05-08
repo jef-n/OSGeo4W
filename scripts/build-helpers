@@ -197,7 +197,7 @@ ninjaenv() {
 		exit 1
 	fi
 
-	export PATH="$PATH:$OSGEO4W_SCRIPTS"
+	export PATH="$OSGEO4W_SCRIPTS:$PATH"
 }
 
 regen() {
