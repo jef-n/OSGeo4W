@@ -82,7 +82,7 @@ mkdir -p ecw
 		'lib/vc141/x64/NCSEcw.lib' \
 		'lib/vc141/x64/NCSEcwS.lib' \
 		'bin/vc141/x64/*' \
-		'\$TEMP/ecwjp2_sdk/Server_Read-Only_EndUser.rtf'
+		'$TEMP/ecwjp2_sdk/Server_Read-Only_EndUser.rtf'
 	mv 'ecw/$0/include' ecw/include
 	rmdir 'ecw/$0'
 	touch ecw/done
@@ -214,6 +214,8 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 		-D                       SWIG_EXECUTABLE=$(cygpath -am ../osgeo4w/bin/swig.bat) \
 		-D             GDAL_EXTRA_LINK_LIBRARIES="$(cygpath -am ../osgeo4w/lib/freetype.lib);$(cygpath -am ../osgeo4w/lib/jpeg_i.lib);$(cygpath -am ../osgeo4w/lib/tiff.lib);$(cygpath -am ../osgeo4w/lib/uriparser.lib);$(cygpath -am ../osgeo4w/lib/minizip.lib)" \
 		../../gdal
+
+	[ -n "$OSGEO4W_SKIP_CLEAN" ] || cmake --build . --target clean
 
 	cmake --build .
 	cmake --build . --target install

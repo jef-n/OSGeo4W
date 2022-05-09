@@ -64,7 +64,7 @@ mkdir -p ecw
 		'lib/vc141/x64/NCSEcw.lib' \
 		'lib/vc141/x64/NCSEcwS.lib' \
 		'bin/vc141/x64/*' \
-		'\$TEMP/ecwjp2_sdk/Server_Read-Only_EndUser.rtf'
+		'$TEMP/ecwjp2_sdk/Server_Read-Only_EndUser.rtf'
 	mv 'ecw/$0/include' ecw/include
 	rmdir 'ecw/$0'
 	touch ecw/done

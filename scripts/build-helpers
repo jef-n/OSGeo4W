@@ -486,8 +486,9 @@ make() { /bin/make "$@"; }
 7z() { /bin/7z "$@"; }
 cygpath() { /bin/cygpath "$@"; }
 curl() { /bin/curl "$@"; }
+catdoc() { /bin/catdoc "$@"; }
 
-declare -x awk bash cat cp rm mkdir tar ls sed diff patch find xargs flip touch unzip cygpath
+declare -x awk bash cat cp rm mkdir tar ls sed diff patch find xargs flip touch unzip cygpath catdoc
 
 init() {
 	if [ -n "$OSGEO4W_ROOT" ]; then
