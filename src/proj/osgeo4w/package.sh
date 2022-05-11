@@ -49,7 +49,7 @@ abi=${abi//./}
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 
-mkdir -p $R/$P-devel $R/$P$abi-runtime
+mkdir -p $R/$P-devel $R/$P$abi-runtime $R/$P-runtime-data
 
 mkdir -p install/etc/abi
 echo $P$abi-runtime >install/etc/abi/$P-devel
@@ -66,7 +66,16 @@ cat <<EOF >$R/$P$abi-runtime/setup.hint
 sdesc: "The PROJ library and commands for coordinate system transformations (Runtime)."
 ldesc: "The PROJ library and commands for coordinate system transformations (Runtime)."
 category: Libs
-requires: msvcrt2019 sqlite3 libtiff curl proj-data $P$abi-runtime
+requires: msvcrt2019 sqlite3 libtiff curl proj-runtime-data proj-data
+maintainer: $MAINTAINER
+external-source: $P
+EOF
+
+cat <<EOF >$R/$P-runtime-data/setup.hint
+sdesc: "The PROJ library and commands for coordinate system transformations (Runtime data)."
+ldesc: "The PROJ library and commands for coordinate system transformations (Runtime data)."
+category: Libs
+requires: 
 maintainer: $MAINTAINER
 external-source: $P
 EOF
@@ -82,12 +91,16 @@ EOF
 
 appendversions $R/setup.hint
 appendversions $R/$P$abi-runtime/setup.hint
+appendversions $R/$P-runtime-data/setup.hint
 appendversions $R/$P-devel/setup.hint
 
 cp ../$P-${V%RC*}/COPYING $R/$P-$V-$B.txt
+cp ../$P-${V%RC*}/COPYING $R/$P$abi-runtime/$P$abi-runtime-$V-$B.txt
+cp ../$P-${V%RC*}/COPYING $R/$P-runtime-data/$P-runtime-data-$V-$B.txt
+cp ../$P-${V%RC*}/COPYING $R/$P-devel/$P-devel-$V-$B.txt
 
 mkdir -p install/etc/ini
-cat <<EOF >install/etc/ini/$P.bat
+cat <<EOF >install/etc/ini/$P-runtime-data.bat
 SET PROJ_LIB=%OSGEO4W_ROOT%\\share\\proj
 EOF
 
@@ -99,6 +112,8 @@ tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
 tar -C install -cjf $R/$P$abi-runtime/$P$abi-runtime-$V-$B.tar.bz2 \
 	--exclude "*.exe" \
 	bin \
+
+tar -C install -cjf $R/$P-runtime-data/$P-runtime-data-$V-$B.tar.bz2 \
 	etc/ini \
 	share/proj
 
