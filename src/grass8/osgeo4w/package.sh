@@ -17,6 +17,11 @@ MM=${MM//./}
 
 [ -f grass-$V.tar.gz ] || wget -O grass-$V.tar.gz https://github.com/OSGeo/grass/archive/refs/tags/$V.tar.gz
 [ -f ../grass-$V/configure ] || tar -C .. -xzf grass-$V.tar.gz
+[ -f ../grass-$V/patched ] || {
+	patch -d ../grass-$V -p1 --dry-run <patch
+	patch -d ../grass-$V -p1 <patch
+	touch ../grass-$V/patched
+}
 
 msysarch=msys2-base-x86_64-20210604.tar.xz
 
@@ -84,12 +89,12 @@ cat <<EOF >$R/setup.hint
 sdesc: "GRASS GIS ${V%.*}"
 ldesc: "Geographic Resources Analysis Support System (GRASS GIS ${V%.*})"
 category: Desktop
-requires: liblas $RUNTIMEDEPENDS avce00 gpsbabel gs proj python3-gdal python3-matplotlib libtiff python3-wxpython python3-pillow python3-pip python3-ply python3-pyopengl python3-psycopg2-binary python3-six zstd python3-pywin32 netcdf wxwidgets
+requires: liblas $RUNTIMEDEPENDS avce00 gpsbabel proj python3-gdal python3-matplotlib libtiff python3-wxpython python3-pillow python3-pip python3-ply python3-pyopengl python3-psycopg2-binary python3-six zstd python3-pywin32 gs netcdf wxwidgets
 maintainer: $MAINTAINER
 EOF
 
 appendversions $R/setup.hint
 
-tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
+tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/patch
 
 endlog
