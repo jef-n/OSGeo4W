@@ -20,7 +20,7 @@
 #include <string>
 #include "win32.h"
 #include "ini.h"
-#include "iniparse.hh"
+#include "iniparse.hpp"
 #include "PackageTrust.h"
 
 extern int yyerror (const std::string& s);

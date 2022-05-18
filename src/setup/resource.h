@@ -69,6 +69,7 @@
 #define IDS_LICENSE_EMPTYPATH             164
 #define IDS_NOTHING_TO_INSTALL_OR_UPGRADE 165
 #define IDS_NOTHING_TO_DOWNLOAD           166
+#define IDS_SPLASH_TEXT                   167
 
 // Dialogs
 

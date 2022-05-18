@@ -102,6 +102,10 @@ SplashPage::OnInit ()
   ::SetWindowText (GetDlgItem (IDC_VERSION), ver.c_str());
   makeClickable (IDC_SPLASH_URL, "https://osgeo4w.osgeo.org");
 
+  char buf[1000];
+  LoadString (hinstance, IDS_SPLASH_TEXT, buf, sizeof buf);
+  eset (h, IDC_SPLASH_TEXT, buf);
+
   test_mode = TestOption;
   safe_mode = SafeModeOption;
 

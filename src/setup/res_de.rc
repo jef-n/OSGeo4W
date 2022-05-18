@@ -237,8 +237,7 @@ FONT 8, "MS Shell Dlg"
 BEGIN
     LTEXT           "OSGeo4W Net Release Setup Programm",
                     IDC_STATIC_WELCOME_TITLE,35,1,250,24
-    LTEXT           "Diese Setupprogramm wird zur initialen Installation der OSGeo4W-Umgebung sowie nachfolgenden Updates gebraucht.  Merken Sie sich, wo Sie es gespeichert haben.\r\n\r\nDie folgenden Seiten werden Sie durch die Installation führen.  Bitte beachten Sie, dass OSGeo4W aus einer großen Zahl von Paketen besteht, die zu vielen Zwecken eingesetzt werden können.  Anfänglich werden davon nur wenige Pakete installiert.  Sie können diese Programm jederzeit wieder starten, um bei Bedarf Pakete zur löschen, hinzufügen oder zu aktualisieren.",
-		    IDC_SPLASH_TEXT,35,25,265,90
+    LTEXT           "", IDC_SPLASH_TEXT,35,25,265,90
     CONTROL         "&Schnellinstallation",
 		    IDC_EXPRESS,"Button", BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,50,104,100,20
     CONTROL         "&Fortgeschrittene Installation",
@@ -419,6 +418,7 @@ END
 
 STRINGTABLE
 BEGIN
+    IDS_SPLASH_TEXT         "Diese Setupprogramm wird zur initialen Installation der OSGeo4W-Umgebung sowie nachfolgenden Updates gebraucht.  Merken Sie sich, wo Sie es gespeichert haben.\r\n\r\nDie folgenden Seiten werden Sie durch die Installation führen.  Bitte beachten Sie, dass OSGeo4W aus einer großen Zahl von Paketen besteht, die zu vielen Zwecken eingesetzt werden können.  Anfänglich werden davon nur wenige Pakete installiert.  Sie können diese Programm jederzeit wieder starten, um bei Bedarf Pakete zur löschen, hinzufügen oder zu aktualisieren."
     IDS_ROOT_SLASH          "Warnung: wir empfehlen NICHT das Hauptverzeichnis Ihrer Festplatte als OSGeo4W-Wurzelverzeichnis zu wählen.  Trotzdem fortfahren?"
     IDS_ROOT_SPACE          "Sie sollten keine Wurzelverzeichnis mit Leerzeichen wählen.  Trotzdem fortfahren?"
     IDS_ERR_OPEN_WRITE      "Kann %s nicht zum Schreiben öffnen: %s"

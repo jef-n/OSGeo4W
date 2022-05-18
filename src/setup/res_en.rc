@@ -237,8 +237,7 @@ FONT 8, "MS Shell Dlg"
 BEGIN
     LTEXT           "OSGeo4W Net Release Setup Program",
                     IDC_STATIC_WELCOME_TITLE,35,1,250,24
-    LTEXT           "This setup program is used for the initial installation of the OSGeo4W environment as well as all subsequent updates.  Make sure to remember where you saved it.\r\n\r\nThe pages that follow will guide you through the installation.  Please note that OSGeo4W consists of a large number of packages spanning a wide variety of purposes.  We only install a base set of packages by default.  You can always run this program at any time in the future to add, remove, or upgrade packages as necessary.",
-		    IDC_SPLASH_TEXT,35,25,265,90
+    LTEXT           "",IDC_SPLASH_TEXT,35,25,265,90
     CONTROL         "Express Install",
 		    IDC_EXPRESS,"Button", BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,50,104,100,20
     CONTROL         "Advanced Install",
@@ -419,6 +418,7 @@ END
 
 STRINGTABLE
 BEGIN
+    IDS_SPLASH_TEXT         "This setup program is used for the initial installation of the OSGeo4W environment as well as all subsequent updates.  Make sure to remember where you saved it.\r\n\r\nThe pages that follow will guide you through the installation.  Please note that OSGeo4W consists of a large number of packages spanning a wide variety of purposes.  We only install a base set of packages by default.  You can always run this program at any time in the future to add, remove, or upgrade packages as necessary."
     IDS_ROOT_SLASH          "Warning: we recommend you do NOT use the root of your hard drive as the OSGeo4W root.  Proceed anyway?"
     IDS_ROOT_SPACE          "You should not choose a root path that include spaces in directory names.  Proceed anyway?"
     IDS_ERR_OPEN_WRITE      "Can't open %s for writing: %s"

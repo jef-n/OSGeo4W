@@ -238,8 +238,7 @@ FONT 8, "MS Shell Dlg"
 BEGIN
     LTEXT           "Instalador de Red OSGeo4W",
                     IDC_STATIC_WELCOME_TITLE,35,1,195,24
-    LTEXT           "Este programa de instalación se utiliza para la instalación inicial del entorno OSGeo4W así como todas las actualizaciones posteriores Aseguresé de recordar dónde lo guardó.\r\n\r\nLas páginas siguientes le guiarán a través de la instalación. Tenga en cuenta que OSGeo4W consiste de un gran número de paquetes que abarcan una gran variedad de propósitos. Solo instalamos por omisión un conjunto de paquetes. Usted podrá en cualquier momento ejecutar otra vez este programa más adelante para agregar, quitar o actualizar los paquetes como sea necesario. ",
-		    IDC_SPLASH_TEXT,35,25,265,90
+    LTEXT           "",IDC_SPLASH_TEXT,35,25,265,90
     CONTROL         "Instalación Rápida",
 		    IDC_EXPRESS,"Button", BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,60,104,100,10
     CONTROL         "Instalación Avanzada",
@@ -420,6 +419,7 @@ END
 
 STRINGTABLE
 BEGIN
+    IDS_SPLASH_TEXT         "Este programa de instalación se utiliza para la instalación inicial del entorno OSGeo4W así como todas las actualizaciones posteriores Aseguresé de recordar dónde lo guardó.\r\n\r\nLas páginas siguientes le guiarán a través de la instalación. Tenga en cuenta que OSGeo4W consiste de un gran número de paquetes que abarcan una gran variedad de propósitos. Solo instalamos por omisión un conjunto de paquetes. Usted podrá en cualquier momento ejecutar otra vez este programa más adelante para agregar, quitar o actualizar los paquetes como sea necesario."
     IDS_ROOT_SLASH          "Advertencia: Le recomendamos que NO use la raíz de su disco duro como la raíz de OSGeo4W. ¿Desea continuar de todas maneras? "
     IDS_ROOT_SPACE          "Revise que no tenga espacios en blanco en la ruta principal de los nombres de directorios. ¿Desea continuar?"
     IDS_ERR_OPEN_WRITE      "No se puede abrir %s para escritura: %s"
