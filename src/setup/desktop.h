@@ -26,7 +26,7 @@
 class BoolOption;
 extern BoolOption NoShortcutsOption;
 extern BoolOption NoStartMenuOption;
-extern BoolOption NoDesktopOption;
+extern BoolOption DesktopOption;
 
 class DesktopSetupPage:public PropertyPage
 {

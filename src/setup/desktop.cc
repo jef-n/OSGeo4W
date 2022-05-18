@@ -46,8 +46,9 @@
 #define OSGEO4W_SHELL "OSGeo4W Shell"
 
 BoolOption NoShortcutsOption (false, 'n', "no-shortcuts", "Disable creation of desktop and start menu shortcuts");
-BoolOption NoStartMenuOption (false, 'N', "no-startmenu", "Disable creation of start menu shortcut");
-BoolOption NoDesktopOption (false, 'd', "no-desktop", "Disable creation of desktop shortcut");
+BoolOption NoStartMenuOption (false, 'N', "no-startmenu", "Disable creation of start menu shortcuts");
+BoolOption OldNoDesktopOption (false, 'd', "no-desktop", "Disable creation of desktop shortcuts (default)");
+BoolOption DesktopOption (false, 'T', "desktop", "Enable creation of desktop shortcuts");
 
 /* Lines starting with '@' are conditionals - include 'N' for NT,
    '5' for Win95, '8' for Win98, '*' for all, like this:
@@ -298,9 +299,9 @@ DesktopSetupPage::OnActivate ()
 	  root_menu = check_startmenu (OSGEO4W_SHELL, backslash (cygpath ("/OSGeo4W.bat")));
 	}
 
-      if (NoDesktopOption)
+      if (DesktopOption)
 	{
-	  root_desktop = 0;
+	  root_desktop = 1;
 	}
       else
 	{

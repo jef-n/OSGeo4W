@@ -94,8 +94,8 @@ load_dialog (HWND h)
 
   EnableWindow( GetDlgItem( h, IDC_ROOT_SYSTEM ), elevated );
 
-  CheckDlgButton (h, IDC_ROOT_DESKTOP, root_desktop ? BST_CHECKED : BST_UNCHECKED );
-  CheckDlgButton (h, IDC_ROOT_MENU, root_menu ? BST_CHECKED : BST_UNCHECKED );
+  CheckDlgButton (h, IDC_ROOT_DESKTOP, (!NoShortcutsOption && (DesktopOption || root_desktop)) ? BST_CHECKED : BST_UNCHECKED );
+  CheckDlgButton (h, IDC_ROOT_MENU,    (!NoShortcutsOption && !NoStartMenuOption && root_menu) ? BST_CHECKED : BST_UNCHECKED );
 
   loading = true;
   eset (h, IDC_ROOT_DIR, root_dir );
