@@ -2,7 +2,7 @@ export P=gdal-dev
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel hdf5-tools ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-devel libjpeg12-devel python3-setuptools opencl-devel libtiff-devel arrow-cpp-devel lz4-devel libgeotiff-devel openssl-devel tiledb-devel"
+export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel hdf5-tools ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-devel libjpeg12-devel python3-setuptools opencl-devel libtiff-devel arrow-cpp-devel lz4-devel libgeotiff-devel openssl-devel tiledb-devel lerc-devel kealib-devel"
 
 REPO=https://github.com/OSGeo/gdal.git
 
@@ -139,7 +139,7 @@ nextbinary
 export abi=$(printf "%d%02d" $major $minor)
 
 R=$OSGEO4W_REP/x86_64/release/gdal/$P
-mkdir -p $R/$P-{devel,oracle,filegdb,ecw,mrsid,sosi,mss,hdf5} $R/$P$abi-runtime $R/python3-$P
+mkdir -p $R/$P-{devel,oracle,filegdb,ecw,mrsid,sosi,mss,hdf5,kea} $R/$P$abi-runtime $R/python3-$P
 
 if [ -f $R/$P-$V-$B-src.tar.bz2 ]; then
 	echo "$R/$P-$V-$B-src.tar.bz2 already exists - skipping"
@@ -183,6 +183,7 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 		-D         GDAL_ENABLE_DRIVER_ECW_PLUGIN=ON \
 		-D       GDAL_ENABLE_DRIVER_MRSID_PLUGIN=ON \
 		-D        GDAL_ENABLE_DRIVER_HDF5_PLUGIN=ON \
+		-D         GDAL_ENABLE_DRIVER_KEA_PLUGIN=ON \
 		-D      OGR_ENABLE_DRIVER_FILEGDB_PLUGIN=ON \
 		-D         OGR_ENABLE_DRIVER_SOSI_PLUGIN=ON \
 		-D OGR_ENABLE_DRIVER_MSSQLSPATIAL_PLUGIN=ON \
@@ -211,6 +212,8 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 		-D                     FYBA_FYUT_LIBRARY=$(cygpath -am ../osgeo4w/lib/ut.lib) \
 		-D                     OGDI_INCLUDE_DIRS=$(cygpath -am ../osgeo4w/include/ogdi) \
 		-D                          OGDI_LIBRARY=$(cygpath -am ../osgeo4w/lib/ogdi.lib) \
+		-D                           KEA_LIBRARY=$(cygpath -am ../osgeo4w/lib/libkea.lib) \
+		-D                          LERC_LIBRARY=$(cygpath -am ../osgeo4w/lib/Lerc.lib) \
 		-D                       SWIG_EXECUTABLE=$(cygpath -am ../osgeo4w/bin/swig.bat) \
 		-D             GDAL_EXTRA_LINK_LIBRARIES="$(cygpath -am ../osgeo4w/lib/freetype.lib);$(cygpath -am ../osgeo4w/lib/jpeg_i.lib);$(cygpath -am ../osgeo4w/lib/tiff.lib);$(cygpath -am ../osgeo4w/lib/uriparser.lib);$(cygpath -am ../osgeo4w/lib/minizip.lib)" \
 		../../gdal
@@ -365,6 +368,15 @@ requires: $P$abi-runtime hdf5
 external-source: $P
 EOF
 
+cat <<EOF >$R/$P-kea/setup.hint
+sdesc: "KEA Plugin for GDAL (nightly build)"
+ldesc: "KEA Plugin for GDAL (nightly build)"
+category: Libs
+maintainer: $MAINTAINER
+requires: $P$abi-runtime kealib
+external-source: $P
+EOF
+
 appendversions $R/setup.hint
 appendversions $R/$P$abi-runtime/setup.hint
 appendversions $R/$P-devel/setup.hint
@@ -376,6 +388,7 @@ appendversions $R/$P-mrsid/setup.hint
 appendversions $R/$P-sosi/setup.hint
 appendversions $R/$P-mss/setup.hint
 appendversions $R/$P-hdf5/setup.hint
+appendversions $R/$P-kea/setup.hint
 
 cp ../gdal/LICENSE.TXT $R/$P-$V-$B.txt
 cp ../gdal/LICENSE.TXT $R/$P-oracle/$P-oracle-$V-$B.txt
@@ -426,6 +439,9 @@ tar -C install -cjvf $R/$P-ecw/$P-ecw-$V-$B.tar.bz2 \
 tar -C install -cjvf $R/$P-hdf5/$P-hdf5-$V-$B.tar.bz2 \
 	apps/$P/lib/gdalplugins/gdal_HDF5.dll
 
+tar -C install -cjvf $R/$P-kea/$P-kea-$V-$B.tar.bz2 \
+	apps/$P/lib/gdalplugins/gdal_KEA.dll
+
 tar -C install -cjvf $R/$P-mrsid/$P-mrsid-$V-$B.tar.bz2 \
 	apps/$P/lib/gdalplugins/gdal_MrSID.dll \
 	apps/$P/bin/lti_dsdk_cdll_9.5.dll \
@@ -468,7 +484,7 @@ find install -type f | sed -e "s#^install/##" >/tmp/$P.installed
 
 (
 	tar tjf $R/$P-$V-$B.tar.bz2 | tee /tmp/$P.files
-	for i in -filegdb -sosi -oracle -mss -ecw -mrsid -hdf5 -devel $abi-runtime; do
+	for i in -filegdb -sosi -oracle -mss -ecw -mrsid -hdf5 -kea -devel $abi-runtime; do
 		tar tjf $R/$P$i/$P$i-$V-$B.tar.bz2 | tee /tmp/$P-$i.files
 	done
 	tar tjf $R/python3-$P/python3-$P-$V-$B.tar.bz2 | tee /tmp/python3-$P.files
