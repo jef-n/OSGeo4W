@@ -1,0 +1,23 @@
+--- src/freexl.c.ori	2022-05-15 21:16:36.563818264 +0200
++++ src/freexl.c	2022-05-15 21:16:48.051798637 +0200
+@@ -295,7 +295,7 @@
+ 	  *err = FREEXL_UNSUPPORTED_CHARSET;
+ 	  return NULL;
+       }
+-    utf8buf = malloc (maxlen);
++    utf8buf = malloc (maxlen + 1);
+     len = buflen;
+     utf8len = maxlen;
+     pBuf = (char *) buf;
+@@ -1923,11 +1923,6 @@
+ 		return FREEXL_OK;
+ 	    }
+ 
+-	  if (len <= 0)
+-	    {
+-		/* zero length - it's a preasumable crafted file intended to crash FreeXL */
+-		return FREEXL_CRAFTED_FILE;
+-	    }
+ 	  if (!parse_unicode_string
+ 	      (workbook->utf16_converter, len, utf16, p_string, &utf8_string))
+ 	      return FREEXL_INVALID_CHARACTER;

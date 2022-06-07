@@ -9,27 +9,30 @@ source ../../../scripts/build-helpers
 startlog
 
 [ -f $P-$V.tar.gz ] || wget http://www.gaia-gis.it/gaia-sins/$P-$V.tar.gz
-[ -f ../configure ] || tar -C .. -xzf  $P-$V.tar.gz --xform "s,^$P-$V,.,"
+[ -f ../$P-$V/configure ] || tar -C .. -xzf  $P-$V.tar.gz
+[ -f ../$P-$V/patched ] || {
+        patch -d ../$P-$V/src -p1 --dry-run <../osgeo4w/patch
+        patch -d ../$P-$V/src -p1 <../osgeo4w/patch
+        touch ../$P-$V/patched
+}
 
 vs2019env
 
-cp makefile.vc ..
+cp makefile.vc ../$P-$V
 
-cd ..
+cd ../$P-$V
 
 set -x
 
-OSGEO4W_ROOT=$(cygpath -aw osgeo4w/osgeo4w) nmake /f makefile.vc all
+OSGEO4W_ROOT=$(cygpath -aw ../osgeo4w/osgeo4w) nmake /f $(cygpath -aw ../osgeo4w/makefile.vc) INSTDIR=..\\osgeo4w\\install all install
 
-nmake /f makefile.vc INSTDIR=osgeo4w\\install install
-
-cd osgeo4w
+cd ../osgeo4w
 
 R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R/$P-devel
 
-cp ../COPYING $R/$P-$V-$B.txt
-cp ../COPYING $R/$P-devel/$P-devel-$V-$B.txt
+cp ../$P-$V/COPYING $R/$P-$V-$B.txt
+cp ../$P-$V/COPYING $R/$P-devel/$P-devel-$V-$B.txt
 
 cat <<EOF >$R/setup.hint
 sdesc: "The FreeXL library for accessing Excel (.xls) spreadsheet. (Runtime)"
@@ -50,6 +53,6 @@ EOF
 
 tar -C install -cjf $R/$P-$V-$B.tar.bz2 bin/freexl.dll
 tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 bin/freexl.dll include lib
-tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/makefile.vc
+tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/makefile.vc osgeo4w/patch
 
 endlog
