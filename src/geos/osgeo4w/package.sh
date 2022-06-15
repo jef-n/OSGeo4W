@@ -1,5 +1,5 @@
 export P=geos
-export V=3.10.2
+export V=3.10.3
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
@@ -25,8 +25,8 @@ cmake -G Ninja \
         -D CMAKE_BUILD_TYPE=Release \
         -D CMAKE_INSTALL_PREFIX=../install \
         ../../$P-$V
-ninja
-ninja install
+cmake --build .
+cmake --build . --target install || cmake --build . --target install
 
 cd ..
 
