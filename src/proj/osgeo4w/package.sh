@@ -1,5 +1,5 @@
 export P=proj
-export V=9.0.0
+export V=9.0.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="sqlite3-devel libtiff-devel curl-devel"
@@ -40,7 +40,7 @@ cmake -G Ninja \
 	-D BUILD_SHARED_LIBS=ON \
 	../../$P-${V%RC*}
 cmake --build .
-cmake --build . --target install
+cmake --build . --target install || cmake --build . --target install
 
 cd ..
 
