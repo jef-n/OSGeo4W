@@ -3,7 +3,7 @@ export WXPYTHON_SHA=0df1d81acd6f1be8624022f8eecb51679008ca40
 export V=3.1.5-$WXPYTHON_SHA
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="zlib-devel expat-devel libjpeg-devel libpng-devel libtiff-devel xz-devel"
+export BUILDDEPENDS="zlib-devel expat-devel libjpeg-turbo-devel libpng-devel libtiff-devel xz-devel"
 
 
 source ../../../scripts/build-helpers
@@ -27,7 +27,7 @@ cmake -G Ninja \
 	-D wxBUILD_VENDOR=osgeo4w \
 	-D wxUSE_ZLIB=sys    -D    ZLIB_LIBRARY=$(cygpath -am ../osgeo4w/lib/zlib.lib)     -D    ZLIB_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D wxUSE_EXPAT=sys   -D   EXPAT_LIBRARY=$(cygpath -am ../osgeo4w/lib/libexpat.lib) -D   EXPAT_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
-	-D wxUSE_LIBJPEG=sys -D    JPEG_LIBRARY=$(cygpath -am ../osgeo4w/lib/jpeg_i.lib)   -D    JPEG_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
+	-D wxUSE_LIBJPEG=sys -D    JPEG_LIBRARY=$(cygpath -am ../osgeo4w/lib/jpeg.lib)     -D    JPEG_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D wxUSE_LIBPNG=sys  -D     PNG_LIBRARY=$(cygpath -am ../osgeo4w/lib/libpng16.lib) -D PNG_PNG_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D wxUSE_LIBTIFF=sys -D    TIFF_LIBRARY=$(cygpath -am ../osgeo4w/lib/tiff.lib)     -D    TIFF_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D wxUSE_LIBLZMA=sys -D LIBLZMA_LIBRARY=$(cygpath -am ../osgeo4w/lib/liblzma.lib)  -D LIBLZMA_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \

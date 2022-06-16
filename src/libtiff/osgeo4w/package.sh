@@ -1,8 +1,8 @@
 export P=libtiff
-export V=4.3.0
+export V=4.4.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="libjpeg-devel libjpeg12-devel xz-devel zlib-devel zstd-devel libwebp-devel lerc-devel"
+export BUILDDEPENDS="libjpeg-turbo-devel xz-devel zlib-devel zstd-devel libwebp-devel lerc-devel"
 
 source ../../../scripts/build-helpers
 
@@ -23,9 +23,7 @@ cmake -G Ninja \
 	-D CMAKE_INSTALL_PREFIX=../install \
 	-D cxx=OFF \
 	-D    JPEG_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
-	-D        JPEG_LIBRARY=$(cygpath -am ../osgeo4w/lib/jpeg_i.lib) \
-	-D  JPEG12_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/libjpeg12) \
-	-D      JPEG12_LIBRARY=$(cygpath -am ../osgeo4w/lib/jpeg12_i.lib) \
+	-D        JPEG_LIBRARY=$(cygpath -am ../osgeo4w/lib/jpeg.lib) \
 	-D    ZLIB_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D        ZLIB_LIBRARY=$(cygpath -am ../osgeo4w/lib/zlib.lib) \
 	-D    ZSTD_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
@@ -38,8 +36,8 @@ cmake -G Ninja \
 	-D LIBLZMA_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D     LIBLZMA_LIBRARY=$(cygpath -am ../osgeo4w/lib/liblzma.lib) \
 	../../tiff-$V
-ninja
-ninja install
+cmake --build .
+cmake --install . || cmake --install .
 
 cd ..
 
@@ -50,7 +48,7 @@ cat <<EOF >$R/setup.hint
 sdesc: "A library for manipulating TIFF format image files (runtime)"
 ldesc: "A library for manipulating TIFF format image files (runtime)"
 category: Libs
-requires: msvcrt2019 libjpeg libjpeg12 zlib xz zstd lerc
+requires: msvcrt2019 libjpeg-turbo zlib xz zstd lerc libwebp
 maintainer: $MAINTAINER
 EOF
 

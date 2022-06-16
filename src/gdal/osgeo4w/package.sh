@@ -1,31 +1,37 @@
 export P=gdal
-export V=3.4.3
+export V=3.5.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-devel libjpeg12-devel python3-setuptools"
+export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel hdf5-tools ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-turbo-devel python3-setuptools opencl-devel libtiff-devel libgeotiff-devel arrow-cpp-devel lz4-devel openssl-devel tiledb-devel lerc-devel kealib-devel"
 
 source ../../../scripts/build-helpers
 
 export PYTHON=Python39
 
-# TODO: revive (unused) csharp
-
 startlog
+
+# should be fixed in the packages
+find $(find osgeo4w -name cmake) -type f | \
+	xargs sed -i \
+		-e 's#.:/src/osgeo4w/src/[^/]*/osgeo4w/install/#\$ENV{OSGEO4W_ROOT}/#g' \
+		-e 's#.:/src/osgeo4w/src/[^/]*/osgeo4w/osgeo4w/#\$ENV{OSGEO4W_ROOT}/#g' \
+		-e 's#.:\\\\src\\\\osgeo4w\\\\src\\\\[^\\]*\\\\osgeo4w\\\\osgeo4w\\\\#\$ENV{OSGEO4W_ROOT}\\\\#g' \
+		-e 's#.:\\\\src\\\\osgeo4w\\\\src\\\\[^\\]*\\\\osgeo4w\\\\install\\\\#\$ENV{OSGEO4W_ROOT}\\\\#g'
 
 [ -f $P-$V.tar.gz ] || {
 	wget -q http://download.osgeo.org/gdal/${V%rc*}/$P-$V.tar.gz
-	rm -f ../$P-${V%rc*}/{makefile.vc,patched}
-}
-[ -f ../$P-${V%rc*}/makefile.vc ] || tar -C .. -xzf $P-$V.tar.gz
-[ -f ../$P-${V%rc*}/patched ] || {
-	cd ../$P-${V%rc*}
-	patch -p0 --dry-run <../osgeo4w/patch
-	patch -p0 <../osgeo4w/patch
-	touch patched
-	cd ../osgeo4w
+	rm -f ../$P-${V%rc*}/patched
 }
 
-[ -f osgeo4w/apps/Python39/Lib/site-packages/setuptools/command/patched ] || {
+[ -d ../$P-$V ] || tar -C .. -xzf $P-$V.tar.gz
+
+if ! [ -f ../$P-${V%rc*}/patched ] && [ -z "$OSGEO4W_SKIP_CLEAN" ]; then
+	patch -p1 -d ../$P-${V%rc*} --dry-run <patch
+	patch -p1 -d ../$P-${V%rc*} <patch
+	touch  ../$P-${V%rc*}/patched
+fi
+
+[ -f osgeo4w/apps/$PYTHON/Lib/site-packages/setuptools/command/patched ] || {
 	patch -p0 --dry-run <easy_install.diff
 	patch -p0 <easy_install.diff
 	touch osgeo4w/apps/Python39/Lib/site-packages/setuptools/command/patched
@@ -90,125 +96,133 @@ major=${V%%.*}
 minor=${V#$major.}
 minor=${minor%%.*}
 
-abi=$(printf "%d%02d" $major $minor)
+export abi=$(printf "%d%02d" $major $minor)
 
 R=$OSGEO4W_REP/x86_64/release/$P
-mkdir -p $R/$P-{devel,oracle,filegdb,ecw,mrsid,sosi,mss,hdf5} $R/$P$abi-runtime $R/python3-$P
+mkdir -p $R/$P-{devel,oracle,filegdb,ecw,mrsid,sosi,mss,hdf5,kea} $R/$P$abi-runtime $R/python3-$P
 
 if [ -f $R/$P-$V-$B-src.tar.bz2 ]; then
 	echo "$R/$P-$V-$B-src.tar.bz2 already exists - skipping"
 	exit 1
 fi
 
-export EXT_NMAKE_OPT=$(cygpath -am $PWD/nmake.opt)
 export FGDB_SDK=$(cygpath -am gdaldeps/filegdb)
 export ECW_SDK=$(cygpath -am gdaldeps/ecw)
 export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 
-export DESTDIR=$PWD/install
-export PYDESTDIR=$PWD/pyinstall
-
-rm -rf $DESTDIR $PYDESTDIR
-
-mkdir -p $DESTDIR/etc/ini
-mkdir -p $DESTDIR/share/gdal
-mkdir -p $PYDESTDIR/etc/{postinstall,preremove}
-
-cd ../$P-${V%rc*}
-
 (
-	fetchenv ../osgeo4w/osgeo4w/bin/o4w_env.bat
+	fetchenv osgeo4w/bin/o4w_env.bat
+
 	vs2019env
-	export PATH=$PATH:/bin
+	cmakeenv
+	ninjaenv
 
-	pv=$(sed -ne 's/#define POPPLER_VERSION "\([0-9]*\)\.\([0-9]*\)\..*$/\1:\2/p' ../osgeo4w/osgeo4w/include/poppler/poppler-config.h)
+	export INCLUDE="$(cygpath -am osgeo4w/include);$(cygpath -am osgeo4w/apps/Python39/include);$(cygpath -am osgeo4w/include/boost-1_74);$INCLUDE"
+	export LIB="$(cygpath -am osgeo4w/lib);$LIB"
 
-	targets=
-	[ -n "$OSGEO4W_SKIP_CLEAN" ] || targets="$targets clean"
-	targets="$targets default"
-	[ -n "$OSGEO4W_SKIP_INSTALL" ] || targets="$targets install devinstall"
+	mkdir -p build
+	cd build
 
-	nmake /f makefile.vc \
-		POPPLER_MAJOR_VERSION=${pv%:*} \
-		POPPLER_MINOR_VERSION=${pv#*:} \
-		OPENJPEG_INCLUDE=$(cygpath -aw ../osgeo4w/osgeo4w/include/openjpeg-*) \
-		OSGEO4W=$(cygpath -aw ../osgeo4w/osgeo4w) \
-		EXT_NMAKE_OPT=$(cygpath -aw ../osgeo4w/nmake.opt) \
-		GDAL_HOME=$(cygpath -aw $DESTDIR) \
-		ECWDIR=$(cygpath -aw $ECW_SDK) \
-		FGDB_SDK=$(cygpath -aw $FGDB_SDK) \
-		MRSID_SDK=$(cygpath -aw $MRSID_SDK) \
-		SETARGV="\"$VCToolsInstallDir\\lib\\x64\\setargv.obj\"" \
-		$targets
+	cmake \
+		-G Ninja \
+		-D                      CMAKE_BUILD_TYPE=RelWithDebInfo \
+		-D                  CMAKE_INSTALL_PREFIX=../install/apps/$P \
+		-D                  GDAL_LIB_OUTPUT_NAME=gdal$abi \
+		-D                 BUILD_PYTHON_BINDINGS=ON \
+		-D             GDAL_USE_GEOTIFF_INTERNAL=OFF \
+		-D               GDAL_ENABLE_DRIVER_JPEG=ON \
+		-D           GDAL_ENABLE_DRIVER_JP2MRSID=ON \
+		-D                OGR_ENABLE_DRIVER_OGDI=ON \
+		-D                   GDAL_USE_MSSQL_NCLI=OFF \
+		-D                       GDAL_USE_OPENCL=ON \
+		-D      OGR_ENABLE_DRIVER_PARQUET_PLUGIN=OFF \
+		-D          OGR_ENABLE_DRIVER_OCI_PLUGIN=ON \
+		-D        GDAL_ENABLE_DRIVER_GEOR_PLUGIN=ON \
+		-D         GDAL_ENABLE_DRIVER_ECW_PLUGIN=ON \
+		-D       GDAL_ENABLE_DRIVER_MRSID_PLUGIN=ON \
+		-D        GDAL_ENABLE_DRIVER_HDF5_PLUGIN=ON \
+		-D         GDAL_ENABLE_DRIVER_KEA_PLUGIN=ON \
+		-D      OGR_ENABLE_DRIVER_FILEGDB_PLUGIN=ON \
+		-D         OGR_ENABLE_DRIVER_SOSI_PLUGIN=ON \
+		-D OGR_ENABLE_DRIVER_MSSQLSPATIAL_PLUGIN=ON \
+		-D             Python_NumPy_INCLUDE_DIRS=$(cygpath -am ../osgeo4w/apps/Python39/Lib/site-packages/numpy/core/include) \
+		-D                       SWIG_EXECUTABLE=$(cygpath -am ../osgeo4w/bin/swig.bat) \
+		-D                       ECW_INCLUDE_DIR=$(cygpath -am ../gdaldeps/ecw/include) \
+		-D                           ECW_LIBRARY=$(cygpath -am ../gdaldeps/ecw/lib/vc141/x64/NCSEcw.lib) \
+		-D                   FileGDB_INCLUDE_DIR=$(cygpath -am ../gdaldeps/filegdb/include) \
+		-D                       FileGDB_LIBRARY=$(cygpath -am ../gdaldeps/filegdb/lib64/FileGDBAPI.lib) \
+		-D                     MRSID_INCLUDE_DIR=$(cygpath -am $MRSID_SDK/Raster_DSDK/include) \
+		-D                         MRSID_LIBRARY=$(cygpath -am $MRSID_SDK/Raster_DSDK/lib/lti_dsdk.lib) \
+		-D                         MYSQL_LIBRARY=$(cygpath -am ../osgeo4w/lib/libmysql.lib) \
+		-D                    MSSQL_ODBC_VERSION=17 \
+		-D                    MSSQL_ODBC_LIBRARY=$(cygpath -am ../osgeo4w/lib/msodbcsql17.lib) \
+		-D                  OPENJPEG_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/openjpeg-2.4) \
+		-D                           Oracle_ROOT=$(cygpath -am ../osgeo4w) \
+		-D                        Oracle_LIBRARY=$(cygpath -am ../osgeo4w/lib/oci.lib) \
+		-D                          JPEG_LIBRARY=$(cygpath -am ../osgeo4w/lib/jpeg.lib) \
+		-D                       LZ4_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
+		-D	             LZ4_LIBRARY_RELEASE=$(cygpath -am ../osgeo4w/lib/lz4.lib) \
+		-D                   PNG_LIBRARY_RELEASE=$(cygpath -am ../osgeo4w/lib/libpng16.lib) \
+		-D   _ICONV_SECOND_ARGUMENT_IS_NOT_CONST=1 \
+		-D                         Iconv_LIBRARY=$(cygpath -am ../osgeo4w/lib/iconv.dll.lib) \
+		-D                     FYBA_FYBA_LIBRARY=$(cygpath -am ../osgeo4w/lib/fyba.lib) \
+		-D                     FYBA_FYGM_LIBRARY=$(cygpath -am ../osgeo4w/lib/gm.lib) \
+		-D                     FYBA_FYUT_LIBRARY=$(cygpath -am ../osgeo4w/lib/ut.lib) \
+		-D                     OGDI_INCLUDE_DIRS=$(cygpath -am ../osgeo4w/include/ogdi) \
+		-D                          OGDI_LIBRARY=$(cygpath -am ../osgeo4w/lib/ogdi.lib) \
+		-D                           KEA_LIBRARY=$(cygpath -am ../osgeo4w/lib/libkea.lib) \
+		-D                          LERC_LIBRARY=$(cygpath -am ../osgeo4w/lib/Lerc.lib) \
+		-D                       SWIG_EXECUTABLE=$(cygpath -am ../osgeo4w/bin/swig.bat) \
+		-D             GDAL_EXTRA_LINK_LIBRARIES="$(cygpath -am ../osgeo4w/lib/freetype.lib);$(cygpath -am ../osgeo4w/lib/jpeg.lib);$(cygpath -am ../osgeo4w/lib/tiff.lib);$(cygpath -am ../osgeo4w/lib/uriparser.lib);$(cygpath -am ../osgeo4w/lib/minizip.lib)" \
+		../../$P-$V
 
-	cd swig
+	[ -n "$OSGEO4W_SKIP_CLEAN" ] || cmake --build . --target clean
 
-	unset INCLUDE LIB
-
-	targets=
-	[ -n "$OSGEO4W_SKIP_CLEAN" ] || targets="$targets clean"
-	targets="$targets python"
-
-	nmake /f makefile.vc \
-		PYDIR=$(cygpath -aw ../../osgeo4w/osgeo4w/apps/$PYTHON) \
-		SWIG=$(cygpath -aw ../../osgeo4w/osgeo4w/bin/swig.bat) \
-		EXT_NMAKE_OPT=$(cygpath -aw ../../osgeo4w/nmake.opt) \
-		$targets
-
-	[ -z "$OSGEO4W_SKIP_INSTALL" ] || exit
-
-	cd python
-
-	# Fix CRLF => CRLFCR conversion.
-	find build -name "*.py" -print | xargs /bin/flip -u
-
-	mkdir -p $PYDESTDIR/apps/$P/$PYTHON
-	python setup.py install \
-		--prefix=$(cygpath -aw $PYDESTDIR/apps/$PYTHON) \
-		--record $(cygpath -aw $OSGEO4W_PWD/python-record.log)
+	cmake --build .
+	cmake --build . --target install || cmake --build . --target install
 )
 
-cd swig/python
+mkdir -p install/etc/{postinstall,preremove}
+>install/etc/postinstall/python3-$P.bat
+>install/etc/preremove/python3-$P.bat
 
->$PYDESTDIR/etc/postinstall/python3-$P.bat
->$PYDESTDIR/etc/preremove/python3-$P.bat
+rm -rf install/apps/$PYTHON
+mkdir -p install/apps/$PYTHON/lib
+mv install/apps/$P/lib/site-packages install/apps/$PYTHON/lib
+mv install/apps/$P/Scripts           install/apps/$PYTHON/
 
 expytmpl=
-for i in $PYDESTDIR/apps/$PYTHON/Scripts/*.py; do
+for i in install/apps/$PYTHON/Scripts/*.py; do
 	b=$(basename "$i" .py)
 
-	cat <<EOF >$PYDESTDIR/apps/$PYTHON/Scripts/$b.bat
+	cat <<EOF >install/apps/$PYTHON/Scripts/$b.bat
 @echo off
 call "%OSGEO4W_ROOT%\\bin\\o4w_env.bat"
 python "%OSGEO4W_ROOT%\\apps\\$PYTHON\\Scripts\\$b.py" %*
 EOF
 	(
 		echo "#! @osgeo4w@\\apps\\$PYTHON\\python3.exe"
-		tail -n +2 $PYDESTDIR/apps/$PYTHON/Scripts/$b.py
-	) >$PYDESTDIR/apps/$PYTHON/Scripts/$b.py.tmpl
+		tail -n +2 install/apps/$PYTHON/Scripts/$b.py
+	) >install/apps/$PYTHON/Scripts/$b.py.tmpl
 
-	echo -e "textreplace -std -t apps\\$PYTHON\\Scripts\\\\$b.py\r" >>$PYDESTDIR/etc/postinstall/python3-$P.bat
-	echo -e "del apps\\$PYTHON\\Scripts\\\\$b.py\r" >>$PYDESTDIR/etc/preremove/python3-$P.bat
+	echo -e "textreplace -std -t apps\\$PYTHON\\Scripts\\\\$b.py\r" >>install/etc/postinstall/python3-$P.bat
+	echo -e "del apps\\$PYTHON\\Scripts\\\\$b.py\r" >>install/etc/preremove/python3-$P.bat
 
 	expytmpl="$expytmpl --exclude apps/$PYTHON/Scripts/$b.py"
 done
 
-echo $(basename "$PYDESTDIR/apps/$PYTHON/lib/site-packages/GDAL"*.egg) >$PYDESTDIR/apps/$PYTHON/lib/site-packages/python3-$P.pth
+echo -e "python -B \"%PYTHONHOME%\\Scripts\\preremove-cached.py\" python3-$P\r" >>install/etc/preremove/python3-$P.bat
 
-echo -e "python -B \"%PYTHONHOME%\\Scripts\\preremove-cached.py\" python3-$P\r" >>$PYDESTDIR/etc/preremove/python3-$P.bat
-
-cd ../../../osgeo4w
-
-mkdir -p $DESTDIR/etc/abi
-cat <<EOF >$DESTDIR/etc/abi/$P-devel
+mkdir -p install/etc/abi
+cat <<EOF >install/etc/abi/$P-devel
 $P$abi-runtime
 EOF
 
-cat <<EOF >$DESTDIR/etc/ini/$P.bat
-SET GDAL_DATA=%OSGEO4W_ROOT%\\share\\gdal
-SET GDAL_DRIVER_PATH=%OSGEO4W_ROOT%\\bin\\gdalplugins
+mkdir -p install/etc/ini
+cat <<EOF >install/etc/ini/$P.bat
+SET GDAL_DATA=%OSGEO4W_ROOT%\\apps\\$P\\share\\gdal
+SET GDAL_DRIVER_PATH=%OSGEO4W_ROOT%\\apps\\$P\\lib\\gdalplugins
 EOF
-
 
 cat <<EOF >$R/setup.hint
 sdesc: "The GDAL/OGR library and commandline tools"
@@ -223,7 +237,7 @@ sdesc: "The GDAL/OGR $major.$minor runtime library"
 ldesc: "The GDAL/OGR $major.$minor runtime library"
 maintainer: $MAINTAINER
 category: Libs Commandline_Utilities
-requires: msvcrt2019 libpng curl geos libmysql sqlite3 netcdf libpq expat xerces-c hdf4 ogdi libiconv openjpeg libspatialite freexl xz zstd poppler msodbcsql libjpeg libjpeg12 $RUNTIMEDEPENDS
+requires: msvcrt2019 libpng curl geos libmysql sqlite3 netcdf libpq expat xerces-c hdf4 ogdi libiconv openjpeg libspatialite freexl xz zstd poppler msodbcsql libjpeg-turbo arrow-cpp thrift brotli tiledb $RUNTIMEDEPENDS
 external-source: $P
 EOF
 
@@ -232,7 +246,7 @@ sdesc: "The GDAL/OGR headers and libraries"
 ldesc: "The GDAL/OGR headers and libraries"
 maintainer: $MAINTAINER
 category: Libs Commandline_Utilities
-requires: $P$abi-runtime
+requires: $P
 external-source: $P
 EOF
 
@@ -308,6 +322,15 @@ requires: $P$abi-runtime hdf5
 external-source: $P
 EOF
 
+cat <<EOF >$R/$P-kea/setup.hint
+sdesc: "KEA Plugin for GDAL"
+ldesc: "KEA Plugin for GDAL"
+category: Libs
+maintainer: $MAINTAINER
+requires: $P$abi-runtime kealib
+external-source: $P
+EOF
+
 appendversions $R/setup.hint
 appendversions $R/$P$abi-runtime/setup.hint
 appendversions $R/$P-devel/setup.hint
@@ -319,6 +342,7 @@ appendversions $R/$P-mrsid/setup.hint
 appendversions $R/$P-sosi/setup.hint
 appendversions $R/$P-mss/setup.hint
 appendversions $R/$P-hdf5/setup.hint
+appendversions $R/$P-kea/setup.hint
 
 cp ../$P-${V%rc*}/LICENSE.TXT $R/$P-$V-$B.txt
 cp ../$P-${V%rc*}/LICENSE.TXT $R/$P-oracle/$P-oracle-$V-$B.txt
@@ -331,72 +355,105 @@ cp $FGDB_SDK/license/userestrictions.txt $R/$P-filegdb/$P-filegdb-$V-$B.txt
 catdoc $ECW_SDK/\$TEMP/ecwjp2_sdk/Server_Read-Only_EndUser.rtf | sed -e "1,/^[^ ]/ { /^$/d }" >$R/$P-ecw/$P-ecw-$V-$B.txt
 pdftotext -layout -enc ASCII7 $MRSID_SDK/LICENSE.pdf - >$R/$P-mrsid/$P-mrsid-$V-$B.txt
 
-cp $FGDB_SDK/bin64/FileGDBAPI.dll $DESTDIR/bin
-cp $ECW_SDK/bin/vc141/x64/NCSEcw.dll $DESTDIR/bin
-cp $MRSID_SDK/Raster_DSDK/lib/lti_dsdk_cdll_9.5.dll $DESTDIR/bin
-cp $MRSID_SDK/Raster_DSDK/lib/tbb.dll $DESTDIR/bin
-cp $MRSID_SDK/Raster_DSDK/lib/lti_dsdk_9.5.dll $DESTDIR/bin
-cp $MRSID_SDK/Lidar_DSDK/lib/lti_lidar_dsdk_1.1.dll $DESTDIR/bin
+mkdir -p install/bin
+cp $FGDB_SDK/bin64/FileGDBAPI.dll install/bin
+cp $ECW_SDK/bin/vc141/x64/NCSEcw.dll install/bin
+cp $MRSID_SDK/Raster_DSDK/lib/lti_dsdk_cdll_9.5.dll install/bin
+cp $MRSID_SDK/Raster_DSDK/lib/tbb.dll install/bin
+cp $MRSID_SDK/Raster_DSDK/lib/lti_dsdk_9.5.dll install/bin
+cp $MRSID_SDK/Lidar_DSDK/lib/lti_lidar_dsdk_1.1.dll install/bin
 
-tar -C $PYDESTDIR -cjvf $R/python3-$P/python3-$P-$V-$B.tar.bz2 \
+tar -C install -cjvf $R/python3-$P/python3-$P-$V-$B.tar.bz2 \
 	--exclude="*.pyc" \
-	--exclude __pycache__ \
+	--exclude="__pycache__" \
 	$expytmpl \
 	apps/$PYTHON \
 	etc/postinstall/python3-$P.bat \
 	etc/preremove/python3-$P.bat
 
 tar -C install -cjvf $R/$P-filegdb/$P-filegdb-$V-$B.tar.bz2 \
-	bin/gdalplugins/ogr_FileGDB.dll \
+	apps/$P/lib/gdalplugins/ogr_FileGDB.dll \
 	bin/FileGDBAPI.dll
 
 tar -C install -cjvf $R/$P-sosi/$P-sosi-$V-$B.tar.bz2 \
-	bin/gdalplugins/ogr_SOSI.dll
+	apps/$P/lib/gdalplugins/ogr_SOSI.dll
 
 tar -C install -cjvf $R/$P-oracle/$P-oracle-$V-$B.tar.bz2 \
-	bin/gdalplugins/gdal_GEOR.dll \
-	bin/gdalplugins/ogr_OCI.dll
+	apps/$P/lib/gdalplugins/gdal_GEOR.dll \
+	apps/$P/lib/gdalplugins/ogr_OCI.dll
 
 tar -C install -cjvf $R/$P-mss/$P-mss-$V-$B.tar.bz2 \
-	bin/gdalplugins/ogr_MSSQLSpatial.dll
+	apps/$P/lib/gdalplugins/ogr_MSSQLSpatial.dll
 
 tar -C install -cjvf $R/$P-ecw/$P-ecw-$V-$B.tar.bz2 \
-	bin/gdalplugins/gdal_ECW_JP2ECW.dll \
+	apps/$P/lib/gdalplugins/gdal_ECW_JP2ECW.dll \
 	bin/NCSEcw.dll
 
+tar -C install -cjvf $R/$P-hdf5/$P-hdf5-$V-$B.tar.bz2 \
+	apps/$P/lib/gdalplugins/gdal_HDF5.dll
+
+tar -C install -cjvf $R/$P-kea/$P-kea-$V-$B.tar.bz2 \
+	apps/$P/lib/gdalplugins/gdal_KEA.dll
+
 tar -C install -cjvf $R/$P-mrsid/$P-mrsid-$V-$B.tar.bz2 \
-	bin/gdalplugins/gdal_MG4Lidar.dll \
-	bin/gdalplugins/gdal_MrSID.dll \
+	apps/$P/lib/gdalplugins/gdal_MrSID.dll \
 	bin/lti_dsdk_cdll_9.5.dll \
 	bin/lti_dsdk_9.5.dll \
 	bin/lti_lidar_dsdk_1.1.dll \
 	bin/tbb.dll
 
-tar -C install -cjvf $R/$P-hdf5/$P-hdf5-$V-$B.tar.bz2 \
-	bin/gdalplugins/gdal_HDF5.dll
+tar -C install -cjvf $R/$P$abi-runtime/$P$abi-runtime-$V-$B.tar.bz2 \
+	--xform "s,apps/$P/bin/gdal$abi.dll,bin/gdal$abi.dll," \
+	apps/$P/bin/gdal$abi.dll
 
 tar -C install -cjvf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
-	include \
-	lib \
+	-h --hard-dereference \
+	--exclude "apps/$P/lib/gdalplugins/drivers.ini" \
+	--xform "s,apps/$P/include,include," \
+	--xform "s,apps/$P/././lib/gdal$abi.lib,lib/gdal.lib," \
+	--xform "s,apps/$P/./lib/gdal$abi.lib,lib/gdal_i.lib," \
+	--xform "s,apps/$P/lib/gdal$abi.lib,lib/gdal$abi.lib," \
+	apps/$P/include \
+	apps/$P/././lib/gdal$abi.lib \
+	apps/$P/./lib/gdal$abi.lib \
+	apps/$P/lib/gdal$abi.lib \
+	apps/$P/lib/pkgconfig \
+	apps/$P/lib/cmake \
 	etc/abi/$P-devel
 
-tar -C install -cjvf $R/$P$abi-runtime/$P$abi-runtime-$V-$B.tar.bz2 \
-	bin/gdal$abi.dll
-
 tar -C install -cjvf $R/$P-$V-$B.tar.bz2 \
+	--exclude="apps/$P/lib/gdalplugins/*.dll" \
 	--exclude "*.dll" \
-	--exclude etc/abi/$P-devel \
-	bin \
-	etc \
-	share
+	--xform "s,apps/$P/bin/gdal$abi.dll,bin/gdal$abi.dll," \
+	--xform "s,apps/$P/bin,bin," \
+	apps/$P/lib/gdalplugins/ \
+	apps/$P/bin \
+	apps/$P/share \
+	etc/ini/$P.bat
 
-find install -type f | sed -e "s#^install/##" >/tmp/$P.installed
+tar -C .. -cjvf $R/$P-$V-$B-src.tar.bz2 \
+	osgeo4w/package.sh \
+	osgeo4w/easy_install.diff \
+	osgeo4w/patch
 
 (
-	tar tjf $R/$P-$V-$B.tar.bz2
-	for i in -filegdb -sosi -oracle -mss -ecw -mrsid -hdf5 -devel $abi-runtime; do
-		tar tjf $R/$P$i/$P$i-$V-$B.tar.bz2
+	find install -type f
+	echo install/lib/gdal.lib
+	echo install/lib/gdal_i.lib
+) |
+	sed -re "/\.pyc$/d;
+s#^install/##;
+/apps\/gdal\/(bin\/|include\/|lib\/gdal.*\.lib$)/ { s/apps\/gdal\///; }
+/apps\/$P\/(Scripts|lib\/site-packages)\// { s/apps\/$P\//apps\/$PYTHON\//; }
+/apps\/$PYTHON\/Scripts\/.*\.py$/ { s/$/.tmpl/; }
+" >/tmp/$P.installed
+
+(
+	tar tjf $R/$P-$V-$B.tar.bz2 | tee /tmp/$P.files
+	for i in -filegdb -sosi -oracle -mss -ecw -mrsid -hdf5 -kea -devel $abi-runtime; do
+		tar tjf $R/$P$i/$P$i-$V-$B.tar.bz2 | tee /tmp/$P-$i.files
 	done
+	tar tjf $R/python3-$P/python3-$P-$V-$B.tar.bz2 | tee /tmp/python3-$P.files
 ) >/tmp/$P.packaged
 
 sort /tmp/$P.packaged | uniq -d >/tmp/$P.dupes
@@ -406,24 +463,20 @@ if [ -s /tmp/$P.dupes ]; then
 	false
 fi
 
-if fgrep -v -x -f /tmp/$P.packages /tmp/$P.installed >/tmp/$P.unpackaged; then
+if fgrep -v -x -f /tmp/$P.packaged /tmp/$P.installed >/tmp/$P.unpackaged; then
 	echo Unpackaged files:
 	cat /tmp/$P.unpackaged
+	false
 fi
 
-if fgrep -v -x -f /tmp/$P.installed /tmp/$P.packaged >/tmp/$P.generated; then
+if fgrep -v -x -f /tmp/$P.installed /tmp/$P.packaged | grep -v "/$" >/tmp/$P.generated; then
 	echo Generated files:
 	cat /tmp/$P.generated
+	false
 fi
 
-! [ -s /tmp/$P.dupes ] && ! [ -s /tmp/$P.unpackaged ] && ! [ -s /tmp/$P.generated ]
-
-tar -C .. -cjvf $R/$P-$V-$B-src.tar.bz2 \
-	osgeo4w/package.sh \
-	osgeo4w/nmake.opt \
-	osgeo4w/patch \
-	osgeo4w/easy_install.diff
-
-rm -f no*
+if [ -s /tmp/$P.dupes ] || [ -s /tmp/$P.unpacked ] || [ -s /tmp/$P.generated ]; then
+	exit 1
+fi
 
 endlog

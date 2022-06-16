@@ -2,88 +2,46 @@ export P=libjpeg
 export V=9d
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS=zlib-devel
+export BUILDDEPENDS=none
 
 source ../../../scripts/build-helpers
 
 startlog
 
-[ -f jpegsrc.v$V.tar.gz ] || wget http://ijg.org/files/jpegsrc.v$V.tar.gz
-[ -f ../makefile.vs ] || tar -C .. -xzf jpegsrc.v$V.tar.gz --xform "s,^jpeg-$V,.,"
-
-vs2019env
-
-tar -C .. -xzf jpegsrc.v$V.tar.gz --xform "s,^jpeg-$V,.," jpeg-$V/jmorecfg.h
-
-mkdir -p install/include
-repl=
-for bits in 8 12; do
-	cat <<EOF | sed -f - ../jmorecfg.h >install/include/jmorecfg$bits.h
-s/#define BITS_IN_JSAMPLE  8/#define BITS_IN_JSAMPLE $bits/;
-/#define EXTERN(type)		extern type/ {
-i #ifdef _WIN32\n#define EXTERN(type)            extern __declspec(dllexport) type\n#else
-a #endif /* _WIN32 */\n$repl
-}
-EOF
-
-	repl=$(grep --exclude-dir osgeo4w -rl "#ifdef *NEED_SHORT_EXTERNAL_NAMES" .. | xargs sed -ne '/#ifdef *NEED_SHORT_EXTERNAL_NAMES/,/#endif/ { s/^#define[\t ]*\([^ \t ]*\)[\t ].*$/#define \1 \1_12\\n/p; }'|paste -d "" -s)
-done
-
-cat <<EOF >../jmorecfg.h
-#if BITS_IN_JSAMPLE == 8
-#include "osgeo4w/install/include/jmorecfg8.h"
-#elif BITS_IN_JSAMPLE == 12
-#include "osgeo4w/install/include/jmorecfg12.h"
-#else
-#error BITS_IN_JSAMPLE == 8 or 12 expected
-#endif
-EOF
-
-mkdir -p install/etc/ini
-cat <<EOF >install/etc/ini/$P.bat
-set JPEGMEM=1000000
-EOF
-
-cd ..
-
-nmake /f makefile.o4w install
-
-cd osgeo4w
-
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R/$P-devel $R/${P}12 $R/${P}12-devel
 
 cat <<EOF >$R/setup.hint
-sdesc: "A library for manipulating JPEG image format files (Runtime; 8 bit samples)"
-ldesc: "A library for manipulating JPEG image format files (Runtime; 8 bit samples)"
-category: Libs
-requires: msvcrt2019
+sdesc: "A library for manipulating JPEG image format files (transitional)"
+ldesc: "A library for manipulating JPEG image format files (transitional)"
+category: _obsolete
+requires: libjpeg-turbo
 maintainer: $MAINTAINER
 EOF
 
 cat <<EOF >$R/${P}12/setup.hint
-sdesc: "A library for manipulating JPEG image format files (Runtime; 12bit samples)"
-ldesc: "A library for manipulating JPEG image format files (Runtime; 12bit samples)"
-category: Libs
-requires: msvcrt2019
+sdesc: "A library for manipulating JPEG image format files (transitional)"
+ldesc: "A library for manipulating JPEG image format files (transitional)"
+category: _obsolete
+requires: libjpeg-turbo
 external-source: $P
 maintainer: $MAINTAINER
 EOF
 
 cat <<EOF >$R/$P-devel/setup.hint
-sdesc: "A library for manipulating JPEG image format files (Development; 8bit samples)"
-ldesc: "A library for manipulating JPEG image format files (Development; 8bit samples)"
-category: Libs
-requires: $P
+sdesc: "A library for manipulating JPEG image format files (transitional)"
+ldesc: "A library for manipulating JPEG image format files (transitional)"
+category: _obsolete
+requires: libjpeg-turbo-devel
 external-source: $P
 maintainer: $MAINTAINER
 EOF
 
 cat <<EOF >$R/${P}12-devel/setup.hint
-sdesc: "A library for manipulating JPEG image format files (Development; 12bit samples)"
-ldesc: "A library for manipulating JPEG image format files (Development; 12bit samples)"
-category: Libs
-requires: $P
+sdesc: "A library for manipulating JPEG image format files (transitional)"
+ldesc: "A library for manipulating JPEG image format files (transitional)"
+category: _obsolete
+requires: libjpeg-turbo-devel
 external-source: $P
 maintainer: $MAINTAINER
 EOF
@@ -153,30 +111,10 @@ but is also freely distributable.
 EOF
 done
 
-tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
-	bin/jpeg.dll \
-	etc/ini/$P.bat
-
-tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
-	--exclude include/jmorecfg.h \
-	--exclude include/jmorecfg12.h \
-	--xform s,include/jmorecfg8.h,include/jmorecfg.h, \
-	include \
-	lib/jpeg_i.lib
-
-tar -C install -cjf $R/${P}12/${P}12-$V-$B.tar.bz2 \
-	bin/jpeg12.dll
-
-tar -C install -cjf $R/${P}12-devel/${P}12-devel-$V-$B.tar.bz2 \
-	--exclude include/jmorecfg.h \
-	--exclude include/jmorecfg8.h \
-	--xform s,include/jmorecfg12.h,include/jmorecfg.h, \
-	--xform s,include,include/libjpeg12, \
-	include \
-	lib/jpeg12_i.lib
-
-tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 \
-	osgeo4w/package.sh \
-	osgeo4w/makefile.o4w
+tar -cjf $R/$P-$V-$B.tar.bz2 -T /dev/null 
+tar -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 -T /dev/null
+tar -cjf $R/${P}12/${P}12-$V-$B.tar.bz2 -T /dev/null
+tar -cjf $R/${P}12-devel/${P}12-devel-$V-$B.tar.bz2 -T /dev/null
+tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 
 endlog

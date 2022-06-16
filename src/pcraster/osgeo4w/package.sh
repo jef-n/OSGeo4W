@@ -45,7 +45,7 @@ cd ../osgeo4w
 
 	export PATH="$(cygpath -a ../osgeo4w/bin):$(cygpath -a ../osgeo4w/apps/qt5/bin):$PATH"
 
-	while :; do
+	for i in $(seq 3); do
 		if ! cmake -G Ninja \
 			-Wno-dev \
 			-D CMAKE_MODULE_PATH=$(cygpath -am ../osgeo4w/share/cmake) \
@@ -66,11 +66,10 @@ cd ../osgeo4w
 			-D pybind11_DIR=$(cygpath -am ../osgeo4w/apps/Python39/Lib/site-packages/pybind11/share/cmake/pybind11) \
 			-D PYBIND11_SYSTEM_INCLUDE=$(cygpath -aw ../osgeo4w/apps/Python39/Lib/site-packages/pybind11/include) \
 			-D Python3_NumPy_INCLUDE_DIR=$(cygpath -am ../osgeo4w/apps/Python39/Lib/site-packages/numpy/core/include) \
-			-D GDAL_DATA=$(cygpath -am ../osgeo4w/share/gdal) \
 			-D Qt5_DIR=$(cygpath -am ../osgeo4w/apps/Qt5) \
 			-D PCRASTER_BUILD_TEST=OFF \
-			../../$P-$V; then
-
+			../../$P-$V
+		then
 			patched=0
 			for devbase in _deps/devbase-src _deps/fern-src/devbase; do
 				[ -d $devbase ]
@@ -84,9 +83,7 @@ cd ../osgeo4w
 				(( patched++ )) || true
 			done
 
-			if (( patched < 2 )); then
-				exit 1
-			fi
+			(( patched == 2 ))
 
 			continue
 		fi
@@ -95,8 +92,8 @@ cd ../osgeo4w
 		break
 	done
 
-	ninja
-	ninja install
+	cmake --build .
+	cmake --install . || cmake --install .
 )
 
 export R=$OSGEO4W_REP/x86_64/release/$P

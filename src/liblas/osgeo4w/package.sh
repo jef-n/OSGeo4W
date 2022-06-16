@@ -2,14 +2,14 @@ export P=liblas
 export V=1.8.1
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="gdal-devel boost-devel libjpeg-devel libtiff-devel libgeotiff-devel zlib-devel"
+export BUILDDEPENDS="gdal-devel boost-devel libjpeg-turbo-devel libtiff-devel libgeotiff-devel zlib-devel"
 
 source ../../../scripts/build-helpers
 
 startlog
 
 [ -f libLAS-$V.tar.bz2 ] || wget http://download.osgeo.org/$P/libLAS-$V.tar.bz2
-[ -f ../libLAS-$V/CMakeLists.txt ] || tar -C .. -xjf  libLAS-$V.tar.bz2
+[ -f ../libLAS-$V/CMakeLists.txt ] || tar -C .. -xjf libLAS-$V.tar.bz2
 
 (
 	fetchenv osgeo4w/bin/o4w_env.bat
@@ -25,7 +25,7 @@ startlog
 		-D CMAKE_INSTALL_PREFIX=../install \
 		-D WITH_TESTS=OFF \
 		-D BUILD_OSGEO4W=OFF \
-		-D JPEG_LIBRARY=$(cygpath -am ../osgeo4w/lib/jpeg_i.lib) \
+		-D JPEG_LIBRARY=$(cygpath -am ../osgeo4w/lib/jpeg.lib) \
 		../../libLAS-$V
 	cmake --build .
 	cmake --build . --target install
@@ -39,7 +39,7 @@ sdesc: "The libLAS commandline utilities"
 ldesc: "libLAS is a library for manipulating LAS 1.0, 1.1, and 1.2 LiDAR data files"
 category: Commandline_Utilities
 category: Libs
-requires: msvcrt2019 $RUNTIMEDEPENDS libjpeg libtiff libgeotiff zlib
+requires: msvcrt2019 $RUNTIMEDEPENDS libjpeg-turbo libtiff libgeotiff zlib
 maintainer: $MAINTAINER
 EOF
 

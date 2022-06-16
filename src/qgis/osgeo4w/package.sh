@@ -321,7 +321,6 @@ EOF
 		apps/$P/plugins/authmethod_maptilerhmacsha256.dll \
 		apps/$P/plugins/provider_arcgisfeatureserver.dll \
 		apps/$P/plugins/provider_arcgismapserver.dll \
-		apps/$P/plugins/provider_db2.dll \
 		apps/$P/plugins/provider_delimitedtext.dll \
 		apps/$P/plugins/provider_geonode.dll \
 		apps/$P/plugins/provider_gpx.dll \

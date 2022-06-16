@@ -31,14 +31,22 @@ index 0d91029..1cd7d84 100644
      )
      ### set(CMAKE_CXX_FLAGS_RELEASE
      ###     # Disable range checks in release builds.
-@@ -163,7 +166,7 @@ if(DEVBASE_GDAL_USEFUL OR DEVBASE_GDAL_REQUIRED)
+@@ -158,12 +161,14 @@ if(DEVBASE_GDAL_USEFUL OR DEVBASE_GDAL_REQUIRED)
+         HINTS ${GDAL_INCLUDE_DIR}/../bin
+     )
+
+-    if(EXISTS "${GDAL_INCLUDE_DIR}/../share/gdal")
++    if(EXISTS "$ENV{GDAL_DATA}")
++        set(GDAL_DATA "$ENV{GDAL_DATA}")
++    elseif(EXISTS "${GDAL_INCLUDE_DIR}/../share/gdal")
+         set(GDAL_DATA "${GDAL_INCLUDE_DIR}/../share/gdal")
      elseif(EXISTS "${GDAL_INCLUDE_DIR}/../../share/gdal")
          set(GDAL_DATA "${GDAL_INCLUDE_DIR}/../../share/gdal")
      else()
 -        message(FATAL_ERROR "GDal data dir not found")
 +        message(FATAL_ERROR "GDAL data dir not found")
      endif()
- 
+
      include(CheckGDalLibrary)
 diff --git a/cmake/PeacockPlatform.cmake b/cmake/PeacockPlatform.cmake
 index 54e649b..504e895 100644

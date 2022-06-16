@@ -2,7 +2,7 @@ export P=qtwebkit
 export V=5.212.0-alpha4
 export B="next qtwebkit-libs"
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="qt5-devel icu-devel python3-core sqlite3-devel libjpeg-devel libpng-devel zlib-devel libxml2-devel libwebp-devel libiconv-devel"
+export BUILDDEPENDS="qt5-devel icu-devel python3-core sqlite3-devel libjpeg-turbo-devel libpng-devel zlib-devel libxml2-devel libwebp-devel libiconv-devel"
 
 source ../../../scripts/build-helpers
 
@@ -43,7 +43,7 @@ mkdir -p build install
 		-D CMAKE_INSTALL_PREFIX=$(cygpath -am ../install/apps/Qt5) \
 		-D PYTHON_EXECUTABLE=$(cygpath -am ../osgeo4w/bin/python.exe) \
 		-D SQLITE_LIBRARIES=$(cygpath -am ../osgeo4w/lib/sqlite3_i.lib) \
-		-D JPEG_LIBRARY="$(cygpath -am ../osgeo4w/lib/jpeg_i.lib)" \
+		-D JPEG_LIBRARY="$(cygpath -am ../osgeo4w/lib/jpeg.lib)" \
 		-D PNG_PNG_INCLUDE_DIR="$(cygpath -am ../osgeo4w/include)" \
 		-D PNG_LIBRARY="$(cygpath -am ../osgeo4w/lib/libpng16.lib)" \
 		-D ZLIB_LIBRARY="$(cygpath -am ../osgeo4w/lib/zlib.lib)" \

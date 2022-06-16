@@ -2,7 +2,7 @@ export P=hdf5
 export V=1.10.7
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="libjpeg-devel szip-devel zlib-devel"
+export BUILDDEPENDS="libjpeg-turbo-devel szip-devel zlib-devel"
 
 source ../../../scripts/build-helpers
 
@@ -42,8 +42,8 @@ cmake -G Ninja \
 	-D HDF5_INSTALL_DATA_DIR=. \
 	-D HDF5_INSTALL_CMAKE_DIR=share/cmake \
 	../..
-ninja
-ninja install
+cmake --build .
+cmake --install . || cmake --install .
 
 cd ..
 
@@ -54,7 +54,7 @@ cat <<EOF >$R/setup.hint
 sdesc: "The HDF5 library for reading and writing HDF5 format (Runtime)"
 ldesc: "The HDF5 library for reading and writing HDF5 format (Runtime)"
 category: Libs
-requires: msvcrt2019 libjpeg szip zlib
+requires: msvcrt2019 libjpeg-turbo szip zlib
 maintainer: $MAINTAINER
 EOF
 

@@ -2,7 +2,7 @@ export P=qt5
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="openssl-devel sqlite3-devel zlib-devel libjpeg-devel libtiff-devel libpng-devel oci-devel libwebp-devel libmysql-devel zstd-devel libpq-devel icu-devel freetype-devel node"
+export BUILDDEPENDS="openssl-devel sqlite3-devel zlib-devel libjpeg-turbo-devel libtiff-devel libpng-devel oci-devel libwebp-devel libmysql-devel zstd-devel libpq-devel icu-devel freetype-devel node"
 
 # perl also used in openssl and libpq
 SBPERL=5.32.0.1
@@ -46,7 +46,6 @@ cmakeenv
 ninjaenv
 
 # meet cute expectations
-cp osgeo4w/lib/jpeg_i.lib osgeo4w/lib/jpeg.lib
 cp osgeo4w/lib/sqlite3_i.lib osgeo4w/lib/sqlite3.lib
 
 mkdir -p build install
@@ -296,7 +295,7 @@ sdesc: "Qt5 runtime libraries"
 ldesc: "Qt5 runtime libraries"
 maintainer: $MAINTAINER
 category: Libs
-requires: base msvcrt2019 openssl sqlite3 zlib libjpeg libtiff libpng libwebp libmysql zstd libpq icu freetype
+requires: base msvcrt2019 openssl sqlite3 zlib libjpeg-turbo libtiff libpng libwebp libmysql zstd libpq icu freetype
 external-source: $P
 EOF
 

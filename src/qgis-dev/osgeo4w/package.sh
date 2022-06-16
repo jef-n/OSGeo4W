@@ -9,6 +9,7 @@ export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-dev-devel qt5-oci qt
 : ${CC:=cl.exe}
 : ${CXX:=cl.exe}
 : ${BUILDCONF:=RelWithDebInfo}
+: ${PUSH_TO_DASH:=TRUE}
 
 REPO=https://github.com/qgis/QGIS.git
 
@@ -118,9 +119,9 @@ nextbinary
 	fetchenv msvc-env.bat
 	fetchenv osgeo4w/bin/gdal-dev-env.bat
 
-	[ -f "$GRASS" ]
-	[ -d "$GRASS_PREFIX" ]
-	[ -d "$DBGHLP_PATH" ]
+	[ -f "$GRASS" ] || { echo GRASS not set; false; }
+	[ -d "$GRASS_PREFIX" ] || { echo no directory GRASS_PREFIX $GRASS_PREFIX; false; }
+	[ -d "$DBGHLP_PATH" ] || { echo no directory $DBGHLP_PATH $DBGHLP_PATH; false; }
 
 	export GRASS_VERSION=$(cmd /c $GRASS --config version | sed -e "s/\r//")
 
@@ -179,7 +180,7 @@ nextbinary
 		-D QWT_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt5/lib/qwt.lib) \
 		-D QSCINTILLA_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt5/lib/qscintilla2.lib) \
 		-D DART_TESTING_TIMEOUT=60 \
-		-D PUSH_TO_CDASH=TRUE \
+		-D PUSH_TO_CDASH=$PUSH_TO_DASH \
 		$(cygpath -m $SRCDIR)
 
 	if [ -z "$OSGEO4W_SKIP_CLEAN" ]; then

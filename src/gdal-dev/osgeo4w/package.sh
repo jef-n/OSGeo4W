@@ -2,7 +2,7 @@ export P=gdal-dev
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel hdf5-tools ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-devel libjpeg12-devel python3-setuptools opencl-devel libtiff-devel arrow-cpp-devel lz4-devel libgeotiff-devel openssl-devel tiledb-devel lerc-devel kealib-devel"
+export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel hdf5-tools ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-turbo-devel python3-setuptools opencl-devel libtiff-devel libgeotiff-devel arrow-cpp-devel lz4-devel openssl-devel tiledb-devel lerc-devel kealib-devel"
 
 REPO=https://github.com/OSGeo/gdal.git
 
@@ -170,7 +170,6 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 		-D                  CMAKE_INSTALL_PREFIX=../install/apps/$P \
 		-D                  GDAL_LIB_OUTPUT_NAME=gdal$abi \
 		-D                 BUILD_PYTHON_BINDINGS=ON \
-		-D                GDAL_USE_JPEG_INTERNAL=OFF \
 		-D             GDAL_USE_GEOTIFF_INTERNAL=OFF \
 		-D               GDAL_ENABLE_DRIVER_JPEG=ON \
 		-D           GDAL_ENABLE_DRIVER_JP2MRSID=ON \
@@ -201,7 +200,7 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 		-D                  OPENJPEG_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/openjpeg-2.4) \
 		-D                           Oracle_ROOT=$(cygpath -am ../osgeo4w) \
 		-D                        Oracle_LIBRARY=$(cygpath -am ../osgeo4w/lib/oci.lib) \
-		-D                          JPEG_LIBRARY=$(cygpath -am ../osgeo4w/lib/jpeg_i.lib) \
+		-D                          JPEG_LIBRARY=$(cygpath -am ../osgeo4w/lib/jpeg.lib) \
 		-D                       LZ4_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 		-D	             LZ4_LIBRARY_RELEASE=$(cygpath -am ../osgeo4w/lib/lz4.lib) \
 		-D                   PNG_LIBRARY_RELEASE=$(cygpath -am ../osgeo4w/lib/libpng16.lib) \
@@ -215,13 +214,13 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 		-D                           KEA_LIBRARY=$(cygpath -am ../osgeo4w/lib/libkea.lib) \
 		-D                          LERC_LIBRARY=$(cygpath -am ../osgeo4w/lib/Lerc.lib) \
 		-D                       SWIG_EXECUTABLE=$(cygpath -am ../osgeo4w/bin/swig.bat) \
-		-D             GDAL_EXTRA_LINK_LIBRARIES="$(cygpath -am ../osgeo4w/lib/freetype.lib);$(cygpath -am ../osgeo4w/lib/jpeg_i.lib);$(cygpath -am ../osgeo4w/lib/tiff.lib);$(cygpath -am ../osgeo4w/lib/uriparser.lib);$(cygpath -am ../osgeo4w/lib/minizip.lib)" \
+		-D             GDAL_EXTRA_LINK_LIBRARIES="$(cygpath -am ../osgeo4w/lib/freetype.lib);$(cygpath -am ../osgeo4w/lib/jpeg.lib);$(cygpath -am ../osgeo4w/lib/tiff.lib);$(cygpath -am ../osgeo4w/lib/uriparser.lib);$(cygpath -am ../osgeo4w/lib/minizip.lib)" \
 		../../gdal
 
 	[ -n "$OSGEO4W_SKIP_CLEAN" ] || cmake --build . --target clean
 
 	cmake --build .
-	cmake --build . --target install
+	cmake --build . --target install || cmake --build . --target install
 )
 
 mkdir -p install/etc/{postinstall,preremove}
@@ -283,7 +282,7 @@ sdesc: "The GDAL/OGR $major.$minor runtime library (nightly build)"
 ldesc: "The GDAL/OGR $major.$minor runtime library (nightly build)"
 maintainer: $MAINTAINER
 category: Libs Commandline_Utilities
-requires: msvcrt2019 libpng curl geos libmysql sqlite3 netcdf libpq expat xerces-c hdf4 ogdi libiconv openjpeg libspatialite freexl xz zstd poppler msodbcsql libjpeg libjpeg12 arrow-cpp thrift brotli tiledb $RUNTIMEDEPENDS
+requires: msvcrt2019 libpng curl geos libmysql sqlite3 netcdf libpq expat xerces-c hdf4 ogdi libiconv openjpeg libspatialite freexl xz zstd poppler msodbcsql libjpeg-turbo arrow-cpp thrift brotli tiledb $RUNTIMEDEPENDS
 external-source: $P
 EOF
 
@@ -480,7 +479,11 @@ tar -C .. -cjvf $R/$P-$V-$B-src.tar.bz2 \
 	osgeo4w/easy_install.diff \
 	osgeo4w/patch
 
-find install -type f | sed -e "s#^install/##" >/tmp/$P.installed
+find install -type f |
+	sed -re "/\.pyc$/d;
+s#^install/##;
+/apps\/$P\/Scripts\/.*\.py$/ { s/$/.tmpl/; }
+" >/tmp/$P.installed
 
 (
 	tar tjf $R/$P-$V-$B.tar.bz2 | tee /tmp/$P.files
@@ -494,16 +497,19 @@ sort /tmp/$P.packaged | uniq -d >/tmp/$P.dupes
 if [ -s /tmp/$P.dupes ]; then
 	echo Duplicate files:
 	cat /tmp/$P.dupes
+	false
 fi
 
 if fgrep -v -x -f /tmp/$P.packaged /tmp/$P.installed >/tmp/$P.unpackaged; then
 	echo Unpackaged files:
 	cat /tmp/$P.unpackaged
+	false
 fi
 
 if fgrep -v -x -f /tmp/$P.installed /tmp/$P.packaged | grep -v "/$" >/tmp/$P.generated; then
 	echo Generated files:
 	cat /tmp/$P.generated
+	false
 fi
 
 if [ -s /tmp/$P.dupes ] || [ -s /tmp/$P.unpacked ] || [ -s /tmp/$P.generated ]; then

@@ -2,7 +2,7 @@ export P=saga
 export V=7.8.2
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="wxwidgets-devel libharu-devel gdal-devel proj-devel libpq-devel curl-devel libpng-devel libtiff-devel libjpeg-devel zlib-devel expat-devel pdal-devel"
+export BUILDDEPENDS="wxwidgets-devel libharu-devel gdal-devel proj-devel libpq-devel curl-devel libpng-devel libtiff-devel libjpeg-turbo-devel zlib-devel expat-devel pdal-devel"
 
 
 source ../../../scripts/build-helpers

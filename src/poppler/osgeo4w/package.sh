@@ -1,8 +1,8 @@
 export P=poppler
-export V=22.05.0
+export V=22.06.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="freetype-devel libjpeg-devel zlib-devel libpng-devel libtiff-devel curl-devel boost-devel cairo-devel libiconv-devel openjpeg-devel openjpeg-tools"
+export BUILDDEPENDS="freetype-devel libjpeg-turbo-devel zlib-devel libpng-devel libtiff-devel curl-devel boost-devel cairo-devel libiconv-devel openjpeg-devel openjpeg-tools"
 
 set -x
 
@@ -74,7 +74,7 @@ cmake -G Ninja \
         -D TIFF_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
         -D TIFF_LIBRARY=$(cygpath -am ../osgeo4w/lib/tiff.lib) \
         -D JPEG_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
-        -D JPEG_LIBRARY=$(cygpath -am ../osgeo4w/lib/jpeg_i.lib) \
+        -D JPEG_LIBRARY=$(cygpath -am ../osgeo4w/lib/jpeg.lib) \
         -D CURL_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
         -D CURL_LIBRARY=$(cygpath -am ../osgeo4w/lib/libcurl.lib) \
 	-D Boost_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/boost-1_74) \
@@ -95,7 +95,7 @@ cat <<EOF >$R/setup.hint
 sdesc: "Poppler is a PDF rendering library based on the xpdf-3.0 code base. (Runtime)"
 ldesc: "Poppler is a PDF rendering library based on the xpdf-3.0 code base. (Runtime)"
 category: Libs
-requires: msvcrt2019 freetype zlib libpng libtiff libjpeg cairo
+requires: msvcrt2019 freetype zlib libpng libtiff libjpeg-turbo cairo
 maintainer: $MAINTAINER
 EOF
 

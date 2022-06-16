@@ -29,7 +29,7 @@ startlog
 		-D CMAKE_INSTALL_PREFIX=../install \
 		../../$P-$V
 	cmake --build .
-	cmake --build . --target install
+	cmake --build . --target install || cmake --build . --target install
 
 	sed -i -e "s#$(cygpath -am ../install)#\$OSGEO4W_ROOT_MSYS#g" -e "s#$(cygpath -am ../osgeo4w)#\$OSGEO4W_ROOT_MSYS#g" ../install/bin/pdal-config
 	sed -i -e "s#$(cygpath -am ../install)#%OSGEO4W_ROOT%#g"      -e "s#$(cygpath -am ../osgeo4w)#%OSGEO4W_ROOT%#g" ../install/bin/pdal-config.bat
