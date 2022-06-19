@@ -56,6 +56,7 @@ sdesc: "A JPEG image codec that uses SIMD instructions to accelerate baseline JP
 ldesc: "A JPEG image codec that uses SIMD instructions to accelerate baseline JPEG compression and decompression (tools)"
 category: Libs
 requires: $P
+external-source: $P
 maintainer: $MAINTAINER
 EOF
 
@@ -83,5 +84,8 @@ tar -C install -cjf $R/$P-tools/$P-tools-$V-$B.tar.bz2 \
 tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	include \
 	lib
+
+tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 \
+	osgeo4w/package.sh
 
 endlog
