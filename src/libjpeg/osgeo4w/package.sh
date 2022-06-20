@@ -111,10 +111,13 @@ but is also freely distributable.
 EOF
 done
 
-tar -cjf $R/$P-$V-$B.tar.bz2 -T /dev/null 
-tar -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 -T /dev/null
-tar -cjf $R/${P}12/${P}12-$V-$B.tar.bz2 -T /dev/null
-tar -cjf $R/${P}12-devel/${P}12-devel-$V-$B.tar.bz2 -T /dev/null
+d=$(mktemp -d)
+/bin/tar -C $d -cjf $R/$P-$V-$B.tar.bz2 .
+/bin/tar -C $d -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 .
+/bin/tar -C $d -cjf $R/${P}12/${P}12-$V-$B.tar.bz2 .
+/bin/tar -C $d -cjf $R/${P}12-devel/${P}12-devel-$V-$B.tar.bz2 .
+rmdir $d
+
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 
 endlog
