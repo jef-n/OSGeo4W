@@ -44,7 +44,7 @@ cat <<EOF >$R/setup.hint
 sdesc: "cross-platform GUI library (runtime)"
 ldesc: "cross-platform GUI library (runtime)"
 category: Libs
-requires: msvcrt2019
+requires: msvcrt2019 zlib expat libjpeg-turbo libpng libtiff xz
 maintainer: $MAINTAINER
 EOF
 
