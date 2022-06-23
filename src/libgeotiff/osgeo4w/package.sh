@@ -53,6 +53,7 @@ maintainer: $MAINTAINER
 EOF
 
 cp ../$P-$V/COPYING $R/$P-$V-$B.txt
+cp ../$P-$V/COPYING $R/$P-devel/$P-devel-$V-$B.txt
 
 tar -C install -cjf $R/$P-$V-$B.tar.bz2 bin
 tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 include lib

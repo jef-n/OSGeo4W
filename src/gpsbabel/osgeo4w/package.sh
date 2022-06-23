@@ -92,6 +92,9 @@ tar -cjf $R/$P-gui/$P-gui-$V-$B.tar.bz2 \
 	preremove.bat \
 	gui.bat
 
+cp ../$P-$V/COPYING $R/$P-$V-$B.txt
+cp ../$P-$V/COPYING $R/$P-gui/$P-gui-$V-$B.txt
+
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 \
 	osgeo4w/package.sh
 

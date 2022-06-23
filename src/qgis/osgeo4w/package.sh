@@ -293,6 +293,7 @@ requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl gdal libspatialite zlib
 external-source: $P
 EOF
 
+	cp ../qgis/COPYING $P-common-$V-$B.txt
 	/bin/tar -C install -cjf $R/$P-common/$P-common-$V-$B.tar.bz2 \
 		--exclude-from exclude \
 		--exclude "*.pyc" \
@@ -357,6 +358,7 @@ requires: $P-common fcgi
 external-source: $P
 EOF
 
+	cp ../qgis/COPYING $P-server-$V-$B.txt
 	/bin/tar -C install -cjf $R/$P-server/$P-server-$V-$B.tar.bz2 \
 		--exclude-from exclude \
 		--exclude "*.pyc" \
@@ -381,6 +383,7 @@ category: Desktop
 requires: $P-common
 EOF
 
+	cp ../qgis/COPYING $R/$P-$V-$B.txt
 	/bin/tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
 		--exclude-from exclude \
 	        apps/$P/i18n/ \
@@ -421,6 +424,7 @@ requires: $P
 external-source: $P
 EOF
 
+	cp ../qgis/COPYING $R/$P-pdb/$P-pdb-$V-$B.txt
 	/bin/tar -C build -cjf $R/$P-pdb/$P-pdb-$V-$B.tar.bz2 \
 		apps/$P/pdb
 
@@ -433,6 +437,7 @@ requires: $P grass
 external-source: $P
 EOF
 
+	cp ../qgis/COPYING $R/$P-grass-plugin/$P-grass-plugin-$V-$B.txt
 	/bin/tar -C install -cjf $R/$P-grass-plugin/$P-grass-plugin-$V-$B.tar.bz2 \
 		--exclude-from exclude \
 		--exclude "*.pyc" \
@@ -453,6 +458,7 @@ requires: $P oci
 external-source: $P
 EOF
 
+	cp ../qgis/COPYING $R/$P-oracle-provider/$P-oracle-provider-$V-$B.txt
 	/bin/tar -C install -cjf $R/$P-oracle-provider/$P-oracle-provider-$V-$B.tar.bz2 \
 		apps/$P/plugins/provider_oracle.dll \
 		apps/$P/qtplugins/sqldrivers/qsqlocispatial.dll
@@ -466,6 +472,7 @@ requires: $P-common oci
 external-source: $P
 EOF
 
+	cp ../qgis/COPYING $R/$P-devel/$P-devel-$V-$B.txt
 	/bin/tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 		--exclude-from exclude \
 		--exclude "*.pyc" \
@@ -503,8 +510,11 @@ external-source: $P
 EOF
 
 	d=$(mktemp -d)
+	cp ../qgis/COPYING $R/$P-full-free/$P-full-free-$V-$B.txt
 	/bin/tar -C $d -cjf $R/$P-full-free/$P-full-free-$V-$B.tar.bz2 .
+	cp ../qgis/COPYING $R/$P-full/$P-full-$V-$B.txt
 	/bin/tar -C $d -cjf $R/$P-full/$P-full-$V-$B.tar.bz2 .
+	cp ../qgis/COPYING $R/$P-deps/$P-deps-$V-$B.txt
 	/bin/tar -C $d -cjf $R/$P-deps/$P-deps-$V-$B.tar.bz2 .
 	rmdir $d
 

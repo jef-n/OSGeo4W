@@ -133,9 +133,9 @@ nextbinary
 
 	fetchenv msvc-env.bat
 
-	[ -f "$GRASS" ]
-	[ -d "$GRASS_PREFIX" ]
-	[ -d "$DBGHLP_PATH" ]
+	[ -f "$GRASS" ] || { echo GRASS not set; false; }
+	[ -d "$GRASS_PREFIX" ] || { echo no directory GRASS_PREFIX $GRASS_PREFIX; false; }
+	[ -d "$DBGHLP_PATH" ] || { echo no directory $DBGHLP_PATH $DBGHLP_PATH; false; }
 
 	export GRASS_VERSION=$(cmd /c $GRASS --config version | sed -e "s/\r//")
 
@@ -309,6 +309,7 @@ EOF
 		mkdir -p $R/$P-{pdb,full-free,full,deps}
 
 		touch exclude
+		cp ../qgis/COPYING $R/$P-$V-$B.txt
 		/bin/tar -cjf $R/$P-$V-$B.tar.bz2 \
 			--exclude-from exclude \
 			--exclude "*.pyc" \
@@ -328,8 +329,11 @@ EOF
 			apps/$P/pdb
 
 		d=$(mktemp -d)
+		cp ../qgis/COPYING $R/$P-full-free/$P-full-free-$V-$B.txt
 		/bin/tar -C $d -cjf $R/$P-full-free/$P-full-free-$V-$B.tar.bz2 .
+		cp ../qgis/COPYING $R/$P-full/$P-full-$V-$B.txt
 		/bin/tar -C $d -cjf $R/$P-full/$P-full-$V-$B.tar.bz2 .
+		cp ../qgis/COPYING $R/$P-deps/$P-deps-$V-$B.txt
 		/bin/tar -C $d -cjf $R/$P-deps/$P-deps-$V-$B.tar.bz2 .
 		rmdir $d
 

@@ -31,24 +31,6 @@ if( open F, "md5sums" ) {
     close F;
 }
 
-my %licfile;
-my %licmap;
-if( open F, "license.map" ) {
-    while(<F>) {
-        chomp;
-        my($first,$second,$comment) = split / /;
-        $licmap{$second} = $first;
-    }
-}
-
-my %acceptable;
-if( open F, "acceptable.lst" ) {
-    while(<F>) {
-        chomp;
-        my($id,$comment) = split / /;
-        $acceptable{$id} = 1;
-    }
-}
 
 my @okmissing = qw'message ldesc build-depends';
 my ($outfile, $help, $recursive);
@@ -56,13 +38,38 @@ my $arch = 'x86_64';
 my $release;
 my $date;
 my $startts;
+my $alllicenses = 0;
 GetOptions('okmissing=s'=>\@okmissing,
            'output=s'=>\$outfile,
            'help'=>\$help,
            'release=s'=>\$release,
            'arch=s'=>\&arch_handler,
            'recursive'=>\$recursive,
-           'date=s'=>\$date) or usage;
+           'date=s'=>\$date,
+           'alllicenses'=>\$alllicenses) or usage;
+
+
+my %licfile;
+my %licmap;
+my %acceptable;
+
+unless($alllicenses) {
+    if( open F, "license.map" ) {
+        while(<F>) {
+            chomp;
+            my($first,$second,$comment) = split / /;
+            $licmap{$second} = $first;
+        }
+    }
+
+    if( open F, "acceptable.lst" ) {
+        while(<F>) {
+            chomp;
+            my($id,$comment) = split / /;
+            $acceptable{$id} = 1;
+        }
+    }
+}
 
 if($date) {
     usage unless $date =~ /^(\d{4})-(\d{2})-(\d{2})$/;
@@ -363,6 +370,8 @@ sub addfiles {
         system "umask 0111; catdoc -dus-ascii '$r' >'$t'";
     }
 
+    print STDERR "$pname: no license [$t]\n" unless -e $t || $pname =~ /^(proj-data|python3-.*)/;
+
     filer($x, 'license', $t) if -e $t;
 
     if ($pkg{$pname}{''}{'external-source'}) {
@@ -404,7 +413,7 @@ sub filer {
       $md5s{$f}{t} = $t;
     }
 
-    if( $what eq 'license' ) {
+    if( !$alllicenses && $what eq 'license' ) {
         $digest = $licmap{$digest} if exists $licmap{$digest};
 
         unless( exists $licfile{$digest} ) {

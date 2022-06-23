@@ -100,4 +100,6 @@ tar -C install -cjf $R/$P-$V-$B.tar.bz2 bin etc
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 
+cp ../COPYING $R/$P-$V-$B.txt
+
 endlog

@@ -19,7 +19,7 @@ close F;
 
 die "MASTER_SCP not set" unless exists $ENV{"MASTER_SCP"};
 die "MASTER_REGEN_URI not set" unless exists $ENV{"MASTER_REGEN_URI"};
-die "setup.ini not found" unless -f "x86_64/setup.ini";
+die "setup-lic.ini not found" unless -f "x86_64/setup-lic.ini";
 
 sub parseini {
 	my $ini = shift;
@@ -165,7 +165,7 @@ my %remote;
 parseini "/tmp/setup-master.ini", \%remote;
 
 my %local;
-parseini "x86_64/setup.ini", \%local;
+parseini "x86_64/setup-lic.ini", \%local;
 
 my %packages;
 $packages{$_}=1 foreach keys %local;

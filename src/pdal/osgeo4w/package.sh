@@ -69,6 +69,8 @@ tar -C install -cjf $R/$P-libs/$P-libs-$V-$B.tar.bz2 \
 	--exclude "bin/pdal.exe" \
 	bin
 
+cp ../$P-$V/LICENSE.txt $R/$P-libs/$P-libs-$V-$B.txt
+
 cat <<EOF >$R/$P-devel/setup.hint
 sdesc: "PDAL: Point Data Abstraction Library (Development)"
 ldesc: "PDAL is a library for manipulating and translating point cloud data"

@@ -97,4 +97,6 @@ tar -cjf $R/$P-$V-$B-src.tar.bz2 \
 	osgeo4w/package.sh \
 	osgeo4w/patch
 
+cp saga-${V}_src/saga-gis/COPYING $R/$P-$V-$B.txt
+
 endlog

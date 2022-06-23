@@ -119,6 +119,9 @@ tar -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 
 cd ..
 
+cp ../postgresql-$V/COPYRIGHT $R/$P-$V-$B.txt
+cp ../postgresql-$V/COPYRIGHT $R/$P-devel/$P-devel-$V-$B.txt
+
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 
 endlog

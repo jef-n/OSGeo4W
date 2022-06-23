@@ -209,6 +209,9 @@ regen() {
 		perl $OSGEO4W_SCRIPTS/genini --arch=x86_64 --output=x86_64/setup.ini.tmp --recursive x86_64/release
 		mv x86_64/setup.ini.tmp x86_64/setup.ini
 		bzip2 -c x86_64/setup.ini >x86_64/setup.ini.bz2
+		perl $OSGEO4W_SCRIPTS/genini --alllicenses --arch=x86_64 --output=x86_64/setup-lic.ini.tmp --recursive x86_64/release
+		mv x86_64/setup-lic.ini.tmp x86_64/setup-lic.ini
+		bzip2 -c x86_64/setup-lic.ini >x86_64/setup-lic.ini.bz2
 	)
 }
 declare -x regen

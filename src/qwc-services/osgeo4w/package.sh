@@ -1391,4 +1391,6 @@ tar -cjf $R/$P/$P-$V-$B-src.tar.bz2 \
 	osgeo4w/qwc-config-generator.diff \
 	osgeo4w/qwc-admin-gui.diff
 
+cp ../$P-core/LICENSE $R/$P/$P-$V-$B.txt
+
 endlog

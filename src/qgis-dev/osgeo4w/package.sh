@@ -92,8 +92,6 @@ nextbinary
 	cmakeenv
 	ninjaenv
 
-	echo $PATH
-
 	cd ../qgis
 
 	if [ -n "$TX_TOKEN" ]; then
@@ -299,6 +297,7 @@ EOF
 		mkdir -p $R/$P-{pdb,full-free,full,deps}
 
 		touch exclude
+		cp ../qgis/COPYING $R/$P-$V-$B.txt
 		/bin/tar -cjf $R/$P-$V-$B.tar.bz2 \
 			--exclude-from exclude \
 			--exclude "*.pyc" \

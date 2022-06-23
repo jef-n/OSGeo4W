@@ -62,7 +62,7 @@ tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	lib
 
 cp ../$P-$V/LICENSE $R/$P-$V-$B.txt
-cp ../$P-$V/LICENSE $R/$P-devel/$P-devel-$P-$V-$B.txt
+cp ../$P-$V/LICENSE $R/$P-devel/$P-devel-$V-$B.txt
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 

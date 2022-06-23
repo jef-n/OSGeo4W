@@ -395,6 +395,8 @@ cp ../gdal/LICENSE.TXT $R/$P$abi-runtime/$P$abi-runtime-$V-$B.txt
 cp ../gdal/LICENSE.TXT $R/$P-devel/$P-devel-$V-$B.txt
 cp ../gdal/LICENSE.TXT $R/$P-mss/$P-mss-$V-$B.txt
 cp ../gdal/LICENSE.TXT $R/$P-sosi/$P-sosi-$V-$B.txt
+cp ../gdal/LICENSE.TXT $R/$P-hdf5/$P-hdf5-$V-$B.txt
+cp ../gdal/LICENSE.TXT $R/$P-kea/$P-kea-$V-$B.txt
 cp ../gdal/LICENSE.TXT $R/python3-$P/python3-$P-$V-$B.txt
 cp $FGDB_SDK/license/userestrictions.txt $R/$P-filegdb/$P-filegdb-$V-$B.txt
 catdoc $ECW_SDK/\$TEMP/ecwjp2_sdk/Server_Read-Only_EndUser.rtf | sed -e "1,/^[^ ]/ { /^$/d }" >$R/$P-ecw/$P-ecw-$V-$B.txt

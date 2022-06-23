@@ -78,6 +78,8 @@ tar -C install -cjf $R/$P-libs/$P-libs-$V-$B.tar.bz2 \
 	--exclude "*.pdb" \
 	apps/Qt5/bin/ \
 	apps/Qt5/lib/qml/
+
+cp ../LICENSE.LGPLv21 $R/$P-libs/$P-libs-$V-$B.txt
 	
 cat <<EOF >$R/$P-devel/setup.hint
 sdesc: "WebKit for Qt5 (development)"
@@ -96,6 +98,8 @@ tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	apps/Qt5/lib/Qt5WebKit.lib \
 	apps/Qt5/lib/Qt5WebKitWidgets.lib
 
+cp ../LICENSE.LGPLv21 $R/$P-devel/$P-devel-$V-$B.txt
+
 cat <<EOF >$R/$P-symbols/setup.hint
 sdesc: "WebKit for Qt5 (symbols)"
 ldesc: "WebKit for Qt5 (symbols)"
@@ -108,6 +112,8 @@ EOF
 tar -C install -cjf $R/$P-symbols/$P-symbols-$V-$B.tar.bz2 \
 	apps/Qt5/bin/Qt5WebKit.pdb \
 	apps/Qt5/bin/Qt5WebKitWidgets.pdb
+
+cp ../LICENSE.LGPLv21 $R/$P-symbols/$P-symbols-$V-$B.txt
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/$P.diff
 

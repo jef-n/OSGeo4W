@@ -91,7 +91,7 @@ tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 \
 	osgeo4w/package.sh
 
-cp ../$P-$V/LICENSE $R/$P-devel/$P-$V-$B.txt
+cp ../$P-$V/LICENSE $R/$P-devel/$P-devel-$V-$B.txt
 
 cat <<EOF >$R/$P-devel/setup.hint
 sdesc: "OpenSSL Cryptography (Development)"
@@ -126,5 +126,7 @@ EOF
 tar -C install -cjf $R/$P-doc/$P-doc-$V-$B.tar.bz2 \
 	--xform s,^html,apps/$P/html, \
 	html
+
+cp ../$P-$V/LICENSE $R/$P-doc/$P-doc-$V-$B.txt
 
 endlog

@@ -135,9 +135,9 @@ nextbinary
 
 	fetchenv msvc-env.bat
 
-	[ -f "$GRASS" ]
-	[ -d "$GRASS_PREFIX" ]
-	[ -d "$DBGHLP_PATH" ]
+	[ -f "$GRASS" ] || { echo GRASS not set; false; }
+	[ -d "$GRASS_PREFIX" ] || { echo no directory GRASS_PREFIX $GRASS_PREFIX; false; }
+	[ -d "$DBGHLP_PATH" ] || { echo no directory $DBGHLP_PATH $DBGHLP_PATH; false; }
 
 	export GRASS_VERSION=$(cmd /c $GRASS --config version | sed -e "s/\r//")
 
@@ -311,6 +311,7 @@ EOF
 		mkdir -p $R/$P-{pdb,full-free,full,deps}
 
 		touch exclude
+		cp ../qgis/COPYING $R/$P-$V-$B.txt
 		/bin/tar -cjf $R/$P-$V-$B.tar.bz2 \
 			--exclude-from exclude \
 			--exclude "*.pyc" \

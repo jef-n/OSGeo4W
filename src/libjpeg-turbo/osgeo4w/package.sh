@@ -71,6 +71,7 @@ EOF
 
 cp ../libjpeg-turbo-2.0.7-esr/LICENSE.md $R/$P-$V-$B.txt
 cp ../libjpeg-turbo-2.0.7-esr/LICENSE.md $R/$P-devel/$P-devel-$V-$B.txt
+cp ../libjpeg-turbo-2.0.7-esr/LICENSE.md $R/$P-tools/$P-tools-$V-$B.txt
 
 tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
 	--exclude "*.exe" \

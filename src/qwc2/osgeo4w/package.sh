@@ -51,4 +51,6 @@ tar -cjf $R/$P-$V-$B-src.tar.bz2 \
 	-C .. \
 	osgeo4w/package.sh
 
+cp ../qwc2-demo-app/LICENSE $R/$P-$V-$B.txt
+
 endlog
