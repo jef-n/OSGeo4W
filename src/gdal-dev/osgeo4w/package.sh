@@ -168,7 +168,7 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 		-G Ninja \
 		-D                      CMAKE_BUILD_TYPE=RelWithDebInfo \
 		-D                  CMAKE_INSTALL_PREFIX=../install/apps/$P \
-		-D                  GDAL_LIB_OUTPUT_NAME=gdal$abi \
+		-D                  GDAL_LIB_OUTPUT_NAME=$P$abi \
 		-D                 BUILD_PYTHON_BINDINGS=ON \
 		-D             GDAL_USE_GEOTIFF_INTERNAL=OFF \
 		-D               GDAL_ENABLE_DRIVER_JPEG=ON \
@@ -451,9 +451,9 @@ tar -C install -cjvf $R/$P-mrsid/$P-mrsid-$V-$B.tar.bz2 \
 	apps/$P/bin/tbb.dll
 
 tar -C install -cjvf $R/$P$abi-runtime/$P$abi-runtime-$V-$B.tar.bz2 \
-	apps/$P/bin/gdal$abi.dll
+	apps/$P/bin/$P$abi.dll
 
-mv install/apps/$P/lib/gdal$abi.lib install/apps/$P/lib/gdal_i.lib
+mv install/apps/$P/lib/$P$abi.lib install/apps/$P/lib/gdal_i.lib
 
 tar -C install -cjvf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	--exclude "*.dll" \
