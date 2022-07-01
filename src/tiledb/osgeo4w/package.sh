@@ -33,6 +33,7 @@ startlog
 		-D TILEDB_SUPERBUILD=OFF \
 		-D TILEDB_VERBOSE=ON \
 		-D TILEDB_TESTS=OFF \
+		-D COMPILER_SUPPORTS_AVX2=OFF \
 		-D LZ4_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 		-D LZ4_LIBRARIES=$(cygpath -am ../osgeo4w/lib/lz4.lib) \
 		-D BZIP2_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
