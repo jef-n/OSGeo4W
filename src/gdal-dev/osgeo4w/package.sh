@@ -4,8 +4,6 @@ export B=tbd
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel hdf5-tools ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-turbo-devel python3-setuptools opencl-devel libtiff-devel libgeotiff-devel arrow-cpp-devel lz4-devel openssl-devel tiledb-devel lerc-devel kealib-devel"
 
-REPO=https://github.com/OSGeo/gdal.git
-
 source ../../../scripts/build-helpers
 
 export PYTHON=Python39
@@ -31,7 +29,7 @@ if [ -d ../gdal ]; then
 
 	cd ../osgeo4w
 else
-	git clone $REPO --branch master --single-branch ../gdal
+	git clone https://github.com/OSGeo/gdal.git --branch master --single-branch ../gdal
 	git config core.filemode false
 	unset OSGEO4W_SKIP_CLEAN
 fi
@@ -139,14 +137,13 @@ nextbinary
 export abi=$(printf "%d%02d" $major $minor)
 
 R=$OSGEO4W_REP/x86_64/release/gdal/$P
-mkdir -p $R/$P-{devel,oracle,filegdb,ecw,mrsid,sosi,mss,hdf5,kea} $R/$P$abi-runtime $R/python3-$P
+mkdir -p $R/$P-{devel,oracle,filegdb,ecw,mrsid,sosi,mss,hdf5,kea,tiledb} $R/$P$abi-runtime $R/python3-$P
 
 if [ -f $R/$P-$V-$B-src.tar.bz2 ]; then
 	echo "$R/$P-$V-$B-src.tar.bz2 already exists - skipping"
 	exit 1
 fi
 
-export EXT_NMAKE_OPT=$(cygpath -am $PWD/nmake.opt)
 export FGDB_SDK=$(cygpath -am gdaldeps/filegdb)
 export ECW_SDK=$(cygpath -am gdaldeps/ecw)
 export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
@@ -183,6 +180,7 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 		-D       GDAL_ENABLE_DRIVER_MRSID_PLUGIN=ON \
 		-D        GDAL_ENABLE_DRIVER_HDF5_PLUGIN=ON \
 		-D         GDAL_ENABLE_DRIVER_KEA_PLUGIN=ON \
+		-D      GDAL_ENABLE_DRIVER_TILEDB_PLUGIN=ON \
 		-D      OGR_ENABLE_DRIVER_FILEGDB_PLUGIN=ON \
 		-D         OGR_ENABLE_DRIVER_SOSI_PLUGIN=ON \
 		-D OGR_ENABLE_DRIVER_MSSQLSPATIAL_PLUGIN=ON \
@@ -376,6 +374,15 @@ requires: $P$abi-runtime kealib
 external-source: $P
 EOF
 
+cat <<EOF >$R/$P-tiledb/setup.hint
+sdesc: "TILEDB plugin for GDAL (nightly build)"
+ldesc: "TILEDB plugin for GDAL (nightly build)"
+category: Libs
+requires: $P$abi-runtime tiledb
+maintainer: $MAINTAINER
+external-source: $P
+EOF
+
 appendversions $R/setup.hint
 appendversions $R/$P$abi-runtime/setup.hint
 appendversions $R/$P-devel/setup.hint
@@ -388,6 +395,7 @@ appendversions $R/$P-sosi/setup.hint
 appendversions $R/$P-mss/setup.hint
 appendversions $R/$P-hdf5/setup.hint
 appendversions $R/$P-kea/setup.hint
+appendversions $R/$P-tiledb/setup.hint
 
 cp ../gdal/LICENSE.TXT $R/$P-$V-$B.txt
 cp ../gdal/LICENSE.TXT $R/$P-oracle/$P-oracle-$V-$B.txt
@@ -397,10 +405,12 @@ cp ../gdal/LICENSE.TXT $R/$P-mss/$P-mss-$V-$B.txt
 cp ../gdal/LICENSE.TXT $R/$P-sosi/$P-sosi-$V-$B.txt
 cp ../gdal/LICENSE.TXT $R/$P-hdf5/$P-hdf5-$V-$B.txt
 cp ../gdal/LICENSE.TXT $R/$P-kea/$P-kea-$V-$B.txt
+cp ../gdal/LICENSE.TXT $R/$P-tiledb/$P-tiledb-$V-$B.txt
 cp ../gdal/LICENSE.TXT $R/python3-$P/python3-$P-$V-$B.txt
 cp $FGDB_SDK/license/userestrictions.txt $R/$P-filegdb/$P-filegdb-$V-$B.txt
 catdoc $ECW_SDK/\$TEMP/ecwjp2_sdk/Server_Read-Only_EndUser.rtf | sed -e "1,/^[^ ]/ { /^$/d }" >$R/$P-ecw/$P-ecw-$V-$B.txt
 pdftotext -layout -enc ASCII7 $MRSID_SDK/LICENSE.pdf - >$R/$P-mrsid/$P-mrsid-$V-$B.txt
+
 
 cp $FGDB_SDK/bin64/FileGDBAPI.dll install/apps/$P/bin
 cp $ECW_SDK/bin/vc141/x64/NCSEcw.dll install/apps/$P/bin
@@ -442,6 +452,9 @@ tar -C install -cjvf $R/$P-hdf5/$P-hdf5-$V-$B.tar.bz2 \
 
 tar -C install -cjvf $R/$P-kea/$P-kea-$V-$B.tar.bz2 \
 	apps/$P/lib/gdalplugins/gdal_KEA.dll
+
+tar -C install -cjvf $R/$P-tiledb/$P-tiledb-$V-$B.tar.bz2 \
+	apps/$P/lib/gdalplugins/gdal_TileDB.dll
 
 tar -C install -cjvf $R/$P-mrsid/$P-mrsid-$V-$B.tar.bz2 \
 	apps/$P/lib/gdalplugins/gdal_MrSID.dll \
@@ -489,7 +502,7 @@ s#^install/##;
 
 (
 	tar tjf $R/$P-$V-$B.tar.bz2 | tee /tmp/$P.files
-	for i in -filegdb -sosi -oracle -mss -ecw -mrsid -hdf5 -kea -devel $abi-runtime; do
+	for i in -filegdb -sosi -oracle -mss -ecw -mrsid -hdf5 -kea -tiledb -devel $abi-runtime; do
 		tar tjf $R/$P$i/$P$i-$V-$B.tar.bz2 | tee /tmp/$P-$i.files
 	done
 	tar tjf $R/python3-$P/python3-$P-$V-$B.tar.bz2 | tee /tmp/python3-$P.files

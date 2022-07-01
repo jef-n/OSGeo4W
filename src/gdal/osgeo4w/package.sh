@@ -99,7 +99,7 @@ minor=${minor%%.*}
 export abi=$(printf "%d%02d" $major $minor)
 
 R=$OSGEO4W_REP/x86_64/release/$P
-mkdir -p $R/$P-{devel,oracle,filegdb,ecw,mrsid,sosi,mss,hdf5,kea} $R/$P$abi-runtime $R/python3-$P
+mkdir -p $R/$P-{devel,oracle,filegdb,ecw,mrsid,sosi,mss,hdf5,kea,tiledb} $R/$P$abi-runtime $R/python3-$P
 
 if [ -f $R/$P-$V-$B-src.tar.bz2 ]; then
 	echo "$R/$P-$V-$B-src.tar.bz2 already exists - skipping"
@@ -127,7 +127,7 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 		-G Ninja \
 		-D                      CMAKE_BUILD_TYPE=RelWithDebInfo \
 		-D                  CMAKE_INSTALL_PREFIX=../install/apps/$P \
-		-D                  GDAL_LIB_OUTPUT_NAME=gdal$abi \
+		-D                  GDAL_LIB_OUTPUT_NAME=$P$abi \
 		-D                 BUILD_PYTHON_BINDINGS=ON \
 		-D             GDAL_USE_GEOTIFF_INTERNAL=OFF \
 		-D               GDAL_ENABLE_DRIVER_JPEG=ON \
@@ -142,6 +142,7 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 		-D       GDAL_ENABLE_DRIVER_MRSID_PLUGIN=ON \
 		-D        GDAL_ENABLE_DRIVER_HDF5_PLUGIN=ON \
 		-D         GDAL_ENABLE_DRIVER_KEA_PLUGIN=ON \
+		-D      GDAL_ENABLE_DRIVER_TILEDB_PLUGIN=ON \
 		-D      OGR_ENABLE_DRIVER_FILEGDB_PLUGIN=ON \
 		-D         OGR_ENABLE_DRIVER_SOSI_PLUGIN=ON \
 		-D OGR_ENABLE_DRIVER_MSSQLSPATIAL_PLUGIN=ON \
@@ -237,7 +238,7 @@ sdesc: "The GDAL/OGR $major.$minor runtime library"
 ldesc: "The GDAL/OGR $major.$minor runtime library"
 maintainer: $MAINTAINER
 category: Libs Commandline_Utilities
-requires: msvcrt2019 libpng curl geos libmysql sqlite3 netcdf libpq expat xerces-c hdf4 ogdi libiconv openjpeg libspatialite freexl xz zstd poppler msodbcsql libjpeg-turbo arrow-cpp thrift brotli tiledb $RUNTIMEDEPENDS
+requires: msvcrt2019 libpng curl geos libmysql sqlite3 netcdf libpq expat xerces-c hdf4 ogdi libiconv openjpeg libspatialite freexl xz zstd poppler msodbcsql libjpeg-turbo arrow-cpp thrift brotli $RUNTIMEDEPENDS
 external-source: $P
 EOF
 
@@ -331,6 +332,15 @@ requires: $P$abi-runtime kealib
 external-source: $P
 EOF
 
+cat <<EOF >$R/$P-tiledb/setup.hint
+sdesc: "TILEDB plugin for GDAL"
+ldesc: "TILEDB plugin for GDAL"
+category: Libs
+requires: $P$abi-runtime tiledb
+maintainer: $MAINTAINER
+external-source: $P
+EOF
+
 appendversions $R/setup.hint
 appendversions $R/$P$abi-runtime/setup.hint
 appendversions $R/$P-devel/setup.hint
@@ -343,6 +353,7 @@ appendversions $R/$P-sosi/setup.hint
 appendversions $R/$P-mss/setup.hint
 appendversions $R/$P-hdf5/setup.hint
 appendversions $R/$P-kea/setup.hint
+appendversions $R/$P-tiledb/setup.hint
 
 cp ../$P-${V%rc*}/LICENSE.TXT $R/$P-$V-$B.txt
 cp ../$P-${V%rc*}/LICENSE.TXT $R/$P-oracle/$P-oracle-$V-$B.txt
@@ -352,6 +363,7 @@ cp ../$P-${V%rc*}/LICENSE.TXT $R/$P-mss/$P-mss-$V-$B.txt
 cp ../$P-${V%rc*}/LICENSE.TXT $R/$P-sosi/$P-sosi-$V-$B.txt
 cp ../$P-${V%rc*}/LICENSE.TXT $R/$P-hdf5/$P-hdf5-$V-$B.txt
 cp ../$P-${V%rc*}/LICENSE.TXT $R/$P-kea/$P-kea-$V-$B.txt
+cp ../$P-${V%rc*}/LICENSE.TXT $R/$P-tiledb/$P-tiledb-$V-$B.txt
 cp ../$P-${V%rc*}/LICENSE.TXT $R/python3-$P/python3-$P-$V-$B.txt
 cp $FGDB_SDK/license/userestrictions.txt $R/$P-filegdb/$P-filegdb-$V-$B.txt
 catdoc $ECW_SDK/\$TEMP/ecwjp2_sdk/Server_Read-Only_EndUser.rtf | sed -e "1,/^[^ ]/ { /^$/d }" >$R/$P-ecw/$P-ecw-$V-$B.txt
@@ -396,6 +408,9 @@ tar -C install -cjvf $R/$P-hdf5/$P-hdf5-$V-$B.tar.bz2 \
 
 tar -C install -cjvf $R/$P-kea/$P-kea-$V-$B.tar.bz2 \
 	apps/$P/lib/gdalplugins/gdal_KEA.dll
+
+tar -C install -cjvf $R/$P-tiledb/$P-tiledb-$V-$B.tar.bz2 \
+	apps/$P/lib/gdalplugins/gdal_TileDB.dll
 
 tar -C install -cjvf $R/$P-mrsid/$P-mrsid-$V-$B.tar.bz2 \
 	apps/$P/lib/gdalplugins/gdal_MrSID.dll \
@@ -452,7 +467,7 @@ s#^install/##;
 
 (
 	tar tjf $R/$P-$V-$B.tar.bz2 | tee /tmp/$P.files
-	for i in -filegdb -sosi -oracle -mss -ecw -mrsid -hdf5 -kea -devel $abi-runtime; do
+	for i in -filegdb -sosi -oracle -mss -ecw -mrsid -hdf5 -kea -tiledb -devel $abi-runtime; do
 		tar tjf $R/$P$i/$P$i-$V-$B.tar.bz2 | tee /tmp/$P-$i.files
 	done
 	tar tjf $R/python3-$P/python3-$P-$V-$B.tar.bz2 | tee /tmp/python3-$P.files
