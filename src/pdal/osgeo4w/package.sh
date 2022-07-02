@@ -10,6 +10,11 @@ startlog
 
 [ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://github.com/${P^^}/${P^^}/archive/$V-maintenance.tar.gz
 [ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz --xform "s,^${P^^}-$V-maintenance,$P-$V,"
+[ -f ../$P-$V/patched ] || {
+	patch -d ../$P-$V -p1 --dry-run <patch
+	patch -d ../$P-$V -p1 <patch
+	touch ../$P-$V/patched
+}
 
 (
 	set -e
