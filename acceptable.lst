@@ -33,6 +33,7 @@
 39bba7d2cf0ba1036f2a6e2be52fe3f0 zstd (GPL)
 3a9bfcba046f8a1b36d9b60bae75b9f5 netcdf
 3b83ef96387f14655fc854ddc3c6bd57 Apache License 2.0
+57c4c10122d7b5a36ffb6416de10bab0 Apache License 2.0 (odbc-cpp-wrapper)
 3d568845cafc3b6c70c6a03dd4e7cdf4 node
 425f6fdc767cc067518eef9bbdf4ab7b curl
 4741693cd088043dcb1922dedb25fd85 python 3.9
