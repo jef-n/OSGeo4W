@@ -157,11 +157,12 @@ diff -ur grass-7.8.6/mswindows/osgeo4w/postinstall.bat ../grass-7.8.6/mswindows/
 +exit /b 0
 diff -ur grass-7.8.7/lib/raster/gdal.c ../grass-7.8.7/lib/raster/gdal.c
 --- grass-7.8.7/lib/raster/gdal.c	2022-02-23 17:43:59.000000000 +0100
-+++ ../grass-7.8.7/lib/raster/gdal.c	2022-05-04 12:20:49.767316400 +0200
-@@ -116,6 +116,7 @@
++++ ../grass-7.8.7/lib/raster/gdal.c	2022-07-17 11:33:12.175118600 +0200
+@@ -116,6 +116,8 @@
  	"libgdal1.7.0.so",
  # endif
  # ifdef _WIN32
++	"gdal305.dll",
 +	"gdal304.dll",
  	"gdal303.dll",
  	"gdal302.dll",
