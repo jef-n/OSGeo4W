@@ -303,8 +303,10 @@ tar -cjf $R/$P-libs/$P-libs-$V-$B.tar.bz2 \
 	--absolute-names \
 	--xform s,^../qt5.bat,etc/ini/qt5.bat, \
 	--xform s,^../qt5.conf,bin/qt.conf, \
+	--xform s,^.././qt5.conf,apps/qt5/bin/qt.conf, \
 	../qt5.bat \
 	../qt5.conf \
+	.././qt5.conf \
 	-T /tmp/libs.release
 
 #
@@ -498,6 +500,7 @@ fi
 
 sort /tmp/qt.files /tmp/qt.installed | uniq -u | fgrep -v -x -f <(cat <<EOF
 bin/qt.conf
+apps/qt5/bin/qt.conf
 etc/ini/qt5.bat
 EOF
 ) >/tmp/qt.not-installed || true
