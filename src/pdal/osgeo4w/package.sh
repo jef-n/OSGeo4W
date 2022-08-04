@@ -1,15 +1,15 @@
 export P=pdal
-export V=2.3
+export V=2.4.2
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="gdal-devel libgeotiff-devel zlib-devel curl-devel libxml2-devel hdf5-devel openssl-devel zstd-devel laszip-devel"
+export BUILDDEPENDS="gdal-devel libgeotiff-devel libtiff-devel zlib-devel curl-devel libxml2-devel hdf5-devel openssl-devel zstd-devel laszip-devel"
 
 source ../../../scripts/build-helpers
 
 startlog
 
-[ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://github.com/${P^^}/${P^^}/archive/$V-maintenance.tar.gz
-[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz --xform "s,^${P^^}-$V-maintenance,$P-$V,"
+[ -f $P-$V-src.tar.gz ] || wget https://github.com/PDAL/PDAL/releases/download/$V/${P^^}-$V-src.tar.gz
+[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf $P-$V-src.tar.gz --xform "s,^${P^^}-$V-src,$P-$V,"
 [ -f ../$P-$V/patched ] || {
 	patch -d ../$P-$V -p1 --dry-run <patch
 	patch -d ../$P-$V -p1 <patch
@@ -32,6 +32,7 @@ startlog
 	cmake -G Ninja \
 		-D CMAKE_BUILD_TYPE=Release \
 		-D CMAKE_INSTALL_PREFIX=../install \
+		-D PDAL_PLUGIN_INSTALL_PATH=../install/apps/$P/plugins \
 		../../$P-$V
 	cmake --build .
 	cmake --build . --target install || cmake --build . --target install
@@ -69,9 +70,16 @@ maintainer: $MAINTAINER
 external-source: $P
 EOF
 
+mkdir -p install/etc/ini
+
+cat <<EOF >install/etc/ini/$P-libs.bat
+set PDAL_DRIVER_PATH=%OSGEO4W_ROOT%\\apps\\$P\\plugins
+EOF
+
 tar -C install -cjf $R/$P-libs/$P-libs-$V-$B.tar.bz2 \
 	--exclude "bin/pdal-config*" \
 	--exclude "bin/pdal.exe" \
+	etc/ini/$P-libs.bat \
 	bin
 
 cp ../$P-$V/LICENSE.txt $R/$P-libs/$P-libs-$V-$B.txt

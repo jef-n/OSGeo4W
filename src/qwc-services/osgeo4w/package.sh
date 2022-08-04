@@ -234,6 +234,7 @@ Listen 127.0.0.1:8001
 	FcgidInitialEnv O4W_QT_FONTS @o4wroot@/apps/Qt5/fonts
 	FcgidInitialEnv GDAL_DATA @o4wroot@/share/gdal
 	FcgidInitialEnv PROJ_LIB @o4wroot@/share/proj
+	FcgidInitialEnv PROJ_DATA @o4wroot@/share/proj
 	FcgidInitialEnv QGIS_PREFIX_PATH @o4wroot@/apps/\${PKG}
 	FcgidInitialEnv TEMP @temp@
 	FcgidInitialEnv USERPROFILE @userprofile@
