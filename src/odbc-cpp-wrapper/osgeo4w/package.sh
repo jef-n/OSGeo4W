@@ -2,7 +2,7 @@ export P=odbc-cpp-wrapper
 export V=1.1
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="none"
+export BUILDDEPENDS=none
 
 source ../../../scripts/build-helpers
 

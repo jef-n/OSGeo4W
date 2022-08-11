@@ -9,14 +9,11 @@ my %src;
 my %bin;
 my $pkg;
 
-system("/usr/bin/rsync download.osgeo.org:/osgeo/download/osgeo4w/v2/x86_64/setup.ini /tmp/setup-master.ini") == 0 or die "Could not download setup.ini";
-
-$src{"openjpeg-tools"} = "openjpeg";
-$src{"alkis-import"} = "alkis-import";
-$src{"qtkeychain"} = "qtkeychain-libs";
+system("/usr/bin/rsync -a upload.osgeo.org::download/osgeo4w/v2/x86_64/setup.ini /tmp/setup-master.ini") == 0 or die "Could not download setup.ini";
 
 # collect package from source relations
 for my $f ("/tmp/setup-master.ini", "x86_64/setup.ini") {
+	next unless -f $f;
 	open F, $f;
 	while(<F>) {
 		if(/^@ (\S+)\s+$/) {
@@ -29,9 +26,10 @@ for my $f ("/tmp/setup-master.ini", "x86_64/setup.ini") {
 			my ($src, $ver, $bin) = $1 =~ m#^.+/([^/]+)/\1-(.*)-(\d+)-src.tar.bz2$#;
 			die "invalid $1" unless defined $src && defined $ver && defined $bin;
 
-			$src = "qtkeychain" if $src eq "qtkeychain-libs";
-
-			die "src/$src [$ver:$bin] not found" unless -f "src/$src/osgeo4w/package.sh";
+			unless(-f "src/$src/osgeo4w/package.sh") {
+				# warn "source src/$src [$ver:$bin] not found";
+				next;
+			}
 
 			$src{$pkg} = $src;
 			push @{ $bin{$src} }, $pkg;
@@ -51,17 +49,7 @@ while(<F>) {
 	my($pkg, $deps) = m#src/([^/]+)/osgeo4w/package.sh:export BUILDDEPENDS=(.*\S)\s+$#;
 	die "invalid $_" unless defined $pkg;
 
-	next if $pkg =~ /^python3-(mathlib|virtualenv)$/;  # n/a
-
-	if(exists $src{"$pkg-devel"} && !exists $src{$pkg}) {
-		#print STDERR "use $pkg-devel for $pkg\n";
-		$pkg = "$pkg-devel";
-	}
-
-	unless(exists $src{$pkg}) {
-		warn "no src for $pkg";
-		next;
-	}
+	next unless exists $src{$pkg};
 
 	$pkg = $src{$pkg};
 
@@ -90,10 +78,8 @@ foreach (grep /-$/, @ARGV) {
 
 my @todo;
 while(my $p = shift @arg) {
-	unless(exists $src{$p}) {
-		die "Source for $p not found" unless exists $src{$p};
-		$p = $src{$p};
-	}
+	die "Source for $p not found" unless exists $src{$p};
+	$p = $src{$p};
 	push @todo, $p;
 }
 
@@ -138,4 +124,4 @@ while(keys %todo) {
 
 push @inorder, keys %todo;
 
-print join(" ", @inorder) . "\n";
+print join("\n", @inorder), "\n";

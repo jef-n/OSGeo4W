@@ -1,4 +1,4 @@
-export P=spdlog
+export P=spdlog-devel
 export V=1.10.0
 export B=next
 export MAINTAINER=JuergenFischer
@@ -8,8 +8,9 @@ source ../../../scripts/build-helpers
 
 startlog
 
-[ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://github.com/gabime/$P/archive/refs/tags/v$V.tar.gz
-[ -d ../$P-$V ] || tar -C .. -xzf $P-$V.tar.gz
+export p=${P%-devel}
+[ -f $p-$V.tar.gz ] || wget -O $p-$V.tar.gz https://github.com/gabime/$p/archive/refs/tags/v$V.tar.gz
+[ -d ../$p-$V ] || tar -C .. -xzf $p-$V.tar.gz
 
 (
 	vs2019env
@@ -22,12 +23,12 @@ startlog
 	cmake -G Ninja \
 		-D CMAKE_BUILD_TYPE=Release \
 		-D CMAKE_INSTALL_PREFIX=../install \
-		../../$P-$V
+		../../$p-$V
 	cmake --build .
 	cmake --install .
 )
 
-export R=$OSGEO4W_REP/x86_64/release/$P-devel
+export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R
 
 cat <<EOF >$R/setup.hint
@@ -38,9 +39,9 @@ requires: msvcrt2019
 maintainer: $MAINTAINER
 EOF
 
-cp ../$P-$V/LICENSE $R/$P-devel-$V-$B.txt
-tar -C install -cjf $R/$P-devel-$V-$B.tar.bz2 lib include
+cp ../$p-$V/LICENSE $R/$P-$V-$B.txt
+tar -C install -cjf $R/$P-$V-$B.tar.bz2 lib include
 
-tar -C .. -cjf $R/$P-devel-$V-$B-src.tar.bz2 osgeo4w/package.sh
+tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 
 endlog

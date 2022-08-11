@@ -1,4 +1,4 @@
-export P=snappy
+export P=snappy-devel
 export V=1.1.9
 export B=next
 export MAINTAINER=JuergenFischer
@@ -8,8 +8,9 @@ source ../../../scripts/build-helpers
 
 startlog
 
-[ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://github.com/google/$P/archive/refs/tags/$V.tar.gz
-[ -d ../$P-$V ] || tar -C .. -xzf $P-$V.tar.gz
+export p=${P%-devel}
+[ -f $p-$V.tar.gz ] || wget -O $p-$V.tar.gz https://github.com/google/$p/archive/refs/tags/$p.tar.gz
+[ -d ../$p-$V ] || tar -C .. -xzf $p-$V.tar.gz
 
 (
 	vs2019env
@@ -26,28 +27,27 @@ startlog
 		-D SNAPPY_BUILD_TESTS=OFF \
 		-D SNAPPY_BUILD_BENCHMARKS=OFF \
 		-D SNAPPY_HAVE_BMI2=OFF \
-		../../$P-$V
+		../../$p-$V
 	cmake --build .
 	cmake --install .
 )
 
-export R=$OSGEO4W_REP/x86_64/release/$P-devel
+export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R
 
 cat <<EOF >$R/setup.hint
 sdesc: "snappy compression (development)"
 ldesc: "snappy compression (development)"
 category: Libs
-requires: $P
 maintainer: $MAINTAINER
 EOF
 
-cp ../$P-$V/COPYING $R/$P-devel-$V-$B.txt
-tar -C install -cjf $R/$P-devel-$V-$B.tar.bz2 \
+cp ../$p-$V/COPYING $R/$P-$V-$B.txt
+tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
 	--xform "s,lib/cmake,share/cmake," \
 	include \
 	lib
 
-tar -C .. -cjf $R/$P-devel-$V-$B-src.tar.bz2 osgeo4w/package.sh
+tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 
 endlog
