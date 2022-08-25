@@ -1,5 +1,5 @@
 export P=pdal
-export V=2.4.2
+export V=2.4.3
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="gdal-devel libgeotiff-devel libtiff-devel zlib-devel curl-devel libxml2-devel hdf5-devel openssl-devel zstd-devel laszip-devel"
@@ -10,11 +10,6 @@ startlog
 
 [ -f $P-$V-src.tar.gz ] || wget https://github.com/PDAL/PDAL/releases/download/$V/${P^^}-$V-src.tar.gz
 [ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf $P-$V-src.tar.gz --xform "s,^${P^^}-$V-src,$P-$V,"
-[ -f ../$P-$V/patched ] || {
-	patch -d ../$P-$V -p1 --dry-run <patch
-	patch -d ../$P-$V -p1 <patch
-	touch ../$P-$V/patched
-}
 
 (
 	set -e
