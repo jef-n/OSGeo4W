@@ -37,6 +37,7 @@ sdesc: "getopt library for Windows compilers (Development)"
 ldesc: "getopt library for Windows compilers (Development)"
 category: Libs
 maintainer: $MAINTAINER
+requires:
 EOF
 
 tar -C install -cjf $R/$P-devel-$V-$B.tar.bz2 include lib
