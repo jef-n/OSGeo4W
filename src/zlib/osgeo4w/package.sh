@@ -10,6 +10,11 @@ startlog
 
 [ -f $P-$V.tar.gz ] || wget http://zlib.net/$P-$V.tar.gz
 [ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf  $P-$V.tar.gz
+[ -f ../$P-$V/patched ] || {
+	patch -p1 -d ../$P-$V --dry-run <patch
+	patch -p1 -d ../$P-$V <patch
+	touch ../$P-$V/patched
+}
 
 vs2019env
 cmakeenv
@@ -84,6 +89,6 @@ cat <<EOF | tee -a $R/$P-$V-$B.txt >$R/$P-devel/$P-devel-$P-$V-$B.txt
   jloup@gzip.org          madler@alumni.caltech.edu
 EOF
 
-tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
+tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/patch
 
 endlog
