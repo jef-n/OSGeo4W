@@ -2,7 +2,7 @@ export P=python3-pillow
 export V=pip
 export B=pip
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-pip python3-wheel python3-setuptools zlib-devel libjpeg-turbo-devel"
+export BUILDDEPENDS="python3-pip python3-wheel python3-setuptools zlib-devel libjpeg-turbo-devel libtiff-devel"
 
 source ../../../scripts/build-helpers
 
@@ -11,6 +11,6 @@ startlog
 export INCLUDE="$(cygpath -aw osgeo4w/include);$INCLUDE"
 export LIB="$(cygpath -aw osgeo4w/lib);$LIB"
 
-adddepends="zlib libjpeg-turbo" packagewheel
+adddepends="zlib libjpeg-turbo libtiff" packagewheel
 
 endlog

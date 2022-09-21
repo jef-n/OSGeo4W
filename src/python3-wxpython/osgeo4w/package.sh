@@ -2,7 +2,7 @@ export P=python3-wxpython
 export V=4.2.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="base python3-core python3-setuptools python3-wheel python3-devel wxwidgets-devel"
+export BUILDDEPENDS="base python3-core python3-setuptools python3-wheel python3-devel python3-attrdict wxwidgets-devel"
 
 source ../../../scripts/build-helpers
 
@@ -29,7 +29,7 @@ startlog
 
 	export INCLUDE="$(cygpath -aw ../osgeo4w/osgeo4w/lib/vc_x64_dll/mswu);$(cygpath -aw ../osgeo4w/osgeo4w/include);$INCLUDE"
 	export LIB="$(cygpath -aw ../osgeo4w/osgeo4w/lib/vc_x64_dll);$LIB"
-	python3 build.py build_py --release --x64 --use_syswx --extra_waf='--msvc_version="msvc 16.7"'
+	python3 build.py build_py --release --x64 --use_syswx --extra_waf='--msvc_version="msvc 16.11"'
 
 	python3 build.py bdist_wheel
 

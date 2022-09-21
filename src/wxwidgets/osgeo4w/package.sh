@@ -1,6 +1,5 @@
 export P=wxwidgets
-export WXPYTHON_SHA=0df1d81acd6f1be8624022f8eecb51679008ca40
-export V=3.1.5-$WXPYTHON_SHA
+export V=3.2.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="zlib-devel expat-devel libjpeg-turbo-devel libpng-devel libtiff-devel xz-devel"
@@ -10,9 +9,7 @@ source ../../../scripts/build-helpers
 
 startlog
 
-p=wxWidgets
-[ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://github.com/wxWidgets/wxWidgets/archive/$WXPYTHON_SHA.tar.gz
-[ -d ../$P-$V ] || tar -C .. -xzf $P-$V.tar.gz --xform "s,$p-$WXPYTHON_SHA/,$P-$V/,"
+[ -d ../$P-$V ] || git clone --recurse-submodules https://github.com/wxWidgets/wxWidgets --branch v$V --single-branch ../$P-$V
 
 vs2019env
 cmakeenv
