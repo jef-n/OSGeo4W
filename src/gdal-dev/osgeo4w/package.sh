@@ -232,7 +232,7 @@ for i in install/apps/$P/Scripts/*.py; do
 
 	cat <<EOF >install/apps/$P/Scripts/$b.bat
 @echo off
-call "%OSGEO4W_ROOT%\\bin\\o4w_env.bat"
+call "%OSGEO4W_ROOT%\\bin\\$P-py-env.bat"
 python "%OSGEO4W_ROOT%\\apps\\$P\\Scripts\\$b.py" %*
 EOF
 	(
