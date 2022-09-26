@@ -60,7 +60,7 @@ cat <<EOF >$R/$P-libs/setup.hint
 sdesc: "PDAL: Point Data Abstraction Library (Runtime)"
 ldesc: "PDAL is a library for manipulating and translating point cloud data"
 category: Libs
-requires: $RUNTIMEDEPS libgeotiff zlib curl libxml2 hdf5 openssl zstd laszip
+requires: $RUNTIMEDEPENDS libgeotiff zlib curl libxml2 hdf5 openssl zstd laszip
 maintainer: $MAINTAINER
 external-source: $P
 EOF
