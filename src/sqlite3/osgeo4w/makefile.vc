@@ -7,7 +7,7 @@
 LIBOBJ		=	sqlite3.obj
 SQLITE3_DLL	=	sqlite3$(VERSION).dll
 
-CFLAGS = /nologo -I. $(OPTFLAGS) /DSQLITE_CUSTOM_INCLUDE=../always.h /DSQLITE_CORE=1 /DSQLITE_AMALGAMATION=1 /DSQLITE_ENABLE_JSON1=1 /DSQLITE_PRIVATE=static /DSQLITE_ALLOW_ROWID_IN_VIEW=1 /DSQLITE_API=__declspec(dllexport)
+CFLAGS = /nologo -I. $(OPTFLAGS) /DSQLITE_CUSTOM_INCLUDE=../always.h /DSQLITE_CORE=1 /DSQLITE_AMALGAMATION=1 /DSQLITE_PRIVATE=static /DSQLITE_API=__declspec(dllexport)
 
 default: all
 
@@ -18,14 +18,14 @@ $(LIBOBJ): $(SRC)/sqlite3.c
 
 shell.obj: $(SRC)/shell.c
 	cl $(CFLAGS) $(SRC)/shell.c /c
-	
+
 $(SQLITE3_DLL):	sqlite3_i.lib
 
 sqlite3_i.lib: $(LIBOBJ)
 	link /debug /dll /out:$(SQLITE3_DLL) \
-		/implib:sqlite3_i.lib $(LIBOBJ) 
+		/implib:sqlite3_i.lib $(LIBOBJ)
 	if exist $(SQLITE3_DLL).manifest mt -manifest \
-		$(SQLITE3_DLL).manifest -outputresource:$(SQLITE3_DLL);2 
+		$(SQLITE3_DLL).manifest -outputresource:$(SQLITE3_DLL);2
 
 sqlite3.exe: shell.obj
 	link /out:sqlite3.exe shell.obj sqlite3_i.lib

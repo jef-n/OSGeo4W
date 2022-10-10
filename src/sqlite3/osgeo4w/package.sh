@@ -1,5 +1,5 @@
 export P=sqlite3
-export V=3.38.1
+export V=3.39.4
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
@@ -44,7 +44,7 @@ EOF
 
 cat <<EOF | tee $R/$P-devel/$P-devel-$V-$B.txt >$R/$P-$V-$B.txt
 SQLite Copyright
-  
+
 All of the code and documentation in SQLite has been dedicated to the public
 domain by the authors. All code authors, and representatives of the companies
 they work for, have signed affidavits dedicating their contributions to the
