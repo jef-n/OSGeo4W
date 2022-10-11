@@ -29,7 +29,7 @@ cmake -G Ninja \
 	-D CMAKE_INSTALL_PREFIX=../install \
 	-D BUILD_SHARED_LIBS=OFF \
 	-D EXPAT_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
-	-D EXPAT_LIBRARY=$(cygpath -am ../osgeo4w/libexpat.lib) \
+	-D EXPAT_LIBRARY=$(cygpath -am ../osgeo4w/lib/libexpat.lib) \
 	-D ZLIB_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D ZLIB_LIBRARY=$(cygpath -am ../osgeo4w/lib/zlib.lib) \
 	-D Boost_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/boost-1_74) \
