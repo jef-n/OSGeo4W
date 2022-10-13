@@ -1,0 +1,14 @@
+diff -ur pcraster-4.4.0/environment/cmake/PCRasterConfiguration.cmake ../pcraster-4.4.0/environment/cmake/PCRasterConfiguration.cmake
+--- pcraster-4.4.0/environment/cmake/PCRasterConfiguration.cmake	2022-10-03 11:23:45.000000000 +0200
++++ ../pcraster-4.4.0/environment/cmake/PCRasterConfiguration.cmake	2022-10-13 10:23:52.092107400 +0200
+@@ -170,7 +170,9 @@
+ find_program(GDAL_TRANSLATE gdal_translate
+     HINTS ${GDAL_INCLUDE_DIRS}/../bin
+ )
+-if(EXISTS "${GDAL_INCLUDE_DIRS}/../../share/gdal")
++if(EXISTS $ENV{GDAL_DATA})
++    set(GDAL_DATA $ENV{GDAL_DATA})
++elseif(EXISTS "${GDAL_INCLUDE_DIRS}/../../share/gdal")
+     set(GDAL_DATA "${GDAL_INCLUDE_DIRS}/../../share/gdal")
+ elseif(EXISTS "${GDAL_INCLUDE_DIRS}/../share/gdal")
+     set(GDAL_DATA "${GDAL_INCLUDE_DIRS}/../share/gdal")
