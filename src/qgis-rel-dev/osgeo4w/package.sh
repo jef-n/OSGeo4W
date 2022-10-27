@@ -45,8 +45,9 @@ if [ -d qgis ]; then
 		if [ "$(git branch --show-current)" != $RELBRANCH ]; then
 			if ! git checkout $RELBRANCH; then
 				git remote set-branches --add origin $RELBRANCH
-				git fetch origin $LTRBRANCH:$RELBRANCH
+				git fetch origin $RELBRANCH:$RELBRANCH
 				git checkout $RELBRANCH
+				git branch --set-upstream-to=origin/$RELBRANCH $RELBRANCH
 			fi
 		fi
 

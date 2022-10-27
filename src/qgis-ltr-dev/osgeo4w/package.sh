@@ -49,6 +49,7 @@ if [ -d qgis ]; then
 				git remote set-branches --add origin $LTRBRANCH
 				git fetch origin $LTRBRANCH:$LTRBRANCH
 				git checkout $LTRBRANCH
+				git branch --set-upstream-to=origin/$LTRBRANCH $LTRBRANCH
 			fi
 		fi
 
@@ -331,8 +332,11 @@ EOF
 			apps/$P/pdb
 
 		d=$(mktemp -d)
+		cp ../qgis/COPYING $R/$P-full-free/$P-full-free-$V-$B.txt
 		/bin/tar -C $d -cjf $R/$P-full-free/$P-full-free-$V-$B.tar.bz2 .
+		cp ../qgis/COPYING $R/$P-full/$P-full-$V-$B.txt
 		/bin/tar -C $d -cjf $R/$P-full/$P-full-$V-$B.tar.bz2 .
+		cp ../qgis/COPYING $R/$P-deps/$P-deps-$V-$B.txt
 		/bin/tar -C $d -cjf $R/$P-deps/$P-deps-$V-$B.tar.bz2 .
 		rmdir $d
 
