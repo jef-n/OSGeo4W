@@ -81,6 +81,8 @@ msysarch=msys2-base-x86_64-20210604.tar.xz
 [ -d msys64 ] || tar xJf $msysarch
 
 (
+	set -e
+
 	fetchenv osgeo4w/bin/o4w_env.bat
 	export OSGEO4W_ROOT_MSYS="${OSGEO4W_ROOT//\\/\/}"
 	export OSGEO4W_ROOT_MSYS="/${OSGEO4W_ROOT_MSYS:0:1}/${OSGEO4W_ROOT_MSYS:3}"

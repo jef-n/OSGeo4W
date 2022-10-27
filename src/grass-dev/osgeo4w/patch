@@ -41,7 +41,7 @@ index 2428924ef..bba76b9e4 100755
  	/mingw64/bin/libgomp-1.dll
  	/mingw64/bin/libgraphite2.dll
  	/mingw64/bin/libpcre-1.dll
-+	/mingw64/bin/libpcre-2-8-0.dll
++	/mingw64/bin/libpcre2-8-0.dll
  	/mingw64/bin/libstdc++-6.dll
  	/mingw64/bin/libgcc_s_seh-1.dll
  	/mingw64/bin/libfftw3-3.dll
