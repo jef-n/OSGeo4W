@@ -37,9 +37,28 @@ category: Libraries
 requires: msvcrt2019
 EOF
 
+dll=api-ms-win-core-path-l1-1-0.dll
+
+cat <<EOF >../$P/build/x64/release/postinstall.bat
+setlocal enabledelayedexpansion
+
+for /f "tokens=*" %%v in ('ver') do set v=%%v
+set v=%v:*[Version =%
+for /f "tokens=1-2 delims=." %%a in ("%v%") do (
+        set run=1
+        if %%a gtr 6 set run=0
+        if %%a equ 6 and %%b geq 2 set run=0
+        if !run! equ 1 ren bin\\$dll.w7 bin\\$dll
+)
+
+endlocal
+EOF
+
 tar -C ../$P/build/x64/release -cjf $R/$P-$V-$B.tar.bz2 \
-	--xform s,api-ms-win-core-path-l1-1-0.dll,bin/api-ms-win-core-path-l1-1-0.dll, \
-	api-ms-win-core-path-l1-1-0.dll
+	--xform s,$dll,bin/$dll.w7, \
+	--xform s,postinstall.bat,etc/postinstall/$P.bat, \
+	$dll \
+	postinstall.bat
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 \
 	osgeo4w/package.sh

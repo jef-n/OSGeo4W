@@ -64,7 +64,7 @@ sdesc: "Python core interpreter and runtime"
 ldesc: "Python core interpreter and runtime"
 maintainer: $MAINTAINER
 category: Commandline_Utilities
-requires: base msvcrt2019 sqlite3 openssl
+requires: base msvcrt2019 sqlite3 openssl api-ms-win-core-path-HACK
 external-source: $P
 EOF
 
