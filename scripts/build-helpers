@@ -454,6 +454,7 @@ packagewheel() {
 		export PIP_NO_COMPILE=1
 		export PIP_UPGRADE=0
 		export PIP_NO_BUILD_ISOLATION=1
+		#export PIP_NO_CLEAN=1
 
 		! [ -f pip.env ] || source pip.env
 

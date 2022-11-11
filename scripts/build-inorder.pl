@@ -45,7 +45,7 @@ for my $f ("/tmp/setup-master.ini", "x86_64/setup.ini") {
 
 				next unless -f "src/$src/osgeo4w/package.sh";
 
-				print "Package $pkg has source $src\n";
+				print STDERR "Package $pkg has source $src\n";
 			}
 
 			$src{$pkg} = $src;

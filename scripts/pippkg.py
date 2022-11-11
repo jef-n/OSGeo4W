@@ -70,7 +70,7 @@ else:
 
 print("Packaging {}".format(pkgv))
 
-argv = ['python3', '-m', 'pip', 'install']
+argv = ['python3', '-m', 'pip', '-v', 'install']
 argv.extend(sys.argv[1:])
 argv.append(pkgv)
 proc = subprocess.Popen(argv, stdout=subprocess.PIPE)

@@ -10,13 +10,19 @@ startlog
 
 major=$(sed -ne "s/# *define *GDAL_VERSION_MAJOR *//p" osgeo4w/include/gdal_version.h)
 minor=$(sed -ne "s/# *define *GDAL_VERSION_MINOR *//p" osgeo4w/include/gdal_version.h)
+rev=$(sed -ne "s/# *define *GDAL_VERSION_REV *//p" osgeo4w/include/gdal_version.h)
+major=${major%}
+minor=${minor%}
+rev=${rev%}
 
 cat <<EOF >pip.env
-export GDAL_VERSION=$major.$minor
+export GDAL_VERSION=$major.$minor.$rev
 export INCLUDE="$(cygpath -am osgeo4w/include);\$INCLUDE"
 export LINK="$(cygpath -am osgeo4w/lib/gdal_i.lib)"
 export PIP_USE_PEP517=0
 EOF
+
+pip install Cython
 
 adddepends="$RUNTIMEDEPENDS" packagewheel
 
