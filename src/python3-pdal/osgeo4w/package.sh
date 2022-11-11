@@ -1,5 +1,5 @@
 export P=python3-pdal
-export V=3.1.2
+export V=3.2.0
 export B=pip
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-pip python3-wheel python3-devel python3-setuptools python3-numpy python3-pybind11 python3-packaging python3-pyparsing pdal-devel"
@@ -12,12 +12,13 @@ cd ..
 
 if [ -d pdalextension ]; then
 	cd pdalextension
-	git pull
+	git fetch
 else
 	git clone https://github.com/PDAL/python pdalextension
 	cd pdalextension
-	git checkout $V
 fi
+
+git checkout $V
 
 cd $OSGEO4W_PWD
 
