@@ -48,7 +48,7 @@ for /f "tokens=1-2 delims=." %%a in ("%v%") do (
         set run=1
         if %%a gtr 6 set run=0
         if %%a equ 6 and %%b geq 2 set run=0
-        if !run! equ 1 ren bin\\$dll.w7 bin\\$dll
+        if !run! equ 1 ren bin\\$dll.w7 $dll
 )
 
 endlocal
