@@ -20,15 +20,32 @@ for my $f ("/tmp/setup-master.ini", "x86_64/setup.ini") {
 			$pkg = $1
 
 		# source: x86_64/release/avce00/avce00-2.0.0-3-src.tar.bz2 1316 1225e82b0adbb05fdee034c206992d28
-		} elsif( /^source:\s+(\S+)\s+\d+\s+\S+\s+$/ ) {
+		} elsif( my($srcpkg) = /^source:\s+(\S+)\s+\d+\s+\S+\s+$/ ) {
 			next if exists $src{$pkg};
 
-			my ($src, $ver, $bin) = $1 =~ m#^.+/([^/]+)/\1-(.*)-(\d+)-src.tar.bz2$#;
-			die "invalid $1" unless defined $src && defined $ver && defined $bin;
+			my ($src, $ver, $bin) = $srcpkg =~ m#^.+/([^/]+)/\1-(.*)-(\d+)-src.tar.bz2$#;
+			die "invalid $srcpkg" unless defined $src && defined $ver && defined $bin;
 
 			unless(-f "src/$src/osgeo4w/package.sh") {
-				# warn "source src/$src [$ver:$bin] not found";
-				next;
+				unless(-f "$srcpkg") {
+					my($d,$f) = $srcpkg =~ m#^(.*)/(.*)$#;
+					system("mkdir -p '$d'; /usr/bin/rsync -a upload.osgeo.org::download/osgeo4w/v2/$srcpkg $srcpkg") == 0 or next;
+				}
+
+				open I, "tar xOjf $srcpkg osgeo4w/package.sh 2>/dev/null |";
+				while(<I>) {
+					if(/^export\s*P=(\S+)/) {
+						if(-f "src/$1/osgeo4w/package.sh") {
+							$src = $1;
+							last;
+						}
+					}
+				}
+				close I;
+
+				next unless -f "src/$src/osgeo4w/package.sh";
+
+				print "Package $pkg has source $src\n";
 			}
 
 			$src{$pkg} = $src;
