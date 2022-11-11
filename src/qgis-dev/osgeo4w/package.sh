@@ -244,11 +244,6 @@ nextbinary
 
 		v=$MAJOR.$MINOR.$PATCH
 
-		SA=python/plugins/sagaprovider
-		SAP=$SA/SagaAlgorithmProvider.py
-		sagadef=$(sed -rne "s/^REQUIRED_VERSION *= *('.*')$/\\1/p" install/apps/$P/$SAP)
-		sed -e "s/^REQUIRED_VERSION *= *'.*'$/REQUIRED_VERSION = @saga@/" install/apps/$P/$SAP >install/apps/$P/$SAP.tmpl
-
 		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       qgis.reg.tmpl    >install/bin/qgis.reg.tmpl
 		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                postinstall.bat  >install/etc/postinstall/$P.bat
 		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                preremove.bat    >install/etc/preremove/$P.bat
@@ -256,37 +251,6 @@ nextbinary
 		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       designer.bat     >install/bin/$P-designer.bat
 		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       process.bat      >install/bin/qgis_process-$P.bat
 		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       python.bat       >install/bin/python-$P.bat
-
-		cat <<EOF >install/apps/$P/saga-refresh.bat
-setlocal enabledelayedexpansion
-
-set SAGA_VER=$sagadef
-
-if exist "%OSGEO4W_ROOT%\\apps\\saga\\tools\\dev_tools.dll" (
-	if not exist "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\description.dist" (
-		ren "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\description" description.dist
-		ren "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\SagaNameDecorator.py" SagaNameDecorator.py.dist
-	)
-
-	"%OSGEO4W_ROOT%\\apps\\saga\\saga_cmd" dev_tools 7 -DIRECTORY "%OSGEO4W_ROOT%\\apps\\$P\\$SA" -CLEAR 0
-	for /f "tokens=3 usebackq" %%a in (`"%OSGEO4W_ROOT%\\apps\\saga\\saga_cmd" -v`) do set v=%%a
-	for /f "tokens=1,2 delims=." %%a in ("!v!") do set SAGA_VER='%%a.%%b.'
-	del "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\readme.txt"
-) else if exist "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\description.dist" (
-	rmdir /s /q "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\description"
-	del "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\SagaNameDecorator.py"
-
-	ren "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\description.dist" description
-	ren "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\SagaNameDecorator.py.dist" SagaNameDecorator.py.dist
-)
-
-textreplace ^
-	-sf "%OSGEO4W_ROOT%\\apps\\$P\\$SAP.tmpl" ^
-	-df "%OSGEO4W_ROOT%\\apps\\$P\\$SAP" ^
-	-map @saga@ "%SAGA_VER%"
-
-endlocal
-EOF
 
 		cp "$DBGHLP_PATH"/{dbghelp.dll,symsrv.dll} install/apps/$P
 
