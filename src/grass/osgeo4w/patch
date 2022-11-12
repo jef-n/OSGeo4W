@@ -1,6 +1,6 @@
 diff -ur grass-7.8.7/include/Make/Grass.make ../grass-7.8.7/include/Make/Grass.make
 --- grass-7.8.7/include/Make/Grass.make	2022-02-23 17:43:59.000000000 +0100
-+++ ../grass-7.8.7/include/Make/Grass.make	2022-07-17 22:10:46.421868600 +0200
++++ ../grass-7.8.7/include/Make/Grass.make	2022-11-12 17:06:58.478078000 +0100
 @@ -101,7 +101,6 @@
  HTML2MAN = VERSION_NUMBER=$(GRASS_VERSION_NUMBER) $(GISBASE)/tools/g.html2man.py
  
@@ -28,7 +28,7 @@ diff -ur grass-7.8.7/include/Make/Grass.make ../grass-7.8.7/include/Make/Grass.m
  NVIZDEPS += -lgdi32
 diff -ur grass-7.8.7/lib/gis/gisinit.c ../grass-7.8.7/lib/gis/gisinit.c
 --- grass-7.8.7/lib/gis/gisinit.c	2022-02-23 17:43:59.000000000 +0100
-+++ ../grass-7.8.7/lib/gis/gisinit.c	2022-07-17 22:11:32.889954600 +0200
++++ ../grass-7.8.7/lib/gis/gisinit.c	2022-11-12 17:06:58.481093600 +0100
 @@ -49,12 +49,14 @@
  
      G_set_program_name(pgm);
@@ -61,7 +61,7 @@ diff -ur grass-7.8.7/lib/gis/gisinit.c ../grass-7.8.7/lib/gis/gisinit.c
  
 diff -ur grass-7.8.7/lib/raster/gdal.c ../grass-7.8.7/lib/raster/gdal.c
 --- grass-7.8.7/lib/raster/gdal.c	2022-02-23 17:43:59.000000000 +0100
-+++ ../grass-7.8.7/lib/raster/gdal.c	2022-07-17 22:10:46.428869500 +0200
++++ ../grass-7.8.7/lib/raster/gdal.c	2022-11-12 17:06:58.484103800 +0100
 @@ -28,190 +28,8 @@
  #endif
  
@@ -641,7 +641,7 @@ diff -ur grass-7.8.7/lib/raster/gdal.c ../grass-7.8.7/lib/raster/gdal.c
  #endif
 diff -ur grass-7.8.7/lib/raster/Makefile ../grass-7.8.7/lib/raster/Makefile
 --- grass-7.8.7/lib/raster/Makefile	2022-02-23 17:43:59.000000000 +0100
-+++ ../grass-7.8.7/lib/raster/Makefile	2022-07-17 22:10:46.423841100 +0200
++++ ../grass-7.8.7/lib/raster/Makefile	2022-11-12 17:06:58.486072900 +0100
 @@ -10,11 +10,6 @@
  ifneq ($(GDAL_LINK),)
  EXTRA_CFLAGS += -DGDAL_LINK=1
@@ -656,7 +656,7 @@ diff -ur grass-7.8.7/lib/raster/Makefile ../grass-7.8.7/lib/raster/Makefile
  default: lib
 diff -ur grass-7.8.7/mswindows/osgeo4w/config.h.vc ../grass-7.8.7/mswindows/osgeo4w/config.h.vc
 --- grass-7.8.7/mswindows/osgeo4w/config.h.vc	2022-02-23 17:43:59.000000000 +0100
-+++ ../grass-7.8.7/mswindows/osgeo4w/config.h.vc	2022-07-17 22:11:32.891954800 +0200
++++ ../grass-7.8.7/mswindows/osgeo4w/config.h.vc	2022-11-12 17:06:58.488074200 +0100
 @@ -295,4 +295,6 @@
  /* define if langinfo.h exists */
  /* #undef HAVE_LANGINFO_H */
@@ -666,7 +666,7 @@ diff -ur grass-7.8.7/mswindows/osgeo4w/config.h.vc ../grass-7.8.7/mswindows/osge
  #endif /* _config_h */
 diff -ur grass-7.8.7/mswindows/osgeo4w/env.bat.tmpl ../grass-7.8.7/mswindows/osgeo4w/env.bat.tmpl
 --- grass-7.8.7/mswindows/osgeo4w/env.bat.tmpl	2022-02-23 17:43:59.000000000 +0100
-+++ ../grass-7.8.7/mswindows/osgeo4w/env.bat.tmpl	2022-07-17 22:11:32.893954900 +0200
++++ ../grass-7.8.7/mswindows/osgeo4w/env.bat.tmpl	2022-11-12 17:06:58.489791900 +0100
 @@ -12,11 +12,3 @@
  set GRASS_PROJSHARE=%OSGEO4W_ROOT%\share\proj
  
@@ -681,8 +681,16 @@ diff -ur grass-7.8.7/mswindows/osgeo4w/env.bat.tmpl ../grass-7.8.7/mswindows/osg
 -IF EXIST "%USERPROFILE%\Documents\R\" set R_USER=%USERPROFILE%\Documents\
 diff -ur grass-7.8.7/mswindows/osgeo4w/package.sh ../grass-7.8.7/mswindows/osgeo4w/package.sh
 --- grass-7.8.7/mswindows/osgeo4w/package.sh	2022-02-23 17:43:59.000000000 +0100
-+++ ../grass-7.8.7/mswindows/osgeo4w/package.sh	2022-07-17 22:11:32.894955200 +0200
-@@ -149,13 +149,13 @@
++++ ../grass-7.8.7/mswindows/osgeo4w/package.sh	2022-11-12 17:08:32.173735200 +0100
+@@ -126,6 +126,7 @@
+ 	/mingw64/bin/libglib-2.0-0.dll
+ 	/mingw64/bin/libgraphite2.dll
+ 	/mingw64/bin/libpcre-1.dll
++	/mingw64/bin/libpcre2-8-0.dll
+ 	/mingw64/bin/libstdc++-6.dll
+ 	/mingw64/bin/libgcc_s_seh-1.dll
+ 	/mingw64/bin/libfftw3-3.dll
+@@ -149,13 +150,13 @@
  
  	log configure
  	./configure \
@@ -701,7 +709,7 @@ diff -ur grass-7.8.7/mswindows/osgeo4w/package.sh ../grass-7.8.7/mswindows/osgeo
  		--without-x \
  		--with-cxx \
  		--enable-shared \
-@@ -178,10 +178,10 @@
+@@ -178,10 +179,10 @@
  		--with-nls \
  		--with-zstd \
  		--with-odbc \
@@ -716,7 +724,7 @@ diff -ur grass-7.8.7/mswindows/osgeo4w/package.sh ../grass-7.8.7/mswindows/osgeo
  
 diff -ur grass-7.8.7/mswindows/osgeo4w/postinstall.bat ../grass-7.8.7/mswindows/osgeo4w/postinstall.bat
 --- grass-7.8.7/mswindows/osgeo4w/postinstall.bat	2022-02-23 17:43:59.000000000 +0100
-+++ ../grass-7.8.7/mswindows/osgeo4w/postinstall.bat	2022-07-17 22:11:32.896955200 +0200
++++ ../grass-7.8.7/mswindows/osgeo4w/postinstall.bat	2022-11-12 17:06:58.493813300 +0100
 @@ -1,29 +1,31 @@
 -set ICON=%OSGEO4W_ROOT%\apps\grass\grass@POSTFIX@\gui\icons\grass_osgeo.ico
 -set BATCH=%OSGEO4W_ROOT%\bin\@GRASS_EXECUTABLE@.bat

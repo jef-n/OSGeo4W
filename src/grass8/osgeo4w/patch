@@ -1,6 +1,6 @@
-diff -ur grass-8.0.1/lib/gis/gisinit.c ../grass-8.0.1/lib/gis/gisinit.c
---- grass-8.0.1/lib/gis/gisinit.c	2022-02-24 21:37:11.000000000 +0100
-+++ ../grass-8.0.1/lib/gis/gisinit.c	2022-05-10 14:24:34.478531500 +0200
+diff -ur grass-8.2.0/lib/gis/gisinit.c ../grass-8.2.0/lib/gis/gisinit.c
+--- grass-8.2.0/lib/gis/gisinit.c	2022-06-03 15:27:06.000000000 +0200
++++ ../grass-8.2.0/lib/gis/gisinit.c	2022-11-12 19:28:30.400798100 +0100
 @@ -49,12 +49,14 @@
  
      G_set_program_name(pgm);
@@ -32,9 +32,9 @@ diff -ur grass-8.0.1/lib/gis/gisinit.c ../grass-8.0.1/lib/gis/gisinit.c
      gisinit();
  }
  
-diff -ur grass-8.0.1/mswindows/osgeo4w/env.bat.tmpl ../grass-8.0.1/mswindows/osgeo4w/env.bat.tmpl
---- grass-8.0.1/mswindows/osgeo4w/env.bat.tmpl	2022-02-24 21:37:11.000000000 +0100
-+++ ../grass-8.0.1/mswindows/osgeo4w/env.bat.tmpl	2022-05-10 14:25:31.663827500 +0200
+diff -ur grass-8.2.0/mswindows/osgeo4w/env.bat.tmpl ../grass-8.2.0/mswindows/osgeo4w/env.bat.tmpl
+--- grass-8.2.0/mswindows/osgeo4w/env.bat.tmpl	2022-06-03 15:27:06.000000000 +0200
++++ ../grass-8.2.0/mswindows/osgeo4w/env.bat.tmpl	2022-11-12 19:28:30.402806200 +0100
 @@ -8,6 +8,7 @@
  REM Note that msys package must be also installed
  REM set GRASS_SH=%OSGEO4W_ROOT%\apps\msys\bin\sh.exe
@@ -43,3 +43,14 @@ diff -ur grass-8.0.1/mswindows/osgeo4w/env.bat.tmpl ../grass-8.0.1/mswindows/osg
  set GRASS_PYTHON=%OSGEO4W_ROOT%\bin\python3.exe
  set GRASS_PROJSHARE=%OSGEO4W_ROOT%\share\proj
  
+diff -ur grass-8.2.0/mswindows/osgeo4w/package.sh ../grass-8.2.0/mswindows/osgeo4w/package.sh
+--- grass-8.2.0/mswindows/osgeo4w/package.sh	2022-06-03 15:27:06.000000000 +0200
++++ ../grass-8.2.0/mswindows/osgeo4w/package.sh	2022-11-12 19:28:51.900934700 +0100
+@@ -128,6 +128,7 @@
+ 	/mingw64/bin/libgomp-1.dll
+ 	/mingw64/bin/libgraphite2.dll
+ 	/mingw64/bin/libpcre-1.dll
++	/mingw64/bin/libpcre2-8-0.dll
+ 	/mingw64/bin/libstdc++-6.dll
+ 	/mingw64/bin/libgcc_s_seh-1.dll
+ 	/mingw64/bin/libfftw3-3.dll
