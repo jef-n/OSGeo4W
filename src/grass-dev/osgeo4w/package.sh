@@ -153,7 +153,7 @@ pacman --noconfirm -S --needed \
 	mingw-w64-x86_64-openmp \
 	mingw-w64-x86_64-cairo
 
-cd ../$p
+cd ../grass
 
 PACKAGE_POSTFIX=-dev bash.exe $xtrace mswindows/osgeo4w/package.sh
 EOF
