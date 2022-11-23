@@ -1,47 +1,172 @@
-diff --git a/lib/gis/gisinit.c b/lib/gis/gisinit.c
-index 202d92068..d4385f9e5 100644
---- a/lib/gis/gisinit.c
-+++ b/lib/gis/gisinit.c
-@@ -49,12 +49,14 @@ void G__gisinit(const char *version, const char *pgm)
+diff --git a/.github/workflows/osgeo4w.yml b/.github/workflows/osgeo4w.yml
+index fb3e797b7..93641977c 100644
+--- a/.github/workflows/osgeo4w.yml
++++ b/.github/workflows/osgeo4w.yml
+@@ -32,14 +32,14 @@ jobs:
+           path-type: inherit
+           location: D:\
+           update: true
+-          install: tar libintl make bison flex diffutils git dos2unix zip mingw-w64-x86_64-toolchain mingw-w64-x86_64-fftw mingw-w64-x86_64-lapack mingw-w64-x86_64-pkgconf mingw-w64-x86_64-gcc mingw-w64-x86_64-ccache mingw-w64-x86_64-zlib mingw-w64-x86_64-libiconv mingw-w64-x86_64-bzip2 mingw-w64-x86_64-gettext mingw-w64-x86_64-libsystre mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libwinpthread-git mingw-w64-x86_64-libpng mingw-w64-x86_64-pcre mingw-w64-x86_64-python3-six
++          install: tar libintl make bison flex diffutils git dos2unix zip mingw-w64-x86_64-toolchain mingw-w64-x86_64-fftw mingw-w64-x86_64-lapack mingw-w64-x86_64-pkgconf mingw-w64-x86_64-gcc mingw-w64-x86_64-ccache mingw-w64-x86_64-zlib mingw-w64-x86_64-libiconv mingw-w64-x86_64-bzip2 mingw-w64-x86_64-gettext mingw-w64-x86_64-libsystre mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libwinpthread-git mingw-w64-x86_64-pcre mingw-w64-x86_64-python3-six
  
-     G_set_program_name(pgm);
+       - name: Install OSGeo4W
+         run: |
+           $exe = 'osgeo4w-setup.exe'
+           $url = 'http://download.osgeo.org/osgeo4w/v2/' + $exe
+           (New-Object System.Net.WebClient).DownloadFile($url, $exe)
+-          Start-Process ('.\'+$exe) -ArgumentList '-A -g -k -q -s http://download.osgeo.org/osgeo4w/v2/ -P proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,pdal-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,python3-six,python3-wxpython,regex-devel,zstd-devel' -Wait
++          Start-Process ('.\'+$exe) -ArgumentList '-A -g -k -q -s http://download.osgeo.org/osgeo4w/v2/ -P proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,pdal-devel,netcdf-devel,cairo-devel,freetype-devel,gdal-ecw,gdal-mrsid,liblas-devel,libpq-devel,pdcurses,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,python3-six,python3-wxpython,zstd-devel' -Wait
  
-+#ifndef _WIN32
-     /* verify version of GRASS headers (and anything else in include) */
-     if (strcmp(version, GIS_H_VERSION) != 0)
-         G_fatal_error(_("Module built against version %s but "
-                         "trying to use version %s. "
-                         "You need to rebuild GRASS GIS or untangle multiple installations."),
-                       version, GIS_H_VERSION);
-+#endif
- 
-     /* Make sure location and mapset are set */
-     G_location_path();
-@@ -85,12 +87,15 @@ void G__no_gisinit(const char *version)
-     if (initialized)
-         return;
- 
-+#ifndef _WIN32
-     /* verify version of GRASS headers (and anything else in include) */
-     if (strcmp(version, GIS_H_VERSION) != 0)
-         G_fatal_error(_("Module built against version %s but "
-                         "trying to use version %s. "
-                         "You need to rebuild GRASS GIS or untangle multiple installations."),
-                       version, GIS_H_VERSION);
-+#endif
-+
-     gisinit();
- }
- 
+       - name: Compile GRASS GIS
+         run: D:\msys64\usr\bin\bash.exe -l (''+(Get-Location)+'\.github\workflows\build_osgeo4w.sh') (Get-Location)
+diff --git a/mswindows/osgeo4w/build_osgeo4w.sh b/mswindows/osgeo4w/build_osgeo4w.sh
+index 6da7e9eed..3bc006aea 100644
+--- a/mswindows/osgeo4w/build_osgeo4w.sh
++++ b/mswindows/osgeo4w/build_osgeo4w.sh
+@@ -46,7 +46,8 @@ export ARCH=x86_64-w64-mingw32
+     --with-nls \
+     --with-readline \
+     --with-blas \
+-    --with-lapack-includes=/mingw64/include/lapack \
++    --with-lapack \
++    --with-lapack-includes=/mingw64/include \
+     --with-freetype \
+     --with-freetype-includes=${OSGEO4W_ROOT_MSYS}/include/freetype2 \
+     --with-proj-share=${OSGEO4W_ROOT_MSYS}/share/proj \
+@@ -61,12 +62,11 @@ export ARCH=x86_64-w64-mingw32
+     --with-sqlite-includes=${OSGEO4W_ROOT_MSYS}/include \
+     --with-sqlite-libs=${OSGEO4W_ROOT_MSYS}/lib \
+     --with-regex \
+-    --with-nls \
+     --with-zstd \
+     --with-odbc \
+     --with-cairo \
+     --with-cairo-includes=${OSGEO4W_ROOT_MSYS}/include \
+-    --with-cairo-libs=$OSGEO4W_ROOT_MSYS/lib \
++    --with-cairo-libs=${OSGEO4W_ROOT_MSYS}/lib \
+     --with-cairo-ldflags="-L${SRC}/mswindows/osgeo4w/lib -lcairo" \
+     --with-opengl=windows \
+     --with-bzlib \
 diff --git a/mswindows/osgeo4w/package.sh b/mswindows/osgeo4w/package.sh
-index 2428924ef..bba76b9e4 100755
+index 2428924ef..b7946aa7f 100755
 --- a/mswindows/osgeo4w/package.sh
 +++ b/mswindows/osgeo4w/package.sh
-@@ -128,6 +128,7 @@ DLLS="
- 	/mingw64/bin/libgomp-1.dll
- 	/mingw64/bin/libgraphite2.dll
- 	/mingw64/bin/libpcre-1.dll
-+	/mingw64/bin/libpcre2-8-0.dll
+@@ -111,23 +111,12 @@ DLLS="
+ 	/mingw64/bin/libbz2-1.dll
+ 	/mingw64/bin/libiconv-2.dll
+ 	/mingw64/bin/libexpat-1.dll
+-	/mingw64/bin/libfontconfig-1.dll
+ 	/mingw64/bin/libgfortran-5.dll
+-	/mingw64/bin/libbrotlidec.dll
+-	/mingw64/bin/libbrotlicommon.dll
+ 	/mingw64/bin/libintl-8.dll
+ 	/mingw64/bin/libsystre-0.dll
+ 	/mingw64/bin/libtre-5.dll
+ 	/mingw64/bin/libwinpthread-1.dll
+-	/mingw64/bin/libcairo-2.dll
+-	/mingw64/bin/libpixman-1-0.dll
+ 	/mingw64/bin/libpng16-16.dll
+-	/mingw64/bin/libfreetype-6.dll
+-	/mingw64/bin/libharfbuzz-0.dll
+-	/mingw64/bin/libglib-2.0-0.dll
+-	/mingw64/bin/libgomp-1.dll
+-	/mingw64/bin/libgraphite2.dll
+-	/mingw64/bin/libpcre-1.dll
  	/mingw64/bin/libstdc++-6.dll
  	/mingw64/bin/libgcc_s_seh-1.dll
  	/mingw64/bin/libfftw3-3.dll
+@@ -135,6 +124,7 @@ DLLS="
+ 	/mingw64/bin/liblapack.dll
+ 	/mingw64/bin/libomp.dll
+ 	/mingw64/bin/libquadmath-0.dll
++	/mingw64/bin/libreadline8.dll
+ "
+ 
+ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
+@@ -149,52 +139,50 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
+ 	mkdir -p dist.x86_64-w64-mingw32/bin
+ 	cp -uv $DLLS dist.x86_64-w64-mingw32/bin
+ 
+-	mkdir -p mswindows/osgeo4w/lib
+-	cp -uv $OSGEO4W_ROOT_MSYS/lib/libpq.lib mswindows/osgeo4w/lib/pq.lib
+-	cp -uv $OSGEO4W_ROOT_MSYS/lib/sqlite3_i.lib mswindows/osgeo4w/lib/sqlite3.lib
+-
+ 	log configure
+ 	./configure \
+ 		--host=x86_64-w64-mingw32 \
+-		--with-libs="$OSGEO4W_ROOT_MSYS/lib" \
+-		--with-includes=$OSGEO4W_ROOT_MSYS/include \
+-		--libexecdir=$OSGEO4W_ROOT_MSYS/bin \
+-		--prefix=$OSGEO4W_ROOT_MSYS/apps/grass \
+-		--bindir=$OSGEO4W_ROOT_MSYS/bin \
+-		--includedir=$OSGEO4W_ROOT_MSYS/include \
+-		--with-opengl=windows \
++		--with-libs="${OSGEO4W_ROOT_MSYS}/lib ${OSGEO4W_ROOT_MSYS}/bin" \
++		--with-includes=${OSGEO4W_ROOT_MSYS}/include \
++		--libexecdir=${OSGEO4W_ROOT_MSYS}/bin \
++		--prefix=${OSGEO4W_ROOT_MSYS}/apps/grass \
++		--bindir=${OSGEO4W_ROOT_MSYS}/bin \
++		--includedir=${OSGEO4W_ROOT_MSYS}/include \
+ 		--without-x \
+ 		--with-cxx \
+ 		--enable-shared \
+ 		--enable-largefile \
++		--with-openmp \
+ 		--with-fftw \
++		--with-nls \
++		--with-readline \
++		--with-blas \
++		--with-lapack \
++		--with-lapack-includes=/mingw64/include \
+ 		--with-freetype \
+-		--with-freetype-includes=/mingw64/include/freetype2 \
+-		--with-proj-share=$OSGEO4W_ROOT_MSYS/share/proj \
+-		--with-proj-includes=$OSGEO4W_ROOT_MSYS/include \
+-		--with-proj-libs=$OSGEO4W_ROOT_MSYS/lib \
++		--with-freetype-includes=${OSGEO4W_ROOT_MSYS}/include/freetype2 \
++		--with-proj-share=${OSGEO4W_ROOT_MSYS}/share/proj \
++		--with-proj-includes=${OSGEO4W_ROOT_MSYS}/include \
++		--with-proj-libs=${OSGEO4W_ROOT_MSYS}/lib \
+ 		--with-postgres \
+-		--with-postgres-includes=$OSGEO4W_ROOT_MSYS/include \
+-		--with-postgres-libs=$PWD/mswindows/osgeo4w/lib \
++		--with-postgres-includes=${OSGEO4W_ROOT_MSYS}/include \
++		--with-postgres-libs=${OSGEO4W_ROOT_MSYS}/lib \
+ 		--with-gdal=$PWD/mswindows/osgeo4w/gdal-config \
+ 		--with-geos=$PWD/mswindows/osgeo4w/geos-config \
+ 		--with-sqlite \
+-		--with-sqlite-includes=$OSGEO4W_ROOT_MSYS/include \
+-		--with-sqlite-libs=$PWD/mswindows/osgeo4w/lib \
++		--with-sqlite-includes=${OSGEO4W_ROOT_MSYS}/include \
++		--with-sqlite-libs=${OSGEO4W_ROOT_MSYS}/lib \
+ 		--with-regex \
+-		--with-nls \
+ 		--with-zstd \
+ 		--with-odbc \
+-		--with-netcdf=${OSGEO4W_ROOT_MSYS}/bin/nc-config \
+-		--with-blas \
+-		--with-lapack \
+-		--with-lapack-includes=/mingw64/include \
+-		--with-openmp \
+ 		--with-cairo \
+-		--with-cairo-includes=$OSGEO4W_ROOT_MSYS/include \
+-		--with-cairo-ldflags="-L$PWD/mswindows/osgeo4w/lib -lcairo -lfontconfig" \
++		--with-cairo-includes=${OSGEO4W_ROOT_MSYS}/include \
++		--with-cairo-libs=${OSGEO4W_ROOT_MSYS}/lib \
++		--with-cairo-ldflags="-L$PWD/mswindows/osgeo4w/lib -lcairo" \
++		--with-opengl=windows \
+ 		--with-bzlib \
+-		--with-liblas=$PWD/mswindows/osgeo4w/liblas-config
++		--with-liblas=$PWD/mswindows/osgeo4w/liblas-config \
++		--with-netcdf=${OSGEO4W_ROOT_MSYS}/bin/nc-config
+ 
+ 	touch mswindows/osgeo4w/configure-stamp
+ fi
+@@ -249,7 +237,6 @@ if [ -n "$PACKAGE_PATCH" ]; then
+ 
+     # copy dependencies (TODO: to be reduced)
+     cp -uv $DLLS apps/grass/grass$POSTFIX/bin
+-    cp -uv /mingw64/etc/fonts/fonts.conf apps/grass/grass$POSTFIX/etc
+ 
+     # creating grass package
+     /bin/tar -cjf $PDIR/grass$PACKAGE_POSTFIX-$VERSION-$PACKAGE_PATCH.tar.bz2 \

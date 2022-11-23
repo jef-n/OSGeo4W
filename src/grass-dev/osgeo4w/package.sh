@@ -2,7 +2,7 @@ export P=grass-dev
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="gdal-devel proj-devel geos-devel netcdf-devel libjpeg-turbo-devel libpng-devel libpq-devel libtiff-devel sqlite3-devel zstd-devel python3-ply python3-core python3-six python3-pywin32 python3-wxpython wxwidgets-devel liblas-devel"
+export BUILDDEPENDS="gdal-devel proj-devel geos-devel netcdf-devel libjpeg-turbo-devel libpq-devel libtiff-devel sqlite3-devel zstd-devel python3-ply python3-core python3-six python3-pywin32 python3-wxpython liblas-devel cairo-devel pdal-devel freetype-devel"
 
 REPO=https://github.com/OSGeo/grass.git
 p=$P
@@ -122,7 +122,7 @@ set -e $xtrace
 
 cd $(cygpath -am .)
 
-exec >build.log 2>&1
+exec >>package.log 2>&1
 
 export OSGEO4W_ROOT=$OSGEO4W_ROOT
 export OSGEO4W_ROOT_MSYS=$OSGEO4W_ROOT_MSYS
@@ -151,7 +151,7 @@ pacman --noconfirm -S --needed \
 	mingw-w64-x86_64-fftw \
 	mingw-w64-x86_64-lapack \
 	mingw-w64-x86_64-openmp \
-	mingw-w64-x86_64-cairo
+	mingw-w64-x86_64-readline
 
 cd ../grass
 
