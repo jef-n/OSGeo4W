@@ -18,6 +18,8 @@ if ! [ -d ../qt5 ]; then
 	cd ../qt5
 	git checkout kde/5.15
 	perl init-repository
+	patch -p1 --dry-run <../osgeo4w/patch
+	patch -p1 <../osgeo4w/patch
 else
 	cd ../qt5
 fi

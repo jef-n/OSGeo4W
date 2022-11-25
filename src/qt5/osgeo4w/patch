@@ -1,0 +1,13 @@
+diff --git a/qtbase/src/plugins/sqldrivers/odbc/qsql_odbc.cpp b/qtbase/src/plugins/sqldrivers/odbc/qsql_odbc.cpp
+index 5f51de3843..25e4c30496 100644
+--- a/qtbase/src/plugins/sqldrivers/odbc/qsql_odbc.cpp
++++ b/qtbase/src/plugins/sqldrivers/odbc/qsql_odbc.cpp
+@@ -598,7 +598,7 @@ static QVariant qGetDoubleData(SQLHANDLE hStmt, int column)
+                               column+1,
+                               SQL_C_DOUBLE,
+                               (SQLPOINTER) &dblbuf,
+-                              0,
++                              sizeof(dblbuf),
+                               &lengthIndicator);
+     if (r != SQL_SUCCESS && r != SQL_SUCCESS_WITH_INFO) {
+         return QVariant(QVariant::Invalid);
