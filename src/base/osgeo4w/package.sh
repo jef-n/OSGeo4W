@@ -31,6 +31,7 @@ tar -cjf $R/$P-$V-$B.tar.bz2 \
 	--xform "s,^getspecialfolder.exe,bin/getspecialfolder.exe," \
 	--xform "s,^xxmklink.exe,bin/xxmklink.exe," \
 	--xform "s,^textreplace.exe,bin/textreplace.exe," \
+	--xform "s,^iswindows8orgreater.exe,bin/iswindows8orgreater.exe," \
 	--xform "s,^o4w_env.bat,bin/o4w_env.bat," \
 	--xform "s,^ini.bat,etc/ini/$P.bat," \
 	--xform "s,^postinstall.bat,etc/postinstall/$P.bat," \
@@ -41,6 +42,7 @@ tar -cjf $R/$P-$V-$B.tar.bz2 \
 	getspecialfolder.exe \
 	textreplace.exe \
 	xxmklink.exe \
+	iswindows8orgreater.exe \
 	ini.bat \
 	o4w_env.bat \
 	OSGeo4W.bat \
@@ -55,6 +57,7 @@ tar -cjf $R/$P-$V-$B-src.tar.bz2 \
 	dllupdate.cpp \
 	getspecialfolder.c \
 	textreplace.c \
+	iswindows8orgreater.c \
 	makefile.vc \
 	o4w_env.bat \
 	OSGeo4W.bat \

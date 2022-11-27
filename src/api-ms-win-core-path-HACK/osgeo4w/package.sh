@@ -34,31 +34,27 @@ Wine code. Originally  made to run Blender 2.93 (specifically, Python 3.9) on Wi
 7."
 maintainer: $MAINTAINER
 category: Libraries
-requires: msvcrt2019
+requires: msvcrt2019 base
 EOF
 
 dll=api-ms-win-core-path-l1-1-0.dll
 
 cat <<EOF >../$P/build/x64/release/postinstall.bat
-setlocal enabledelayedexpansion
+iswindows8orgreater
+if errorlevel 1 ren bin\\$dll.w7 $dll
+EOF
 
-for /f "tokens=*" %%v in ('ver') do set v=%%v
-set v=%v:*[Version =%
-for /f "tokens=1-2 delims=." %%a in ("%v%") do (
-        set run=1
-        if %%a gtr 6 set run=0
-        if %%a equ 6 and %%b geq 2 set run=0
-        if !run! equ 1 ren bin\\$dll.w7 $dll
-)
-
-endlocal
+cat <<EOF >../$P/build/x64/release/preremove.bat
+if exist bin\\$dll del bin\\$dll
 EOF
 
 tar -C ../$P/build/x64/release -cjf $R/$P-$V-$B.tar.bz2 \
 	--xform s,$dll,bin/$dll.w7, \
 	--xform s,postinstall.bat,etc/postinstall/$P.bat, \
+	--xform s,preremove.bat,etc/preremove/$P.bat, \
 	$dll \
-	postinstall.bat
+	postinstall.bat \
+	preremove.bat
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 \
 	osgeo4w/package.sh

@@ -1,25 +1,28 @@
 CFLAGS=-DMBCS
 
-all: dllupdate.exe textreplace.exe bgspawn.exe run.exe getspecialfolder.exe elevate.exe
+all: dllupdate.exe textreplace.exe bgspawn.exe run.exe getspecialfolder.exe elevate.exe iswindows8orgreater.exe
 
 dllupdate.exe: dllupdate.cpp
-	cl /nologo dllupdate.cpp version.lib advapi32.lib
+	cl /nologo $** version.lib advapi32.lib
 
 textreplace.exe: textreplace.c
-	cl /nologo textreplace.c
+	cl /nologo $**
 
 bgspawn.exe: bgspawn.c
-	cl /nologo bgspawn.c shell32.lib
+	cl /nologo $** shell32.lib
 
 run.exe: run.c
-	cl /nologo run.c shell32.lib
+	cl /nologo $** shell32.lib
 
 elevate.exe: elevate.c elevate.exe.manifest
 	cl /nologo elevate.c shell32.lib
 	mt -manifest elevate.exe.manifest -outputresource:"elevate.exe;#1"
 
 getspecialfolder.exe: getspecialfolder.c
-	cl /nologo getspecialfolder.c shell32.lib ole32.lib
+	cl /nologo $** shell32.lib ole32.lib
+
+iswindows8orgreater.exe: iswindows8orgreater.c
+	cl /nologo $** kernel32.lib ntdll.lib
 
 clean:
 	-del *.exe
