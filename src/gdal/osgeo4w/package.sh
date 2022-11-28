@@ -200,7 +200,7 @@ for i in install/apps/$PYTHON/Scripts/*.py; do
 	cat <<EOF >install/apps/$PYTHON/Scripts/$b.bat
 @echo off
 call "%OSGEO4W_ROOT%\\bin\\o4w_env.bat"
-python "%OSGEO4W_ROOT%\\apps\\$PYTHON\\Scripts\\$b.py" %*
+python -u "%OSGEO4W_ROOT%\\apps\\$PYTHON\\Scripts\\$b.py" %*
 EOF
 	(
 		echo "#! @osgeo4w@\\apps\\$PYTHON\\python3.exe"
