@@ -503,7 +503,7 @@ ldesc: "QGIS Desktop Full (meta package; long term release)
 including proprietary extensions"
 maintainer: $MAINTAINER
 category: Desktop
-requires: $P-full-free $P-oracle-provider gdal-hdf5 gdal-ecw gdal-mrsid gdal-oracle
+requires: $P-full-free $P-oracle-provider gdal-hdf5 gdal-mss gdal-ecw gdal-mrsid gdal-oracle
 external-source: $P
 EOF
 

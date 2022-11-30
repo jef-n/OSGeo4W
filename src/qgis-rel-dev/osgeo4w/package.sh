@@ -375,7 +375,7 @@ sdesc: "QGIS nightly build of the $LABEL branch (metapackage with additional dep
 ldesc: "QGIS nightly build of the $LABEL branch (metapackage with additional dependencies including proprietary)"
 maintainer: $MAINTAINER
 category: Desktop
-requires: $P-full-free gdal-hdf5 gdal-ecw gdal-mrsid gdal-oracle
+requires: $P-full-free gdal-hdf5 gdal-mss gdal-ecw gdal-mrsid gdal-oracle
 external-source: $P
 EOF
 
