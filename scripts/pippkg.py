@@ -263,7 +263,7 @@ requires: python3-core{2}{3}
 """ .format(
         props['Summary'],
         environ['MAINTAINER'],
-        (" " + " ".join(sorted('python3-{}'.format(p) for p in props['Requires']))) if props['Requires'] else "",
+        (" " + " ".join(sorted('python3-{}'.format(p.replace('_', '-')) for p in props['Requires']))) if props['Requires'] else "",
         (" " + environ['adddepends']) if 'adddepends' in environ else ''
     ).encode("utf-8")
 )
