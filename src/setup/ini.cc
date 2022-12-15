@@ -401,7 +401,7 @@ do_fetch_license (HWND owner)
                   lic_file = get_url_to_membuf (url, owner, true);
                   if( !lic_file )
                     {
-                      note (owner, IDS_LICENSE_MISSING, file_name.c_str(), url.c_str());
+                      log (LOG_BABBLE) << "Unable to get license file " << file_name.c_str() << " from <" << url.c_str() << ">" << endLog;
                       continue;
                     }
 
@@ -433,6 +433,7 @@ do_fetch_license (HWND owner)
                     }
 
                   delete lic_file;
+                  break;
                 }
             }
           else

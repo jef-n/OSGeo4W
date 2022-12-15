@@ -64,7 +64,6 @@
 #define IDS_CAPTION_NOTINSTALLED          159
 #define IDS_CAPTION_CATEGORY              160
 #define IDS_CAPTION_LIC_PACKAGE           161
-#define IDS_LICENSE_MISSING               162
 #define IDS_LICENSE_NOLOAD                163
 #define IDS_LICENSE_EMPTYPATH             164
 #define IDS_NOTHING_TO_INSTALL_OR_UPGRADE 165

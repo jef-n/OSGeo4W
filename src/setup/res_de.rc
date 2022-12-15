@@ -487,7 +487,6 @@ BEGIN
     IDS_CAPTION_NOTINSTALLED	"Nicht Inst."
     IDS_CAPTION_CATEGORY	"Kategorie"
     IDS_CAPTION_LIC_PACKAGE	"Bitte lesen Sie die Lizenzbedingungen der folgenden Pakete und stimmen Sie ihnen zu:\r\n%s"
-    IDS_LICENSE_MISSING		"Konnte Lizenzdatei %s nicht von <%s> laden"
     IDS_LICENSE_NOLOAD		"Installation fand die Lizenzdatei von %s nicht. Bitte überprüfen Sie, ob sie heruntergeladen wurden."
     IDS_LICENSE_EMPTYPATH	"Es gibt keine Lizenzdatei zu %s auf dem Server"
     IDS_NOTHING_TO_INSTALL_OR_UPGRADE "Nichts zu installieren oder zu aktualisieren"

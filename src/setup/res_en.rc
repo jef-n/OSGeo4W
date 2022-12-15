@@ -480,7 +480,6 @@ BEGIN
     IDS_CAPTION_NOTINSTALLED	"Not Installed"
     IDS_CAPTION_CATEGORY	"Category"
     IDS_CAPTION_LIC_PACKAGE	"Please review the license terms of the following packages and indicate acceptance of it's terms:\r\n%s"
-    IDS_LICENSE_MISSING		"Unable to get license file %s from <%s>"
     IDS_LICENSE_NOLOAD		"Installer couldn't load the license file of %s please make sure it was downloaded on disk"
     IDS_LICENSE_EMPTYPATH	"There isn't a license file in remote path for %s"
     IDS_NOTHING_TO_INSTALL_OR_UPGRADE "Nothing to install/upgrade"

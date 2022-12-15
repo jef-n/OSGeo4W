@@ -481,7 +481,6 @@ BEGIN
     IDS_CAPTION_NOTINSTALLED	"No instalado"
     IDS_CAPTION_CATEGORY	"Categoría"
     IDS_CAPTION_LIC_PACKAGE	"Por favor, revise los términos de las siguientes paquetes e indique si acepta sus términos:\r\n%s"
-    IDS_LICENSE_MISSING		"No se pudo conseguir el archivo de la licencia %s de <%s>"
     IDS_LICENSE_NOLOAD		"El instalador no pudo cargar el archivo de licencia de %s , asegúrese que fue descargado en su disco"
     IDS_LICENSE_EMPTYPATH	"No se encontrado el archivo de licencia en la ruta remota para %s"
     IDS_NOTHING_TO_INSTALL_OR_UPGRADE "Nada para instalar o actualizar"
