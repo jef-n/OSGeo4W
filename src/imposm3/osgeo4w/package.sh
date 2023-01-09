@@ -45,7 +45,7 @@ msysarch=msys2-base-x86_64-20201109.tar.xz
 	export GOPATH=$(cygpath -aw go/Go)
 
 	if ! type go >/dev/null || ! go version; then
-		wget -q -c -O $GO_MSI https://go.dev/dl/$GO_MSI
+		[ -f $GO_MSI ] || wget -q -c -O $GO_MSI https://go.dev/dl/$GO_MSI
 		if ! msiexec "/l*v" go.log /a $GO_MSI "TARGETDIR=$(cygpath -aw go)" /qb; then
 			iconv -f UTF-16 -t UTF-8 go.log
 			false
@@ -91,7 +91,8 @@ tar -cjf $R/$P-$V-$B.tar.bz2 \
 	../Go/bin/imposm.exe \
 	msys64/mingw64/bin/libwinpthread-1.dll \
 	msys64/mingw64/bin/libstdc++-6.dll \
-	msys64/mingw64/bin/libgcc_s_seh-1.dll
+	msys64/mingw64/bin/libgcc_s_seh-1.dll \
+	msys64/mingw64/bin/libleveldb.dll
 
 cp ../Go/pkg/mod/github.com/omniscale/$P@v$V/LICENSE $R/$P-$V-$B.txt
 
