@@ -139,9 +139,9 @@ CAPTION "Інсталятор OSGeo4W - Виберіть тип інтернет
 FONT 8, "MS Shell Dlg"
 BEGIN
     CONTROL         "Використовувати налаштовування &IE 5.0:",
-		    IDC_NET_PRECONFIG,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,60,55,168,10
+		    IDC_NET_PRECONFIG,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,60,55,168,10
     CONTROL         "&Пряме з'єднання",
-		    IDC_NET_DIRECT,"Button", BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,60,70,88,10
+		    IDC_NET_DIRECT,"Button", BS_AUTORADIOBUTTON | WS_TABSTOP,60,70,88,10
     CONTROL         "Вказати налаштовування проксі &HTTP/FTP:",
 		    IDC_NET_PROXY,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,60,85,168,10
     EDITTEXT        IDC_PROXY_HOST,120,105,120,12,ES_AUTOHSCROLL | WS_DISABLED | WS_GROUP

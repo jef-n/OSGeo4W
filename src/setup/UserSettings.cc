@@ -182,10 +182,10 @@ UserSettings::save ()
     return;
   for (Element **e = table; *e; e++)
     {
-	  msg( "SAVE '%s' => '%s'\n", (*e)->key, (*e)->value );
+      msg( "SAVE '%s' => '%s'\n", (*e)->key, (*e)->value );
       f->write ((*e)->key, strlen ((*e)->key));
       f->write ("\n", 1);
-      std::string s = (*e)->value;
+      std::string s = (*e)->value ? (*e)->value : "";
       s.append ("\n");
       size_t n;
       for (size_t i = 0; (n = s.find_first_of ('\n', i)) != std::string::npos; i = n + 1)
