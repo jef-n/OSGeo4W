@@ -19,11 +19,37 @@ index fb3e797b7..93641977c 100644
  
        - name: Compile GRASS GIS
          run: D:\msys64\usr\bin\bash.exe -l (''+(Get-Location)+'\.github\workflows\build_osgeo4w.sh') (Get-Location)
+diff --git a/include/Make/Grass.make b/include/Make/Grass.make
+index 5ed7692fe..d4ef1acf5 100644
+--- a/include/Make/Grass.make
++++ b/include/Make/Grass.make
+@@ -196,7 +196,7 @@ DSPFDEPS         = $(GISLIB)
+ FORMDEPS         = $(DBMILIB) $(GISLIB)
+ RASTER3DDEPS     = $(RASTERLIB) $(GISLIB)
+ GISDEPS          = $(DATETIMELIB) $(ZLIBLIBPATH) $(ZLIB) $(BZIP2LIBPATH) $(BZIP2LIB) $(ZSTDLIBPATH) $(ZSTDLIB) $(INTLLIB) $(REGEXLIBPATH) $(REGEXLIB) $(ICONVLIB) $(PTHREADLIBPATH) $(PTHREADLIB) $(MATHLIB)
+-GMATHDEPS        = $(GISLIB) $(FFTWLIB) $(LAPACKLIB) $(BLASLIB) $(CCMATHLIB) $(OPENMP_CFLAGS) $(OPENMP_LIBPATH) $(OPENMP_LIB)
++GMATHDEPS        = $(GISLIB) $(FFTWLIB) $(LAPACKLIB) $(BLASLIB) $(CCMATHLIB) $(OPENMP_LIBPATH) $(OPENMP_LIB)
+ GPDEDEPS         = $(RASTER3DLIB) $(RASTERLIB) $(GISLIB) $(GMATHLIB) $(OPENMP_LIBPATH) $(OPENMP_LIB) $(MATHLIB)
+ GPROJDEPS        = $(GISLIB) $(GDALLIBS) $(PROJLIB) $(MATHLIB)
+ HTMLDRIVERDEPS   = $(DRIVERLIB) $(GISLIB) $(MATHLIB)
+diff --git a/include/Make/Platform.make.in b/include/Make/Platform.make.in
+index 664304a20..50f9eef6c 100644
+--- a/include/Make/Platform.make.in
++++ b/include/Make/Platform.make.in
+@@ -229,7 +229,7 @@ USE_PTHREAD         = @USE_PTHREAD@
+ #OpenMP
+ OPENMP_INCPATH      = @OPENMP_INCPATH@
+ OPENMP_LIBPATH      = @OPENMP_LIBPATH@
+-OPENMP_LIB          = @OPENMP_LIB@
++OPENMP_LIB          = @OPENMP_CFLAGS@ @OPENMP_LIB@
+ OPENMP_CFLAGS       = @OPENMP_CFLAGS@
+ USE_OPENMP          = @USE_OPENMP@
+ 
 diff --git a/mswindows/osgeo4w/build_osgeo4w.sh b/mswindows/osgeo4w/build_osgeo4w.sh
-index 6da7e9eed..3bc006aea 100644
+index 69c854c5a..f59a39aa4 100644
 --- a/mswindows/osgeo4w/build_osgeo4w.sh
 +++ b/mswindows/osgeo4w/build_osgeo4w.sh
-@@ -46,7 +46,8 @@ export ARCH=x86_64-w64-mingw32
+@@ -38,7 +38,8 @@ export ARCH=x86_64-w64-mingw32
      --with-nls \
      --with-readline \
      --with-blas \
@@ -33,7 +59,7 @@ index 6da7e9eed..3bc006aea 100644
      --with-freetype \
      --with-freetype-includes=${OSGEO4W_ROOT_MSYS}/include/freetype2 \
      --with-proj-share=${OSGEO4W_ROOT_MSYS}/share/proj \
-@@ -61,12 +62,11 @@ export ARCH=x86_64-w64-mingw32
+@@ -53,12 +54,11 @@ export ARCH=x86_64-w64-mingw32
      --with-sqlite-includes=${OSGEO4W_ROOT_MSYS}/include \
      --with-sqlite-libs=${OSGEO4W_ROOT_MSYS}/lib \
      --with-regex \
