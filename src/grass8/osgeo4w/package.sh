@@ -1,5 +1,5 @@
 export P=grass8
-export V=8.2.0
+export V=8.2.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="gdal-devel proj-devel geos-devel libjpeg-turbo-devel libpng-devel libpq-devel libtiff-devel sqlite3-devel zstd-devel python3-core python3-six python3-pywin32 liblas-devel python3-wxpython wxwidgets-devel netcdf-devel python3-ply"
@@ -106,7 +106,7 @@ cd ../$p
 PACKAGE_POSTFIX=${V%%.*} bash.exe $xtrace mswindows/osgeo4w/package.sh
 EOF
 
-	cygstart -w $(cygpath -aw msys64/usr/bin/bash.exe) $(cygpath -am build.sh)
+	cygstart -w $(cygpath -aw msys64/usr/bin/bash.exe) $(cygpath -am build.sh) || { cat ../$p/mswindows/osgeo4w/package.log; exit 1; }
 )
 
 export R=$OSGEO4W_REP/x86_64/release/$P
