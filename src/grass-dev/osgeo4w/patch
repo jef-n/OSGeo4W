@@ -1,26 +1,27 @@
 diff --git a/.github/workflows/osgeo4w.yml b/.github/workflows/osgeo4w.yml
-index fb3e797b7..93641977c 100644
+index 3b8e1f316..14221f244 100644
 --- a/.github/workflows/osgeo4w.yml
 +++ b/.github/workflows/osgeo4w.yml
-@@ -32,14 +32,14 @@ jobs:
-           path-type: inherit
-           location: D:\
-           update: true
--          install: tar libintl make bison flex diffutils git dos2unix zip mingw-w64-x86_64-toolchain mingw-w64-x86_64-fftw mingw-w64-x86_64-lapack mingw-w64-x86_64-pkgconf mingw-w64-x86_64-gcc mingw-w64-x86_64-ccache mingw-w64-x86_64-zlib mingw-w64-x86_64-libiconv mingw-w64-x86_64-bzip2 mingw-w64-x86_64-gettext mingw-w64-x86_64-libsystre mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libwinpthread-git mingw-w64-x86_64-libpng mingw-w64-x86_64-pcre mingw-w64-x86_64-python3-six
-+          install: tar libintl make bison flex diffutils git dos2unix zip mingw-w64-x86_64-toolchain mingw-w64-x86_64-fftw mingw-w64-x86_64-lapack mingw-w64-x86_64-pkgconf mingw-w64-x86_64-gcc mingw-w64-x86_64-ccache mingw-w64-x86_64-zlib mingw-w64-x86_64-libiconv mingw-w64-x86_64-bzip2 mingw-w64-x86_64-gettext mingw-w64-x86_64-libsystre mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libwinpthread-git mingw-w64-x86_64-pcre mingw-w64-x86_64-python3-six
+@@ -37,7 +37,7 @@ jobs:
+             mingw-w64-x86_64-fftw mingw-w64-x86_64-lapack mingw-w64-x86_64-pkgconf
+             mingw-w64-x86_64-gcc mingw-w64-x86_64-ccache mingw-w64-x86_64-zlib mingw-w64-x86_64-libiconv
+             mingw-w64-x86_64-bzip2 mingw-w64-x86_64-gettext mingw-w64-x86_64-libsystre
+-            mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libwinpthread-git mingw-w64-x86_64-libpng
++            mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libwinpthread-git
+             mingw-w64-x86_64-pcre mingw-w64-x86_64-python3-six
  
        - name: Install OSGeo4W
-         run: |
-           $exe = 'osgeo4w-setup.exe'
-           $url = 'http://download.osgeo.org/osgeo4w/v2/' + $exe
-           (New-Object System.Net.WebClient).DownloadFile($url, $exe)
--          Start-Process ('.\'+$exe) -ArgumentList '-A -g -k -q -s http://download.osgeo.org/osgeo4w/v2/ -P proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,pdal-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,python3-six,python3-wxpython,regex-devel,zstd-devel' -Wait
-+          Start-Process ('.\'+$exe) -ArgumentList '-A -g -k -q -s http://download.osgeo.org/osgeo4w/v2/ -P proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,pdal-devel,netcdf-devel,cairo-devel,freetype-devel,gdal-ecw,gdal-mrsid,liblas-devel,libpq-devel,pdcurses,python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,python3-six,python3-wxpython,zstd-devel' -Wait
+@@ -53,7 +53,7 @@ jobs:
+         env:
+           Deps: "proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,pdal-devel,netcdf-devel,cairo-devel,\
+             fftw,freetype-devel,gdal-ecw,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,python3-matplotlib,\
+-            python3-numpy,python3-ply,python3-pywin32,python3-six,python3-wxpython,regex-devel,zstd-devel"
++            python3-numpy,python3-ply,python3-pywin32,python3-six,python3-wxpython,zstd-devel"
  
        - name: Compile GRASS GIS
          run: D:\msys64\usr\bin\bash.exe -l (''+(Get-Location)+'\.github\workflows\build_osgeo4w.sh') (Get-Location)
 diff --git a/include/Make/Grass.make b/include/Make/Grass.make
-index 5ed7692fe..d4ef1acf5 100644
+index 93f64046c..ebaaad93e 100644
 --- a/include/Make/Grass.make
 +++ b/include/Make/Grass.make
 @@ -196,7 +196,7 @@ DSPFDEPS         = $(GISLIB)
@@ -33,7 +34,7 @@ index 5ed7692fe..d4ef1acf5 100644
  GPROJDEPS        = $(GISLIB) $(GDALLIBS) $(PROJLIB) $(MATHLIB)
  HTMLDRIVERDEPS   = $(DRIVERLIB) $(GISLIB) $(MATHLIB)
 diff --git a/include/Make/Platform.make.in b/include/Make/Platform.make.in
-index 664304a20..50f9eef6c 100644
+index 93a6f0792..8613ce839 100644
 --- a/include/Make/Platform.make.in
 +++ b/include/Make/Platform.make.in
 @@ -229,7 +229,7 @@ USE_PTHREAD         = @USE_PTHREAD@

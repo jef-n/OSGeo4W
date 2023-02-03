@@ -155,7 +155,7 @@ pacman --noconfirm -S --needed \
 
 cd ../grass
 
-PACKAGE_POSTFIX=-dev bash.exe $xtrace mswindows/osgeo4w/package.sh
+PACKAGE_POSTFIX=-dev bash.exe $xtrace mswindows/osgeo4w/package.sh || { cat mswindows/osgeo4w/package.log; exit 1; }
 EOF
 
 	cygstart -w $(cygpath -aw msys64/usr/bin/bash.exe) $(cygpath -am build.sh)
