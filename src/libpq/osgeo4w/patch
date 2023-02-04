@@ -1,0 +1,21 @@
+diff -ur postgresql-15.1/src/backend/libpq/be-secure-openssl.c ../postgresql-15.1/src/backend/libpq/be-secure-openssl.c
+--- postgresql-15.1/src/backend/libpq/be-secure-openssl.c	2022-11-07 22:36:53.000000000 +0100
++++ ../postgresql-15.1/src/backend/libpq/be-secure-openssl.c	2023-02-04 11:16:54.733927500 +0100
+@@ -38,6 +38,17 @@
+ #include "utils/memutils.h"
+ 
+ /*
++ * On Windows, <wincrypt.h> includes a #define for X509_NAME, which breaks our
++ * ability to use OpenSSL's version of that symbol if <wincrypt.h> is pulled
++ * in after <openssl/ssl.h> ... and, at least on some builds, it is.  We
++ * can't reliably fix that by re-ordering #includes, because libpq/libpq-be.h
++ * #includes <openssl/ssl.h>.  Instead, just zap the #define again here.
++ */
++#ifdef X509_NAME
++#undef X509_NAME
++#endif
++
++/*
+  * These SSL-related #includes must come after all system-provided headers.
+  * This ensures that OpenSSL can take care of conflicts with Windows'
+  * <wincrypt.h> by #undef'ing the conflicting macros.  (We don't directly

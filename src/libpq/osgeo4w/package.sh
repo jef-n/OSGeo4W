@@ -1,5 +1,5 @@
 export P=libpq
-export V=14.3
+export V=15.2
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="openssl-devel zlib-devel libiconv-devel"
@@ -12,7 +12,11 @@ source ../../../scripts/build-helpers
 startlog
 
 [ -f postgresql-$V.tar.bz2 ] || wget https://ftp.postgresql.org/pub/source/v$V/postgresql-$V.tar.bz2
-[ -f ../postgresql-$V/Makefile ] || tar -C .. -xjf postgresql-$V.tar.bz2
+[ -f ../postgresql-$V/Makefile ] || {
+	tar -C .. -xjf postgresql-$V.tar.bz2
+	patch --dry-run -p1 -d ../postgresql-$V <patch
+	patch           -p1 -d ../postgresql-$V <patch
+}
 
 if ! [ -d perl ]; then
 	wget -c http://strawberryperl.com/download/$SBPERL/strawberry-perl-$SBPERL-64bit-portable.zip
@@ -62,7 +66,7 @@ EOF
 	export PATH="$PATH:/c/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/amd64/"
 
 	cd ../postgresql-$V/src/tools/msvc
-	cmd /c build.bat >libpq.log 2>&1
+	cmd /c build.bat >libpq.log 2>&1 || { cat libpq.log; false; }
 	cmd /c install.bat $(cygpath -aw $OSGEO4W_PWD/install) client || true
 
 	# clean empty directories
@@ -122,6 +126,6 @@ cd ..
 cp ../postgresql-$V/COPYRIGHT $R/$P-$V-$B.txt
 cp ../postgresql-$V/COPYRIGHT $R/$P-devel/$P-devel-$V-$B.txt
 
-tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
+tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/patch
 
 endlog
