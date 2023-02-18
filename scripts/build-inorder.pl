@@ -128,7 +128,7 @@ while(keys %todo) {
 
 	last unless @p;
 
-	push @inorder, @p;
+	push @inorder, sort @p;
 
 	foreach my $p (@p) {
 		delete $todo{$p};
