@@ -56,7 +56,7 @@ ldesc: "OpenStreetMap data to PostgreSQL converter"
 category: Commandline_Utilities
 requires: msvcrt2019
 maintainer: $MAINTAINER
-requires: msvcrt2019 libpq expat bzip2 proj zlib
+requires: msvcrt2019 libpq expat proj zlib
 EOF
 
 tar -C install -cjf $R/$P-$V-$B.tar.bz2 \

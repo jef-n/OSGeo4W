@@ -60,7 +60,7 @@ sdesc: "A multipurpose command line tool for working with OpenStreetMap data bas
 ldesc: "A multipurpose command line tool for working with OpenStreetMap data based on the Osmium library."
 category: Commandline_Utilities
 maintainer: $MAINTAINER
-requires: msvcrt2019 expat bzip2 proj zlib lz4 $RUNTIMEDEPENDS
+requires: msvcrt2019 expat proj zlib lz4 $RUNTIMEDEPENDS
 EOF
 
 tar -C install -cjf $R/$P-$V-$B.tar.bz2 bin

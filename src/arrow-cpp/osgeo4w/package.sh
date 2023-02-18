@@ -65,7 +65,7 @@ cat <<EOF >$R/setup.hint
 sdesc: "Apache Arrow C++ library (runtime)"
 ldesc: "Arrow C++ libraries, (runtime)"
 category: Libs
-requires: msvcrt2019
+requires: msvcrt2019 thrift
 maintainer: $MAINTAINER
 EOF
 
