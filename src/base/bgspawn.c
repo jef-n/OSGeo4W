@@ -33,7 +33,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 {
   int argc = 0;
   LPWSTR *argv = CommandLineToArgvW(lpCmdLine, &argc);
-
   if(argc < 1)
     return 1;
 

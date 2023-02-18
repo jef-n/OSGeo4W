@@ -2,27 +2,27 @@ CFLAGS=-DMBCS
 
 all: dllupdate.exe textreplace.exe bgspawn.exe run.exe getspecialfolder.exe elevate.exe iswindows8orgreater.exe
 
-dllupdate.exe: dllupdate.cpp
-	cl /nologo $** version.lib advapi32.lib
+dllupdate.exe: dllupdate.obj
+	cl /nologo /Fo:$@ $** version.lib advapi32.lib
 
-textreplace.exe: textreplace.c
-	cl /nologo $**
+textreplace.exe: textreplace.obj
+	cl /nologo /Fo:$@ $**
 
-bgspawn.exe: bgspawn.c
-	cl /nologo $** shell32.lib
+bgspawn.exe: bgspawn.obj
+	cl /nologo /Fo:$@ $** shell32.lib
 
-run.exe: run.c
-	cl /nologo $** shell32.lib
+run.exe: run.obj
+	cl /nologo /Fo:$@ $** shell32.lib
 
-elevate.exe: elevate.c elevate.exe.manifest
-	cl /nologo elevate.c shell32.lib
-	mt -manifest elevate.exe.manifest -outputresource:"elevate.exe;#1"
+elevate.exe: bgspawn.exe elevate.exe.manifest
+	copy bgspawn.exe elevate.exe
+	mt -manifest elevate.exe.manifest -outputresource:"$@;#1"
 
-getspecialfolder.exe: getspecialfolder.c
-	cl /nologo $** shell32.lib ole32.lib
+getspecialfolder.exe: getspecialfolder.obj
+	cl /nologo /Fo:$@ $** shell32.lib ole32.lib
 
-iswindows8orgreater.exe: iswindows8orgreater.c
-	cl /nologo $** kernel32.lib ntdll.lib
+iswindows8orgreater.exe: iswindows8orgreater.obj
+	cl /nologo /Fo:$@ $** kernel32.lib ntdll.lib
 
 clean:
 	-del *.exe

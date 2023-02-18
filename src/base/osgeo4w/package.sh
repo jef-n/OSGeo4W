@@ -27,6 +27,7 @@ EOF
 
 tar -cjf $R/$P-$V-$B.tar.bz2 \
 	--xform "s,^bgspawn.exe,bin/bgspawn.exe," \
+	--xform "s,^elevate.exe,bin/elevate.exe," \
 	--xform "s,^dllupdate.exe,bin/dllupdate.exe," \
 	--xform "s,^getspecialfolder.exe,bin/getspecialfolder.exe," \
 	--xform "s,^xxmklink.exe,bin/xxmklink.exe," \
@@ -38,6 +39,7 @@ tar -cjf $R/$P-$V-$B.tar.bz2 \
 	--xform "s,^preremove.bat,etc/preremove/$P.bat," \
 	--xform "s,^o-help.bat,bin/o-help.bat," \
 	bgspawn.exe \
+	elevate.exe \
 	dllupdate.exe \
 	getspecialfolder.exe \
 	textreplace.exe \
