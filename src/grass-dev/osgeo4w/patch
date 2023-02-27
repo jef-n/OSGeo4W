@@ -1,8 +1,8 @@
 diff --git a/.github/workflows/osgeo4w.yml b/.github/workflows/osgeo4w.yml
-index 3b8e1f316..14221f244 100644
+index 719772a41..05e03eeea 100644
 --- a/.github/workflows/osgeo4w.yml
 +++ b/.github/workflows/osgeo4w.yml
-@@ -37,7 +37,7 @@ jobs:
+@@ -37,9 +37,10 @@ jobs:
              mingw-w64-x86_64-fftw mingw-w64-x86_64-lapack mingw-w64-x86_64-pkgconf
              mingw-w64-x86_64-gcc mingw-w64-x86_64-ccache mingw-w64-x86_64-zlib mingw-w64-x86_64-libiconv
              mingw-w64-x86_64-bzip2 mingw-w64-x86_64-gettext mingw-w64-x86_64-libsystre
@@ -10,13 +10,16 @@ index 3b8e1f316..14221f244 100644
 +            mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libwinpthread-git
              mingw-w64-x86_64-pcre mingw-w64-x86_64-python3-six
  
++
        - name: Install OSGeo4W
-@@ -53,7 +53,7 @@ jobs:
-         env:
-           Deps: "proj-devel,gdal-devel,geos-devel,libtiff-devel,libpng-devel,pdal-devel,netcdf-devel,cairo-devel,\
-             fftw,freetype-devel,gdal-ecw,gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,python3-matplotlib,\
--            python3-numpy,python3-ply,python3-pywin32,python3-six,python3-wxpython,regex-devel,zstd-devel"
-+            python3-numpy,python3-ply,python3-pywin32,python3-six,python3-wxpython,zstd-devel"
+         run: |
+           $exe = 'osgeo4w-setup.exe'
+@@ -52,7 +53,7 @@ jobs:
+             pdal-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,\
+             gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,\
+             python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,\
+-            python3-six,python3-wxpython,regex-devel,zstd-devel"
++            python3-six,python3-wxpython,zstd-devel"
  
        - name: Compile GRASS GIS
          run: D:\msys64\usr\bin\bash.exe -l (''+(Get-Location)+'\.github\workflows\build_osgeo4w.sh') (Get-Location)
@@ -47,7 +50,7 @@ index 93a6f0792..8613ce839 100644
  USE_OPENMP          = @USE_OPENMP@
  
 diff --git a/mswindows/osgeo4w/build_osgeo4w.sh b/mswindows/osgeo4w/build_osgeo4w.sh
-index 69c854c5a..f59a39aa4 100644
+index ecb6e951f..4d6e04696 100644
 --- a/mswindows/osgeo4w/build_osgeo4w.sh
 +++ b/mswindows/osgeo4w/build_osgeo4w.sh
 @@ -38,7 +38,8 @@ export ARCH=x86_64-w64-mingw32
