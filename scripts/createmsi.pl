@@ -852,6 +852,10 @@ sub sign {
 	system $cmd;
 	die "signing failed [$cmd]" if $?;
 
+	$cmd = "osslsigncode verify \"$base-signed.msi\"";
+	system $cmd;
+	die "verification failed [$cmd]" if $?;
+
 	rename("$base-signed.msi", "$base.msi") or die "rename failed: $!";
 }
 
