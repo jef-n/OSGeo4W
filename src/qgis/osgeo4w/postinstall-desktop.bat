@@ -25,4 +25,5 @@ set OSGEO4W_ROOT=%O4W_ROOT%
 REM Do not register extensions if long-term release is installed
 if not exist "%OSGEO4W_ROOT%\apps\qgis-ltr\bin\qgis.reg" "%WINDIR%\regedit" /s "%OSGEO4W_ROOT%\apps\@package@\bin\qgis.reg"
 del /s /q "%OSGEO4W_ROOT%\apps\@package@\python\*.pyc"
+if exist "%OSGEO4W_ROOT%\apps\@package@\python\sagaprovider" rd /s /q "%OSGEO4W_ROOT%\apps\@package@\python\sagaprovider"
 exit /b 0
