@@ -1,6 +1,45 @@
+diff -ur saga-7.8.2_src/saga-gis/src/dev_tools/dev_tools.vcxproj ../saga-7.8.2_src/saga-gis/src/dev_tools/dev_tools.vcxproj
+--- saga-7.8.2_src/saga-gis/src/dev_tools/dev_tools.vcxproj	2020-11-26 18:06:34.000000000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/dev_tools/dev_tools.vcxproj	2023-03-19 18:06:59.536958800 +0100
+@@ -146,7 +146,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31ud.lib;wxmsw31ud_core.lib;saga_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32ud.lib;wxmsw32ud_core.lib;saga_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN_32)\lib\vc_dll;..\..\bin\saga_vc_$(Platform)_d\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -198,7 +198,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31ud.lib;wxmsw31ud_core.lib;saga_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32ud.lib;wxmsw32ud_core.lib;saga_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN)\lib\vc_x64_dll;..\..\bin\saga_vc_$(Platform)_d\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -249,7 +249,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31u.lib;wxmsw31u_core.lib;saga_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32u.lib;wxmsw32u_core.lib;saga_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN_32)\lib\vc_dll;..\..\bin\saga_vc_$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -301,7 +301,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31u.lib;wxmsw31u_core.lib;saga_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32u.lib;wxmsw32u_core.lib;saga_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN)\lib\vc_x64_dll;..\..\bin\saga_vc_$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 diff -ur saga-7.8.2_src/saga-gis/src/saga.vc14.sln ../saga-7.8.2_src/saga-gis/src/saga.vc14.sln
 --- saga-7.8.2_src/saga-gis/src/saga.vc14.sln	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/saga.vc14.sln	2021-02-19 12:48:56.529847600 +0100
++++ ../saga-7.8.2_src/saga-gis/src/saga.vc14.sln	2023-03-19 18:06:59.540959400 +0100
 @@ -1,7 +1,7 @@
  ﻿
  Microsoft Visual Studio Solution File, Format Version 12.00
@@ -463,7 +502,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/saga.vc14.sln ../saga-7.8.2_src/saga-gis/sr
  EndGlobal
 diff -ur saga-7.8.2_src/saga-gis/src/saga_core/saga_api/saga_api.vcxproj ../saga-7.8.2_src/saga-gis/src/saga_core/saga_api/saga_api.vcxproj
 --- saga-7.8.2_src/saga-gis/src/saga_core/saga_api/saga_api.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/saga_core/saga_api/saga_api.vcxproj	2021-02-18 14:03:30.754201600 +0100
++++ ../saga-7.8.2_src/saga-gis/src/saga_core/saga_api/saga_api.vcxproj	2023-03-19 18:06:59.542958300 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -494,9 +533,52 @@ diff -ur saga-7.8.2_src/saga-gis/src/saga_core/saga_api/saga_api.vcxproj ../saga
    </PropertyGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
    <ImportGroup Label="ExtensionSettings">
+@@ -126,7 +126,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31ud.lib;wxbase31ud_net.lib;wxbase31ud_xml.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32u.lib;wxbase32ud_net.lib;wxbase32ud_xml.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN_32)/lib/vc_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -203,7 +203,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31u.lib;wxbase31u_net.lib;wxbase31u_xml.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32u.lib;wxbase32u_net.lib;wxbase32u_xml.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN_32)/lib/vc_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -278,7 +278,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31ud.lib;wxbase31ud_net.lib;wxbase31ud_xml.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32ud.lib;wxbase32ud_net.lib;wxbase32ud_xml.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN)/lib/vc_x64_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -354,7 +354,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31u.lib;wxbase31u_net.lib;wxbase31u_xml.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32u.lib;wxbase32u_net.lib;wxbase32u_xml.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN)/lib/vc_x64_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -900,4 +900,4 @@
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+   <ImportGroup Label="ExtensionTargets">
+   </ImportGroup>
+-</Project>
+\ No newline at end of file
++</Project>
 diff -ur saga-7.8.2_src/saga-gis/src/saga_core/saga_cmd/saga_cmd.vcxproj ../saga-7.8.2_src/saga-gis/src/saga_core/saga_cmd/saga_cmd.vcxproj
 --- saga-7.8.2_src/saga-gis/src/saga_core/saga_cmd/saga_cmd.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/saga_core/saga_cmd/saga_cmd.vcxproj	2021-02-18 14:03:30.755200600 +0100
++++ ../saga-7.8.2_src/saga-gis/src/saga_core/saga_cmd/saga_cmd.vcxproj	2023-03-19 18:06:59.544971200 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>Application</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -527,9 +609,52 @@ diff -ur saga-7.8.2_src/saga-gis/src/saga_core/saga_cmd/saga_cmd.vcxproj ../saga
    </PropertyGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
    <ImportGroup Label="ExtensionSettings">
+@@ -125,7 +125,7 @@
+       <AdditionalIncludeDirectories>.\..\..\include;.\..\..\lib\vc_lib\mswd;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31ud.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32ud.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN_32)/lib/vc_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -174,7 +174,7 @@
+       <AdditionalIncludeDirectories>.\..\..\include;.\..\..\lib\vc_lib\msw;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31u.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32u.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN_32)/lib/vc_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -224,7 +224,7 @@
+       <AdditionalIncludeDirectories>.\..\..\include;.\..\..\lib\vc_lib\mswd;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31ud.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32ud.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN)/lib/vc_x64_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -273,7 +273,7 @@
+       <AdditionalIncludeDirectories>.\..\..\include;.\..\..\lib\vc_lib\msw;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31u.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32u.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN)/lib/vc_x64_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -344,4 +344,4 @@
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+   <ImportGroup Label="ExtensionTargets">
+   </ImportGroup>
+-</Project>
+\ No newline at end of file
++</Project>
 diff -ur saga-7.8.2_src/saga-gis/src/saga_core/saga_gdi/saga_gdi.vcxproj ../saga-7.8.2_src/saga-gis/src/saga_core/saga_gdi/saga_gdi.vcxproj
 --- saga-7.8.2_src/saga-gis/src/saga_core/saga_gdi/saga_gdi.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/saga_core/saga_gdi/saga_gdi.vcxproj	2021-02-18 14:03:30.757200200 +0100
++++ ../saga-7.8.2_src/saga-gis/src/saga_core/saga_gdi/saga_gdi.vcxproj	2023-03-19 18:06:59.547965100 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -560,9 +685,52 @@ diff -ur saga-7.8.2_src/saga-gis/src/saga_core/saga_gdi/saga_gdi.vcxproj ../saga
    </PropertyGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
    <ImportGroup Label="ExtensionSettings">
+@@ -126,7 +126,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxmsw31ud_core.lib;wxbase31ud.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxmsw32ud_core.lib;wxbase32ud.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN_32)/lib/vc_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -192,7 +192,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxmsw31u_core.lib;wxbase31u.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxmsw32u_core.lib;wxbase32u.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN_32)/lib/vc_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -256,7 +256,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxmsw31ud_core.lib;wxbase31ud.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxmsw32ud_core.lib;wxbase32ud.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN)/lib/vc_x64_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -321,7 +321,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxmsw31u_core.lib;wxbase31u.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxmsw32u_core.lib;wxbase32u.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN)/lib/vc_x64_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -382,4 +382,4 @@
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+   <ImportGroup Label="ExtensionTargets">
+   </ImportGroup>
+-</Project>
+\ No newline at end of file
++</Project>
 diff -ur saga-7.8.2_src/saga-gis/src/saga_core/saga_gdi/sgdi_helper.cpp ../saga-7.8.2_src/saga-gis/src/saga_core/saga_gdi/sgdi_helper.cpp
 --- saga-7.8.2_src/saga-gis/src/saga_core/saga_gdi/sgdi_helper.cpp	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/saga_core/saga_gdi/sgdi_helper.cpp	2021-02-18 14:03:30.759200500 +0100
++++ ../saga-7.8.2_src/saga-gis/src/saga_core/saga_gdi/sgdi_helper.cpp	2023-03-19 18:06:59.549959600 +0100
 @@ -419,7 +419,7 @@
  	}
  
@@ -574,7 +742,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/saga_core/saga_gdi/sgdi_helper.cpp ../saga-
  		{
 diff -ur saga-7.8.2_src/saga-gis/src/saga_core/saga_gui/saga_gui.vcxproj ../saga-7.8.2_src/saga-gis/src/saga_core/saga_gui/saga_gui.vcxproj
 --- saga-7.8.2_src/saga-gis/src/saga_core/saga_gui/saga_gui.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/saga_core/saga_gui/saga_gui.vcxproj	2021-02-18 14:03:30.760200400 +0100
++++ ../saga-7.8.2_src/saga-gis/src/saga_core/saga_gui/saga_gui.vcxproj	2023-03-19 18:06:59.551958600 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>Application</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -605,7 +773,43 @@ diff -ur saga-7.8.2_src/saga-gis/src/saga_core/saga_gui/saga_gui.vcxproj ../saga
    </PropertyGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
    <ImportGroup Label="ExtensionSettings">
-@@ -1351,6 +1351,10 @@
+@@ -133,7 +133,7 @@
+       <AdditionalIncludeDirectories>./../../../wxWidgets/include;./../../../wxWidgets/lib/vc_lib/msw;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31u_xml.lib;wxbase31u_net.lib;wxmsw31u_propgrid.lib;wxmsw31u_html.lib;wxmsw31u_aui.lib;wxmsw31u_adv.lib;wxmsw31u_core.lib;wxbase31u.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32u_xml.lib;wxbase32u_net.lib;wxmsw32u_propgrid.lib;wxmsw32u_html.lib;wxmsw32u_aui.lib;wxmsw32u_adv.lib;wxmsw32u_core.lib;wxbase32u.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN_32)/lib/vc_dll;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -204,7 +204,7 @@
+       <AdditionalIncludeDirectories>./../../../wxWidgets/include;./../../../wxWidgets/lib/vc_lib/mswd;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31ud_xml.lib;wxbase31ud_net.lib;wxmsw31ud_propgrid.lib;wxmsw31ud_html.lib;wxmsw31ud_aui.lib;wxmsw31ud_adv.lib;wxmsw31ud_core.lib;wxbase31ud.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32ud_xml.lib;wxbase32ud_net.lib;wxmsw32ud_propgrid.lib;wxmsw32ud_html.lib;wxmsw32ud_aui.lib;wxmsw32ud_adv.lib;wxmsw32ud_core.lib;wxbase32ud.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN_32)/lib/vc_dll;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -275,7 +275,7 @@
+       <AdditionalIncludeDirectories>./../../../wxWidgets/include;./../../../wxWidgets/lib/vc_lib/msw;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31u_xml.lib;wxbase31u_net.lib;wxmsw31u_propgrid.lib;wxmsw31u_html.lib;wxmsw31u_aui.lib;wxmsw31u_adv.lib;wxmsw31u_core.lib;wxbase31u.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32u_xml.lib;wxbase32u_net.lib;wxmsw32u_propgrid.lib;wxmsw32u_html.lib;wxmsw32u_aui.lib;wxmsw32u_adv.lib;wxmsw32u_core.lib;wxbase32u.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN)/lib/vc_x64_dll;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -346,7 +346,7 @@
+       <AdditionalIncludeDirectories>./../../../wxWidgets/include;./../../../wxWidgets/lib/vc_lib/mswd;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31ud_xml.lib;wxbase31ud_net.lib;wxmsw31ud_propgrid.lib;wxmsw31ud_html.lib;wxmsw31ud_aui.lib;wxmsw31ud_adv.lib;wxmsw31ud_core.lib;wxbase31ud.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32ud_xml.lib;wxbase32ud_net.lib;wxmsw32ud_propgrid.lib;wxmsw32ud_html.lib;wxmsw32ud_aui.lib;wxmsw32ud_adv.lib;wxmsw32ud_core.lib;wxbase32ud.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN)/lib/vc_x64_dll;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -1351,8 +1351,12 @@
      <ProjectReference Include="..\saga_api\saga_api.vcxproj">
        <Project>{2fecd6e9-b83b-4bc3-be78-9da2698e456b}</Project>
      </ProjectReference>
@@ -616,9 +820,13 @@ diff -ur saga-7.8.2_src/saga-gis/src/saga_core/saga_gui/saga_gui.vcxproj ../saga
    </ItemGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
+   </ImportGroup>
+-</Project>
+\ No newline at end of file
++</Project>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/climate/climate_tools/climate_tools.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/climate/climate_tools/climate_tools.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/climate/climate_tools/climate_tools.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/climate/climate_tools/climate_tools.vcxproj	2021-02-18 14:03:30.762200100 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/climate/climate_tools/climate_tools.vcxproj	2023-03-19 18:06:59.553961600 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -664,7 +872,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/climate/climate_tools/climate_tools.v
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/contrib/contrib_perego/contrib_perego.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/contrib/contrib_perego/contrib_perego.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/contrib/contrib_perego/contrib_perego.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/contrib/contrib_perego/contrib_perego.vcxproj	2021-02-18 14:03:30.764201000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/contrib/contrib_perego/contrib_perego.vcxproj	2023-03-19 18:06:59.555971800 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -710,7 +918,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/contrib/contrib_perego/contrib_perego
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/db/db_odbc/db_odbc.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/db/db_odbc/db_odbc.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/db/db_odbc/db_odbc.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/db/db_odbc/db_odbc.vcxproj	2021-02-18 14:03:30.765200400 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/db/db_odbc/db_odbc.vcxproj	2023-03-19 18:06:59.557958800 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -756,7 +964,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/db/db_odbc/db_odbc.vcxproj ../saga-7.
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/db/db_pgsql/db_pgsql.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/db/db_pgsql/db_pgsql.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/db/db_pgsql/db_pgsql.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/db/db_pgsql/db_pgsql.vcxproj	2021-02-18 14:03:30.767202300 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/db/db_pgsql/db_pgsql.vcxproj	2023-03-19 18:06:59.559958500 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -838,7 +1046,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/db/db_pgsql/db_pgsql.vcxproj ../saga-
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/docs/docs_html/docs_html.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/docs/docs_html/docs_html.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/docs/docs_html/docs_html.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/docs/docs_html/docs_html.vcxproj	2021-02-18 14:03:30.769204200 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/docs/docs_html/docs_html.vcxproj	2023-03-19 18:06:59.560958800 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -884,7 +1092,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/docs/docs_html/docs_html.vcxproj ../s
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/docs/docs_pdf/docs_pdf.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/docs/docs_pdf/docs_pdf.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/docs/docs_pdf/docs_pdf.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/docs/docs_pdf/docs_pdf.vcxproj	2021-02-18 14:03:30.771202400 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/docs/docs_pdf/docs_pdf.vcxproj	2023-03-19 18:06:59.562959900 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -948,7 +1156,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/docs/docs_pdf/docs_pdf.vcxproj ../sag
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/garden/garden_3d_viewer/garden_3d_viewer.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/garden/garden_3d_viewer/garden_3d_viewer.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/garden/garden_3d_viewer/garden_3d_viewer.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/garden/garden_3d_viewer/garden_3d_viewer.vcxproj	2021-02-18 14:03:30.773203400 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/garden/garden_3d_viewer/garden_3d_viewer.vcxproj	2023-03-19 18:14:38.298957700 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -979,7 +1187,43 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/garden/garden_3d_viewer/garden_3d_vie
    </PropertyGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
    <ImportGroup Label="ExtensionSettings">
-@@ -335,6 +335,16 @@
+@@ -126,7 +126,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31ud.lib;wxmsw31ud_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32ud.lib;wxmsw32ud_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN_32)\lib\vc_dll;..\..\..\..\bin\saga_vc_$(Platform)_d\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -178,7 +178,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31ud.lib;wxmsw31ud_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32ud.lib;wxmsw32ud_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN)\lib\vc_x64_dll;..\..\..\..\bin\saga_vc_$(Platform)_d\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -229,7 +229,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31u.lib;wxmsw31u_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32u.lib;wxmsw32u_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN_32)\lib\vc_dll;..\..\..\..\bin\saga_vc_$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -281,7 +281,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31u.lib;wxmsw31u_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32u.lib;wxmsw32u_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN)\lib\vc_x64_dll;..\..\..\..\bin\saga_vc_$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -335,7 +335,17 @@
      <ClCompile Include="3d_viewer_tin.cpp" />
      <ClCompile Include="MLB_Interface.cpp" />
    </ItemGroup>
@@ -996,9 +1240,12 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/garden/garden_3d_viewer/garden_3d_vie
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
+-</Project>
+\ No newline at end of file
++</Project>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/garden/garden_fractals/garden_fractals.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/garden/garden_fractals/garden_fractals.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/garden/garden_fractals/garden_fractals.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/garden/garden_fractals/garden_fractals.vcxproj	2021-02-18 14:03:30.775200700 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/garden/garden_fractals/garden_fractals.vcxproj	2023-03-19 18:06:59.566963700 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1044,7 +1291,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/garden/garden_fractals/garden_fractal
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/garden/garden_games/garden_games.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/garden/garden_games/garden_games.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/garden/garden_games/garden_games.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/garden/garden_games/garden_games.vcxproj	2021-02-18 14:03:30.777200500 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/garden/garden_games/garden_games.vcxproj	2023-03-19 18:06:59.568958800 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1090,7 +1337,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/garden/garden_games/garden_games.vcxp
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/garden/garden_learn_to_program/garden_learn_to_program.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/garden/garden_learn_to_program/garden_learn_to_program.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/garden/garden_learn_to_program/garden_learn_to_program.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/garden/garden_learn_to_program/garden_learn_to_program.vcxproj	2021-02-18 14:03:30.778201900 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/garden/garden_learn_to_program/garden_learn_to_program.vcxproj	2023-03-19 18:06:59.570959500 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1136,7 +1383,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/garden/garden_learn_to_program/garden
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/garden/garden_webservices/garden_webservices.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/garden/garden_webservices/garden_webservices.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/garden/garden_webservices/garden_webservices.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/garden/garden_webservices/garden_webservices.vcxproj	2021-02-18 14:03:30.780202000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/garden/garden_webservices/garden_webservices.vcxproj	2023-03-19 18:06:59.572962800 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1172,7 +1419,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/garden/garden_webservices/garden_webs
      </ResourceCompile>
      <Link>
 -      <AdditionalDependencies>libcurl_imp.lib;saga_api.lib;wxbase31ud.lib;wxbase31ud_net.lib;wxbase31ud_xml.lib;wxmsw31ud_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>libcurl.lib;saga_api.lib;wxbase31ud.lib;wxbase31ud_net.lib;wxbase31ud_xml.lib;wxmsw31ud_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>libcurl.lib;saga_api.lib;wxbase32ud.lib;wxbase32ud_net.lib;wxbase32ud_xml.lib;wxmsw32ud_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
        <SuppressStartupBanner>true</SuppressStartupBanner>
        <AdditionalLibraryDirectories>$(GDAL_32)\lib;$(WXWIN_32)\lib\vc_dll;..\..\..\..\bin\saga_vc_$(Platform)_d\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -1181,7 +1428,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/garden/garden_webservices/garden_webs
      </ResourceCompile>
      <Link>
 -      <AdditionalDependencies>libcurl_imp.lib;saga_api.lib;wxbase31ud.lib;wxbase31ud_net.lib;wxbase31ud_xml.lib;wxmsw31ud_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>libcurl.lib;saga_api.lib;wxbase31ud.lib;wxbase31ud_net.lib;wxbase31ud_xml.lib;wxmsw31ud_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>libcurl.lib;saga_api.lib;wxbase32ud.lib;wxbase32ud_net.lib;wxbase32ud_xml.lib;wxmsw32ud_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
        <SuppressStartupBanner>true</SuppressStartupBanner>
        <AdditionalLibraryDirectories>$(GDAL)\lib;$(WXWIN)\lib\vc_x64_dll;..\..\..\..\bin\saga_vc_$(Platform)_d\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -1190,7 +1437,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/garden/garden_webservices/garden_webs
      </ResourceCompile>
      <Link>
 -      <AdditionalDependencies>libcurl_imp.lib;saga_api.lib;wxbase31u.lib;wxbase31u_net.lib;wxbase31u_xml.lib;wxmsw31u_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>libcurl.lib;saga_api.lib;wxbase31u.lib;wxbase31u_net.lib;wxbase31u_xml.lib;wxmsw31u_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>libcurl.lib;saga_api.lib;wxbase32u.lib;wxbase32u_net.lib;wxbase32u_xml.lib;wxmsw32u_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
        <SuppressStartupBanner>true</SuppressStartupBanner>
        <AdditionalLibraryDirectories>$(GDAL_32)\lib;$(WXWIN_32)\lib\vc_dll;..\..\..\..\bin\saga_vc_$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -1199,11 +1446,11 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/garden/garden_webservices/garden_webs
      </ResourceCompile>
      <Link>
 -      <AdditionalDependencies>libcurl_imp.lib;saga_api.lib;wxbase31u.lib;wxbase31u_net.lib;wxbase31u_xml.lib;wxmsw31u_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>libcurl.lib;saga_api.lib;wxbase31u.lib;wxbase31u_net.lib;wxbase31u_xml.lib;wxmsw31u_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>libcurl.lib;saga_api.lib;wxbase32u.lib;wxbase32u_net.lib;wxbase32u_xml.lib;wxmsw32u_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
        <SuppressStartupBanner>true</SuppressStartupBanner>
        <AdditionalLibraryDirectories>$(GDAL)\lib;$(WXWIN)\lib\vc_x64_dll;..\..\..\..\bin\saga_vc_$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-@@ -337,6 +337,12 @@
+@@ -337,7 +337,13 @@
      <ClInclude Include="sg_curl.h" />
      <ClInclude Include="wms_import.h" />
    </ItemGroup>
@@ -1216,9 +1463,12 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/garden/garden_webservices/garden_webs
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
+-</Project>
+\ No newline at end of file
++</Project>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/grid/grid_analysis/grid_analysis.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_analysis/grid_analysis.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/grid/grid_analysis/grid_analysis.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_analysis/grid_analysis.vcxproj	2021-02-18 14:03:30.782200600 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_analysis/grid_analysis.vcxproj	2023-03-19 18:06:59.574959200 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1264,7 +1514,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/grid/grid_analysis/grid_analysis.vcxp
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/grid/grid_calculus/grid_calculus.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_calculus/grid_calculus.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/grid/grid_calculus/grid_calculus.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_calculus/grid_calculus.vcxproj	2021-02-18 14:03:30.784200500 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_calculus/grid_calculus.vcxproj	2023-03-19 18:06:59.575961100 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1310,7 +1560,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/grid/grid_calculus/grid_calculus.vcxp
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/grid/grid_calculus_bsl/grid_calculus_bsl.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_calculus_bsl/grid_calculus_bsl.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/grid/grid_calculus_bsl/grid_calculus_bsl.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_calculus_bsl/grid_calculus_bsl.vcxproj	2021-02-18 14:03:30.786204200 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_calculus_bsl/grid_calculus_bsl.vcxproj	2023-03-19 18:06:59.577960400 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1356,7 +1606,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/grid/grid_calculus_bsl/grid_calculus_
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/grid/grid_filter/grid_filter.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_filter/grid_filter.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/grid/grid_filter/grid_filter.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_filter/grid_filter.vcxproj	2021-02-18 14:03:30.788234300 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_filter/grid_filter.vcxproj	2023-03-19 18:06:59.579959300 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1402,7 +1652,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/grid/grid_filter/grid_filter.vcxproj 
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/grid/grid_gridding/grid_gridding.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_gridding/grid_gridding.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/grid/grid_gridding/grid_gridding.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_gridding/grid_gridding.vcxproj	2021-02-18 14:03:30.789232000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_gridding/grid_gridding.vcxproj	2023-03-19 18:06:59.581958800 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1448,7 +1698,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/grid/grid_gridding/grid_gridding.vcxp
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/grid/grid_spline/grid_spline.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_spline/grid_spline.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/grid/grid_spline/grid_spline.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_spline/grid_spline.vcxproj	2021-02-18 14:03:30.791231800 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_spline/grid_spline.vcxproj	2023-03-19 18:06:59.583959600 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1494,7 +1744,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/grid/grid_spline/grid_spline.vcxproj 
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/grid/grid_tools/grid_tools.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_tools/grid_tools.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/grid/grid_tools/grid_tools.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_tools/grid_tools.vcxproj	2021-02-18 14:03:30.793222800 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_tools/grid_tools.vcxproj	2023-03-19 18:06:59.584960000 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1540,7 +1790,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/grid/grid_tools/grid_tools.vcxproj ..
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/grid/grid_visualisation/grid_visualisation.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_visualisation/grid_visualisation.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/grid/grid_visualisation/grid_visualisation.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_visualisation/grid_visualisation.vcxproj	2021-02-18 14:03:30.795229500 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/grid/grid_visualisation/grid_visualisation.vcxproj	2023-03-19 18:06:59.587959700 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1586,7 +1836,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/grid/grid_visualisation/grid_visualis
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/grid/grids_tools/grids_tools.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/grid/grids_tools/grids_tools.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/grid/grids_tools/grids_tools.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/grid/grids_tools/grids_tools.vcxproj	2021-02-18 14:03:30.797200900 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/grid/grids_tools/grids_tools.vcxproj	2023-03-19 18:06:59.589960600 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1632,7 +1882,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/grid/grids_tools/grids_tools.vcxproj 
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_classification/imagery_classification.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_classification/imagery_classification.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_classification/imagery_classification.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_classification/imagery_classification.vcxproj	2021-02-18 14:03:30.798202200 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_classification/imagery_classification.vcxproj	2023-03-19 18:06:59.592960500 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1678,7 +1928,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_classification/imager
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_isocluster/imagery_isocluster.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_isocluster/imagery_isocluster.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_isocluster/imagery_isocluster.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_isocluster/imagery_isocluster.vcxproj	2021-02-18 14:03:30.800202200 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_isocluster/imagery_isocluster.vcxproj	2023-03-19 18:06:59.594959000 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1724,7 +1974,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_isocluster/imagery_is
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_maxent/imagery_maxent.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_maxent/imagery_maxent.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_maxent/imagery_maxent.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_maxent/imagery_maxent.vcxproj	2021-02-18 14:03:30.802202600 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_maxent/imagery_maxent.vcxproj	2023-03-19 18:06:59.596958800 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1770,7 +2020,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_maxent/imagery_maxent
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_opencv/imagery_opencv.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_opencv/imagery_opencv.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_opencv/imagery_opencv.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_opencv/imagery_opencv.vcxproj	2021-02-18 14:03:30.804202000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_opencv/imagery_opencv.vcxproj	2023-03-19 18:06:59.598958800 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1816,7 +2066,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_opencv/imagery_opencv
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_photogrammetry/imagery_photogrammetry.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_photogrammetry/imagery_photogrammetry.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_photogrammetry/imagery_photogrammetry.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_photogrammetry/imagery_photogrammetry.vcxproj	2021-02-18 14:03:30.806202800 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_photogrammetry/imagery_photogrammetry.vcxproj	2023-03-19 18:06:59.599959200 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1862,7 +2112,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_photogrammetry/imager
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_segmentation/imagery_segmentation.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_segmentation/imagery_segmentation.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_segmentation/imagery_segmentation.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_segmentation/imagery_segmentation.vcxproj	2021-02-18 14:03:30.808202500 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_segmentation/imagery_segmentation.vcxproj	2023-03-19 18:06:59.601959400 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1908,7 +2158,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_segmentation/imagery_
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_svm/imagery_svm.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_svm/imagery_svm.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_svm/imagery_svm.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_svm/imagery_svm.vcxproj	2021-02-18 14:03:30.811205900 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_svm/imagery_svm.vcxproj	2023-03-19 18:06:59.603962600 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -1954,7 +2204,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_svm/imagery_svm.vcxpr
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_tools/imagery_tools.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_tools/imagery_tools.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_tools/imagery_tools.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_tools/imagery_tools.vcxproj	2021-02-18 14:03:30.814210500 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_tools/imagery_tools.vcxproj	2023-03-19 18:06:59.605976700 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2000,7 +2250,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_tools/imagery_tools.v
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_vigra/imagery_vigra.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_vigra/imagery_vigra.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_vigra/imagery_vigra.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_vigra/imagery_vigra.vcxproj	2021-02-18 14:03:30.816202300 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_vigra/imagery_vigra.vcxproj	2023-03-19 18:06:59.607961800 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2046,7 +2296,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/imagery/imagery_vigra/imagery_vigra.v
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_esri_e00/io_esri_e00.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/io/io_esri_e00/io_esri_e00.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/io/io_esri_e00/io_esri_e00.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_esri_e00/io_esri_e00.vcxproj	2021-02-18 14:03:30.819206200 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_esri_e00/io_esri_e00.vcxproj	2023-03-19 18:06:59.610959200 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2092,7 +2342,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_esri_e00/io_esri_e00.vcxproj ..
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_gdal/io_gdal.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/io/io_gdal/io_gdal.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/io/io_gdal/io_gdal.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_gdal/io_gdal.vcxproj	2021-02-18 14:03:30.820206100 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_gdal/io_gdal.vcxproj	2023-03-19 18:06:59.613958900 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2138,7 +2388,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_gdal/io_gdal.vcxproj ../saga-7.
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_gps/io_gps.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/io/io_gps/io_gps.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/io/io_gps/io_gps.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_gps/io_gps.vcxproj	2021-02-18 14:03:30.822205800 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_gps/io_gps.vcxproj	2023-03-19 18:06:59.615958700 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2184,7 +2434,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_gps/io_gps.vcxproj ../saga-7.8.
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_grid/io_grid.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/io/io_grid/io_grid.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/io/io_grid/io_grid.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_grid/io_grid.vcxproj	2021-02-18 14:03:30.824205800 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_grid/io_grid.vcxproj	2023-03-19 18:06:59.618958700 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2230,7 +2480,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_grid/io_grid.vcxproj ../saga-7.
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_grid_image/io_grid_image.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/io/io_grid_image/io_grid_image.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/io/io_grid_image/io_grid_image.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_grid_image/io_grid_image.vcxproj	2021-02-18 14:03:30.825205800 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_grid_image/io_grid_image.vcxproj	2023-03-19 18:06:59.620958700 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2261,7 +2511,43 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_grid_image/io_grid_image.vcxpro
    </PropertyGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
    <ImportGroup Label="ExtensionSettings">
-@@ -329,6 +329,12 @@
+@@ -126,7 +126,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31ud.lib;wxmsw31ud_core.lib;saga_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32ud.lib;wxmsw32ud_core.lib;saga_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN_32)\lib\vc_dll;..\..\..\..\bin\saga_vc_$(Platform)_d\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -178,7 +178,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31ud.lib;wxmsw31ud_core.lib;saga_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32ud.lib;wxmsw32ud_core.lib;saga_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN)\lib\vc_x64_dll;..\..\..\..\bin\saga_vc_$(Platform)_d\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -229,7 +229,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31u.lib;wxmsw31u_core.lib;saga_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32u.lib;wxmsw32u_core.lib;saga_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN_32)\lib\vc_dll;..\..\..\..\bin\saga_vc_$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -281,7 +281,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31u.lib;wxmsw31u_core.lib;saga_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32u.lib;wxmsw32u_core.lib;saga_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN)\lib\vc_x64_dll;..\..\..\..\bin\saga_vc_$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -329,7 +329,13 @@
      <ClInclude Include="..\..\..\saga_core\saga_api\table.h" />
      <ClInclude Include="..\..\..\saga_core\saga_api\tin.h" />
    </ItemGroup>
@@ -2274,9 +2560,12 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_grid_image/io_grid_image.vcxpro
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
+-</Project>
+\ No newline at end of file
++</Project>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_pdal/io_pdal.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/io/io_pdal/io_pdal.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/io/io_pdal/io_pdal.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_pdal/io_pdal.vcxproj	2021-02-18 14:03:30.827206000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_pdal/io_pdal.vcxproj	2023-03-19 18:06:59.623960900 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2307,9 +2596,52 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_pdal/io_pdal.vcxproj ../saga-7.
    </PropertyGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
    <ImportGroup Label="ExtensionSettings">
+@@ -126,7 +126,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>saga_api.lib;pdal_util.lib;pdalcpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>saga_api.lib;pdal_util.lib;pdalcpp.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(PDAL_32)\lib;..\..\..\..\bin\saga_vc_$(Platform)_d\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -178,7 +178,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>saga_api.lib;pdal_util.lib;pdalcpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>saga_api.lib;pdal_util.lib;pdalcpp.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(PDAL)\lib;..\..\..\..\bin\saga_vc_$(Platform)_d\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -229,7 +229,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>saga_api.lib;pdal_util.lib;pdalcpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>saga_api.lib;pdal_util.lib;pdalcpp.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(PDAL_32)\lib;..\..\..\..\bin\saga_vc_$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -281,7 +281,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>saga_api.lib;pdal_util.lib;pdalcpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>saga_api.lib;pdal_util.lib;pdalcpp.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(PDAL)\lib;..\..\..\..\bin\saga_vc_$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -327,4 +327,4 @@
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+   <ImportGroup Label="ExtensionTargets">
+   </ImportGroup>
+-</Project>
+\ No newline at end of file
++</Project>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_shapes/io_shapes.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/io/io_shapes/io_shapes.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/io/io_shapes/io_shapes.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_shapes/io_shapes.vcxproj	2021-02-18 14:03:30.829206000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_shapes/io_shapes.vcxproj	2023-03-19 18:06:59.625960300 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2355,7 +2687,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_shapes/io_shapes.vcxproj ../sag
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_shapes_dxf/io_shapes_dxf.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/io/io_shapes_dxf/io_shapes_dxf.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/io/io_shapes_dxf/io_shapes_dxf.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_shapes_dxf/io_shapes_dxf.vcxproj	2021-02-18 14:03:30.831207800 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_shapes_dxf/io_shapes_dxf.vcxproj	2023-03-19 18:06:59.628959600 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2401,7 +2733,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_shapes_dxf/io_shapes_dxf.vcxpro
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_shapes_las/io_shapes_las.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/io/io_shapes_las/io_shapes_las.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/io/io_shapes_las/io_shapes_las.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_shapes_las/io_shapes_las.vcxproj	2021-02-18 14:03:30.833207200 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_shapes_las/io_shapes_las.vcxproj	2023-03-19 18:06:59.631959200 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2447,7 +2779,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_shapes_las/io_shapes_las.vcxpro
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_table/io_table.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/io/io_table/io_table.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/io/io_table/io_table.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_table/io_table.vcxproj	2021-02-18 14:03:30.835203200 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_table/io_table.vcxproj	2023-03-19 18:06:59.634959200 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2493,7 +2825,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_table/io_table.vcxproj ../saga-
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_virtual/io_virtual.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/io/io_virtual/io_virtual.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/io/io_virtual/io_virtual.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_virtual/io_virtual.vcxproj	2021-02-18 14:03:30.837206000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_virtual/io_virtual.vcxproj	2023-03-19 18:06:59.637959700 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2539,7 +2871,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_virtual/io_virtual.vcxproj ../s
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_webservices/io_webservices.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/io/io_webservices/io_webservices.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/io/io_webservices/io_webservices.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_webservices/io_webservices.vcxproj	2021-02-18 14:03:30.838227300 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/io/io_webservices/io_webservices.vcxproj	2023-03-19 18:14:23.452114900 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2575,7 +2907,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_webservices/io_webservices.vcxp
      </ResourceCompile>
      <Link>
 -      <AdditionalDependencies>libcurl_imp.lib;saga_api.lib;wxbase31ud.lib;wxbase31ud_net.lib;wxbase31ud_xml.lib;wxmsw31ud_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>libcurl.lib;saga_api.lib;wxbase31ud.lib;wxbase31ud_net.lib;wxbase31ud_xml.lib;wxmsw31ud_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>libcurl.lib;saga_api.lib;wxbase32ud.lib;wxbase32ud_net.lib;wxbase32ud_xml.lib;wxmsw32ud_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
        <SuppressStartupBanner>true</SuppressStartupBanner>
        <AdditionalLibraryDirectories>$(GDAL_32)\lib;$(WXWIN_32)\lib\vc_dll;..\..\..\..\bin\saga_vc_$(Platform)_d\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -2584,7 +2916,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_webservices/io_webservices.vcxp
      </ResourceCompile>
      <Link>
 -      <AdditionalDependencies>libcurl_imp.lib;saga_api.lib;wxbase31ud.lib;wxbase31ud_net.lib;wxbase31ud_xml.lib;wxmsw31ud_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>libcurl.lib;saga_api.lib;wxbase31ud.lib;wxbase31ud_net.lib;wxbase31ud_xml.lib;wxmsw31ud_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>libcurl.lib;saga_api.lib;wxbase32ud.lib;wxbase32ud_net.lib;wxbase32ud_xml.lib;wxmsw32ud_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
        <SuppressStartupBanner>true</SuppressStartupBanner>
        <AdditionalLibraryDirectories>$(GDAL)\lib;$(WXWIN)\lib\vc_x64_dll;..\..\..\..\bin\saga_vc_$(Platform)_d\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -2593,7 +2925,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_webservices/io_webservices.vcxp
      </ResourceCompile>
      <Link>
 -      <AdditionalDependencies>libcurl_imp.lib;saga_api.lib;wxbase31u.lib;wxbase31u_net.lib;wxbase31u_xml.lib;wxmsw31u_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>libcurl.lib;saga_api.lib;wxbase31u.lib;wxbase31u_net.lib;wxbase31u_xml.lib;wxmsw31u_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>libcurl.lib;saga_api.lib;wxbase32u.lib;wxbase32u_net.lib;wxbase32u_xml.lib;wxmsw32u_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
        <SuppressStartupBanner>true</SuppressStartupBanner>
        <AdditionalLibraryDirectories>$(GDAL_32)\lib;$(WXWIN_32)\lib\vc_dll;..\..\..\..\bin\saga_vc_$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -2602,13 +2934,20 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_webservices/io_webservices.vcxp
      </ResourceCompile>
      <Link>
 -      <AdditionalDependencies>libcurl_imp.lib;saga_api.lib;wxbase31u.lib;wxbase31u_net.lib;wxbase31u_xml.lib;wxmsw31u_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>libcurl.lib;saga_api.lib;wxbase31u.lib;wxbase31u_net.lib;wxbase31u_xml.lib;wxmsw31u_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>libcurl.lib;saga_api.lib;wxbase32u.lib;wxbase32u_net.lib;wxbase32u_xml.lib;wxmsw32u_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
        <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
        <SuppressStartupBanner>true</SuppressStartupBanner>
        <AdditionalLibraryDirectories>$(GDAL)\lib;$(WXWIN)\lib\vc_x64_dll;..\..\..\..\bin\saga_vc_$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -329,4 +329,4 @@
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+   <ImportGroup Label="ExtensionTargets">
+   </ImportGroup>
+-</Project>
+\ No newline at end of file
++</Project>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/pointcloud/pointcloud_tools/pointcloud_tools.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/pointcloud/pointcloud_tools/pointcloud_tools.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/pointcloud/pointcloud_tools/pointcloud_tools.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/pointcloud/pointcloud_tools/pointcloud_tools.vcxproj	2021-02-18 14:03:30.840227000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/pointcloud/pointcloud_tools/pointcloud_tools.vcxproj	2023-03-19 18:06:59.643960000 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2654,7 +2993,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/pointcloud/pointcloud_tools/pointclou
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/pointcloud/pointcloud_viewer/pointcloud_viewer.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/pointcloud/pointcloud_viewer/pointcloud_viewer.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/pointcloud/pointcloud_viewer/pointcloud_viewer.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/pointcloud/pointcloud_viewer/pointcloud_viewer.vcxproj	2021-02-18 14:03:30.842227900 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/pointcloud/pointcloud_viewer/pointcloud_viewer.vcxproj	2023-03-19 18:06:59.647960400 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2685,7 +3024,43 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/pointcloud/pointcloud_viewer/pointclo
    </PropertyGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
    <ImportGroup Label="ExtensionSettings">
-@@ -340,6 +340,16 @@
+@@ -126,7 +126,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31ud.lib;wxmsw31ud_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32ud.lib;wxmsw32ud_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN_32)\lib\vc_dll;..\..\..\..\bin\saga_vc_$(Platform)_d\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -178,7 +178,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31ud.lib;wxmsw31ud_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32ud.lib;wxmsw32ud_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN)\lib\vc_x64_dll;..\..\..\..\bin\saga_vc_$(Platform)_d\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -229,7 +229,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31u.lib;wxmsw31u_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32u.lib;wxmsw32u_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN_32)\lib\vc_dll;..\..\..\..\bin\saga_vc_$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -281,7 +281,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31u.lib;wxmsw31u_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32u.lib;wxmsw32u_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN)\lib\vc_x64_dll;..\..\..\..\bin\saga_vc_$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -340,7 +340,17 @@
      <ClInclude Include="points_view_extent.h" />
      <ClInclude Include="points_view_module.h" />
    </ItemGroup>
@@ -2702,9 +3077,12 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/pointcloud/pointcloud_viewer/pointclo
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
+-</Project>
+\ No newline at end of file
++</Project>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/projection/pj_georeference/pj_georeference.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/projection/pj_georeference/pj_georeference.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/projection/pj_georeference/pj_georeference.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/projection/pj_georeference/pj_georeference.vcxproj	2021-02-18 14:03:30.843227100 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/projection/pj_georeference/pj_georeference.vcxproj	2023-03-19 18:06:59.649960000 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2750,7 +3128,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/projection/pj_georeference/pj_georefe
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/projection/pj_geotrans/pj_geotrans.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/projection/pj_geotrans/pj_geotrans.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/projection/pj_geotrans/pj_geotrans.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/projection/pj_geotrans/pj_geotrans.vcxproj	2021-02-18 14:03:30.845227300 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/projection/pj_geotrans/pj_geotrans.vcxproj	2023-03-19 18:06:59.650960100 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2796,7 +3174,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/projection/pj_geotrans/pj_geotrans.vc
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/projection/pj_proj4/pj_proj4.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/projection/pj_proj4/pj_proj4.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/projection/pj_proj4/pj_proj4.vcxproj	2020-11-26 18:06:34.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/projection/pj_proj4/pj_proj4.vcxproj	2021-02-18 14:03:30.847227200 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/projection/pj_proj4/pj_proj4.vcxproj	2023-03-19 18:06:59.652973100 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2878,7 +3256,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/projection/pj_proj4/pj_proj4.vcxproj 
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/riegl/riegl_io_rdb2_import/riegl_io_rdb2_import.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/riegl/riegl_io_rdb2_import/riegl_io_rdb2_import.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/riegl/riegl_io_rdb2_import/riegl_io_rdb2_import.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/riegl/riegl_io_rdb2_import/riegl_io_rdb2_import.vcxproj	2021-02-18 14:03:30.848227200 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/riegl/riegl_io_rdb2_import/riegl_io_rdb2_import.vcxproj	2023-03-19 18:06:59.655962000 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2924,7 +3302,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/riegl/riegl_io_rdb2_import/riegl_io_r
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_grid/shapes_grid.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_grid/shapes_grid.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_grid/shapes_grid.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_grid/shapes_grid.vcxproj	2021-02-18 14:03:30.851202800 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_grid/shapes_grid.vcxproj	2023-03-19 18:06:59.657960500 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -2970,7 +3348,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_grid/shapes_grid.vcxpro
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_lines/shapes_lines.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_lines/shapes_lines.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_lines/shapes_lines.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_lines/shapes_lines.vcxproj	2021-02-18 14:03:30.854206600 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_lines/shapes_lines.vcxproj	2023-03-19 18:06:59.659959800 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3016,7 +3394,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_lines/shapes_lines.vcxp
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_points/shapes_points.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_points/shapes_points.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_points/shapes_points.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_points/shapes_points.vcxproj	2021-02-18 14:03:30.855206000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_points/shapes_points.vcxproj	2023-03-19 18:06:59.660960400 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3062,7 +3440,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_points/shapes_points.vc
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_polygons/shapes_polygons.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_polygons/shapes_polygons.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_polygons/shapes_polygons.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_polygons/shapes_polygons.vcxproj	2021-02-18 14:03:30.857206500 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_polygons/shapes_polygons.vcxproj	2023-03-19 18:06:59.662960200 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3108,7 +3486,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_polygons/shapes_polygon
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_tools/shapes_tools.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_tools/shapes_tools.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_tools/shapes_tools.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_tools/shapes_tools.vcxproj	2021-02-18 14:03:30.859206200 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_tools/shapes_tools.vcxproj	2023-03-19 18:06:59.664960100 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3154,7 +3532,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_tools/shapes_tools.vcxp
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_transect/shapes_transect.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_transect/shapes_transect.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_transect/shapes_transect.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_transect/shapes_transect.vcxproj	2021-02-18 14:03:30.860205800 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_transect/shapes_transect.vcxproj	2023-03-19 18:06:59.666960000 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3200,7 +3578,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/shapes/shapes_transect/shapes_transec
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_air_flow/sim_air_flow.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_air_flow/sim_air_flow.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/simulation/sim_air_flow/sim_air_flow.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_air_flow/sim_air_flow.vcxproj	2021-02-18 14:03:30.862206000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_air_flow/sim_air_flow.vcxproj	2023-03-19 18:06:59.667960300 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3233,7 +3611,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_air_flow/sim_air_flow.
    <ImportGroup Label="ExtensionSettings">
 diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_cellular_automata/sim_cellular_automata.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_cellular_automata/sim_cellular_automata.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/simulation/sim_cellular_automata/sim_cellular_automata.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_cellular_automata/sim_cellular_automata.vcxproj	2021-02-18 14:03:30.864206500 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_cellular_automata/sim_cellular_automata.vcxproj	2023-03-19 18:06:59.669960200 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3279,7 +3657,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_cellular_automata/sim_
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_ecosystems_hugget/sim_ecosystems_hugget.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_ecosystems_hugget/sim_ecosystems_hugget.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/simulation/sim_ecosystems_hugget/sim_ecosystems_hugget.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_ecosystems_hugget/sim_ecosystems_hugget.vcxproj	2021-02-18 14:03:30.866206700 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_ecosystems_hugget/sim_ecosystems_hugget.vcxproj	2023-03-19 18:06:59.671961000 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3325,7 +3703,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_ecosystems_hugget/sim_
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_erosion/sim_erosion.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_erosion/sim_erosion.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/simulation/sim_erosion/sim_erosion.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_erosion/sim_erosion.vcxproj	2021-02-18 14:03:30.867206200 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_erosion/sim_erosion.vcxproj	2023-03-19 18:06:59.673960300 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3371,7 +3749,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_erosion/sim_erosion.vc
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_fire_spreading/sim_fire_spreading.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_fire_spreading/sim_fire_spreading.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/simulation/sim_fire_spreading/sim_fire_spreading.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_fire_spreading/sim_fire_spreading.vcxproj	2021-02-18 14:03:30.869207600 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_fire_spreading/sim_fire_spreading.vcxproj	2023-03-19 18:06:59.675959900 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3417,7 +3795,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_fire_spreading/sim_fir
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_geomorphology/sim_geomorphology.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_geomorphology/sim_geomorphology.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/simulation/sim_geomorphology/sim_geomorphology.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_geomorphology/sim_geomorphology.vcxproj	2021-02-18 14:03:30.871206000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_geomorphology/sim_geomorphology.vcxproj	2023-03-19 18:06:59.676960200 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3463,7 +3841,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_geomorphology/sim_geom
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_hydrology/sim_hydrology.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_hydrology/sim_hydrology.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/simulation/sim_hydrology/sim_hydrology.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_hydrology/sim_hydrology.vcxproj	2021-02-18 14:03:30.872206000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_hydrology/sim_hydrology.vcxproj	2023-03-19 18:06:59.678960700 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3509,7 +3887,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_hydrology/sim_hydrolog
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_ihacres/sim_ihacres.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_ihacres/sim_ihacres.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/simulation/sim_ihacres/sim_ihacres.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_ihacres/sim_ihacres.vcxproj	2021-02-18 14:03:30.874206900 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_ihacres/sim_ihacres.vcxproj	2023-03-19 18:06:59.680967700 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3555,7 +3933,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_ihacres/sim_ihacres.vc
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_landscape_evolution/sim_landscape_evolution.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_landscape_evolution/sim_landscape_evolution.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/simulation/sim_landscape_evolution/sim_landscape_evolution.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_landscape_evolution/sim_landscape_evolution.vcxproj	2021-02-18 14:03:30.876204300 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_landscape_evolution/sim_landscape_evolution.vcxproj	2023-03-19 18:06:59.682960700 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3601,7 +3979,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_landscape_evolution/si
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_qm_of_esp/sim_qm_of_esp.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_qm_of_esp/sim_qm_of_esp.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/simulation/sim_qm_of_esp/sim_qm_of_esp.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_qm_of_esp/sim_qm_of_esp.vcxproj	2021-02-18 14:03:30.878205400 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_qm_of_esp/sim_qm_of_esp.vcxproj	2023-03-19 18:06:59.683960800 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3647,7 +4025,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_qm_of_esp/sim_qm_of_es
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_rivflow/sim_rivflow.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_rivflow/sim_rivflow.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/simulation/sim_rivflow/sim_rivflow.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_rivflow/sim_rivflow.vcxproj	2021-02-18 14:03:30.879204100 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/simulation/sim_rivflow/sim_rivflow.vcxproj	2023-03-19 18:06:59.685961500 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3693,7 +4071,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/simulation/sim_rivflow/sim_rivflow.vc
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_grid/statistics_grid.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_grid/statistics_grid.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_grid/statistics_grid.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_grid/statistics_grid.vcxproj	2021-02-18 14:03:30.881202700 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_grid/statistics_grid.vcxproj	2023-03-19 18:06:59.687960400 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3739,7 +4117,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_grid/statistics
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_kriging/statistics_kriging.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_kriging/statistics_kriging.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_kriging/statistics_kriging.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_kriging/statistics_kriging.vcxproj	2021-02-18 14:03:30.883204100 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_kriging/statistics_kriging.vcxproj	2023-03-19 18:06:59.689973900 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3770,7 +4148,43 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_kriging/statist
    </PropertyGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
    <ImportGroup Label="ExtensionSettings">
-@@ -351,6 +351,16 @@
+@@ -126,7 +126,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31ud.lib;wxmsw31ud_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32ud.lib;wxmsw32ud_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN_32)\lib\vc_dll;..\..\..\..\bin\saga_vc_$(Platform)_d\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -178,7 +178,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31ud.lib;wxmsw31ud_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32ud.lib;wxmsw32ud_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN)\lib\vc_x64_dll;..\..\..\..\bin\saga_vc_$(Platform)_d\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -229,7 +229,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31u.lib;wxmsw31u_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32u.lib;wxmsw32u_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN_32)\lib\vc_dll;..\..\..\..\bin\saga_vc_$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -281,7 +281,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31u.lib;wxmsw31u_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32u.lib;wxmsw32u_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN)\lib\vc_x64_dll;..\..\..\..\bin\saga_vc_$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -351,7 +351,17 @@
      <ClInclude Include="semivariogram.h" />
      <ClInclude Include="variogram_dialog.h" />
    </ItemGroup>
@@ -3787,9 +4201,12 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_kriging/statist
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
+-</Project>
+\ No newline at end of file
++</Project>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_points/statistics_points.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_points/statistics_points.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_points/statistics_points.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_points/statistics_points.vcxproj	2021-02-18 14:03:30.885202600 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_points/statistics_points.vcxproj	2023-03-19 18:06:59.691960200 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3835,7 +4252,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_points/statisti
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_regression/statistics_regression.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_regression/statistics_regression.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_regression/statistics_regression.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_regression/statistics_regression.vcxproj	2021-02-18 14:03:30.887202900 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_regression/statistics_regression.vcxproj	2023-03-19 18:06:59.692960400 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3881,7 +4298,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/statistics/statistics_regression/stat
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/table/table_calculus/table_calculus.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/table/table_calculus/table_calculus.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/table/table_calculus/table_calculus.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/table/table_calculus/table_calculus.vcxproj	2021-02-18 14:03:30.889203800 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/table/table_calculus/table_calculus.vcxproj	2023-03-19 18:06:59.694960700 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3927,7 +4344,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/table/table_calculus/table_calculus.v
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/table/table_tools/table_tools.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/table/table_tools/table_tools.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/table/table_tools/table_tools.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/table/table_tools/table_tools.vcxproj	2021-02-18 14:03:30.891202700 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/table/table_tools/table_tools.vcxproj	2023-03-19 18:06:59.696960500 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -3973,7 +4390,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/table/table_tools/table_tools.vcxproj
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_channels/ta_channels.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_channels/ta_channels.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_channels/ta_channels.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_channels/ta_channels.vcxproj	2021-02-18 14:03:30.893205300 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_channels/ta_channels.vcxproj	2023-03-19 18:06:59.698960500 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -4019,7 +4436,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_channels/ta_chann
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_cliffmetrics/ta_cliffmetrics.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_cliffmetrics/ta_cliffmetrics.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_cliffmetrics/ta_cliffmetrics.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_cliffmetrics/ta_cliffmetrics.vcxproj	2021-02-18 14:03:30.894203800 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_cliffmetrics/ta_cliffmetrics.vcxproj	2023-03-19 18:06:59.699960600 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -4052,7 +4469,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_cliffmetrics/ta_c
    <ImportGroup Label="ExtensionSettings">
 diff -ur saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_compound/ta_compound.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_compound/ta_compound.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_compound/ta_compound.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_compound/ta_compound.vcxproj	2021-02-18 14:03:30.896203900 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_compound/ta_compound.vcxproj	2023-03-19 18:06:59.701961600 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -4096,7 +4513,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_compound/ta_compo
      </ProjectReference>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_hydrology/ta_hydrology.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_hydrology/ta_hydrology.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_hydrology/ta_hydrology.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_hydrology/ta_hydrology.vcxproj	2021-02-18 14:03:30.898203500 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_hydrology/ta_hydrology.vcxproj	2023-03-19 18:06:59.703968900 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -4142,7 +4559,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_hydrology/ta_hydr
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_lighting/ta_lighting.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_lighting/ta_lighting.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_lighting/ta_lighting.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_lighting/ta_lighting.vcxproj	2021-02-18 14:03:30.900203800 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_lighting/ta_lighting.vcxproj	2023-03-19 18:06:59.705960400 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -4188,7 +4605,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_lighting/ta_light
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_morphometry/ta_morphometry.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_morphometry/ta_morphometry.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_morphometry/ta_morphometry.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_morphometry/ta_morphometry.vcxproj	2021-02-18 14:03:30.901204100 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_morphometry/ta_morphometry.vcxproj	2023-03-19 18:06:59.706960700 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -4234,7 +4651,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_morphometry/ta_mo
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_preprocessor/ta_preprocessor.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_preprocessor/ta_preprocessor.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_preprocessor/ta_preprocessor.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_preprocessor/ta_preprocessor.vcxproj	2021-02-18 14:03:30.903204000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_preprocessor/ta_preprocessor.vcxproj	2023-03-19 18:06:59.708960700 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -4280,7 +4697,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_preprocessor/ta_p
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_profiles/ta_profiles.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_profiles/ta_profiles.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_profiles/ta_profiles.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_profiles/ta_profiles.vcxproj	2021-02-18 14:03:30.905203500 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_profiles/ta_profiles.vcxproj	2023-03-19 18:06:59.710973800 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -4326,7 +4743,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_profiles/ta_profi
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_slope_stability/ta_slope_stability.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_slope_stability/ta_slope_stability.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_slope_stability/ta_slope_stability.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_slope_stability/ta_slope_stability.vcxproj	2021-02-18 14:03:30.907204800 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_slope_stability/ta_slope_stability.vcxproj	2023-03-19 18:06:59.712960500 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -4370,7 +4787,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/terrain_analysis/ta_slope_stability/t
      </ProjectReference>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/tin/tin_tools/tin_tools.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/tin/tin_tools/tin_tools.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/tin/tin_tools/tin_tools.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/tin/tin_tools/tin_tools.vcxproj	2021-02-18 14:03:30.909203900 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/tin/tin_tools/tin_tools.vcxproj	2023-03-19 18:06:59.713960700 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -4416,7 +4833,7 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/tin/tin_tools/tin_tools.vcxproj ../sa
    </ImportGroup>
 diff -ur saga-7.8.2_src/saga-gis/src/tools/tin/tin_viewer/tin_viewer.vcxproj ../saga-7.8.2_src/saga-gis/src/tools/tin/tin_viewer/tin_viewer.vcxproj
 --- saga-7.8.2_src/saga-gis/src/tools/tin/tin_viewer/tin_viewer.vcxproj	2020-11-26 18:06:36.000000000 +0100
-+++ ../saga-7.8.2_src/saga-gis/src/tools/tin/tin_viewer/tin_viewer.vcxproj	2021-02-18 14:03:30.910203000 +0100
++++ ../saga-7.8.2_src/saga-gis/src/tools/tin/tin_viewer/tin_viewer.vcxproj	2023-03-19 18:06:59.715967900 +0100
 @@ -26,25 +26,25 @@
      <ConfigurationType>DynamicLibrary</ConfigurationType>
      <UseOfMfc>false</UseOfMfc>
@@ -4447,7 +4864,43 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/tin/tin_viewer/tin_viewer.vcxproj ../
    </PropertyGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
    <ImportGroup Label="ExtensionSettings">
-@@ -338,6 +338,16 @@
+@@ -126,7 +126,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31ud.lib;wxmsw31ud_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32ud.lib;wxmsw32ud_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN_32)\lib\vc_dll;..\..\..\..\bin\saga_vc_$(Platform)_d\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -178,7 +178,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31ud.lib;wxmsw31ud_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32ud.lib;wxmsw32ud_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN)\lib\vc_x64_dll;..\..\..\..\bin\saga_vc_$(Platform)_d\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -229,7 +229,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31u.lib;wxmsw31u_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32u.lib;wxmsw32u_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN_32)\lib\vc_dll;..\..\..\..\bin\saga_vc_$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -281,7 +281,7 @@
+       <Culture>0x0407</Culture>
+     </ResourceCompile>
+     <Link>
+-      <AdditionalDependencies>wxbase31u.lib;wxmsw31u_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>wxbase32u.lib;wxmsw32u_core.lib;saga_api.lib;saga_gdi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+       <AdditionalLibraryDirectories>$(WXWIN)\lib\vc_x64_dll;..\..\..\..\bin\saga_vc_$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -338,7 +338,17 @@
      <ClInclude Include="tin_view_dialog.h" />
      <ClInclude Include="tin_view_module.h" />
    </ItemGroup>
@@ -4464,3 +4917,6 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/tin/tin_viewer/tin_viewer.vcxproj ../
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">
    </ImportGroup>
+-</Project>
+\ No newline at end of file
++</Project>

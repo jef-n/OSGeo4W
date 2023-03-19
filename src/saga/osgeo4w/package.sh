@@ -40,10 +40,12 @@ p=${P%$M}
 	rm -f $OSGEO4W_PWD/build.log
 
 	devenv saga.vc14.sln /UseEnv /Build "Release|x64" /Out $(cygpath -aw $OSGEO4W_PWD/build.log) ||
-	devenv saga.vc14.sln /UseEnv /Build "Release|x64" /Out $(cygpath -aw $OSGEO4W_PWD/build.log)
+	devenv saga.vc14.sln /UseEnv /Build "Release|x64" /Out $(cygpath -aw $OSGEO4W_PWD/build.log) ||
+	{ cat $OSGEO4W_PWD/build.log; false; }
 
 	cd dev_tools
-	devenv dev_tools.vc14.sln /UseEnv /Build "Release|x64" /Out $(cygpath -aw $OSGEO4W_PWD/build-dev.log)
+	devenv dev_tools.vc14.sln /UseEnv /Build "Release|x64" /Out $(cygpath -aw $OSGEO4W_PWD/build-dev.log) ||
+	{ cat $OSGEO4W_PWD/build-dev.log; false; }
 )
 
 mkdir -p install/{bin,etc/{postinstall,preremove},apps/$P}
