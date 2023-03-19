@@ -1,5 +1,5 @@
 export P=sqlite3
-export V=3.39.4
+export V=3.41.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
