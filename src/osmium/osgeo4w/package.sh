@@ -1,5 +1,5 @@
 export P=osmium
-export V=1.14.0
+export V=1.15.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="libosmium-devel protozero-devel boost-devel bzip2-devel zlib-devel lz4-devel expat-devel gdal-devel"
@@ -18,11 +18,11 @@ p=$P-tool
 	cmakeenv
 	ninjaenv
 
-	mkdir -p build install
-	cd build
-
 	export LIB="$(cygpath -am osgeo4w/lib);$LIB"
 	export INCLUDE="$(cygpath -am osgeo4w/include);$INCLUDE"
+
+	mkdir -p build install
+	cd build
 
 	cmake -G Ninja \
 		-D CMAKE_BUILD_TYPE=Release \
@@ -33,15 +33,9 @@ p=$P-tool
 		-D Boost_USE_STATIC_RUNTIME=OFF \
 		-D Boost_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/boost-1_74) \
 		-D Boost_LIBRARY_DIR="$(cygpath -am ../osgeo4w/lib)" \
-		-D OSMIUM_INCLUDE_DIR="$(cygpath -am ../osgeo4w/include)" \
-		-D PROTOZERO_INCLUDE_DIR="$(cygpath -am ../osgeo4w/include)" \
-		-D EXPAT_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 		-D EXPAT_LIBRARY=$(cygpath -am ../osgeo4w/lib/libexpat.lib) \
-		-D ZLIB_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 		-D ZLIB_LIBRARY_RELEASE=$(cygpath -am ../osgeo4w/lib/zlib.lib) \
-		-D BZIP2_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 		-D BZIP2_LIBRARY_RELEASE=$(cygpath -am ../osgeo4w/lib/libbz2.lib) \
-		-D LZ4_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 		-D LZ4_LIBRARY_RELEASE=$(cygpath -am ../osgeo4w/lib/lz4.lib) \
 		../../$p-$V
 	cmake --build .

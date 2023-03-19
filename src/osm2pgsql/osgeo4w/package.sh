@@ -1,8 +1,8 @@
 export P=osm2pgsql
-export V=1.6.0
+export V=1.8.1
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="expat-devel proj-devel bzip2-devel zlib-devel boost-devel libpq-devel wingetopt-devel"
+export BUILDDEPENDS="expat-devel proj-devel bzip2-devel zlib-devel boost-devel libpq-devel wingetopt-devel lua-devel"
 
 source ../../../scripts/build-helpers
 
@@ -26,13 +26,14 @@ startlog
 		-D CMAKE_BUILD_TYPE=Release \
 		-D CMAKE_INSTALL_PREFIX=../install \
 		-D CMAKE_CXX_STANDARD=17 \
-		-D WITH_LUA=OFF \
 		-D EXPAT_LIBRARY=$(cygpath -am ../osgeo4w/lib/libexpat.lib) \
 		-D EXPAT_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 		-D ZLIB_INCLUDE_DIR=$(cygpath -aw ../osgeo4w/include) \
 		-D ZLIB_LIBRARY=$(cygpath -aw ../osgeo4w/lib/zlib.lib) \
 		-D BZIP2_LIBRARIES=$(cygpath -am ../osgeo4w/lib/libbz2.lib) \
 		-D BZIP2_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
+		-D LUA_LIBRARIES=$(cygpath -am ../osgeo4w/lib/lua*.lib) \
+		-D LUA_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/lua*) \
 		-D Boost_USE_STATIC_LIBS=ON \
 		-D Boost_USE_MULTITHREADED=ON \
 		-D Boost_USE_STATIC_RUNTIME=OFF \
