@@ -1,5 +1,5 @@
 export P=python3-pdal
-export V=3.2.0
+export V=3.2.3
 export B=pip
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-pip python3-wheel python3-devel python3-setuptools python3-numpy python3-pybind11 python3-packaging python3-pyparsing pdal-devel"
