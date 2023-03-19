@@ -26,19 +26,19 @@ except:
         return p
 
 if 'OSGEO4W_ROOT' not in environ:
-    print("OSGEO4W_ROOT not set")
+    print("OSGEO4W_ROOT not set", file=sys.stderr)
     sys.exit(1)
 
 if 'MAINTAINER' not in environ:
-    print("MAINTAINER not set")
+    print("MAINTAINER not set", file=sys.stderr)
     sys.exit(1)
 
 if 'OSGEO4W_REP' not in environ:
-    print("OSGEO4W_REP not set")
+    print("OSGEO4W_REP not set", file=sys.stderr)
     sys.exit(1)
 
 if 'P' not in environ:
-    print("P not set")
+    print("P not set", file=sys.stderr)
     sys.exit(1)
 
 try:
@@ -47,7 +47,7 @@ except:
     rep = environ['OSGEO4W_REP'].replace(sep,'/')+'/'
 
 if not isdir(rep):
-    print("OSGEO4W repository not found at {}.".format(rep))
+    print(f"OSGEO4W repository not found at {rep}.", file=sys.stderr)
     sys.exit(1)
 
 o4wroot = GetLongPathName(environ['OSGEO4W_ROOT']).replace(sep,'/')+'/'
@@ -57,7 +57,7 @@ prefix = re.compile("^" + re.escape(o4wroot), re.IGNORECASE)
 
 pkg = environ["P"]
 if not pkg.startswith("python3-"):
-    print("{}: python3- prefix missing".format(pkg))
+    print(f"{pkg}: python3- prefix missing", file=sys.stderr)
     sys.exit(1)
 
 pkg = pkg[8:]
@@ -66,69 +66,57 @@ v = environ["V"]
 if 'wheel' in environ:
     pkgv = environ['wheel']
 else:
-    pkgv = pkg if v == "pip" else "{}=={}".format(pkg, v)
+    pkgv = pkg if v == "pip" else f"{pkg}=={v}"
 
-print("Packaging {}".format(pkgv))
+print(f"Packaging {pkgv}", file=sys.stderr)
 
 argv = ['python3', '-m', 'pip', '-v', 'install']
 argv.extend(sys.argv[1:])
 argv.append(pkgv)
-proc = subprocess.Popen(argv, stdout=subprocess.PIPE)
+print(f"PIP:{' '.join(argv)}", file=sys.stderr)
+proc = subprocess.Popen(argv, stdout=subprocess.PIPE, encoding="utf-8")
 if not proc:
-    print("{}: could not install.".format(pkgv))
+    print("{pkgv}: could not install.", file=sys.stderr)
     sys.exit(1)
 
 while True:
-    l = proc.stdout.readline()
-    if not l:
+    line = proc.stdout.readline()
+    if not line:
         break
 
-    try:
-        l = l.decode("utf-8")
-    except:
-        try:
-            l = l.decode("cp1252")
-        except:
-            pass
+    print(f"L:{line}", end='')
 
-    print("L:{}".format(l), end='')
-
-    m = re.search('Collecting (.*)==(.*) from', l)
+    m = re.search('Collecting (.*)==(.*) from', line)
     if m:
-        print("{} (Version {}) installed from {}".format(m.group(1), m.group(2), pkg))
+        print(f"{m.group(1)} (Version {m.group(2)}) installed from {pkg}", file=sys.stderr)
         pkg = m.group(1)
 
 proc.stdout.close()
 
-print("python3 -m pip show -f {0} >%TEMP%/{0}.metadata".format(pkg))
+print("python3 -m pip list", file=sys.stderr)
+system("python3 -m pip list")
+
+print("python3 -m pip show -f {0} >%TEMP%/{0}.metadata".format(pkg), file=sys.stderr)
 system("python3 -m pip show -f {0} >%TEMP%/{0}.metadata".format(pkg))
 
-proc = subprocess.Popen(['python3', '-m', 'pip', 'show', '-f', pkg], stdout=subprocess.PIPE)
+proc = subprocess.Popen(['python3', '-m', 'pip', 'show', '-f', pkg], stdout=subprocess.PIPE, encoding="utf-8")
 if not proc:
-    print("{}: Could not query package information.".format(pkg))
+    print(f"{pkg}: Could not query package information.", file=sys.stderr)
     sys.exit(1)
 
 props = {}
 
 while True:
-    l = proc.stdout.readline()
-    try:
-        l = l.decode("utf-8")
-    except:
-        try:
-            l = l.decode("cp1252")
-        except:
-            pass
-
-    if not l:
+    line = proc.stdout.readline()
+    if not line:
         break
 
-    l = l.rstrip()
-    if l == "---":
+    line = line.rstrip()
+    if line == "---":
         continue
 
-    if not l.startswith("  "):
-        m = re.search('(\S+):\s*(.*)', l)
+    if not line.startswith("  "):
+        m = re.search('(\S+):\s*(.*)', line)
         if m:
             section, val = m.group(1), m.group(2)
             if val == "":
@@ -137,16 +125,16 @@ while True:
             continue
     else:
         if not section:
-            print("{}: Line outside section: |{}|".format(pkg, l))
+            print(f"{pkg}: Line outside section: |{line}|", file=sys.stderr)
             sys.exit(1)
 
-        props[section].append(l[2:])
+        props[section].append(line[2:])
 
 proc.stdout.close()
 
 for p in ['Name', 'Version', 'Summary', 'Files', 'Requires', 'Location']:
     if p not in props:
-        print("{}: Required property {} not found.\nprops: {}".format(pkg, p, repr(props)))
+        print(f"{pkg}: Required property {p} not found.\nprops: {repr(props)}", file=sys.stderr)
         sys.exit(1)
 
 if not isinstance(props['Requires'], list):
@@ -154,19 +142,19 @@ if not isinstance(props['Requires'], list):
 
 for p in ['Files', 'Requires']:
     if not isinstance(props[p], list):
-        print("{}: Property {} should be a list. {}".format(pkg, p, repr(props[p])))
+        print(f"{pkg}: Property {p} should be a list. {repr(props[p])}", file=sys.stderr)
         sys.exit(1)
 
 if len(props['Files']) == 0:
-    print("{}: File lists empty.".format(pkg))
+    print(f"{pkg}: File lists empty.", file=sys.stderr)
     sys.exit(1)
 
 name = props['Name'].lower()
 if name != pkg:
-    print("{}: expected {} instead of {}".format(pkg, pkg, name))
+    print(f"{pkg}: expected {pkg} instead of {name}", file=sys.stderr)
     sys.exit(1)
 
-pname = 'python3-{}'.format(name)
+pname = f'python3-{name}'
 
 d = join(rep, "x86_64", "release", 'python3', pname)
 if not isdir(d):
@@ -174,7 +162,7 @@ if not isdir(d):
 
 b = 1
 while True:
-    tn = join(d, "{0}-{1}-{2}.tar.bz2".format(pname, props['Version'], b))
+    tn = join(d, f"{pname}-{props['Version']}-{b}.tar.bz2")
     if not isfile(tn):
         break
     b += 1
@@ -192,7 +180,7 @@ for f in map( lambda x: abspath(join(props['Location'], x)).replace(sep,'/'), pr
         continue
 
     if not isfile(f):
-        print("{}: WARNING: File {} missing".format(pkg, f))
+        print(f"{pkg}: WARNING: File {f} missing", file=sys.stderr)
         continue
 
     if f.endswith(".py"):
@@ -214,7 +202,7 @@ for f in map( lambda x: abspath(join(props['Location'], x)).replace(sep,'/'), pr
         )
 
         if data != data2:
-            print("{}: Script {} patched".format(pkg, f))
+            print(f"{pkg}: Script {f} patched", file=sys.stderr)
             if not postinstall:
                 postinstall = open("postinstall.bat", "wb")
 
@@ -232,7 +220,7 @@ for f in map( lambda x: abspath(join(props['Location'], x)).replace(sep,'/'), pr
 
     fr = prefix.sub('', f)
     if f == fr:
-        print("{}: ERROR: Prefix {} missing from file {}".format(pkg, prefix.pattern, f))
+        print("{}: ERROR: Prefix {} missing from file {}".format(pkg, prefix.pattern, f), file=sys.stderr)
         raise BaseException("File {} for package {} missing".format(f, pkg))
 
     tf.add(f, fr)

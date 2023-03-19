@@ -443,7 +443,7 @@ packagewheel() {
 		fetchenv osgeo4w/bin/o4w_env.bat
 		vs2019env
 
-		python3 -m pip install pywin32
+		python3 -m pip install pywin32 || echo "FAILED:$?"
 
 		export PIP_LOG=$(cygpath -am pip.log)
 		savelog $PIP_LOG
