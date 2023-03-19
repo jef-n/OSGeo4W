@@ -2,7 +2,7 @@ export P=qgis-ltr-dev
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-devel qt5-oci qt5-oci-debug sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt5 python3-sip python3-pyqt-builder python3-devel python3-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-devel qscintilla-devel qt5-devel qwt-devel libspatialite-devel oci-devel qtkeychain-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel oci-devel qtwebkit-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel python3-pyqt-builder pdal pdal-devel grass transifex-cli"
+export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-devel qt5-oci qt5-oci-debug sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt5 python3-sip python3-pyqt-builder python3-devel python3-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-devel qscintilla-devel qt5-devel qwt-devel libspatialite-devel oci-devel qtkeychain-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel oci-devel qtwebkit-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel python3-pyqt-builder pdal pdal-devel grass8 transifex-cli"
 
 : ${SITE:=qgis.org}
 : ${TARGET:=Nightly}
@@ -62,8 +62,10 @@ else
 	git config core.filemode false
 fi
 
-patch -p1 --dry-run <../osgeo4w/patch
-patch -p1 <../osgeo4w/patch
+if [ -z "$OSGEO4W_SKIP_CLEAN" ]; then
+	patch -p1 --dry-run <../osgeo4w/patch
+	patch -p1 <../osgeo4w/patch
+fi
 
 SHA=$(git log -n1 --pretty=%h)
 
@@ -115,7 +117,6 @@ nextbinary
 	cd ../qgis
 
 	if [ -n "$TX_TOKEN" ]; then
-		pip install transifex-client
 		if ! PATH=/bin:$PATH bash -x scripts/pull_ts.sh; then
 			echo "TSPULL FAILED $?"
 			rm -rf i18n doc/TRANSLATORS
@@ -166,8 +167,8 @@ nextbinary
 		-D WITH_PDAL=TRUE \
 		-D WITH_HANA=TRUE \
 		-D WITH_GRASS=TRUE \
-		-D WITH_GRASS7=TRUE \
-		-D GRASS_PREFIX7="$(cygpath -m $GRASS_PREFIX)" \
+		-D WITH_GRASS8=TRUE \
+		-D GRASS_PREFIX8="$(cygpath -m $GRASS_PREFIX)" \
 		-D WITH_ORACLE=TRUE \
 		-D WITH_CUSTOM_WIDGETS=TRUE \
 		-D CMAKE_BUILD_TYPE=$BUILDCONF \
@@ -284,7 +285,7 @@ if exist "%OSGEO4W_ROOT%\\apps\\saga\\tools\\dev_tools.dll" (
 	)
 
 	"%OSGEO4W_ROOT%\\apps\\saga\\saga_cmd" dev_tools 7 -DIRECTORY "%OSGEO4W_ROOT%\\apps\\$P\\$SA" -CLEAR 0
-	for /f "tokens=3 usebackq" %%a in (`"%OSGEO4W_ROOT%\\apps\\saga\\saga_cmd" -v`) do set v=%%a
+	for /f "tokens=3 usebackq" %%a in (\`"%OSGEO4W_ROOT%\\apps\\saga\\saga_cmd" -v\`) do set v=%%a
 	for /f "tokens=1,2 delims=." %%a in ("!v!") do set SAGA_VER='%%a.%%b.'
 	del "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\readme.txt"
 ) else if exist "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\description.dist" (
@@ -366,7 +367,7 @@ sdesc: "QGIS nightly build of the $LABEL branch (metapackage with additional fre
 ldesc: "QGIS nightly build of the $LABEL branch (metapackage with additional free dependencies)"
 maintainer: $MAINTAINER
 category: Desktop
-requires: $P proj python3-pyparsing python3-simplejson python3-shapely python3-matplotlib gdal-sosi python3-pygments qt5-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-pillow python3-geopandas python3-geographiclib grass saga python3-pyserial
+requires: $P proj python3-pyparsing python3-simplejson python3-shapely python3-matplotlib python3-pygments qt5-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-pillow python3-geopandas python3-geographiclib grass8 python3-pyserial gdal-sosi saga
 external-source: $P
 EOF
 

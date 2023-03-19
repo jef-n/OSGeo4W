@@ -2,7 +2,7 @@ export P=qgis-ltr
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-devel qt5-oci qt5-oci-debug sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt5 python3-sip python3-pyqt-builder python3-devel python3-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-devel qscintilla-devel qt5-devel qwt-devel libspatialite-devel oci-devel qtkeychain-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel oci-devel qtwebkit-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel python3-pyqt-builder pdal pdal-devel grass"
+export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-devel qt5-oci qt5-oci-debug sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt5 python3-sip python3-pyqt-builder python3-devel python3-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-devel qscintilla-devel qt5-devel qwt-devel libspatialite-devel oci-devel qtkeychain-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel oci-devel qtwebkit-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel python3-pyqt-builder pdal pdal-devel grass8"
 
 : ${SITE:=qgis.org}
 : ${TARGET:=Release}
@@ -99,9 +99,9 @@ nextbinary
 
 	fetchenv msvc-env.bat
 
-	[ -f "$GRASS" ]
-	[ -d "$GRASS_PREFIX" ]
-	[ -d "$DBGHLP_PATH" ]
+	[ -f "$GRASS" ] || { echo GRASS not set; false; }
+	[ -d "$GRASS_PREFIX" ] || { echo no directory GRASS_PREFIX $GRASS_PREFIX; false; }
+	[ -d "$DBGHLP_PATH" ] || { echo no directory $DBGHLP_PATH $DBGHLP_PATH; false; }
 
 	export GRASS_VERSION=$(cmd /c $GRASS --config version | sed -e "s/\r//")
 
@@ -133,8 +133,8 @@ nextbinary
 		-D WITH_PDAL=TRUE \
 		-D WITH_HANA=TRUE \
 		-D WITH_GRASS=TRUE \
-		-D WITH_GRASS7=TRUE \
-		-D GRASS_PREFIX7="$(cygpath -m $GRASS_PREFIX)" \
+		-D WITH_GRASS8=TRUE \
+		-D GRASS_PREFIX8="$(cygpath -m $GRASS_PREFIX)" \
 		-D WITH_ORACLE=TRUE \
 		-D WITH_CUSTOM_WIDGETS=TRUE \
 		-D CMAKE_BUILD_TYPE=$BUILDCONF \
@@ -256,7 +256,7 @@ if exist "%OSGEO4W_ROOT%\\apps\\saga\\tools\\dev_tools.dll" (
 	)
 
 	"%OSGEO4W_ROOT%\\apps\\saga\\saga_cmd" dev_tools 7 -DIRECTORY "%OSGEO4W_ROOT%\\apps\\$P\\$SA" -CLEAR 0
-	for /f "tokens=3 usebackq" %%a in (`"%OSGEO4W_ROOT%\\apps\\saga\\saga_cmd" -v`) do set v=%%a
+	for /f "tokens=3 usebackq" %%a in (\`"%OSGEO4W_ROOT%\\apps\\saga\\saga_cmd" -v\`) do set v=%%a
 	for /f "tokens=1,2 delims=." %%a in ("!v!") do set SAGA_VER='%%a.%%b.'
 	del "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\readme.txt"
 ) else if exist "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\description.dist" (
@@ -441,7 +441,7 @@ sdesc: "GRASS plugin for QGIS (long term release)"
 ldesc: "GRASS plugin for QGIS (long term release)"
 maintainer: $MAINTAINER
 category: Libs
-requires: $P grass
+requires: $P grass8
 external-source: $P
 EOF
 
@@ -449,11 +449,11 @@ EOF
 	/bin/tar -C install -cjf $R/$P-grass-plugin/$P-grass-plugin-$V-$B.tar.bz2 \
 		--exclude-from exclude \
 		--exclude "*.pyc" \
-		apps/$P/bin/qgisgrass7.dll \
+		apps/$P/bin/qgisgrass8.dll \
 		apps/$P/grass \
-		apps/$P/plugins/plugin_grass7.dll \
-		apps/$P/plugins/provider_grass7.dll \
-		apps/$P/plugins/provider_grassraster7.dll \
+		apps/$P/plugins/plugin_grass8.dll \
+		apps/$P/plugins/provider_grass8.dll \
+		apps/$P/plugins/provider_grassraster8.dll \
 		etc/postinstall/$P-grass-plugin.bat \
 		etc/preremove/$P-grass-plugin.bat
 

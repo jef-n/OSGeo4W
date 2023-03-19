@@ -29,7 +29,6 @@ if [ -d qgis ]; then
 	git config core.filemode false
 
 	if [ -z "$OSGEO4W_SKIP_CLEAN" ]; then
-
 		git clean -f
 		git reset --hard
 
@@ -42,8 +41,10 @@ else
 	git config core.filemode false
 fi
 
-patch -p1 --dry-run <../osgeo4w/patch
-patch -p1 <../osgeo4w/patch
+if [ -z "$OSGEO4W_SKIP_CLEAN" ]; then
+	patch -p1 --dry-run <../osgeo4w/patch
+	patch -p1 <../osgeo4w/patch
+fi
 
 SHA=$(git log -n1 --pretty=%h)
 
@@ -95,7 +96,6 @@ nextbinary
 	cd ../qgis
 
 	if [ -n "$TX_TOKEN" ]; then
-		pip install transifex-client
 		if ! PATH=/bin:$PATH bash -x scripts/pull_ts.sh; then
 			echo "TSPULL FAILED $?"
 			rm -rf i18n doc/TRANSLATORS
@@ -312,7 +312,7 @@ sdesc: "QGIS nightly build of the $LABEL branch (metapackage with additional fre
 ldesc: "QGIS nightly build of the $LABEL branch (metapackage with additional free dependencies)"
 maintainer: $MAINTAINER
 category: Desktop
-requires: $P proj python3-pyparsing python3-simplejson python3-shapely python3-matplotlib gdal-dev-sosi python3-pygments qt5-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-pillow python3-geopandas python3-geographiclib grass8 saga python3-pyserial
+requires: $P proj python3-pyparsing python3-simplejson python3-shapely python3-matplotlib python3-pygments qt5-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-pillow python3-geopandas python3-geographiclib grass8 python3-pyserial saga gdal-dev-sosi
 external-source: $P
 EOF
 

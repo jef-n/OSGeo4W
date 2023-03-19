@@ -51,7 +51,7 @@ call "%vcdir%\VC\Auxiliary\Build\vcvarsall.bat" %VCARCH% %VCSDK%
 path %path%;%vcdir%\VC\bin
 
 set GRASS=
-if exist %OSGEO4W_ROOT%\bin\grass78.bat set GRASS=%OSGEO4W_ROOT%\bin\grass78.bat
+if exist %OSGEO4W_ROOT%\bin\grass82.bat set GRASS=%OSGEO4W_ROOT%\bin\grass82.bat
 if not defined GRASS (echo GRASS not found & goto error)
 for /f "usebackq tokens=1" %%a in (`%GRASS% --config path`) do set GRASS_PREFIX=%%a
 
