@@ -2,7 +2,7 @@ export P=python3-fiona
 export V=pip
 export B=pip
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-pip python3-wheel python3-setuptools python3-attrs python3-click python3-cligj python3-click-plugins python3-six python3-munch gdal-devel"
+export BUILDDEPENDS="python3-pip python3-wheel python3-devel python3-setuptools python3-attrs python3-click python3-cligj python3-click-plugins python3-six python3-munch gdal-devel"
 
 source ../../../scripts/build-helpers
 
@@ -18,9 +18,13 @@ rev=${rev%}
 cat <<EOF >pip.env
 export GDAL_VERSION=$major.$minor.$rev
 export INCLUDE="$(cygpath -am osgeo4w/include);\$INCLUDE"
-export LIB="$(cygpath -am osgeo4w/lib);\$LIB"
+export LINK="$(cygpath -am osgeo4w/lib/gdal_i.lib)"
 EOF
 
-adddepends="$RUNTIMEDEPENDS" packagewheel --global-option="build_ext" --global-option="-lgdal_i"
+fetchenv osgeo4w/bin/o4w_env.bat
+
+pip install Cython
+
+adddepends="$RUNTIMEDEPENDS" packagewheel
 
 endlog
