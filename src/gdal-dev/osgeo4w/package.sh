@@ -168,6 +168,7 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 		-D                  GDAL_LIB_OUTPUT_NAME=$P$abi \
 		-D                 BUILD_PYTHON_BINDINGS=ON \
 		-D                   BUILD_JAVA_BINDINGS=OFF \
+		-D                 BUILD_CSHARP_BINDINGS=OFF \
 		-D             GDAL_USE_GEOTIFF_INTERNAL=OFF \
 		-D               GDAL_ENABLE_DRIVER_JPEG=ON \
 		-D           GDAL_ENABLE_DRIVER_JP2MRSID=ON \
