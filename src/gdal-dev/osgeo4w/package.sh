@@ -259,7 +259,7 @@ EOF
 
 mkdir -p install/bin
 cat <<EOF >install/bin/$P-env.bat
-SET GDAL_DATA=%OSGEO4W_ROOT%\\share\\$P
+SET GDAL_DATA=%OSGEO4W_ROOT%\\apps\\$P\\share\\gdal
 SET GDAL_DRIVER_PATH=%OSGEO4W_ROOT%\\apps\\$P\\lib\\gdalplugins
 PATH %OSGEO4W_ROOT%\\apps\\$P\\bin;%PATH%
 EOF
