@@ -10,6 +10,9 @@ source ../../../scripts/build-helpers
 
 startlog
 
+fetchenv osgeo4w/bin/o4w_env.bat
+python3 -m pip install --upgrade pip
+
 packagewheel
 
 endlog

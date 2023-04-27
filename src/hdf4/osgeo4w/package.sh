@@ -1,5 +1,5 @@
 export P=hdf4
-export V=4.2.15
+export V=4.2.16
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="libjpeg-turbo-devel zlib-devel szip-devel"

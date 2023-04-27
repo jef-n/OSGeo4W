@@ -1,5 +1,5 @@
 export P=hdf5
-export V=1.10.7
+export V=1.14.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="libjpeg-turbo-devel szip-devel zlib-devel"
@@ -9,7 +9,7 @@ source ../../../scripts/build-helpers
 startlog
 
 [ -f $P-$V.tar.bz2 ] || wget https://support.hdfgroup.org/ftp/${P^^}/releases/$P-${V%.*}/$P-$V/src/$P-$V.tar.bz2
-[ -f ../CMakeLists.txt ] || tar -C .. --xform s,$P-$V/,, -xjf $P-$V.tar.bz2
+[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xjf $P-$V.tar.bz2
 
 vs2019env
 cmakeenv
@@ -41,7 +41,7 @@ cmake -G Ninja \
 	-D ZLIB_INCLUDE_DIR=$(cygpath -aw ../osgeo4w/include) \
 	-D HDF5_INSTALL_DATA_DIR=. \
 	-D HDF5_INSTALL_CMAKE_DIR=share/cmake \
-	../..
+	../../$P-$V
 cmake --build .
 cmake --install . || cmake --install .
 
@@ -76,9 +76,9 @@ external-source: $P
 maintainer: $MAINTAINER
 EOF
 
-cp ../COPYING $R/$P-$V-$B.txt
-cp ../COPYING $R/$P-devel/$P-devel-$V-$B.txt
-cp ../COPYING $R/$P-tools/$P-tools-$V-$B.txt
+cp ../$P-$V/COPYING $R/$P-$V-$B.txt
+cp ../$P-$V/COPYING $R/$P-devel/$P-devel-$V-$B.txt
+cp ../$P-$V/COPYING $R/$P-tools/$P-tools-$V-$B.txt
 
 tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
 	bin/hdf5.dll \

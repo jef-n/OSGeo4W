@@ -1,5 +1,5 @@
 export P=netcdf
-export V=4.7.4
+export V=4.9.2
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="hdf4-devel hdf5-devel curl-devel zlib-devel hdf5-tools szip-devel"
@@ -8,11 +8,11 @@ source ../../../scripts/build-helpers
 
 startlog
 
-[ -f $P-c-$V.tar.gz ] || wget ftp://ftp.unidata.ucar.edu/pub/$P/$P-c-$V.tar.gz
-[ -f ../CMakeLists.txt ] || tar -C .. --xform s,$P-c-$V/,, -xzf $P-c-$V.tar.gz
+[ -f $P-c-$V.tar.gz ] || wget https://downloads.unidata.ucar.edu/$P-c/$V/$P-c-$V.tar.gz
+[ -f ../$P-c-$V/CMakeLists.txt ] || tar -C .. -xzf $P-c-$V.tar.gz
 
-if ! [ -f patched ]; then
-	patch -d .. -p0 <<EOF
+if ! [ -f ../$P-c-$V/patched ]; then
+	patch -d ../$P-c-$V -p0 <<EOF
 --- ../CMakeLists.txt	2016-11-21 19:27:08.000000000 +0100
 +++ CMakeLists.txt	2017-05-21 18:55:29.046949000 +0200
 @@ -110,7 +110,7 @@
@@ -36,7 +36,7 @@ if ! [ -f patched ]; then
  #####
  # Configure and print the libnetcdf.settings file.
 EOF
-	touch patched
+	touch ../$P-c-$V/patched
 fi
 
 vs2019env
@@ -50,13 +50,13 @@ cmake -G Ninja \
 	-D CMAKE_BUILD_TYPE=Release \
 	-D CMAKE_INSTALL_PREFIX=$(cygpath -aw ../install) \
 	-D CMAKE_MODULE_PATH='${CMAKE_ROOT}/cmake/modules/ ${CMAKE_SOURCE_DIR}/cmake/modules/ ${CMAKE_SOURCE_DIR}/cmake/modules/windows' \
-	-D HDF5_DIR=$(cygpath -aw ../osgeo4w/share/cmake/hdf5) \
-	-D HDF5_INCLUDE_DIR=$(cygpath -aw ../osgeo4w/include) \
-	-D CURL_INCLUDE_DIR=$(cygpath -aw ../osgeo4w/include) \
-	-D CURL_LIBRARY=$(cygpath -aw ../osgeo4w/lib/libcurl.lib) \
-	-D ZLIB_INCLUDE_DIR=$(cygpath -aw ../osgeo4w/include) \
-	-D ZLIB_LIBRARY=$(cygpath -aw ../osgeo4w/lib/zlib.lib) \
-	../..
+	-D HDF5_DIR=$(cygpath -am ../osgeo4w/share/cmake) \
+	-D HDF5_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
+	-D CURL_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
+	-D CURL_LIBRARY=$(cygpath -am ../osgeo4w/lib/libcurl.lib) \
+	-D ZLIB_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
+	-D ZLIB_LIBRARY=$(cygpath -am ../osgeo4w/lib/zlib.lib) \
+	../../$P-c-$V
 ninja
 ninja install
 
@@ -91,9 +91,9 @@ external-source: $P
 maintainer: $MAINTAINER
 EOF
 
-cp ../COPYRIGHT $R/$P-$V-$B.txt
-cp ../COPYRIGHT $R/$P-devel/$P-devel-$V-$B.txt
-cp ../COPYRIGHT $R/$P-tools/$P-tools-$V-$B.txt
+cp ../$P-c-$V/COPYRIGHT $R/$P-$V-$B.txt
+cp ../$P-c-$V/COPYRIGHT $R/$P-devel/$P-devel-$V-$B.txt
+cp ../$P-c-$V/COPYRIGHT $R/$P-tools/$P-tools-$V-$B.txt
 
 sed -e "s#$(cygpath -am install)#@osgeo4w_msys@#" install/bin/nc-config >install/bin/nc-config.tmpl
 

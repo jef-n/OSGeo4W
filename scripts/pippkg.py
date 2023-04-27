@@ -7,7 +7,6 @@
 # OSGEO4W_ROOT: private install directory
 # MAINTAINER:   OSGeo4W maintainer
 # OSGEO4W_REP:  local osgeo4w repository
-# OSGEO4W_ROOT: OSGeo4W maintainer
 # adddepends:   additional (eg. non-python) dependencies
 # addsrcfiles:  additional packaging files
 
@@ -16,12 +15,12 @@ import subprocess
 import re
 import tarfile
 
-from os import makedirs, environ, sep, system  # chdir
-from os.path import abspath, join, isdir, isfile, exists
+from os import makedirs, environ, sep, system
+from os.path import abspath, join, isdir, isfile
 
 try:
     from win32file import GetLongPathName
-except:
+except Exception:
     def GetLongPathName(p):
         return p
 
@@ -42,16 +41,15 @@ if 'P' not in environ:
     sys.exit(1)
 
 try:
-    rep = GetLongPathName(environ['OSGEO4W_REP']).replace(sep,'/')+'/'
-except:
-    rep = environ['OSGEO4W_REP'].replace(sep,'/')+'/'
+    rep = GetLongPathName(environ['OSGEO4W_REP']).replace(sep, '/') + '/'
+except Exception:
+    rep = environ['OSGEO4W_REP'].replace(sep, '/') + '/'
 
 if not isdir(rep):
     print(f"OSGEO4W repository not found at {rep}.", file=sys.stderr)
     sys.exit(1)
 
-o4wroot = GetLongPathName(environ['OSGEO4W_ROOT']).replace(sep,'/')+'/'
-# chdir(o4wroot)
+o4wroot = GetLongPathName(environ['OSGEO4W_ROOT']).replace(sep, '/') + '/'
 
 prefix = re.compile("^" + re.escape(o4wroot), re.IGNORECASE)
 
@@ -116,7 +114,7 @@ while True:
         continue
 
     if not line.startswith("  "):
-        m = re.search('(\S+):\s*(.*)', line)
+        m = re.search('(\\S+):\\s*(.*)', line)
         if m:
             section, val = m.group(1), m.group(2)
             if val == "":
@@ -173,9 +171,9 @@ postinstall = None
 preremove = None
 haspy = False
 
-scriptspath = abspath(join(props['Location'], '..\\..\\Scripts')).replace(sep,'/') + "/"
+scriptspath = abspath(join(props['Location'], '..\\..\\Scripts')).replace(sep, '/') + "/"
 
-for f in map( lambda x: abspath(join(props['Location'], x)).replace(sep,'/'), props['Files']):
+for f in map(lambda x: abspath(join(props['Location'], x)).replace(sep, '/'), props['Files']):
     if f.endswith(".pyc"):
         continue
 
@@ -249,12 +247,11 @@ maintainer: {1}
 category: Libs
 requires: python3-core{2}{3}
 """ .format(
-        props['Summary'],
-        environ['MAINTAINER'],
-        (" " + " ".join(sorted('python3-{}'.format(p.replace('_', '-')) for p in props['Requires']))) if props['Requires'] else "",
-        (" " + environ['adddepends']) if 'adddepends' in environ else ''
-    ).encode("utf-8")
-)
+    props['Summary'],
+    environ['MAINTAINER'],
+    (" " + " ".join(sorted('python3-{}'.format(p.replace('_', '-')) for p in props['Requires']))) if props['Requires'] else "",
+    (" " + environ['adddepends']) if 'adddepends' in environ else ''
+).encode("utf-8"))
 sf.close()
 
 tn = join(d, "{0}-{1}-{2}-src.tar.bz2".format(pname, props['Version'], b))
