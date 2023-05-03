@@ -126,7 +126,7 @@ while True:
             print(f"{pkg}: Line outside section: |{line}|", file=sys.stderr)
             sys.exit(1)
 
-        props[section].append(line[2:])
+        props[section] += line[2:]
 
 proc.stdout.close()
 
