@@ -1,0 +1,66 @@
+diff --git a/ogr/ogrsf_frmts/geojson/libjson/json_object.c b/ogr/ogrsf_frmts/geojson/libjson/json_object.c
+index 28d5ae6f035..7a23c378cce 100644
+--- a/ogr/ogrsf_frmts/geojson/libjson/json_object.c
++++ b/ogr/ogrsf_frmts/geojson/libjson/json_object.c
+@@ -37,6 +37,8 @@
+ #include "snprintf_compat.h"
+ #include "strdup_compat.h"
+ 
++#include "cpl_string.h"
++
+ #if SIZEOF_LONG_LONG != SIZEOF_INT64_T
+ #error "The long long type isn't 64-bits"
+ #endif
+@@ -1192,7 +1194,7 @@ double json_object_get_double(const struct json_object *jso)
+ 	case json_type_boolean: return JC_BOOL_C(jso)->c_boolean;
+ 	case json_type_string:
+ 		errno = 0;
+-		cdouble = strtod(get_string_component(jso), &errPtr);
++		cdouble = CPLStrtod(get_string_component(jso), &errPtr);
+ 
+ 		/* if conversion stopped at the first character, return 0.0 */
+ 		if (errPtr == get_string_component(jso))
+diff --git a/ogr/ogrsf_frmts/geojson/libjson/json_tokener.c b/ogr/ogrsf_frmts/geojson/libjson/json_tokener.c
+index 9316a4d4153..1d24104d416 100644
+--- a/ogr/ogrsf_frmts/geojson/libjson/json_tokener.c
++++ b/ogr/ogrsf_frmts/geojson/libjson/json_tokener.c
+@@ -44,6 +44,8 @@
+ #include <strings.h>
+ #endif /* HAVE_STRINGS_H */
+ 
++#include "cpl_string.h"
++
+ #define jt_hexdigit(x) (((x) <= '9') ? (x) - '0' : ((x)&7) + 9)
+ 
+ #if !HAVE_STRNCASECMP && defined(_MSC_VER)
+@@ -1261,7 +1263,7 @@ size_t json_tokener_get_parse_end(struct json_tokener *tok)
+ static int json_tokener_parse_double(const char *buf, int len, double *retval)
+ {
+ 	char *end;
+-	*retval = strtod(buf, &end);
++	*retval = CPLStrtod(buf, &end);
+ 	if (buf + len == end)
+ 		return 0; // It worked
+ 	return 1;
+diff --git a/ogr/ogrsf_frmts/geojson/libjson/json_util.c b/ogr/ogrsf_frmts/geojson/libjson/json_util.c
+index ab16fe20abc..8e273e766b2 100644
+--- a/ogr/ogrsf_frmts/geojson/libjson/json_util.c
++++ b/ogr/ogrsf_frmts/geojson/libjson/json_util.c
+@@ -58,6 +58,8 @@
+ #include "json_util.h"
+ #include "printbuf.h"
+ 
++#include "cpl_string.h"
++
+ static int _json_object_to_fd(int fd, struct json_object *obj, int flags, const char *filename);
+ 
+ static char _last_err[256] = "";
+@@ -227,7 +229,7 @@ int json_object_to_file(const char *filename, struct json_object *obj)
+ int json_parse_double(const char *buf, double *retval)
+ {
+ 	char *end;
+-	*retval = strtod(buf, &end);
++	*retval = CPLStrtod(buf, &end);
+ 	return end == buf ? 1 : 0;
+ }
+ 
