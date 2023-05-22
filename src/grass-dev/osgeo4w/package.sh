@@ -129,7 +129,7 @@ export OSGEO4W_ROOT_MSYS=$OSGEO4W_ROOT_MSYS
 export VCPATH="$VCPATH"
 export PATH=$MSYSPATH
 
-pacman --noconfirm -Sy --needed \
+pacman --noconfirm -Syu --needed \
 	diffutils \
 	flex \
 	bison \
@@ -155,10 +155,10 @@ pacman --noconfirm -Sy --needed \
 
 cd ../grass
 
-PACKAGE_POSTFIX=-dev bash.exe $xtrace mswindows/osgeo4w/package.sh || { cat mswindows/osgeo4w/package.log; exit 1; }
+PACKAGE_POSTFIX=-dev bash.exe $xtrace mswindows/osgeo4w/package.sh
 EOF
 
-	cygstart -w $(cygpath -aw msys64/usr/bin/bash.exe) $(cygpath -am build.sh)
+	cygstart -w $(cygpath -aw msys64/usr/bin/bash.exe) $(cygpath -am build.sh) || { cat ../grass/mswindows/osgeo4w/package.log; exit 1; }
 )
 
 mv ../grass/mswindows/osgeo4w/package/$P-$major.$minor.dev-1.tar.bz2 $R/$P-$V-$B.tar.bz2

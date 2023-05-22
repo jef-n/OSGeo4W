@@ -24,6 +24,9 @@ MM=${MM//./}
 	touch ../$p/patched
 }
 
+export R=$OSGEO4W_REP/x86_64/release/$P
+mkdir -p $R
+
 msysarch=msys2-base-x86_64-20221028.tar.xz
 
 [ -f $msysarch ] || wget http://repo.msys2.org/distrib/x86_64/$msysarch
@@ -70,14 +73,14 @@ set -e $xtrace
 
 cd $(cygpath -am .)
 
-exec >build.log 2>&1
+exec >>package.log 2>&1
 
 export OSGEO4W_ROOT=$OSGEO4W_ROOT
 export OSGEO4W_ROOT_MSYS=$OSGEO4W_ROOT_MSYS
 export VCPATH="$VCPATH"
 export PATH=$MSYSPATH
 
-pacman --noconfirm -S --needed \
+pacman --noconfirm -Syu --needed \
 	diffutils \
 	flex \
 	bison \
@@ -108,9 +111,6 @@ EOF
 
 	cygstart -w $(cygpath -aw msys64/usr/bin/bash.exe) $(cygpath -am build.sh) || { cat ../$p/mswindows/osgeo4w/package.log; exit 1; }
 )
-
-export R=$OSGEO4W_REP/x86_64/release/$P
-mkdir -p $R
 
 cp ../$p/mswindows/osgeo4w/package/$P-$V-1.tar.bz2 $R/$P-$V-$B.tar.bz2
 cp ../$p/COPYING $R/$P-$V-$B.txt
