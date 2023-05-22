@@ -1,5 +1,5 @@
 export P=pdal
-export V=2.5.2
+export V=2.5.3
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="gdal-devel libgeotiff-devel libtiff-devel zlib-devel curl-devel libxml2-devel hdf5-devel openssl-devel zstd-devel laszip-devel"
@@ -8,8 +8,13 @@ source ../../../scripts/build-helpers
 
 startlog
 
-[ -f $P-$V-src.tar.gz ] || wget https://github.com/PDAL/PDAL/releases/download/$V/${P^^}-$V-src.tar.gz
-[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf $P-$V-src.tar.gz --xform "s,^${P^^}-$V-src,$P-$V,"
+[ -f $P-$V-src.tar.bz2 ] || wget https://github.com/PDAL/PDAL/releases/download/$V/${P^^}-$V-src.tar.bz2
+[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xjf $P-$V-src.tar.bz2 --xform "s,^${P^^}-$V-src,$P-$V,"
+if ! [ -f ../$P-$V/patched ]; then
+	patch -p1 -d ../$P-$V --dry-run <patch
+	patch -p1 -d ../$P-$V <patch
+	touch  ../$P-$V/patched
+fi
 
 (
 	set -e
@@ -95,6 +100,6 @@ tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 
 cp ../$P-$V/LICENSE.txt $R/$P-devel/$P-devel-$V-$B.txt
 
-tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
+tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/patch
 
 endlog
