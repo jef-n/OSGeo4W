@@ -443,7 +443,9 @@ packagewheel() {
 		fetchenv osgeo4w/bin/o4w_env.bat
 		vs2019env
 
-		python3 -m pip install pywin32 || echo "FAILED:$?"
+		# for pywin32.GetLongName
+		# sometimes exits with 130 although it has installed the package
+		python3 -m pip -v install pywin32 || python3 -m pip show pywin32
 
 		export PIP_LOG=$(cygpath -am pip.log)
 		savelog $PIP_LOG

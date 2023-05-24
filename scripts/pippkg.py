@@ -14,55 +14,61 @@ import sys
 import subprocess
 import re
 import tarfile
+import os
 
-from os import makedirs, environ, sep, system
 from os.path import abspath, join, isdir, isfile
 
-try:
+
+def system(cmd):
+    print(f"SYSTEM:{cmd}", file=sys.stderr)
+    return os.system(cmd)
+
+
+if os.name == 'nt':
     from win32file import GetLongPathName
-except Exception:
+else:
     def GetLongPathName(p):
         return p
 
-if 'OSGEO4W_ROOT' not in environ:
+if 'OSGEO4W_ROOT' not in os.environ:
     print("OSGEO4W_ROOT not set", file=sys.stderr)
     sys.exit(1)
 
-if 'MAINTAINER' not in environ:
+if 'MAINTAINER' not in os.environ:
     print("MAINTAINER not set", file=sys.stderr)
     sys.exit(1)
 
-if 'OSGEO4W_REP' not in environ:
+if 'OSGEO4W_REP' not in os.environ:
     print("OSGEO4W_REP not set", file=sys.stderr)
     sys.exit(1)
 
-if 'P' not in environ:
+if 'P' not in os.environ:
     print("P not set", file=sys.stderr)
     sys.exit(1)
 
 try:
-    rep = GetLongPathName(environ['OSGEO4W_REP']).replace(sep, '/') + '/'
+    rep = GetLongPathName(os.environ['OSGEO4W_REP']).replace(os.sep, '/') + '/'
 except Exception:
-    rep = environ['OSGEO4W_REP'].replace(sep, '/') + '/'
+    rep = os.environ['OSGEO4W_REP'].replace(os.sep, '/') + '/'
 
 if not isdir(rep):
     print(f"OSGEO4W repository not found at {rep}.", file=sys.stderr)
     sys.exit(1)
 
-o4wroot = GetLongPathName(environ['OSGEO4W_ROOT']).replace(sep, '/') + '/'
+o4wroot = GetLongPathName(os.environ['OSGEO4W_ROOT']).replace(os.sep, '/') + '/'
 
 prefix = re.compile("^" + re.escape(o4wroot), re.IGNORECASE)
 
-pkg = environ["P"]
+pkg = os.environ["P"]
 if not pkg.startswith("python3-"):
     print(f"{pkg}: python3- prefix missing", file=sys.stderr)
     sys.exit(1)
 
 pkg = pkg[8:]
-v = environ["V"]
+v = os.environ["V"]
 
-if 'wheel' in environ:
-    pkgv = environ['wheel']
+if 'wheel' in os.environ:
+    pkgv = os.environ['wheel']
 else:
     pkgv = pkg if v == "pip" else f"{pkg}=={v}"
 
@@ -91,10 +97,7 @@ while True:
 
 proc.stdout.close()
 
-print("python3 -m pip list", file=sys.stderr)
 system("python3 -m pip list")
-
-print("python3 -m pip show -f {0} >%TEMP%/{0}.metadata".format(pkg), file=sys.stderr)
 system("python3 -m pip show -f {0} >%TEMP%/{0}.metadata".format(pkg))
 
 proc = subprocess.Popen(['python3', '-m', 'pip', 'show', '-f', pkg], stdout=subprocess.PIPE, encoding="utf-8")
@@ -128,7 +131,7 @@ while True:
 
         try:
             props[section].append(line[2:])
-        except:
+        except Exception:
             props[section] += line[2:]
 
 proc.stdout.close()
@@ -159,7 +162,7 @@ pname = f'python3-{name}'
 
 d = join(rep, "x86_64", "release", 'python3', pname)
 if not isdir(d):
-    makedirs(d)
+    os.makedirs(d)
 
 b = 1
 while True:
@@ -174,9 +177,9 @@ postinstall = None
 preremove = None
 haspy = False
 
-scriptspath = abspath(join(props['Location'], '..\\..\\Scripts')).replace(sep, '/') + "/"
+scriptspath = abspath(join(props['Location'], '..\\..\\Scripts')).replace(os.sep, '/') + "/"
 
-for f in map(lambda x: abspath(join(props['Location'], x)).replace(sep, '/'), props['Files']):
+for f in map(lambda x: abspath(join(props['Location'], x)).replace(os.sep, '/'), props['Files']):
     if f.endswith(".pyc"):
         continue
 
@@ -251,14 +254,14 @@ category: Libs
 requires: python3-core{2}{3}
 """ .format(
     props['Summary'],
-    environ['MAINTAINER'],
+    os.environ['MAINTAINER'],
     (" " + " ".join(sorted('python3-{}'.format(p.replace('_', '-')) for p in props['Requires']))) if props['Requires'] else "",
-    (" " + environ['adddepends']) if 'adddepends' in environ else ''
+    (" " + os.environ['adddepends']) if 'adddepends' in os.environ else ''
 ).encode("utf-8"))
 sf.close()
 
 tn = join(d, "{0}-{1}-{2}-src.tar.bz2".format(pname, props['Version'], b))
-if system("tar -C .. -cjf {0} osgeo4w/package.sh {1}".format(tn, environ.get("addsrcfiles", ''))) != 0:
+if system("tar -C .. -cjf {0} osgeo4w/package.sh {1}".format(tn, os.environ.get("addsrcfiles", ''))) != 0:
     sys.exit(1)
 
 f = open("pipped.env", "w")
