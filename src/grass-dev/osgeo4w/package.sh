@@ -42,6 +42,7 @@ availablepackageversions $P
 exec 3<../grass/include/VERSION
 read major <&3
 read minor <&3
+read patch <&3
 V=$major.$minor
 
 build=1
@@ -76,7 +77,7 @@ if [ -f $R/$P-$V-$B-src.tar.bz2 ]; then
 	exit 1
 fi
 
-msysarch=msys2-base-x86_64-20221028.tar.xz
+msysarch=msys2-base-x86_64-20230526.tar.xz
 
 [ -f $msysarch ] || wget http://repo.msys2.org/distrib/x86_64/$msysarch
 if ! [ -d msys64 ]; then
@@ -161,7 +162,7 @@ EOF
 	cygstart -w $(cygpath -aw msys64/usr/bin/bash.exe) $(cygpath -am build.sh) || { cat ../grass/mswindows/osgeo4w/package.log; exit 1; }
 )
 
-mv ../grass/mswindows/osgeo4w/package/$P-$major.$minor.dev-1.tar.bz2 $R/$P-$V-$B.tar.bz2
+mv ../grass/mswindows/osgeo4w/package/$P-$major.$minor.$patch-1.tar.bz2 $R/$P-$V-$B.tar.bz2
 cp ../grass/COPYING $R/$P-$V-$B.txt
 
 cat <<EOF >$R/setup.hint
