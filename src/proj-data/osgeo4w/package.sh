@@ -1,5 +1,5 @@
 export P=proj-data
-export V=1.13
+export V=1.14
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
@@ -8,7 +8,7 @@ source ../../../scripts/build-helpers
 
 startlog
 
-[ -f proj-data-$V.tar.gz ] || wget -c http://ftp.osuosl.org/pub/osgeo/download/proj/proj-data-$V.tar.gz
+[ -f proj-data-$V.tar.gz ] || wget -c http://download.osgeo.org/proj/proj-data-$V.tar.gz
 
 mkdir -p share/proj
 tar -C share/proj -xzf proj-data-$V.tar.gz
