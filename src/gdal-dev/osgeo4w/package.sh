@@ -2,7 +2,7 @@ export P=gdal-dev
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel hdf5-tools ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-turbo-devel python3-setuptools opencl-devel libtiff-devel libgeotiff-devel arrow-cpp-devel lz4-devel openssl-devel tiledb-devel lerc-devel kealib-devel odbc-cpp-wrapper-devel"
+export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel hdf5-tools ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-turbo-devel python3-setuptools opencl-devel libtiff-devel arrow-cpp-devel lz4-devel openssl-devel tiledb-devel lerc-devel kealib-devel odbc-cpp-wrapper-devel libjxl-devel"
 
 source ../../../scripts/build-helpers
 
@@ -137,7 +137,7 @@ nextbinary
 export abi=$(printf "%d%02d" $major $minor)
 
 R=$OSGEO4W_REP/x86_64/release/gdal/$P
-mkdir -p $R/$P-{devel,oracle,filegdb,ecw,mrsid,sosi,mss,hdf5,kea,tiledb,hana} $R/$P$abi-runtime $R/python3-$P
+mkdir -p $R/$P-{devel,oracle,filegdb,ecw,mrsid,sosi,mss,hdf5,kea,tiledb,hana,jxl} $R/$P$abi-runtime $R/python3-$P
 
 if [ -f $R/$P-$V-$B-src.tar.bz2 ]; then
 	echo "$R/$P-$V-$B-src.tar.bz2 already exists - skipping"
@@ -169,7 +169,8 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 		-D                 BUILD_PYTHON_BINDINGS=ON \
 		-D                   BUILD_JAVA_BINDINGS=OFF \
 		-D                 BUILD_CSHARP_BINDINGS=OFF \
-		-D             GDAL_USE_GEOTIFF_INTERNAL=OFF \
+		-D                GDAL_USE_TIFF_INTERNAL=ON \
+		-D             GDAL_USE_GEOTIFF_INTERNAL=ON \
 		-D               GDAL_ENABLE_DRIVER_JPEG=ON \
 		-D           GDAL_ENABLE_DRIVER_JP2MRSID=ON \
 		-D                OGR_ENABLE_DRIVER_OGDI=ON \
@@ -180,6 +181,7 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 		-D          OGR_ENABLE_DRIVER_OCI_PLUGIN=ON \
 		-D        GDAL_ENABLE_DRIVER_GEOR_PLUGIN=ON \
 		-D         GDAL_ENABLE_DRIVER_ECW_PLUGIN=ON \
+		-D      GDAL_ENABLE_DRIVER_JPEGXL_PLUGIN=ON \
 		-D       GDAL_ENABLE_DRIVER_MRSID_PLUGIN=ON \
 		-D        GDAL_ENABLE_DRIVER_HDF5_PLUGIN=ON \
 		-D         GDAL_ENABLE_DRIVER_KEA_PLUGIN=ON \
@@ -203,7 +205,7 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 		-D                        Oracle_LIBRARY=$(cygpath -am ../osgeo4w/lib/oci.lib) \
 		-D                          JPEG_LIBRARY=$(cygpath -am ../osgeo4w/lib/jpeg.lib) \
 		-D                       LZ4_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
-		-D	             LZ4_LIBRARY_RELEASE=$(cygpath -am ../osgeo4w/lib/lz4.lib) \
+		-D                   LZ4_LIBRARY_RELEASE=$(cygpath -am ../osgeo4w/lib/lz4.lib) \
 		-D                   PNG_LIBRARY_RELEASE=$(cygpath -am ../osgeo4w/lib/libpng16.lib) \
 		-D   _ICONV_SECOND_ARGUMENT_IS_NOT_CONST=1 \
 		-D                         Iconv_LIBRARY=$(cygpath -am ../osgeo4w/lib/iconv.dll.lib) \
@@ -284,7 +286,7 @@ sdesc: "The GDAL/OGR $major.$minor runtime library (nightly build)"
 ldesc: "The GDAL/OGR $major.$minor runtime library (nightly build)"
 maintainer: $MAINTAINER
 category: Libs Commandline_Utilities
-requires: msvcrt2019 libpng curl geos libmysql sqlite3 netcdf libpq expat xerces-c hdf4 ogdi libiconv openjpeg libspatialite freexl xz zstd poppler msodbcsql libjpeg-turbo arrow-cpp thrift brotli $RUNTIMEDEPENDS
+requires: msvcrt2019 libpng curl geos libmysql sqlite3 netcdf libpq expat xerces-c hdf4 ogdi libiconv openjpeg libspatialite freexl xz zstd poppler msodbcsql libjpeg-turbo arrow-cpp thrift brotli libjxl $RUNTIMEDEPENDS
 external-source: $P
 EOF
 
@@ -471,7 +473,7 @@ tar -C install -cjvf $R/$P-kea/$P-kea-$V-$B.tar.bz2 \
 tar -C install -cjvf $R/$P-tiledb/$P-tiledb-$V-$B.tar.bz2 \
 	apps/$P/lib/gdalplugins/gdal_TileDB.dll
 
-tar -C install -cjvf $R/$P-hana/$P-HANA-$V-$B.tar.bz2 \
+tar -C install -cjvf $R/$P-hana/$P-hana-$V-$B.tar.bz2 \
 	apps/$P/lib/gdalplugins/ogr_HANA.dll
 
 tar -C install -cjvf $R/$P-mrsid/$P-mrsid-$V-$B.tar.bz2 \

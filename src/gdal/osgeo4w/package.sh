@@ -2,7 +2,7 @@ export P=gdal
 export V=3.7.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel hdf5-tools ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-turbo-devel python3-setuptools opencl-devel libtiff-devel libgeotiff-devel arrow-cpp-devel lz4-devel openssl-devel tiledb-devel lerc-devel kealib-devel odbc-cpp-wrapper-devel"
+export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel hdf5-tools ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-turbo-devel python3-setuptools opencl-devel libtiff-devel arrow-cpp-devel lz4-devel openssl-devel tiledb-devel lerc-devel kealib-devel odbc-cpp-wrapper-devel libjxl-devel"
 
 source ../../../scripts/build-helpers
 
@@ -129,7 +129,10 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 		-D                  CMAKE_INSTALL_PREFIX=../install/apps/$P \
 		-D                  GDAL_LIB_OUTPUT_NAME=$P$abi \
 		-D                 BUILD_PYTHON_BINDINGS=ON \
-		-D             GDAL_USE_GEOTIFF_INTERNAL=OFF \
+		-D                   BUILD_JAVA_BINDINGS=OFF \
+		-D                 BUILD_CSHARP_BINDINGS=OFF \
+		-D                GDAL_USE_TIFF_INTERNAL=ON \
+		-D             GDAL_USE_GEOTIFF_INTERNAL=ON \
 		-D               GDAL_ENABLE_DRIVER_JPEG=ON \
 		-D           GDAL_ENABLE_DRIVER_JP2MRSID=ON \
 		-D                OGR_ENABLE_DRIVER_OGDI=ON \
@@ -163,7 +166,7 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 		-D                        Oracle_LIBRARY=$(cygpath -am ../osgeo4w/lib/oci.lib) \
 		-D                          JPEG_LIBRARY=$(cygpath -am ../osgeo4w/lib/jpeg.lib) \
 		-D                       LZ4_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
-		-D	             LZ4_LIBRARY_RELEASE=$(cygpath -am ../osgeo4w/lib/lz4.lib) \
+		-D                   LZ4_LIBRARY_RELEASE=$(cygpath -am ../osgeo4w/lib/lz4.lib) \
 		-D                   PNG_LIBRARY_RELEASE=$(cygpath -am ../osgeo4w/lib/libpng16.lib) \
 		-D   _ICONV_SECOND_ARGUMENT_IS_NOT_CONST=1 \
 		-D                         Iconv_LIBRARY=$(cygpath -am ../osgeo4w/lib/iconv.dll.lib) \
@@ -240,7 +243,7 @@ sdesc: "The GDAL/OGR $major.$minor runtime library"
 ldesc: "The GDAL/OGR $major.$minor runtime library"
 maintainer: $MAINTAINER
 category: Libs Commandline_Utilities
-requires: msvcrt2019 libpng curl geos libmysql sqlite3 netcdf libpq expat xerces-c hdf4 ogdi libiconv openjpeg libspatialite freexl xz zstd poppler msodbcsql libjpeg-turbo arrow-cpp thrift brotli libgeotiff opencl $RUNTIMEDEPENDS
+requires: msvcrt2019 libpng curl geos libmysql sqlite3 netcdf libpq expat xerces-c hdf4 ogdi libiconv openjpeg libspatialite freexl xz zstd poppler msodbcsql libjpeg-turbo arrow-cpp thrift brotli opencl libjxl $RUNTIMEDEPENDS
 external-source: $P
 EOF
 
