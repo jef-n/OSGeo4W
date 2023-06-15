@@ -137,7 +137,7 @@ nextbinary
 export abi=$(printf "%d%02d" $major $minor)
 
 R=$OSGEO4W_REP/x86_64/release/gdal/$P
-mkdir -p $R/$P-{devel,oracle,filegdb,ecw,mrsid,sosi,mss,hdf5,kea,tiledb,hana,jxl} $R/$P$abi-runtime $R/python3-$P
+mkdir -p $R/$P-{devel,oracle,filegdb,ecw,mrsid,sosi,mss,hdf5,kea,tiledb,hana} $R/$P$abi-runtime $R/python3-$P
 
 if [ -f $R/$P-$V-$B-src.tar.bz2 ]; then
 	echo "$R/$P-$V-$B-src.tar.bz2 already exists - skipping"
@@ -181,7 +181,6 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 		-D          OGR_ENABLE_DRIVER_OCI_PLUGIN=ON \
 		-D        GDAL_ENABLE_DRIVER_GEOR_PLUGIN=ON \
 		-D         GDAL_ENABLE_DRIVER_ECW_PLUGIN=ON \
-		-D      GDAL_ENABLE_DRIVER_JPEGXL_PLUGIN=ON \
 		-D       GDAL_ENABLE_DRIVER_MRSID_PLUGIN=ON \
 		-D        GDAL_ENABLE_DRIVER_HDF5_PLUGIN=ON \
 		-D         GDAL_ENABLE_DRIVER_KEA_PLUGIN=ON \
