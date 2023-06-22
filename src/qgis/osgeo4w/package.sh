@@ -308,6 +308,7 @@ EOF
 		apps/$P/svg/ \
 		apps/$P/crssync.exe \
 		apps/$P/untwine.exe \
+		apps/$P/pdal_wrench.exe \
 		bin/qgis_process-$P.bat \
 		etc/postinstall/$P-common.bat
 
