@@ -1,40 +1,66 @@
-diff -ur grass-8.2.0/lib/gis/gisinit.c ../grass-8.2.0/lib/gis/gisinit.c
---- grass-8.2.0/lib/gis/gisinit.c	2022-06-03 15:27:06.000000000 +0200
-+++ ../grass-8.2.0/lib/gis/gisinit.c	2022-11-12 19:28:30.400798100 +0100
-@@ -49,12 +49,14 @@
+diff -ur grass-8.3.0/include/Make/Grass.make ../grass-8.3.0/include/Make/Grass.make
+--- grass-8.3.0/include/Make/Grass.make	2023-06-24 12:01:41.000000000 +0200
++++ ../grass-8.3.0/include/Make/Grass.make	2023-06-24 21:24:22.581019500 +0200
+@@ -196,7 +196,7 @@
+ FORMDEPS         = $(DBMILIB) $(GISLIB)
+ RASTER3DDEPS     = $(RASTERLIB) $(GISLIB)
+ GISDEPS          = $(DATETIMELIB) $(ZLIBLIBPATH) $(ZLIB) $(BZIP2LIBPATH) $(BZIP2LIB) $(ZSTDLIBPATH) $(ZSTDLIB) $(INTLLIB) $(REGEXLIBPATH) $(REGEXLIB) $(ICONVLIB) $(PTHREADLIBPATH) $(PTHREADLIB) $(MATHLIB)
+-GMATHDEPS        = $(GISLIB) $(FFTWLIB) $(LAPACKLIB) $(BLASLIB) $(CCMATHLIB) $(OPENMP_CFLAGS) $(OPENMP_LIBPATH) $(OPENMP_LIB)
++GMATHDEPS        = $(GISLIB) $(FFTWLIB) $(LAPACKLIB) $(BLASLIB) $(CCMATHLIB) $(OPENMP_LIBPATH) $(OPENMP_LIB)
+ GPDEDEPS         = $(RASTER3DLIB) $(RASTERLIB) $(GISLIB) $(GMATHLIB) $(OPENMP_LIBPATH) $(OPENMP_LIB) $(MATHLIB)
+ GPROJDEPS        = $(GISLIB) $(GDALLIBS) $(PROJLIB) $(MATHLIB)
+ HTMLDRIVERDEPS   = $(DRIVERLIB) $(GISLIB) $(MATHLIB)
+diff -ur grass-8.3.0/include/Make/Platform.make.in ../grass-8.3.0/include/Make/Platform.make.in
+--- grass-8.3.0/include/Make/Platform.make.in	2023-06-24 12:01:41.000000000 +0200
++++ ../grass-8.3.0/include/Make/Platform.make.in	2023-06-24 21:24:22.584540200 +0200
+@@ -229,7 +229,7 @@
+ #OpenMP
+ OPENMP_INCPATH      = @OPENMP_INCPATH@
+ OPENMP_LIBPATH      = @OPENMP_LIBPATH@
+-OPENMP_LIB          = @OPENMP_LIB@
++OPENMP_LIB          = @OPENMP_CFLAGS@ @OPENMP_LIB@
+ OPENMP_CFLAGS       = @OPENMP_CFLAGS@
+ USE_OPENMP          = @USE_OPENMP@
+ 
+diff -ur grass-8.3.0/lib/gis/gisinit.c ../grass-8.3.0/lib/gis/gisinit.c
+--- grass-8.3.0/lib/gis/gisinit.c	2023-06-24 12:01:41.000000000 +0200
++++ ../grass-8.3.0/lib/gis/gisinit.c	2023-06-24 21:24:22.551481900 +0200
+@@ -49,6 +49,7 @@
  
      G_set_program_name(pgm);
  
 +#ifndef _WIN32
      /* verify version of GRASS headers (and anything else in include) */
      if (strcmp(version, GIS_H_VERSION) != 0)
- 	G_fatal_error(_("Module built against version %s but "
- 			"trying to use version %s. "
- 			"You need to rebuild GRASS GIS or untangle multiple installations."),
-                         version, GIS_H_VERSION);
+         G_fatal_error(_("Module built against version %s but "
+@@ -56,6 +57,7 @@
+                         "You need to rebuild GRASS GIS or untangle multiple "
+                         "installations."),
+                       version, GIS_H_VERSION);
 +#endif
-     
+ 
      /* Make sure location and mapset are set */
      G_location_path();
-@@ -84,12 +86,15 @@
+@@ -85,6 +87,7 @@
      if (initialized)
- 	return;
+         return;
  
 +#ifndef _WIN32
      /* verify version of GRASS headers (and anything else in include) */
      if (strcmp(version, GIS_H_VERSION) != 0)
- 	G_fatal_error(_("Module built against version %s but "
- 			"trying to use version %s. "
- 			"You need to rebuild GRASS GIS or untangle multiple installations."),
-                         version, GIS_H_VERSION);
+         G_fatal_error(_("Module built against version %s but "
+@@ -92,6 +95,8 @@
+                         "You need to rebuild GRASS GIS or untangle multiple "
+                         "installations."),
+                       version, GIS_H_VERSION);
 +#endif
 +
      gisinit();
  }
  
-diff -ur grass-8.2.0/mswindows/osgeo4w/env.bat.tmpl ../grass-8.2.0/mswindows/osgeo4w/env.bat.tmpl
---- grass-8.2.0/mswindows/osgeo4w/env.bat.tmpl	2022-06-03 15:27:06.000000000 +0200
-+++ ../grass-8.2.0/mswindows/osgeo4w/env.bat.tmpl	2022-11-12 19:28:30.402806200 +0100
+diff -ur grass-8.3.0/mswindows/osgeo4w/env.bat.tmpl ../grass-8.3.0/mswindows/osgeo4w/env.bat.tmpl
+--- grass-8.3.0/mswindows/osgeo4w/env.bat.tmpl	2023-06-24 12:01:41.000000000 +0200
++++ ../grass-8.3.0/mswindows/osgeo4w/env.bat.tmpl	2023-06-24 21:24:22.556228500 +0200
 @@ -8,6 +8,7 @@
  REM Note that msys package must be also installed
  REM set GRASS_SH=%OSGEO4W_ROOT%\apps\msys\bin\sh.exe
@@ -43,14 +69,105 @@ diff -ur grass-8.2.0/mswindows/osgeo4w/env.bat.tmpl ../grass-8.2.0/mswindows/osg
  set GRASS_PYTHON=%OSGEO4W_ROOT%\bin\python3.exe
  set GRASS_PROJSHARE=%OSGEO4W_ROOT%\share\proj
  
-diff -ur grass-8.2.0/mswindows/osgeo4w/package.sh ../grass-8.2.0/mswindows/osgeo4w/package.sh
---- grass-8.2.0/mswindows/osgeo4w/package.sh	2022-06-03 15:27:06.000000000 +0200
-+++ ../grass-8.2.0/mswindows/osgeo4w/package.sh	2022-11-12 19:28:51.900934700 +0100
-@@ -128,6 +128,7 @@
- 	/mingw64/bin/libgomp-1.dll
- 	/mingw64/bin/libgraphite2.dll
- 	/mingw64/bin/libpcre-1.dll
-+	/mingw64/bin/libpcre2-8-0.dll
+diff -ur grass-8.3.0/mswindows/osgeo4w/package.sh ../grass-8.3.0/mswindows/osgeo4w/package.sh
+--- grass-8.3.0/mswindows/osgeo4w/package.sh	2023-06-24 12:01:41.000000000 +0200
++++ ../grass-8.3.0/mswindows/osgeo4w/package.sh	2023-06-24 21:28:24.717960900 +0200
+@@ -111,29 +111,19 @@
+ 	/mingw64/bin/libbz2-1.dll
+ 	/mingw64/bin/libiconv-2.dll
+ 	/mingw64/bin/libexpat-1.dll
+-	/mingw64/bin/libfontconfig-1.dll
+ 	/mingw64/bin/libgfortran-5.dll
+-	/mingw64/bin/libbrotlidec.dll
+-	/mingw64/bin/libbrotlicommon.dll
+ 	/mingw64/bin/libintl-8.dll
+ 	/mingw64/bin/libsystre-0.dll
+ 	/mingw64/bin/libtre-5.dll
+ 	/mingw64/bin/libwinpthread-1.dll
+-	/mingw64/bin/libcairo-2.dll
+-	/mingw64/bin/libpixman-1-0.dll
+ 	/mingw64/bin/libpng16-16.dll
+-	/mingw64/bin/libfreetype-6.dll
+-	/mingw64/bin/libharfbuzz-0.dll
+-	/mingw64/bin/libglib-2.0-0.dll
+-	/mingw64/bin/libgomp-1.dll
+-	/mingw64/bin/libgraphite2.dll
+-	/mingw64/bin/libpcre-1.dll
  	/mingw64/bin/libstdc++-6.dll
  	/mingw64/bin/libgcc_s_seh-1.dll
  	/mingw64/bin/libfftw3-3.dll
+ 	/mingw64/bin/libblas.dll
+ 	/mingw64/bin/liblapack.dll
+ 	/mingw64/bin/libquadmath-0.dll
++	/mingw64/bin/libreadline8.dll
+ "
+ 
+ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
+@@ -149,18 +139,18 @@
+ 	cp -uv $DLLS dist.x86_64-w64-mingw32/bin
+ 
+ 	mkdir -p mswindows/osgeo4w/lib
+-	cp -uv $OSGEO4W_ROOT_MSYS/lib/libpq.lib mswindows/osgeo4w/lib/pq.lib
+ 	cp -uv $OSGEO4W_ROOT_MSYS/lib/sqlite3_i.lib mswindows/osgeo4w/lib/sqlite3.lib
+ 
++
+ 	log configure
+ 	./configure \
+ 		--host=x86_64-w64-mingw32 \
+-		--with-libs="$OSGEO4W_ROOT_MSYS/lib" \
+-		--with-includes=$OSGEO4W_ROOT_MSYS/include \
+-		--libexecdir=$OSGEO4W_ROOT_MSYS/bin \
+-		--prefix=$OSGEO4W_ROOT_MSYS/apps/grass \
+-		--bindir=$OSGEO4W_ROOT_MSYS/bin \
+-		--includedir=$OSGEO4W_ROOT_MSYS/include \
++		--with-libs="${OSGEO4W_ROOT_MSYS}/lib ${OSGEO4W_ROOT_MSYS}/bin" \
++		--with-includes=${OSGEO4W_ROOT_MSYS}/include \
++		--libexecdir=${OSGEO4W_ROOT_MSYS}/bin \
++		--prefix=${OSGEO4W_ROOT_MSYS}/apps/grass \
++		--bindir=${OSGEO4W_ROOT_MSYS}/bin \
++		--includedir=${OSGEO4W_ROOT_MSYS}/include \
+ 		--with-opengl=windows \
+ 		--without-x \
+ 		--with-cxx \
+@@ -168,13 +158,13 @@
+ 		--enable-largefile \
+ 		--with-fftw \
+ 		--with-freetype \
+-		--with-freetype-includes=/mingw64/include/freetype2 \
+-		--with-proj-share=$OSGEO4W_ROOT_MSYS/share/proj \
+-		--with-proj-includes=$OSGEO4W_ROOT_MSYS/include \
+-		--with-proj-libs=$OSGEO4W_ROOT_MSYS/lib \
++		--with-freetype-includes=${OSGEO4W_ROOT_MSYS}/include/freetype2 \
++		--with-proj-share=${OSGEO4W_ROOT_MSYS}/share/proj \
++		--with-proj-includes=${OSGEO4W_ROOT_MSYS}/include \
++		--with-proj-libs=${OSGEO4W_ROOT_MSYS}/lib \
+ 		--with-postgres \
+-		--with-postgres-includes=$OSGEO4W_ROOT_MSYS/include \
+-		--with-postgres-libs=$PWD/mswindows/osgeo4w/lib \
++		--with-postgres-includes=${OSGEO4W_ROOT_MSYS}/include \
++		--with-postgres-libs=${OSGEO4W_ROOT_MSYS}/lib \
+ 		--with-gdal=$PWD/mswindows/osgeo4w/gdal-config \
+ 		--with-geos=$PWD/mswindows/osgeo4w/geos-config \
+ 		--with-sqlite \
+@@ -190,10 +180,11 @@
+ 		--with-lapack-includes=/mingw64/include \
+ 		--with-openmp \
+ 		--with-cairo \
+-		--with-cairo-includes=$OSGEO4W_ROOT_MSYS/include \
+-		--with-cairo-ldflags="-L$PWD/mswindows/osgeo4w/lib -lcairo -lfontconfig" \
++		--with-cairo-includes=${OSGEO4W_ROOT_MSYS}/include \
++		--with-cairo-ldflags="-L$PWD/mswindows/osgeo4w/lib -lcairo" \
+ 		--with-bzlib \
+ 		--with-liblas=$PWD/mswindows/osgeo4w/liblas-config \
++		--with-netcdf=${OSGEO4W_ROOT_MSYS}/bin/nc-config \
+ 		--without-pdal
+ 
+ 	touch mswindows/osgeo4w/configure-stamp
+@@ -249,7 +240,6 @@
+ 
+     # copy dependencies (TODO: to be reduced)
+     cp -uv $DLLS apps/grass/grass$POSTFIX/bin
+-    cp -uv /mingw64/etc/fonts/fonts.conf apps/grass/grass$POSTFIX/etc
+ 
+     # creating grass package
+     /bin/tar -cjf $PDIR/grass$PACKAGE_POSTFIX-$VERSION-$PACKAGE_PATCH.tar.bz2 \

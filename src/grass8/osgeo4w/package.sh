@@ -1,8 +1,8 @@
 export P=grass8
-export V=8.2.1
+export V=8.3.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="gdal-devel proj-devel geos-devel libjpeg-turbo-devel libpng-devel libpq-devel libtiff-devel sqlite3-devel zstd-devel python3-core python3-six python3-pywin32 liblas-devel python3-wxpython wxwidgets-devel netcdf-devel python3-ply"
+export BUILDDEPENDS="gdal-devel proj-devel geos-devel netcdf-devel libjpeg-turbo-devel libpq-devel libtiff-devel sqlite3-devel zstd-devel python3-ply python3-core python3-six python3-pywin32 python3-wxpython liblas-devel cairo-devel freetype-devel"
 
 branch=main
 p=grass-$V
@@ -27,7 +27,7 @@ MM=${MM//./}
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R
 
-msysarch=msys2-base-x86_64-20221028.tar.xz
+msysarch=msys2-base-x86_64-20230526.tar.xz
 
 [ -f $msysarch ] || wget http://repo.msys2.org/distrib/x86_64/$msysarch
 if ! [ -d msys64 ]; then
@@ -102,7 +102,7 @@ pacman --noconfirm -Syu --needed \
 	mingw-w64-x86_64-fftw \
 	mingw-w64-x86_64-lapack \
 	mingw-w64-x86_64-openmp \
-	mingw-w64-x86_64-cairo
+	mingw-w64-x86_64-readline
 
 cd ../$p
 
