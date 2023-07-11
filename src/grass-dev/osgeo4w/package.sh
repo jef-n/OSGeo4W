@@ -169,7 +169,7 @@ cat <<EOF >$R/setup.hint
 sdesc: "GRASS GIS ${V%.*} nightly"
 ldesc: "Geographic Resources Analysis Support System (GRASS GIS ${V%.*} nightly)"
 category: Desktop
-requires: liblas $RUNTIMEDEPENDS avce00 gpsbabel proj python3-gdal python3-matplotlib libtiff python3-wxpython python3-pillow python3-pip python3-ply python3-pyopengl python3-psycopg2-binary python3-six zstd python3-pywin32 gs netcdf wxwidgets
+requires: liblas $RUNTIMEDEPENDS avce00 git gpsbabel proj python3-gdal python3-matplotlib libtiff python3-wxpython python3-pillow python3-pip python3-ply python3-pyopengl python3-psycopg2-binary python3-six zstd python3-pywin32 gs netcdf wxwidgets
 maintainer: $MAINTAINER
 EOF
 
