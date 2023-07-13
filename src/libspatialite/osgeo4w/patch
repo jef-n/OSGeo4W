@@ -1,0 +1,308 @@
+diff -ur libspatialite-5.0.1/makefile.vc ../libspatialite-5.0.1/makefile.vc
+--- libspatialite-5.0.1/makefile.vc	2021-02-07 16:53:46.000000000 +0100
++++ ../libspatialite-5.0.1/makefile.vc	2023-07-04 14:36:37.210498900 +0200
+@@ -2,144 +2,161 @@
+ #
+ # NMAKE Makefile to build libspatialite on Windows
+ #
+-!INCLUDE nmake.opt
++OPTFLAGS=	/nologo /Ox /fp:precise /W4 /MD /D_CRT_SECURE_NO_WARNINGS \
++		/DDLL_EXPORT /DYY_NO_UNISTD_H
+ 
+-LIBOBJ = src\gaiaaux\gg_sqlaux.obj src\gaiaaux\gg_utf8.obj \
+-	src\gaiaexif\gaia_exif.obj src\gaiageo\gg_advanced.obj \
+-	src\gaiageo\gg_endian.obj src\gaiageo\gg_ewkt.obj \
+-	src\gaiageo\gg_geodesic.obj src\gaiageo\gg_geoJSON.obj \
+-	src\gaiageo\gg_geometries.obj src\gaiageo\gg_geoscvt.obj \
+-	src\gaiageo\gg_gml.obj src\gaiageo\gg_kml.obj \
+-	src\gaiageo\gg_relations.obj src\gaiageo\gg_shape.obj \
+-	src\gaiageo\gg_transform.obj src\gaiageo\gg_vanuatu.obj \
+-	src\gaiageo\gg_wkb.obj src\gaiageo\gg_wkt.obj \
+-	src\gaiageo\gg_extras.obj src\gaiageo\gg_xml.obj \
+-	src\gaiageo\gg_voronoj.obj src\gaiageo\gg_matrix.obj \
+-	src\gaiageo\gg_relations_ext.obj src\gaiageo\gg_rttopo.obj \
+-	src/connection_cache/alloc_cache.obj src/connection_cache/gg_sequence.obj \
+-	src\spatialite\mbrcache.obj src\shapefiles\shapefiles.obj \
+-	src\spatialite\spatialite.obj src\spatialite\virtualdbf.obj \
+-	src\spatialite\virtualfdo.obj src\spatialite\virtualnetwork.obj \
+-	src\spatialite\virtualshape.obj src\spatialite\virtualspatialindex.obj \
+-	src\spatialite\statistics.obj src\spatialite\metatables.obj \
+-	src\spatialite\virtualXL.obj src\spatialite\extra_tables.obj \
+-	src\spatialite\virtualxpath.obj src\spatialite\virtualbbox.obj \
+-	src\spatialite\spatialite_init.obj src\spatialite\se_helpers.obj \
+-	src\spatialite\srid_aux.obj src\spatialite\table_cloner.obj \
+-	src\spatialite\virtualelementary.obj src\spatialite\virtualgeojson.obj \
+-	src\spatialite\virtualrouting.obj src\spatialite\create_routing.obj \
+-	src\spatialite\dbobj_scopes.obj src\spatialite\pause.obj \
+-	src\wfs\wfs_in.obj src\srsinit\srs_init.obj src\spatialite\virtualgpkg.obj \
+-	src\dxf\dxf_parser.obj src\dxf\dxf_loader.obj src\dxf\dxf_writer.obj \
+-	src\dxf\dxf_load_distinct.obj src\dxf\dxf_load_mixed.obj \
+-	src\shapefiles\validator.obj src\md5\md5.obj src\md5\gaia_md5.obj \
+-	src\srsinit\epsg_inlined_00.obj src\srsinit\epsg_inlined_01.obj \
+-	src\srsinit\epsg_inlined_02.obj src\srsinit\epsg_inlined_03.obj \
+-	src\srsinit\epsg_inlined_04.obj src\srsinit\epsg_inlined_05.obj \
+-	src\srsinit\epsg_inlined_06.obj src\srsinit\epsg_inlined_07.obj \
+-	src\srsinit\epsg_inlined_08.obj src\srsinit\epsg_inlined_09.obj \
+-	src\srsinit\epsg_inlined_10.obj src\srsinit\epsg_inlined_11.obj \
+-	src\srsinit\epsg_inlined_12.obj src\srsinit\epsg_inlined_13.obj \
+-	src\srsinit\epsg_inlined_14.obj src\srsinit\epsg_inlined_15.obj \
+-	src\srsinit\epsg_inlined_16.obj src\srsinit\epsg_inlined_17.obj \
+-	src\srsinit\epsg_inlined_18.obj src\srsinit\epsg_inlined_19.obj \
+-	src\srsinit\epsg_inlined_20.obj src\srsinit\epsg_inlined_21.obj \
+-	src\srsinit\epsg_inlined_22.obj src\srsinit\epsg_inlined_23.obj \
+-	src\srsinit\epsg_inlined_24.obj src\srsinit\epsg_inlined_25.obj \
+-	src\srsinit\epsg_inlined_26.obj src\srsinit\epsg_inlined_27.obj \
+-	src\srsinit\epsg_inlined_28.obj src\srsinit\epsg_inlined_29.obj \
+-	src\srsinit\epsg_inlined_30.obj src\srsinit\epsg_inlined_31.obj \
+-	src\srsinit\epsg_inlined_32.obj src\srsinit\epsg_inlined_33.obj \
+-	src\srsinit\epsg_inlined_34.obj src\srsinit\epsg_inlined_35.obj \
+-	src\srsinit\epsg_inlined_36.obj src\srsinit\epsg_inlined_37.obj \
+-	src\srsinit\epsg_inlined_38.obj src\srsinit\epsg_inlined_39.obj \
+-	src\srsinit\epsg_inlined_40.obj src\srsinit\epsg_inlined_41.obj \
+-	src\srsinit\epsg_inlined_42.obj src\srsinit\epsg_inlined_43.obj \
+-	src\srsinit\epsg_inlined_44.obj src\srsinit\epsg_inlined_45.obj \
+-	src\srsinit\epsg_inlined_46.obj src\srsinit\epsg_inlined_47.obj \
+-	src\srsinit\epsg_inlined_48.obj src\srsinit\epsg_inlined_49.obj \
+-	src\srsinit\epsg_inlined_50.obj src\srsinit\epsg_inlined_51.obj \
+-	src\srsinit\epsg_inlined_52.obj src\srsinit\epsg_inlined_53.obj \
+-	src\srsinit\epsg_inlined_54.obj src\srsinit\epsg_inlined_55.obj \
+-	src\srsinit\epsg_inlined_56.obj src\srsinit\epsg_inlined_57.obj \
+-	src\srsinit\epsg_inlined_58.obj src\srsinit\epsg_inlined_59.obj \
+-	src\srsinit\epsg_inlined_extra.obj src\srsinit\epsg_inlined_prussian.obj \
+-	src\srsinit\epsg_inlined_wgs84_00.obj src\srsinit\epsg_inlined_wgs84_01.obj \
+-	src\versioninfo\version.obj src\virtualtext\virtualtext.obj \
+-	src\cutter\gaia_cutter.obj src\spatialite\virtualknn.obj \
+-	src\control_points\gaia_control_points.obj \
+-	src\control_points\grass_crs3d.obj src\control_points\grass_georef_tps.obj \
+-	src\control_points\grass_georef.obj src\stored_procedures\stored_procedures.obj \
+-	src\geopackage\gaia_cvt_gpkg.obj \
+-	src\geopackage\gpkgAddGeometryColumn.obj \
+-	src\geopackage\gpkg_add_geometry_triggers.obj \
+-	src\geopackage\gpkg_add_spatial_index.obj \
+-	src\geopackage\gpkg_add_tile_triggers.obj \
+-	src\geopackage\gpkgBinary.obj \
+-	src\geopackage\gpkgCreateBaseTables.obj \
+-	src\geopackage\gpkgCreateTilesTable.obj \
+-	src\geopackage\gpkgCreateTilesZoomLevel.obj \
+-	src\geopackage\gpkgGetImageType.obj \
+-	src\geopackage\gpkg_get_normal_row.obj \
+-	src\geopackage\gpkg_get_normal_zoom.obj \
+-	src\geopackage\gpkgInsertEpsgSRID.obj \
+-	src\geopackage\gpkgMakePoint.obj \
+-	src\topology\gaia_auxnet.obj src\topology\gaia_auxtopo.obj \
+-	src\topology\gaia_auxtopo_table.obj src\topology\gaia_netstmts.obj \
+-	src\topology\gaia_network.obj src\topology\gaia_topology.obj \
+-	src\topology\gaia_topostmts.obj src\topology\lwn_network.obj \
+-	src\topology\net_callbacks.obj src\topology\topo_callbacks.obj
++# Set the version number for the DLL.  Normally we leave this blank since
++# we want software that is dynamically loading the DLL to have no problem
++# with version numbers.
++VERSION=
++
++LIBSRC = src\gaiaaux\gg_sqlaux.c src\gaiaaux\gg_utf8.c \
++	src\gaiaexif\gaia_exif.c src\gaiageo\gg_advanced.c \
++	src\gaiageo\gg_endian.c src\gaiageo\gg_ewkt.c \
++	src\gaiageo\gg_geodesic.c src\gaiageo\gg_geoJSON.c \
++	src\gaiageo\gg_geometries.c src\gaiageo\gg_geoscvt.c \
++	src\gaiageo\gg_gml.c src\gaiageo\gg_kml.c \
++	src\gaiageo\gg_relations.c src\gaiageo\gg_shape.c \
++	src\gaiageo\gg_transform.c src\gaiageo\gg_vanuatu.c \
++	src\gaiageo\gg_wkb.c src\gaiageo\gg_wkt.c \
++	src\gaiageo\gg_extras.c src\gaiageo\gg_xml.c \
++	src\gaiageo\gg_voronoj.c src\gaiageo\gg_matrix.c \
++	src\gaiageo\gg_relations_ext.c src\gaiageo\gg_rttopo.c \
++	src/connection_cache/alloc_cache.c src/connection_cache/gg_sequence.c \
++	src\spatialite\mbrcache.c src\shapefiles\shapefiles.c \
++	src\spatialite\spatialite.c src\spatialite\virtualdbf.c \
++	src\spatialite\virtualfdo.c src\spatialite\virtualnetwork.c \
++	src\spatialite\virtualshape.c src\spatialite\virtualspatialindex.c \
++	src\spatialite\statistics.c src\spatialite\metatables.c \
++	src\spatialite\virtualXL.c src\spatialite\extra_tables.c \
++	src\spatialite\virtualxpath.c src\spatialite\virtualbbox.c \
++	src\spatialite\spatialite_init.c src\spatialite\se_helpers.c \
++	src\spatialite\srid_aux.c src\spatialite\table_cloner.c \
++	src\spatialite\virtualelementary.c src\spatialite\virtualgeojson.c \
++	src\spatialite\virtualrouting.c src\spatialite\create_routing.c \
++	src\spatialite\dbobj_scopes.c src\spatialite\pause.c \
++	src\wfs\wfs_in.c src\srsinit\srs_init.c src\spatialite\virtualgpkg.c \
++	src\dxf\dxf_parser.c src\dxf\dxf_loader.c src\dxf\dxf_writer.c \
++	src\dxf\dxf_load_distinct.c src\dxf\dxf_load_mixed.c \
++	src\shapefiles\validator.c src\md5\md5.c src\md5\gaia_md5.c \
++	src\srsinit\epsg_inlined_00.c src\srsinit\epsg_inlined_01.c \
++	src\srsinit\epsg_inlined_02.c src\srsinit\epsg_inlined_03.c \
++	src\srsinit\epsg_inlined_04.c src\srsinit\epsg_inlined_05.c \
++	src\srsinit\epsg_inlined_06.c src\srsinit\epsg_inlined_07.c \
++	src\srsinit\epsg_inlined_08.c src\srsinit\epsg_inlined_09.c \
++	src\srsinit\epsg_inlined_10.c src\srsinit\epsg_inlined_11.c \
++	src\srsinit\epsg_inlined_12.c src\srsinit\epsg_inlined_13.c \
++	src\srsinit\epsg_inlined_14.c src\srsinit\epsg_inlined_15.c \
++	src\srsinit\epsg_inlined_16.c src\srsinit\epsg_inlined_17.c \
++	src\srsinit\epsg_inlined_18.c src\srsinit\epsg_inlined_19.c \
++	src\srsinit\epsg_inlined_20.c src\srsinit\epsg_inlined_21.c \
++	src\srsinit\epsg_inlined_22.c src\srsinit\epsg_inlined_23.c \
++	src\srsinit\epsg_inlined_24.c src\srsinit\epsg_inlined_25.c \
++	src\srsinit\epsg_inlined_26.c src\srsinit\epsg_inlined_27.c \
++	src\srsinit\epsg_inlined_28.c src\srsinit\epsg_inlined_29.c \
++	src\srsinit\epsg_inlined_30.c src\srsinit\epsg_inlined_31.c \
++	src\srsinit\epsg_inlined_32.c src\srsinit\epsg_inlined_33.c \
++	src\srsinit\epsg_inlined_34.c src\srsinit\epsg_inlined_35.c \
++	src\srsinit\epsg_inlined_36.c src\srsinit\epsg_inlined_37.c \
++	src\srsinit\epsg_inlined_38.c src\srsinit\epsg_inlined_39.c \
++	src\srsinit\epsg_inlined_40.c src\srsinit\epsg_inlined_41.c \
++	src\srsinit\epsg_inlined_42.c src\srsinit\epsg_inlined_43.c \
++	src\srsinit\epsg_inlined_44.c src\srsinit\epsg_inlined_45.c \
++	src\srsinit\epsg_inlined_46.c src\srsinit\epsg_inlined_47.c \
++	src\srsinit\epsg_inlined_48.c src\srsinit\epsg_inlined_49.c \
++	src\srsinit\epsg_inlined_50.c src\srsinit\epsg_inlined_51.c \
++	src\srsinit\epsg_inlined_52.c src\srsinit\epsg_inlined_53.c \
++	src\srsinit\epsg_inlined_54.c src\srsinit\epsg_inlined_55.c \
++	src\srsinit\epsg_inlined_56.c src\srsinit\epsg_inlined_57.c \
++	src\srsinit\epsg_inlined_58.c src\srsinit\epsg_inlined_59.c \
++	src\srsinit\epsg_inlined_extra.c src\srsinit\epsg_inlined_prussian.c \
++	src\srsinit\epsg_inlined_wgs84_00.c src\srsinit\epsg_inlined_wgs84_01.c \
++	src\versioninfo\version.c src\virtualtext\virtualtext.c \
++	src\cutter\gaia_cutter.c src\spatialite\virtualknn.c \
++	src\control_points\gaia_control_points.c \
++	src\control_points\grass_crs3d.c src\control_points\grass_georef_tps.c \
++	src\control_points\grass_georef.c src\stored_procedures\stored_procedures.c \
++	src\geopackage\gaia_cvt_gpkg.c \
++	src\geopackage\gpkgAddGeometryColumn.c \
++	src\geopackage\gpkg_add_geometry_triggers.c \
++	src\geopackage\gpkg_add_spatial_index.c \
++	src\geopackage\gpkg_add_tile_triggers.c \
++	src\geopackage\gpkgBinary.c \
++	src\geopackage\gpkgCreateBaseTables.c \
++	src\geopackage\gpkgCreateTilesTable.c \
++	src\geopackage\gpkgCreateTilesZoomLevel.c \
++	src\geopackage\gpkgGetImageType.c \
++	src\geopackage\gpkg_get_normal_row.c \
++	src\geopackage\gpkg_get_normal_zoom.c \
++	src\geopackage\gpkgInsertEpsgSRID.c \
++	src\geopackage\gpkgMakePoint.c \
++	src\topology\gaia_auxnet.c src\topology\gaia_auxtopo.c \
++	src\topology\gaia_auxtopo_table.c src\topology\gaia_netstmts.c \
++	src\topology\gaia_network.c src\topology\gaia_topology.c \
++	src\topology\gaia_topostmts.c src\topology\lwn_network.c \
++	src\topology\net_callbacks.c src\topology\topo_callbacks.c
++
++LIBOBJ     = $(LIBSRC:.c=.libobj)
++MOD_LIBOBJ = $(LIBSRC:.c=.modobj)
+ 
+ SPATIALITE_DLL = spatialite$(VERSION).dll
++MOD_SPATIALITE_DLL = mod_spatialite$(VERSION).dll
++
++LDLIBS = \
++	$(OSGEO4W_ROOT)\lib\proj.lib \
++	$(OSGEO4W_ROOT)\lib\geos_c.lib \
++	$(OSGEO4W_ROOT)\lib\freexl_i.lib \
++	$(OSGEO4W_ROOT)\lib\iconv.dll.lib \
++	$(OSGEO4W_ROOT)\lib\sqlite3_i.lib \
++	$(OSGEO4W_ROOT)\lib\zlib.lib \
++	$(OSGEO4W_ROOT)\lib\libxml2.lib \
++	$(OSGEO4W_ROOT)\lib\librttopo.lib
+ 
+ CFLAGS = /nologo -I.\src\headers -I.\src\topology \
+-	-I. -IC:\OSGeo4W\include $(OPTFLAGS)
++	-I. \
++	-I$(OSGEO4W_ROOT)\include \
++	-I$(OSGEO4W_ROOT)\include\libxml2 \
++	$(OPTFLAGS)
+ 
+ default:	all
+ 
+-all: spatialite.lib spatialite_i.lib
+-#$(EXIF_LOADER_EXE)
++all: spatialite.lib spatialite_i.lib $(SPATIALITE_DLL) $(MOD_SPATIALITE_DLL)
+ 
+ spatialite.lib:	$(LIBOBJ)
+ 	if exist spatialite.lib del spatialite.lib
+ 	lib /out:spatialite.lib $(LIBOBJ)
+ 
+-$(SPATIALITE_DLL):	spatialite_i.lib
++mod_spatialite.lib:	$(MOD_LIBOBJ)
++	if exist mod_spatialite.lib del mod_spatialite.lib
++	lib /out:mod_spatialite.lib $(MOD_LIBOBJ)
+ 
+-spatialite_i.lib:     $(LIBOBJ)
++$(SPATIALITE_DLL) spatialite_i.lib:     $(LIBOBJ)
+ 	link /dll /out:$(SPATIALITE_DLL) \
+-		/implib:spatialite_i.lib $(LIBOBJ) \
+-		C:\OSGeo4W\lib\proj_i.lib C:\OSGeo4W\lib\geos_c.lib \
+-		C:\OSGeo4w\lib\freexl_i.lib C:\OSGeo4w\lib\iconv.lib \
+-		C:\OSGeo4W\lib\sqlite3_i.lib C:\OSGeo4W\lib\zlib.lib \
+-		C:\OSGeo4W\lib\libxml2.lib C:\OSGeo4W\lib\librttopo.lib
++		/implib:spatialite_i.lib $(LIBOBJ) $(LDLIBS)
+ 	if exist $(SPATIALITE_DLL).manifest mt -manifest \
+ 		$(SPATIALITE_DLL).manifest -outputresource:$(SPATIALITE_DLL);2
++
++$(MOD_SPATIALITE_DLL) mod_spatialite_i.lib:     $(MOD_LIBOBJ)
++	link /dll /out:$(MOD_SPATIALITE_DLL) \
++		/implib:mod_spatialite_i.lib $(MOD_LIBOBJ) $(LDLIBS)
++	if exist $(MOD_SPATIALITE_DLL).manifest mt -manifest \
++		$(MOD_SPATIALITE_DLL).manifest -outputresource:$(MOD_SPATIALITE_DLL);2
+ 		
+-.c.obj:
+-	$(CC) $(CFLAGS) /c $*.c /Fo$@
+-	
++.c.modobj:
++	$(CC) $(CFLAGS) /DLOADABLE_EXTENSION /c $< /Fo$*.modobj
++
++.c.libobj:
++	if not exist 12 mkdir 12
++	$(CC) $(CFLAGS) /c $< /Fo$*.libobj
++
+ clean:
+ 	del *.dll
+ 	del *.exp
+ 	del *.manifest
+ 	del *.lib
+-	del src\connection_cache\*.obj
+-	del src\cutter\*.obj
+-	del src\gaiaaux\*.obj
+-	del src\gaiaexif\*.obj
+-	del src\gaiageo\*.obj
+-	del src\shapefiles\*.obj
+-	del src\spatialite\*.obj
+-	del src\srsinit\*.obj
+-	del src\versioninfo\*.obj
+-	del src\virtualtext\*.obj
+-	del src\wfs\*.obj
+-	del src\dxf\*.obj
+-	del src\md5\*.obj
+-	del src\topology\*.obj
+-	del src\stored_procedures\*.obj
+ 	del *.pdb
++	del /s *.libobj
++	del /s *.modobj
+ 
+ install: all
+ 	-mkdir $(INSTDIR)
+@@ -151,4 +168,3 @@
+ 	copy *.lib $(INSTDIR)\lib
+ 	copy src\headers\spatialite.h $(INSTDIR)\include
+ 	copy src\headers\spatialite\*.h $(INSTDIR)\include\spatialite
+-	
+diff -ur libspatialite-5.0.1/src/gaiaaux/gg_sqlaux.c ../libspatialite-5.0.1/src/gaiaaux/gg_sqlaux.c
+--- libspatialite-5.0.1/src/gaiaaux/gg_sqlaux.c	2021-02-07 16:53:46.000000000 +0100
++++ ../libspatialite-5.0.1/src/gaiaaux/gg_sqlaux.c	2023-07-04 14:38:28.102664500 +0200
+@@ -1149,7 +1149,7 @@
+ gaiaConvertToDMS (double longitude, double latitude)
+ {
+ /* formatting a DMS string */
+-    return gaiaConvertToDMS (longitude, latitude);
++    return gaiaConvertToDMSex(longitude, latitude, 8);
+ }
+ 
+ GAIAAUX_DECLARE char *
+diff -ur libspatialite-5.0.1/src/spatialite/virtualelementary.c ../libspatialite-5.0.1/src/spatialite/virtualelementary.c
+--- libspatialite-5.0.1/src/spatialite/virtualelementary.c	2021-02-07 16:53:46.000000000 +0100
++++ ../libspatialite-5.0.1/src/spatialite/virtualelementary.c	2023-07-13 17:49:39.316329700 +0200
+@@ -957,7 +957,7 @@
+     if (column == 5)
+       {
+ 	  /* the "geometry" column */
+-	  gaiaGeomCollPtr geom = *(cursor->geometries + cursor->current);
++	  gaiaGeomCollPtr geom = cursor->geometries ? *(cursor->geometries + cursor->current) : NULL;
+ 	  if (geom == NULL)
+ 	      sqlite3_result_null (pContext);
+ 	  else

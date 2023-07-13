@@ -38,6 +38,7 @@ startlog() {
 		export RUNTIMEDEPENDS=$(runtimedepends $BUILDDEPENDS)
 	}
 
+	trap 'errlog $LINENO $?' ERR
 	trap "faillog" EXIT
 }
 declare -x startlog
@@ -83,14 +84,18 @@ endlog() {
 }
 declare -x endlog
 
-faillog() {
-	log "FAILED: $? AT $LINENO:"
-
-	i=0
-	while caller $i; do
-		(( i++ )) || true
+errlog() {
+	log "ERROR: error $2 on line $1"
+	set -x
+	local i=1
+	while caller $(( i++ )); do
+		:
 	done
+}
+declare -x errlog
 
+faillog() {
+	log "FAILED: $?"
 	finishlog
 	return 1
 }
@@ -117,8 +122,14 @@ fetchenv() {
 
 	local d=$(mktemp -d /tmp/fetchenv.XXXXXXXXXX)
 	cmd /c set >$d/srcenv || true
-	cmd /c call $(cygpath -w $batch) "$@" \>nul 2\>\&1 \& set >$d/dstenv || true
-	sleep 2
+	cmd /c call $(cygpath -w $batch) "$@" \>$(cygpath -w $d/log) 2\>\&1 \& set >$d/dstenv || true
+
+	! [ -f $d/log ] || cat $d/log
+
+	while [ -f $d/log ]; do
+		rm $d/log || sleep 2
+	done
+
 	cat <<EOF >$d/envdiff
 /^+++/d;
 /^[^+]/d;
@@ -138,7 +149,7 @@ EOF
 	diff -u $d/srcenv $d/dstenv | sed -f $d/envdiff >$d/diffenv
 	. $d/diffenv
 	PATH=$PATH:/bin:/usr/bin:$(cygpath --sysdir):$(cygpath --windir)
-	rm -fr $d || true
+	[ -n "$OSGEO4W_KEEP_ENV" ] || rm -fr $d || true
 }
 declare -x fetchenv
 
@@ -476,6 +487,9 @@ bash() { /bin/bash "$@"; }
 cat() { /bin/cat "$@"; }
 cp() { /bin/cp "$@"; }
 rm() { /bin/rm "$@"; }
+rmdir() { /bin/rmdir "$@"; }
+mv() { /bin/mv "$@"; }
+mktemp() { /bin/mktemp "$@"; }
 mkdir() { /bin/mkdir "$@"; }
 tar() { /bin/tar "$@"; }
 ls() { /bin/ls "$@"; }

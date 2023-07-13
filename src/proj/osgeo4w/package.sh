@@ -15,6 +15,7 @@ vs2019env
 cmakeenv
 ninjaenv
 
+rm -rf install
 mkdir -p build-$V install
 cd build-$V
 
@@ -120,8 +121,7 @@ tar -C install -cjf $R/$P-runtime-data/$P-runtime-data-$V-$B.tar.bz2 \
 tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	etc/abi/$P-devel \
 	include \
-	lib \
-	share/cmake
+	lib
 		
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 

@@ -1,5 +1,5 @@
 export P=poppler
-export V=22.06.0
+export V=23.07.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="freetype-devel libjpeg-turbo-devel zlib-devel libpng-devel libtiff-devel curl-devel boost-devel cairo-devel libiconv-devel openjpeg-devel openjpeg-tools"

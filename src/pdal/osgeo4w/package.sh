@@ -1,5 +1,5 @@
 export P=pdal
-export V=2.5.3
+export V=2.5.5
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="gdal-devel libgeotiff-devel libtiff-devel zlib-devel curl-devel libxml2-devel hdf5-devel openssl-devel zstd-devel laszip-devel"

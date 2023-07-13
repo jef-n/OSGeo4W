@@ -27,7 +27,7 @@ export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R
 
 
-msysarch=msys2-base-x86_64-20221028.tar.xz
+msysarch=msys2-base-x86_64-20230526.tar.xz
 
 [ -f $msysarch ] || wget http://repo.msys2.org/distrib/x86_64/$msysarch
 if ! [ -d msys64 ]; then

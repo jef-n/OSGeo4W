@@ -10,17 +10,20 @@ startlog
 
 [ -f $P-$V.tar.gz ] || wget http://www.gaia-gis.it/gaia-sins/$P-$V.tar.gz
 [ -f ../$P-$V/makefile.vc ] || tar -C .. -xzf $P-$V.tar.gz
+[ -f ../$P-$V/patched ] || {
+	patch -p1 -d ../$P-$V --dry-run <patch
+	patch -p1 -d ../$P-$V <patch
+	touch ../$P-$V/patched
+}
 
 vs2019env
 
-mkdir -p install
-
-cp makefile.vc ../$P-$V
+rm -rf install
 
 cd ../$P-$V
 
-nmake /f makefile.vc OSGEO4W_ROOT=$(cygpath -aw ../osgeo4w/osgeo4w)
-nmake /f makefile.vc OSGEO4W_ROOT=$(cygpath -aw ../osgeo4w/osgeo4w) INSTDIR=$(cygpath -aw ../osgeo4w/install) install
+nmake /nologo /f makefile.vc OSGEO4W_ROOT=$(cygpath -aw ../osgeo4w/osgeo4w)
+nmake /nologo /f makefile.vc OSGEO4W_ROOT=$(cygpath -aw ../osgeo4w/osgeo4w) INSTDIR=$(cygpath -aw ../osgeo4w/install) install
 
 cd ../osgeo4w
 
@@ -51,7 +54,7 @@ tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	lib/spatialite.lib \
 	lib/spatialite_i.lib
 
-tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/makefile.vc
+tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/patch
 
 cp ../$P-$V/COPYING $R//$P-$V-$B.txt
 cp ../$P-$V/COPYING $R/$P-devel/$P-devel-$V-$B.txt

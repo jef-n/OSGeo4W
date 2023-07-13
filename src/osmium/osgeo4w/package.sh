@@ -14,6 +14,7 @@ p=$P-tool
 [ -f ../$p-$V/CMakeLists.txt ] || tar -C .. -xzf $p-$V.tar.gz
 
 (
+	fetchenv osgeo4w/bin/o4w_env.bat
 	vs2019env
 	cmakeenv
 	ninjaenv
@@ -39,10 +40,11 @@ p=$P-tool
 		-D LZ4_LIBRARY_RELEASE=$(cygpath -am ../osgeo4w/lib/lz4.lib) \
 		../../$p-$V
 	cmake --build .
-	(
-		fetchenv ../osgeo4w/bin/o4w_env.bat
+
+	if [ -z "$OSGEO4W_SKIP_TESTS" ]; then
 		cmake --build . --target test
-	)
+	fi
+
 	cmake --build . --target install
 )
 
