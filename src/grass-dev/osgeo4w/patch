@@ -1,5 +1,5 @@
 diff --git a/.github/workflows/osgeo4w.yml b/.github/workflows/osgeo4w.yml
-index 86f5fe5f5..43bf6fc4c 100644
+index 5ad3a3fa7..606444ed4 100644
 --- a/.github/workflows/osgeo4w.yml
 +++ b/.github/workflows/osgeo4w.yml
 @@ -42,9 +42,10 @@ jobs:
@@ -78,7 +78,7 @@ index ecb6e951f..4d6e04696 100644
      --with-opengl=windows \
      --with-bzlib \
 diff --git a/mswindows/osgeo4w/package.sh b/mswindows/osgeo4w/package.sh
-index c638c40ee..73333db24 100755
+index c638c40ee..84fe0bb87 100755
 --- a/mswindows/osgeo4w/package.sh
 +++ b/mswindows/osgeo4w/package.sh
 @@ -111,29 +111,19 @@ DLLS="
@@ -172,11 +172,14 @@ index c638c40ee..73333db24 100755
  		--without-pdal
  
  	touch mswindows/osgeo4w/configure-stamp
-@@ -249,7 +240,6 @@ if [ -n "$PACKAGE_PATCH" ]; then
+@@ -249,7 +240,9 @@ if [ -n "$PACKAGE_PATCH" ]; then
  
      # copy dependencies (TODO: to be reduced)
      cp -uv $DLLS apps/grass/grass$POSTFIX/bin
 -    cp -uv /mingw64/etc/fonts/fonts.conf apps/grass/grass$POSTFIX/etc
++
++    # copy R batch files
++    cp -uv $SRC/mswindows/external/rbatch/* apps/grass/grass$POSTFIX/bin
  
      # creating grass package
      /bin/tar -cjf $PDIR/grass$PACKAGE_POSTFIX-$VERSION-$PACKAGE_PATCH.tar.bz2 \

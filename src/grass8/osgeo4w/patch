@@ -163,11 +163,14 @@ diff -ur grass-8.3.0/mswindows/osgeo4w/package.sh ../grass-8.3.0/mswindows/osgeo
  		--without-pdal
  
  	touch mswindows/osgeo4w/configure-stamp
-@@ -249,7 +240,6 @@
+@@ -249,7 +240,9 @@
  
      # copy dependencies (TODO: to be reduced)
      cp -uv $DLLS apps/grass/grass$POSTFIX/bin
 -    cp -uv /mingw64/etc/fonts/fonts.conf apps/grass/grass$POSTFIX/etc
++
++    # copy R batch files
++    cp -uv $SRC/mswindows/external/rbatch/* apps/grass/grass$POSTFIX/bin
  
      # creating grass package
      /bin/tar -cjf $PDIR/grass$PACKAGE_POSTFIX-$VERSION-$PACKAGE_PATCH.tar.bz2 \
