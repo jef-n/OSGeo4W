@@ -1,5 +1,5 @@
 export P=gs
-export V=9.55.0
+export V=10.01.2
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
@@ -8,7 +8,7 @@ source ../../../scripts/build-helpers
 
 startlog
 
-[ -f gs9550w64.exe ] || wget https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/$P${V//./}/$P${V//./}w64.exe
+[ -f gs${V//./}w64.exe ] || wget https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/$P${V//./}/$P${V//./}w64.exe
 
 [ -d install ] || {
 	mkdir -p install
@@ -41,12 +41,10 @@ cp install/bin/gswin64c.exe install/bin/gswin32c.exe
 cp install/bin/gswin64c.exe install/bin/gs.exe
 
 tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
-	--xform "s,^tesseract,apps/gs/tesserac/," \
 	--xform "s,^Resource,apps/gs/Resource," \
 	--xform "s,^lib,apps/gs/lib," \
 	--xform "s,^doc,apps/gs/doc," \
 	--xform "s,^iccprofiles,apps/gs/iccprofiles," \
-	tesseract \
 	Resource \
 	lib \
 	bin/gsdll64.dll \
@@ -55,7 +53,7 @@ tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
 	bin/gs.exe \
 	etc/ini/gs.bat
 
-cp ../ghostscript-$V/doc/COPYING $R/$P-$V-$B.txt
+cp install/doc/COPYING $R/$P-$V-$B.txt
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 
