@@ -1,23 +1,64 @@
---- src/freexl.c.ori	2022-05-15 21:16:36.563818264 +0200
-+++ src/freexl.c	2022-05-15 21:16:48.051798637 +0200
-@@ -295,7 +295,7 @@
- 	  *err = FREEXL_UNSUPPORTED_CHARSET;
- 	  return NULL;
-       }
--    utf8buf = malloc (maxlen);
-+    utf8buf = malloc (maxlen + 1);
-     len = buflen;
-     utf8len = maxlen;
-     pBuf = (char *) buf;
-@@ -1923,11 +1923,6 @@
- 		return FREEXL_OK;
- 	    }
+diff -ur freexl-2.0.0/makefile.vc ../freexl-2.0.0/makefile.vc
+--- freexl-2.0.0/makefile.vc	2023-07-25 07:12:29.000000000 +0200
++++ ../freexl-2.0.0/makefile.vc	2023-08-04 23:52:29.644873000 +0200
+@@ -11,7 +11,7 @@
+ LIBOBJ	               =	$(CORE) $(XLSX) $(ODS)
+ FREEXL_DLL	 	       =	freexl$(VERSION).dll
  
--	  if (len <= 0)
--	    {
--		/* zero length - it's a preasumable crafted file intended to crash FreeXL */
--		return FREEXL_CRAFTED_FILE;
--	    }
- 	  if (!parse_unicode_string
- 	      (workbook->utf16_converter, len, utf16, p_string, &utf8_string))
- 	      return FREEXL_INVALID_CHARACTER;
+-CFLAGS	=	/nologo -I. -Iheaders -IC:\OSGeo4W\include $(OPTFLAGS)
++CFLAGS	=	/nologo -I. -Iheaders -I$(OSGEO4W_ROOT)\include $(OPTFLAGS)
+ 
+ default:	all
+ 
+@@ -35,12 +35,15 @@
+ freexl_i.lib:	$(LIBOBJ)
+ 	link /debug /dll /out:$(FREEXL_DLL) \
+ 		/implib:freexl_i.lib $(LIBOBJ) \
+-		C:\OSGeo4W\lib\iconv.lib \
+-		C:\OSGeo4W\lib\libexpat.lib \
+-		C:\OSGeo4W\lib\libminizip.lib \
+-		C:\OSGeo4w\lib\zlib.lib
++		$(OSGEO4W_ROOT)\lib\iconv.dll.lib \
++		$(OSGEO4W_ROOT)\lib\libexpat.lib \
++		$(OSGEO4W_ROOT)\lib\libminizip.lib \
++		$(OSGEO4W_ROOT)\lib\zlib.lib \
++		$(OSGEO4W_ROOT)\lib\liblzma.lib \
++		$(OSGEO4W_ROOT)\lib\libbz2.lib \
++		advapi32.lib crypt32.lib
+ 	if exist $(FREEXL_DLL).manifest mt -manifest \
+-		$(FREEXL_DLL).manifest -outputresource:$(FREEXL_DLL);2 
++		$(FREEXL_DLL).manifest -outputresource:$(FREEXL_DLL);2
+ 
+ clean:
+ 	del *.dll
+@@ -57,5 +60,4 @@
+ 	-mkdir $(INSTDIR)\include
+ 	copy *.dll $(INSTDIR)\bin
+ 	copy *.lib $(INSTDIR)\lib
+-	copy headers\freexl.h $(INSTDIR)\include	
+-
++	copy headers\freexl.h $(INSTDIR)\include
+diff -ur freexl-2.0.0/src/freexl_ods.c ../freexl-2.0.0/src/freexl_ods.c
+--- freexl-2.0.0/src/freexl_ods.c	2023-07-25 07:12:29.000000000 +0200
++++ ../freexl-2.0.0/src/freexl_ods.c	2023-08-04 23:48:08.784973500 +0200
+@@ -83,7 +83,7 @@
+ #include "freexl.h"
+ #include "freexl_internals.h"
+ 
+-#include <minizip/unzip.h>
++#include <unzip.h>
+ 
+ #ifdef _WIN32
+ #define strcasecmp	_stricmp
+diff -ur freexl-2.0.0/src/freexl_xlsx.c ../freexl-2.0.0/src/freexl_xlsx.c
+--- freexl-2.0.0/src/freexl_xlsx.c	2023-07-25 07:12:29.000000000 +0200
++++ ../freexl-2.0.0/src/freexl_xlsx.c	2023-08-04 23:48:08.786971600 +0200
+@@ -84,7 +84,7 @@
+ #include "freexl.h"
+ #include "freexl_internals.h"
+ 
+-#include <minizip/unzip.h>
++#include <unzip.h>
+ 
+ #ifdef _WIN32
+ #define strcasecmp	_stricmp

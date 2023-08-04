@@ -1,0 +1,14 @@
+diff -ur gdal-3.7.1/cmake/modules/packages/FindSPATIALITE.cmake ../gdal-3.7.1/cmake/modules/packages/FindSPATIALITE.cmake
+--- gdal-3.7.1/cmake/modules/packages/FindSPATIALITE.cmake	2023-07-06 13:14:14.000000000 +0200
++++ ../gdal-3.7.1/cmake/modules/packages/FindSPATIALITE.cmake	2023-08-05 00:38:25.543906800 +0200
+@@ -55,8 +55,8 @@
+ if(SPATIALITE_LIBRARY AND SPATIALITE_INCLUDE_DIR
+    AND NOT SPATIALITE_VERSION_STRING)
+     file(STRINGS "${SPATIALITE_INCLUDE_DIR}/spatialite.h" _spatialite_h_ver
+-         REGEX "^[ \t]version[ \t]([0-9]+\\.[0-9]+),.*")
+-    string(REGEX REPLACE "[ \t]version[ \t]([0-9]+\\.[0-9]+),.*" "\\1" _spatialite_h_ver ${_spatialite_h_ver})
++         REGEX "^[ \t]version[ \t]([0-9]+\\.[0-9]+)[,.].*")
++    string(REGEX REPLACE "[ \t]version[ \t]([0-9]+\\.[0-9]+)[,.].*" "\\1" _spatialite_h_ver ${_spatialite_h_ver})
+     set(SPATIALITE_VERSION_STRING "${_spatialite_h_ver}")
+ endif()
+ 

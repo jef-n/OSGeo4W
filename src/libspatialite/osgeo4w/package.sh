@@ -1,5 +1,5 @@
 export P=libspatialite
-export V=5.0.1
+export V=5.1.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="sqlite3-devel libiconv-devel geos-devel proj-devel freexl-devel libxml2-devel librttopo-devel zlib-devel"
@@ -8,7 +8,7 @@ source ../../../scripts/build-helpers
 
 startlog
 
-[ -f $P-$V.tar.gz ] || wget http://www.gaia-gis.it/gaia-sins/$P-$V.tar.gz
+[ -f $P-$V.tar.gz ] || wget https://www.gaia-gis.it/gaia-sins/$P-sources/$P-$V.tar.gz
 [ -f ../$P-$V/makefile.vc ] || tar -C .. -xzf $P-$V.tar.gz
 [ -f ../$P-$V/patched ] || {
 	patch -p1 -d ../$P-$V --dry-run <patch

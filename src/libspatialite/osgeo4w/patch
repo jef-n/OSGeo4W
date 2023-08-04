@@ -1,7 +1,7 @@
-diff -ur libspatialite-5.0.1/makefile.vc ../libspatialite-5.0.1/makefile.vc
---- libspatialite-5.0.1/makefile.vc	2021-02-07 16:53:46.000000000 +0100
-+++ ../libspatialite-5.0.1/makefile.vc	2023-07-04 14:36:37.210498900 +0200
-@@ -2,144 +2,161 @@
+diff -ur libspatialite-5.1.0/makefile.vc ../libspatialite-5.1.0/makefile.vc
+--- libspatialite-5.1.0/makefile.vc	2023-08-04 09:51:40.000000000 +0200
++++ ../libspatialite-5.1.0/makefile.vc	2023-08-05 00:07:24.617449100 +0200
+@@ -2,147 +2,159 @@
  #
  # NMAKE Makefile to build libspatialite on Windows
  #
@@ -68,10 +68,13 @@ diff -ur libspatialite-5.0.1/makefile.vc ../libspatialite-5.0.1/makefile.vc
 -	src\srsinit\epsg_inlined_54.obj src\srsinit\epsg_inlined_55.obj \
 -	src\srsinit\epsg_inlined_56.obj src\srsinit\epsg_inlined_57.obj \
 -	src\srsinit\epsg_inlined_58.obj src\srsinit\epsg_inlined_59.obj \
+-	src\srsinit\epsg_inlined_60.obj src\srsinit\epsg_inlined_61.obj \
+-	src\srsinit\epsg_inlined_62.obj src\srsinit\epsg_inlined_63.obj \
 -	src\srsinit\epsg_inlined_extra.obj src\srsinit\epsg_inlined_prussian.obj \
 -	src\srsinit\epsg_inlined_wgs84_00.obj src\srsinit\epsg_inlined_wgs84_01.obj \
 -	src\versioninfo\version.obj src\virtualtext\virtualtext.obj \
--	src\cutter\gaia_cutter.obj src\spatialite\virtualknn.obj \
+-	src\cutter\gaia_cutter.obj \
+-	src\spatialite\virtualknn.obj src\spatialite\virtualknn2.obj \
 -	src\control_points\gaia_control_points.obj \
 -	src\control_points\grass_crs3d.obj src\control_points\grass_georef_tps.obj \
 -	src\control_points\grass_georef.obj src\stored_procedures\stored_procedures.obj \
@@ -94,11 +97,8 @@ diff -ur libspatialite-5.0.1/makefile.vc ../libspatialite-5.0.1/makefile.vc
 -	src\topology\gaia_network.obj src\topology\gaia_topology.obj \
 -	src\topology\gaia_topostmts.obj src\topology\lwn_network.obj \
 -	src\topology\net_callbacks.obj src\topology\topo_callbacks.obj
-+# Set the version number for the DLL.  Normally we leave this blank since
-+# we want software that is dynamically loading the DLL to have no problem
-+# with version numbers.
-+VERSION=
-+
+-
+-SPATIALITE_DLL = spatialite$(VERSION).dll
 +LIBSRC = src\gaiaaux\gg_sqlaux.c src\gaiaaux\gg_utf8.c \
 +	src\gaiaexif\gaia_exif.c src\gaiageo\gg_advanced.c \
 +	src\gaiageo\gg_endian.c src\gaiageo\gg_ewkt.c \
@@ -158,10 +158,13 @@ diff -ur libspatialite-5.0.1/makefile.vc ../libspatialite-5.0.1/makefile.vc
 +	src\srsinit\epsg_inlined_54.c src\srsinit\epsg_inlined_55.c \
 +	src\srsinit\epsg_inlined_56.c src\srsinit\epsg_inlined_57.c \
 +	src\srsinit\epsg_inlined_58.c src\srsinit\epsg_inlined_59.c \
++	src\srsinit\epsg_inlined_60.c src\srsinit\epsg_inlined_61.c \
++	src\srsinit\epsg_inlined_62.c src\srsinit\epsg_inlined_63.c \
 +	src\srsinit\epsg_inlined_extra.c src\srsinit\epsg_inlined_prussian.c \
 +	src\srsinit\epsg_inlined_wgs84_00.c src\srsinit\epsg_inlined_wgs84_01.c \
 +	src\versioninfo\version.c src\virtualtext\virtualtext.c \
-+	src\cutter\gaia_cutter.c src\spatialite\virtualknn.c \
++	src\cutter\gaia_cutter.c \
++	src\spatialite\virtualknn.c src\spatialite\virtualknn2.c \
 +	src\control_points\gaia_control_points.c \
 +	src\control_points\grass_crs3d.c src\control_points\grass_georef_tps.c \
 +	src\control_points\grass_georef.c src\stored_procedures\stored_procedures.c \
@@ -187,9 +190,9 @@ diff -ur libspatialite-5.0.1/makefile.vc ../libspatialite-5.0.1/makefile.vc
 +
 +LIBOBJ     = $(LIBSRC:.c=.libobj)
 +MOD_LIBOBJ = $(LIBSRC:.c=.modobj)
- 
- SPATIALITE_DLL = spatialite$(VERSION).dll
-+MOD_SPATIALITE_DLL = mod_spatialite$(VERSION).dll
++
++SPATIALITE_DLL = spatialite.dll
++MOD_SPATIALITE_DLL = mod_spatialite.dll
 +
 +LDLIBS = \
 +	$(OSGEO4W_ROOT)\lib\proj.lib \
@@ -277,32 +280,8 @@ diff -ur libspatialite-5.0.1/makefile.vc ../libspatialite-5.0.1/makefile.vc
  
  install: all
  	-mkdir $(INSTDIR)
-@@ -151,4 +168,3 @@
+@@ -154,4 +166,3 @@
  	copy *.lib $(INSTDIR)\lib
  	copy src\headers\spatialite.h $(INSTDIR)\include
  	copy src\headers\spatialite\*.h $(INSTDIR)\include\spatialite
 -	
-diff -ur libspatialite-5.0.1/src/gaiaaux/gg_sqlaux.c ../libspatialite-5.0.1/src/gaiaaux/gg_sqlaux.c
---- libspatialite-5.0.1/src/gaiaaux/gg_sqlaux.c	2021-02-07 16:53:46.000000000 +0100
-+++ ../libspatialite-5.0.1/src/gaiaaux/gg_sqlaux.c	2023-07-04 14:38:28.102664500 +0200
-@@ -1149,7 +1149,7 @@
- gaiaConvertToDMS (double longitude, double latitude)
- {
- /* formatting a DMS string */
--    return gaiaConvertToDMS (longitude, latitude);
-+    return gaiaConvertToDMSex(longitude, latitude, 8);
- }
- 
- GAIAAUX_DECLARE char *
-diff -ur libspatialite-5.0.1/src/spatialite/virtualelementary.c ../libspatialite-5.0.1/src/spatialite/virtualelementary.c
---- libspatialite-5.0.1/src/spatialite/virtualelementary.c	2021-02-07 16:53:46.000000000 +0100
-+++ ../libspatialite-5.0.1/src/spatialite/virtualelementary.c	2023-07-13 17:49:39.316329700 +0200
-@@ -957,7 +957,7 @@
-     if (column == 5)
-       {
- 	  /* the "geometry" column */
--	  gaiaGeomCollPtr geom = *(cursor->geometries + cursor->current);
-+	  gaiaGeomCollPtr geom = cursor->geometries ? *(cursor->geometries + cursor->current) : NULL;
- 	  if (geom == NULL)
- 	      sqlite3_result_null (pContext);
- 	  else
