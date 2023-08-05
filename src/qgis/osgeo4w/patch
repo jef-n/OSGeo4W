@@ -1,0 +1,106 @@
+From 3e774edcb6a252b55366ce366a841ee960f504b6 Mon Sep 17 00:00:00 2001
+From: "Juergen E. Fischer" <jef@norbit.de>
+Date: Thu, 3 Aug 2023 13:36:14 +0200
+Subject: [PATCH] grass on windows: * avoid running grassMm.bat found in the
+ current directory * avoid finding and running GRASS pager found in the
+ current directory
+
+---
+ python/plugins/grassprovider/Grass7Utils.py | 16 ++++++----------
+ src/providers/grass/qgsgrass.cpp            | 15 +++++++++++----
+ 2 files changed, 17 insertions(+), 14 deletions(-)
+
+diff --git a/python/plugins/grassprovider/Grass7Utils.py b/python/plugins/grassprovider/Grass7Utils.py
+index 902f73d093..dd4f0daabe 100644
+--- a/python/plugins/grassprovider/Grass7Utils.py
++++ b/python/plugins/grassprovider/Grass7Utils.py
+@@ -21,7 +21,6 @@ __copyright__ = '(C) 2014-2015, Victor Olaya'
+ 
+ import stat
+ import shutil
+-import shlex
+ import subprocess
+ import os
+ import sys
+@@ -36,7 +35,6 @@ from qgis.core import (Qgis,
+ from qgis.PyQt.QtCore import QCoreApplication
+ from processing.core.ProcessingConfig import ProcessingConfig
+ from processing.tools.system import userFolder, isWindows, isMac, mkdir
+-from processing.tests.TestData import points
+ from processing.algs.gdal.GdalUtils import GdalUtils
+ 
+ 
+@@ -169,14 +167,12 @@ class Grass7Utils:
+                 cmdList = [
+                     "grass{}{}{}".format(major, minor, patch),
+                     "grass",
+-                    "grass{}{}{}.sh".format(major, minor, patch),
+-                    "grass.sh"
++                    "grass{}{}{}.{}".format(major, minor, patch, "bat" if isWindows() else "sh"),
++                    "grass.{}".format("bat" if isWindows() else "sh")
+                 ]
+         else:
+-            cmdList = [
+-                "grass80", "grass78", "grass76", "grass74", "grass72", "grass70", "grass",
+-                "grass80.sh", "grass78.sh", "grass76.sh", "grass74.sh", "grass72.sh", "grass70.sh", "grass.sh"
+-            ]
++            cmdList = ["grass80", "grass78", "grass76", "grass74", "grass72", "grass70", "grass"]
++            cmdList.extend(["{}.{}".format(b, "bat" if isWindows() else "sh") for b in cmdList])
+ 
+         # For MS-Windows there is a difference between GRASS Path and GRASS binary
+         if isWindows():
+@@ -191,8 +187,8 @@ class Grass7Utils:
+             # Search in grassPath
+             command = searchFolder(path)
+ 
+-        # If everything has failed, use shutil
+-        if not command:
++        # If everything has failed, use shutil (but not for Windows as it'd include .)
++        if not command and not isWindows():
+             for cmd in cmdList:
+                 testBin = shutil.which(cmd)
+                 if testBin:
+diff --git a/src/providers/grass/qgsgrass.cpp b/src/providers/grass/qgsgrass.cpp
+index 581a9b3614..0f3ef32e9f 100644
+--- a/src/providers/grass/qgsgrass.cpp
++++ b/src/providers/grass/qgsgrass.cpp
+@@ -408,11 +408,7 @@ bool QgsGrass::init( void )
+     }
+ #endif
+ 
+-    //QString p = getenv( "PATH" );
+-    //path.append( sep + p );
+-
+     QgsDebugMsgLevel( QStringLiteral( "sGrassModulesPaths = " ) + sGrassModulesPaths.join( ',' ), 2 );
+-    //putEnv( "PATH", path );
+ 
+     // TODO: move where it is required for QProcess
+     // Set GRASS_PAGER if not set, it is necessary for some
+@@ -425,6 +421,12 @@ bool QgsGrass::init( void )
+     // MSYS terminal and built in shell.
+     if ( !getenv( "GRASS_PAGER" ) )
+     {
++#ifdef Q_OS_WIN
++      // avoid finding pager in current directory
++      bool skipCurrentDirectory = getenv( "NoDefaultCurrentDirectoryInExePath" ) != nullptr;
++      if ( !skipCurrentDirectory )
++        putEnv( QStringLiteral( "NoDefaultCurrentDirectoryInExePath" ), "1" );
++#endif
+       QString pager;
+       QStringList pagers;
+       //pagers << "more" << "less" << "cat"; // se notes above
+@@ -454,6 +456,11 @@ bool QgsGrass::init( void )
+       {
+         putEnv( QStringLiteral( "GRASS_PAGER" ), pager );
+       }
++
++#ifdef Q_OS_WIN
++      if ( !skipCurrentDirectory )
++        putEnv( QStringLiteral( "NoDefaultCurrentDirectoryInExePath" ), "" );
++#endif
+     }
+     sInitialized = 1;
+   }
+-- 
+2.33.0
+
