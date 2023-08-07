@@ -7,7 +7,7 @@ diff -ur libspatialite-5.1.0/makefile.vc ../libspatialite-5.1.0/makefile.vc
  #
 -!INCLUDE nmake.opt
 +OPTFLAGS=	/nologo /Ox /fp:precise /W4 /MD /D_CRT_SECURE_NO_WARNINGS \
-+		/DDLL_EXPORT /DYY_NO_UNISTD_H
++		/DDLL_EXPORT /DYY_NO_UNISTD_H /DGEOS_3100 /DGEOS_3110
  
 -LIBOBJ = src\gaiaaux\gg_sqlaux.obj src\gaiaaux\gg_utf8.obj \
 -	src\gaiaexif\gaia_exif.obj src\gaiageo\gg_advanced.obj \
