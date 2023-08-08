@@ -1,6 +1,6 @@
 diff -ur grass-8.3.0/include/Make/Grass.make ../grass-8.3.0/include/Make/Grass.make
 --- grass-8.3.0/include/Make/Grass.make	2023-06-24 12:01:41.000000000 +0200
-+++ ../grass-8.3.0/include/Make/Grass.make	2023-06-24 21:24:22.581019500 +0200
++++ ../grass-8.3.0/include/Make/Grass.make	2023-08-05 02:36:26.832721200 +0200
 @@ -196,7 +196,7 @@
  FORMDEPS         = $(DBMILIB) $(GISLIB)
  RASTER3DDEPS     = $(RASTERLIB) $(GISLIB)
@@ -12,7 +12,7 @@ diff -ur grass-8.3.0/include/Make/Grass.make ../grass-8.3.0/include/Make/Grass.m
  HTMLDRIVERDEPS   = $(DRIVERLIB) $(GISLIB) $(MATHLIB)
 diff -ur grass-8.3.0/include/Make/Platform.make.in ../grass-8.3.0/include/Make/Platform.make.in
 --- grass-8.3.0/include/Make/Platform.make.in	2023-06-24 12:01:41.000000000 +0200
-+++ ../grass-8.3.0/include/Make/Platform.make.in	2023-06-24 21:24:22.584540200 +0200
++++ ../grass-8.3.0/include/Make/Platform.make.in	2023-08-05 02:36:26.833717900 +0200
 @@ -229,7 +229,7 @@
  #OpenMP
  OPENMP_INCPATH      = @OPENMP_INCPATH@
@@ -24,7 +24,7 @@ diff -ur grass-8.3.0/include/Make/Platform.make.in ../grass-8.3.0/include/Make/P
  
 diff -ur grass-8.3.0/lib/gis/gisinit.c ../grass-8.3.0/lib/gis/gisinit.c
 --- grass-8.3.0/lib/gis/gisinit.c	2023-06-24 12:01:41.000000000 +0200
-+++ ../grass-8.3.0/lib/gis/gisinit.c	2023-06-24 21:24:22.551481900 +0200
++++ ../grass-8.3.0/lib/gis/gisinit.c	2023-08-05 02:36:26.835734400 +0200
 @@ -49,6 +49,7 @@
  
      G_set_program_name(pgm);
@@ -60,7 +60,7 @@ diff -ur grass-8.3.0/lib/gis/gisinit.c ../grass-8.3.0/lib/gis/gisinit.c
  
 diff -ur grass-8.3.0/mswindows/osgeo4w/env.bat.tmpl ../grass-8.3.0/mswindows/osgeo4w/env.bat.tmpl
 --- grass-8.3.0/mswindows/osgeo4w/env.bat.tmpl	2023-06-24 12:01:41.000000000 +0200
-+++ ../grass-8.3.0/mswindows/osgeo4w/env.bat.tmpl	2023-06-24 21:24:22.556228500 +0200
++++ ../grass-8.3.0/mswindows/osgeo4w/env.bat.tmpl	2023-08-05 02:36:26.837719300 +0200
 @@ -8,6 +8,7 @@
  REM Note that msys package must be also installed
  REM set GRASS_SH=%OSGEO4W_ROOT%\apps\msys\bin\sh.exe
@@ -71,8 +71,8 @@ diff -ur grass-8.3.0/mswindows/osgeo4w/env.bat.tmpl ../grass-8.3.0/mswindows/osg
  
 diff -ur grass-8.3.0/mswindows/osgeo4w/package.sh ../grass-8.3.0/mswindows/osgeo4w/package.sh
 --- grass-8.3.0/mswindows/osgeo4w/package.sh	2023-06-24 12:01:41.000000000 +0200
-+++ ../grass-8.3.0/mswindows/osgeo4w/package.sh	2023-06-24 21:28:24.717960900 +0200
-@@ -111,29 +111,19 @@
++++ ../grass-8.3.0/mswindows/osgeo4w/package.sh	2023-08-08 23:28:51.793576200 +0200
+@@ -111,29 +111,21 @@
  	/mingw64/bin/libbz2-1.dll
  	/mingw64/bin/libiconv-2.dll
  	/mingw64/bin/libexpat-1.dll
@@ -90,9 +90,10 @@ diff -ur grass-8.3.0/mswindows/osgeo4w/package.sh ../grass-8.3.0/mswindows/osgeo
 -	/mingw64/bin/libfreetype-6.dll
 -	/mingw64/bin/libharfbuzz-0.dll
 -	/mingw64/bin/libglib-2.0-0.dll
--	/mingw64/bin/libgomp-1.dll
+ 	/mingw64/bin/libgomp-1.dll
 -	/mingw64/bin/libgraphite2.dll
 -	/mingw64/bin/libpcre-1.dll
++	/mingw64/bin/libomp.dll
  	/mingw64/bin/libstdc++-6.dll
  	/mingw64/bin/libgcc_s_seh-1.dll
  	/mingw64/bin/libfftw3-3.dll
@@ -103,7 +104,7 @@ diff -ur grass-8.3.0/mswindows/osgeo4w/package.sh ../grass-8.3.0/mswindows/osgeo
  "
  
  if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
-@@ -149,18 +139,18 @@
+@@ -149,18 +141,18 @@
  	cp -uv $DLLS dist.x86_64-w64-mingw32/bin
  
  	mkdir -p mswindows/osgeo4w/lib
@@ -129,7 +130,7 @@ diff -ur grass-8.3.0/mswindows/osgeo4w/package.sh ../grass-8.3.0/mswindows/osgeo
  		--with-opengl=windows \
  		--without-x \
  		--with-cxx \
-@@ -168,13 +158,13 @@
+@@ -168,13 +160,13 @@
  		--enable-largefile \
  		--with-fftw \
  		--with-freetype \
@@ -149,7 +150,7 @@ diff -ur grass-8.3.0/mswindows/osgeo4w/package.sh ../grass-8.3.0/mswindows/osgeo
  		--with-gdal=$PWD/mswindows/osgeo4w/gdal-config \
  		--with-geos=$PWD/mswindows/osgeo4w/geos-config \
  		--with-sqlite \
-@@ -190,10 +180,11 @@
+@@ -190,10 +182,11 @@
  		--with-lapack-includes=/mingw64/include \
  		--with-openmp \
  		--with-cairo \
@@ -163,7 +164,7 @@ diff -ur grass-8.3.0/mswindows/osgeo4w/package.sh ../grass-8.3.0/mswindows/osgeo
  		--without-pdal
  
  	touch mswindows/osgeo4w/configure-stamp
-@@ -249,7 +240,9 @@
+@@ -249,7 +242,9 @@
  
      # copy dependencies (TODO: to be reduced)
      cp -uv $DLLS apps/grass/grass$POSTFIX/bin

@@ -1,5 +1,5 @@
 diff --git a/.github/workflows/osgeo4w.yml b/.github/workflows/osgeo4w.yml
-index 5ad3a3fa7..606444ed4 100644
+index fbbd06caf..215ecd042 100644
 --- a/.github/workflows/osgeo4w.yml
 +++ b/.github/workflows/osgeo4w.yml
 @@ -42,9 +42,10 @@ jobs:
@@ -8,7 +8,7 @@ index 5ad3a3fa7..606444ed4 100644
              mingw-w64-x86_64-bzip2 mingw-w64-x86_64-gettext mingw-w64-x86_64-libsystre
 -            mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libwinpthread-git mingw-w64-x86_64-libpng
 +            mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libwinpthread-git
-             mingw-w64-x86_64-pcre mingw-w64-x86_64-python3-six
+             mingw-w64-x86_64-pcre
  
 +
        - name: Install OSGeo4W
@@ -18,8 +18,8 @@ index 5ad3a3fa7..606444ed4 100644
              pdal-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,\
              gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,\
              python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,\
--            python3-six,python3-wxpython,regex-devel,zstd-devel"
-+            python3-six,python3-wxpython,zstd-devel"
+-            python3-wxpython,regex-devel,zstd-devel"
++            python3-wxpython,zstd-devel"
  
        - name: Compile GRASS GIS
          run: D:\msys64\usr\bin\bash.exe -l (''+(Get-Location)+'\.github\workflows\build_osgeo4w.sh') (Get-Location)
@@ -78,10 +78,10 @@ index ecb6e951f..4d6e04696 100644
      --with-opengl=windows \
      --with-bzlib \
 diff --git a/mswindows/osgeo4w/package.sh b/mswindows/osgeo4w/package.sh
-index c638c40ee..84fe0bb87 100755
+index c638c40ee..9350acc3a 100755
 --- a/mswindows/osgeo4w/package.sh
 +++ b/mswindows/osgeo4w/package.sh
-@@ -111,29 +111,19 @@ DLLS="
+@@ -111,29 +111,21 @@ DLLS="
  	/mingw64/bin/libbz2-1.dll
  	/mingw64/bin/libiconv-2.dll
  	/mingw64/bin/libexpat-1.dll
@@ -99,9 +99,10 @@ index c638c40ee..84fe0bb87 100755
 -	/mingw64/bin/libfreetype-6.dll
 -	/mingw64/bin/libharfbuzz-0.dll
 -	/mingw64/bin/libglib-2.0-0.dll
--	/mingw64/bin/libgomp-1.dll
+ 	/mingw64/bin/libgomp-1.dll
 -	/mingw64/bin/libgraphite2.dll
 -	/mingw64/bin/libpcre-1.dll
++	/mingw64/bin/libomp.dll
  	/mingw64/bin/libstdc++-6.dll
  	/mingw64/bin/libgcc_s_seh-1.dll
  	/mingw64/bin/libfftw3-3.dll
@@ -112,7 +113,7 @@ index c638c40ee..84fe0bb87 100755
  "
  
  if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
-@@ -149,18 +139,18 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
+@@ -149,18 +141,18 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
  	cp -uv $DLLS dist.x86_64-w64-mingw32/bin
  
  	mkdir -p mswindows/osgeo4w/lib
@@ -138,7 +139,7 @@ index c638c40ee..84fe0bb87 100755
  		--with-opengl=windows \
  		--without-x \
  		--with-cxx \
-@@ -168,13 +158,13 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
+@@ -168,13 +160,13 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
  		--enable-largefile \
  		--with-fftw \
  		--with-freetype \
@@ -158,7 +159,7 @@ index c638c40ee..84fe0bb87 100755
  		--with-gdal=$PWD/mswindows/osgeo4w/gdal-config \
  		--with-geos=$PWD/mswindows/osgeo4w/geos-config \
  		--with-sqlite \
-@@ -190,10 +180,11 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
+@@ -190,10 +182,11 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
  		--with-lapack-includes=/mingw64/include \
  		--with-openmp \
  		--with-cairo \
@@ -172,7 +173,7 @@ index c638c40ee..84fe0bb87 100755
  		--without-pdal
  
  	touch mswindows/osgeo4w/configure-stamp
-@@ -249,7 +240,9 @@ if [ -n "$PACKAGE_PATCH" ]; then
+@@ -249,7 +242,9 @@ if [ -n "$PACKAGE_PATCH" ]; then
  
      # copy dependencies (TODO: to be reduced)
      cp -uv $DLLS apps/grass/grass$POSTFIX/bin
