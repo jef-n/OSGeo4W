@@ -65,7 +65,8 @@ if not %OSGEO4W_DESKTOP_LINKS%==0 if not exist "%OSGEO4W_DESKTOP%" mkdir "%OSGEO
 if not %OSGEO4W_MENU_LINKS%==0 xxmklink "%OSGEO4W_STARTMENU%\\SAGA GIS $V.lnk" "%OSGEO4W_ROOT%\\bin\\bgspawn.exe" "\\"%OSGEO4W_ROOT%\\bin\\saga_gui.bat\\"" "%DOCUMENTS%" "" 1 "%OSGEO4W_ROOT%\\apps\\$P\\saga_gui.exe"
 if not %OSGEO4W_DESKTOP_LINKS%==0 xxmklink "%OSGEO4W_DESKTOP%\\SAGA GIS $V.lnk" "%OSGEO4W_ROOT%\\bin\\bgspawn.exe" "\\"%OSGEO4W_ROOT%\\bin\\saga_gui.bat\\"" "%DOCUMENTS%" "" 1 "%OSGEO4W_ROOT%\\apps\\$P\\saga_gui.exe"
 
-for /f "tokens=* usebackq" %%f in (\`dir /s /b "%OSGEO4W_ROOT%\\apps\\saga-refresh.bat"\`) do call "%%f"
+dir /s /b "%OSGEO4W_ROOT%\\apps\\saga-refresh.bat" >nul 2>&1
+if %errorlevel%==0 for /f "tokens=* usebackq" %%f in (\`dir /s /b "%OSGEO4W_ROOT%\\apps\\saga-refresh.bat" 2^>nul\`) do call "%%f"
 EOF
 
 cat <<EOF >install/etc/preremove/$P.bat
@@ -74,7 +75,8 @@ del "%OSGEO4W_STARTMENU%\\SAGA GIS $V.lnk"
 del "%OSGEO4W_DESKTOP%\\SAGA GIS $V.lnk"
 
 del "%OSGEO4W_ROOT%\\apps\\saga\\tools\\dev_tools.dll"
-for /f "tokens=* usebackq" %%f in (\`dir /s /b "%OSGEO4W_ROOT%\\apps\\saga-refresh.bat"\`) do call "%%f"
+dir /s /b "%OSGEO4W_ROOT%\\apps\\saga-refresh.bat" >nul 2>&1
+if %errorlevel%==0 for /f "tokens=* usebackq" %%f in (\`dir /s /b "%OSGEO4W_ROOT%\\apps\\saga-refresh.bat" 2^>nul\`) do call "%%f"
 EOF
 
 export R=$OSGEO4W_REP/x86_64/release/$P
