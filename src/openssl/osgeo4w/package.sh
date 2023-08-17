@@ -1,5 +1,5 @@
 export P=openssl
-export V=1.1.1s
+export V=1.1.1v
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
