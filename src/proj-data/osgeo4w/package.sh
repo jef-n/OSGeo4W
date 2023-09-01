@@ -1,5 +1,5 @@
 export P=proj-data
-export V=1.14
+export V=1.15
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
@@ -24,7 +24,7 @@ requires:
 maintainer: $MAINTAINER
 EOF
 
-tar --remove-files -cjf $R/$P-$V-$B.tar.bz2 share
-tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
+tar --remove-files -cjf $R/$P-${V%RC*}-$B.tar.bz2 share
+tar -C .. -cjf $R/$P-${V%RC*}-$B-src.tar.bz2 osgeo4w/package.sh
 
 endlog
