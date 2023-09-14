@@ -2,15 +2,15 @@ export P=imposm3
 export V=0.11.1
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="base geos-devel"
+export BUILDDEPENDS=base
 
-export GO_MSI=go1.19.2.windows-amd64.msi
+export GO_MSI=go1.21.1.windows-amd64.msi
 
 source ../../../scripts/build-helpers
 
 startlog
 
-msysarch=msys2-base-x86_64-20201109.tar.xz
+msysarch=msys2-base-x86_64-20230526.tar.xz
 
 [ -f $msysarch ] || wget http://repo.msys2.org/distrib/x86_64/$msysarch
 [ -d msys64 ] || tar xJf $msysarch
@@ -22,10 +22,7 @@ msysarch=msys2-base-x86_64-20201109.tar.xz
 	export OSGEO4W_ROOT_MSYS="${OSGEO4W_ROOT//\\/\/}"
 	export OSGEO4W_ROOT_MSYS="/${OSGEO4W_ROOT_MSYS:0:1}/${OSGEO4W_ROOT_MSYS:3}"
 
-	export CGO_CFLAGS="-I$(cygpath -am osgeo4w/include)"
 	export CGO_LDFLAGS="-lstdc++"
-
-	cp osgeo4w/lib/geos_c.lib msys64/mingw64/lib/libgeos_c.lib
 
 	export PATH="$(cygpath -a msys64/usr/bin):$PATH"
 
@@ -92,7 +89,9 @@ tar -cjf $R/$P-$V-$B.tar.bz2 \
 	msys64/mingw64/bin/libwinpthread-1.dll \
 	msys64/mingw64/bin/libstdc++-6.dll \
 	msys64/mingw64/bin/libgcc_s_seh-1.dll \
-	msys64/mingw64/bin/libleveldb.dll
+	msys64/mingw64/bin/libleveldb.dll \
+	msys64/mingw64/bin/libgeos.dll \
+	msys64/mingw64/bin/libgeos_c.dll
 
 cp ../Go/pkg/mod/github.com/omniscale/$P@v$V/LICENSE $R/$P-$V-$B.txt
 
