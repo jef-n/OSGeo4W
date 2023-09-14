@@ -1,5 +1,5 @@
 export P=openssl
-export V=1.1.1v
+export V=1.1.1w
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
@@ -34,9 +34,9 @@ vs2019env
 	fetchenv perl/portableshell.bat /SETENV
 	export PATH=$PATH:$(cygpath -a nasm-$NASM)
 
-	if ! [ -f built ]; then
-		cd ../$P-$V
+	cd ../$P-$V
 
+	if ! [ -f built ]; then
 		perl Configure VC-WIN64A --prefix=$(cygpath -aw ../osgeo4w/install) --openssldir=$(cygpath -aw ../osgeo4w/install/apps/openssl)
 
 		nmake clean
