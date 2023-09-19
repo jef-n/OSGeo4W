@@ -154,8 +154,6 @@ nextbinary
 		-D CMAKE_BUILD_TYPE=$BUILDCONF \
 		-D CMAKE_CONFIGURATION_TYPES="$BUILDCONF" \
 		-D SETUPAPI_LIBRARY="$SETUPAPI_LIBRARY" \
-		-D GDAL_INCLUDE_DIR=$(cygpath -am $O4W_ROOT/apps/gdal-dev/include) \
-		-D GDAL_LIBRARY=$(cygpath -am $O4W_ROOT/apps/gdal-dev/lib/gdal_i.lib) \
 		-D PROJ_INCLUDE_DIR=$(cygpath -am $O4W_ROOT/include) \
 		-D GEOS_LIBRARY=$(cygpath -am "$O4W_ROOT/lib/geos_c.lib") \
 		-D SQLITE3_LIBRARY=$(cygpath -am "$O4W_ROOT/lib/sqlite3_i.lib") \

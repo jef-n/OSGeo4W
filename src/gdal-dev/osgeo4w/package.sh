@@ -485,7 +485,7 @@ tar -C install -cjvf $R/$P-mrsid/$P-mrsid-$V-$B.tar.bz2 \
 tar -C install -cjvf $R/$P$abi-runtime/$P$abi-runtime-$V-$B.tar.bz2 \
 	apps/$P/bin/$P$abi.dll
 
-mv install/apps/$P/lib/$P$abi.lib install/apps/$P/lib/gdal_i.lib
+cp install/apps/$P/lib/$P$abi.lib install/apps/$P/lib/gdal_i.lib
 
 tar -C install -cjvf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	--exclude "*.dll" \
