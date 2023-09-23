@@ -67,6 +67,7 @@ tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
 	bin/xdr.dll
 
 tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
+	--exclude include/netcdf.h \
 	cmake include lib
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh

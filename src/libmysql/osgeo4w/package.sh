@@ -60,6 +60,7 @@ EOF
 
 tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	--exclude "lib/libmysql.dll" \
+	--exclude "include/openssl/applink.c" \
 	include lib
 
 cp ../LICENSE $R/$P-$V-$B.txt

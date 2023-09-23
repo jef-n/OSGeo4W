@@ -50,7 +50,7 @@ R=$OSGEO4W_REP/x86_64/release/$P
 
 mkdir -p $R/$P-devel
 
-tar -C $OSGEO4W_PWD/install --exclude "*.3.*" -cjf $R/$P-$V-$B.tar.bz2 bin share
+tar -C $OSGEO4W_PWD/install --exclude "*.3" -cjf $R/$P-$V-$B.tar.bz2 bin share
 cp COPYING $R/$P-$V-$B.txt
 
 cat <<EOF >$R/setup.hint
@@ -61,7 +61,11 @@ requires: msvcrt2019
 maintainer: $MAINTAINER
 EOF
 
-tar -C $OSGEO4W_PWD/install --exclude "*.1.*" -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 include lib share
+tar -C $OSGEO4W_PWD/install \
+	-cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
+	--exclude "*.1" \
+	include lib share
+
 cp COPYING $R/$P-devel/$P-devel-$V-$B.txt
 
 cat <<EOF >$R/$P-devel/setup.hint

@@ -2,7 +2,7 @@ export P=python3-pillow
 export V=pip
 export B=pip
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-pip python3-wheel python3-setuptools zlib-devel libjpeg-turbo-devel libtiff-devel freetype-devel"
+export BUILDDEPENDS="python3-pip python3-wheel python3-devel python3-setuptools zlib-devel libjpeg-turbo-devel libtiff-devel freetype-devel"
 
 source ../../../scripts/build-helpers
 

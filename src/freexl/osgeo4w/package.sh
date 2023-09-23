@@ -48,7 +48,7 @@ external-source: $P
 EOF
 
 tar -C install -cjf $R/$P-$V-$B.tar.bz2 bin/freexl.dll
-tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 bin/freexl.dll include lib
+tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 include lib
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/patch
 
 endlog

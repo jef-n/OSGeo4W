@@ -113,6 +113,7 @@ tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
 
 tar -C install -cjf $R/$P-tools/$P-tools-$V-$B.tar.bz2 \
 	--exclude bin/nc-config \
+	--exclude bin/nc-config.tmpl \
 	--exclude "*.dll" \
 	bin
 
