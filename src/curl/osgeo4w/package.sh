@@ -1,5 +1,5 @@
 export P=curl
-export V=8.1.2
+export V=8.4.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="openssl-devel zlib-devel"
