@@ -155,8 +155,11 @@ if len(props['Files']) == 0:
 
 name = props['Name'].lower()
 if name != pkg:
-    print(f"{pkg}: expected {pkg} instead of {name}", file=sys.stderr)
-    sys.exit(1)
+    if name.replace('_', '-') == pkg:
+        name = pkg
+    else:
+        print(f"{pkg}: expected {pkg} instead of {name}", file=sys.stderr)
+        sys.exit(1)
 
 pname = f'python3-{name}'
 
