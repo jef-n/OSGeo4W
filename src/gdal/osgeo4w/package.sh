@@ -1,5 +1,5 @@
 export P=gdal
-export V=3.7.2
+export V=3.7.3
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel hdf5-tools ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-turbo-devel python3-setuptools opencl-devel libtiff-devel arrow-cpp-devel lz4-devel openssl-devel tiledb-devel lerc-devel kealib-devel odbc-cpp-wrapper-devel libjxl-devel"
@@ -120,8 +120,12 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 	export INCLUDE="$(cygpath -am osgeo4w/include);$(cygpath -am osgeo4w/apps/Python39/include);$(cygpath -am osgeo4w/include/boost-1_74);$INCLUDE"
 	export LIB="$(cygpath -am osgeo4w/lib);$LIB"
 
+	[ -n "$OSGEO4W_SKIP_CLEAN" ] || rm -rf build
+
 	mkdir -p build
 	cd build
+
+	cmake --version
 
 	cmake \
 		-G Ninja \
@@ -150,6 +154,7 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 		-D      OGR_ENABLE_DRIVER_FILEGDB_PLUGIN=ON \
 		-D         OGR_ENABLE_DRIVER_SOSI_PLUGIN=ON \
 		-D OGR_ENABLE_DRIVER_MSSQLSPATIAL_PLUGIN=ON \
+		-D                     Python_EXECUTABLE=$(cygpath -am ../osgeo4w/apps/Python39/python3.exe) \
 		-D             Python_NumPy_INCLUDE_DIRS=$(cygpath -am ../osgeo4w/apps/Python39/Lib/site-packages/numpy/core/include) \
 		-D                       SWIG_EXECUTABLE=$(cygpath -am ../osgeo4w/bin/swig.bat) \
 		-D                       ECW_INCLUDE_DIR=$(cygpath -am ../gdaldeps/ecw/include) \
@@ -181,8 +186,6 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 		-D                       SWIG_EXECUTABLE=$(cygpath -am ../osgeo4w/bin/swig.bat) \
 		-D             GDAL_EXTRA_LINK_LIBRARIES="$(cygpath -am ../osgeo4w/lib/freetype.lib);$(cygpath -am ../osgeo4w/lib/jpeg.lib);$(cygpath -am ../osgeo4w/lib/tiff.lib);$(cygpath -am ../osgeo4w/lib/uriparser.lib);$(cygpath -am ../osgeo4w/lib/minizip.lib)" \
 		../../$P-${V%rc*}
-
-	[ -n "$OSGEO4W_SKIP_CLEAN" ] || cmake --build . --target clean
 
 	cmake --build .
 	cmake --build . --target install || cmake --build . --target install
