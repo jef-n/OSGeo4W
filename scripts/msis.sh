@@ -3,6 +3,7 @@
 set -e
 
 cert=$PWD/src/setup/osgeo4w/OSGeo_DigiCert_Signing_Cert
+: ${mirror:=https://download.osgeo.org/osgeo4w/v2}
 
 [ -r "$cert.p12" ]
 [ -r "$cert.pass" ]
@@ -19,5 +20,6 @@ for i in ${PKGS:-qgis qgis-ltr}; do
 		-banner=$PWD/src/$i/osgeo4w/qgis_msibanner.bmp \
 		-background=$PWD/src/$i/osgeo4w/qgis_msiinstaller.bmp \
 		-arpicon=$PWD/src/$i/osgeo4w/qgis.ico \
+		-mirror=$mirror \
 		$i-full
 done

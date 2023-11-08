@@ -64,7 +64,6 @@ my $result = GetOptions(
 		"banner=s" => \$banner,
 		"background=s" => \$background,
 		"arpicon=s" => \$arpicon,
-		"mirror=s" => \$root,
 		"help" => \$help
 	);
 
