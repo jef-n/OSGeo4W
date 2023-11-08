@@ -160,6 +160,8 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 
 	[ -n "$OSGEO4W_SKIP_CLEAN" ] || rm -rf build
 
+	rm -rf install
+
 	mkdir -p build
 	cd build
 
