@@ -1,8 +1,8 @@
 export P=pdal
-export V=2.5.5
+export V=2.6.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="gdal-devel libgeotiff-devel libtiff-devel zlib-devel curl-devel libxml2-devel hdf5-devel openssl-devel zstd-devel laszip-devel"
+export BUILDDEPENDS="gdal-devel libgeotiff-devel libtiff-devel zlib-devel curl-devel libxml2-devel hdf5-devel openssl-devel zstd-devel laszip-devel proj-devel"
 
 source ../../../scripts/build-helpers
 
@@ -33,6 +33,7 @@ fi
 		-D CMAKE_BUILD_TYPE=Release \
 		-D CMAKE_INSTALL_PREFIX=../install \
 		-D PDAL_PLUGIN_INSTALL_PATH=../install/apps/$P/plugins \
+		-D Python_EXECUTABLE=$(cygpath -am ../osgeo4w/apps/$PYTHON/python3.exe) \
 		../../$P-$V
 	cmake --build .
 	cmake --build . --target install || cmake --build . --target install

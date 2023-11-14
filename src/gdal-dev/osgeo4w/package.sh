@@ -44,7 +44,7 @@ SHA=$(cd ../gdal; git log -n1 --pretty=%h)
 [ -f osgeo4w/apps/$PYTHON/Lib/site-packages/setuptools/command/patched ] || {
 	patch -p0 --dry-run <easy_install.diff
 	patch -p0 <easy_install.diff
-	touch osgeo4w/apps/Python39/Lib/site-packages/setuptools/command/patched
+	touch osgeo4w/apps/$PYTHON/Lib/site-packages/setuptools/command/patched
 }
 
 #
@@ -155,7 +155,7 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 	cmakeenv
 	ninjaenv
 
-	export INCLUDE="$(cygpath -am osgeo4w/include);$(cygpath -am osgeo4w/apps/Python39/include);$(cygpath -am osgeo4w/include/boost-1_74);$INCLUDE"
+	export INCLUDE="$(cygpath -am osgeo4w/include);$(cygpath -am osgeo4w/apps/$PYTHON/include);$(cygpath -am osgeo4w/include/boost-1_74);$INCLUDE"
 	export LIB="$(cygpath -am osgeo4w/lib);$LIB"
 
 	[ -n "$OSGEO4W_SKIP_CLEAN" ] || rm -rf build
@@ -194,8 +194,8 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 		-D      OGR_ENABLE_DRIVER_FILEGDB_PLUGIN=ON \
 		-D         OGR_ENABLE_DRIVER_SOSI_PLUGIN=ON \
 		-D OGR_ENABLE_DRIVER_MSSQLSPATIAL_PLUGIN=ON \
-		-D                     Python_EXECUTABLE=$(cygpath -am ../osgeo4w/apps/Python39/python3.exe) \
-		-D             Python_NumPy_INCLUDE_DIRS=$(cygpath -am ../osgeo4w/apps/Python39/Lib/site-packages/numpy/core/include) \
+		-D                     Python_EXECUTABLE=$(cygpath -am ../osgeo4w/apps/$PYTHON/python3.exe) \
+		-D             Python_NumPy_INCLUDE_DIRS=$(cygpath -am ../osgeo4w/apps/$PYTHON/Lib/site-packages/numpy/core/include) \
 		-D                       SWIG_EXECUTABLE=$(cygpath -am ../osgeo4w/bin/swig.bat) \
 		-D                       ECW_INCLUDE_DIR=$(cygpath -am ../gdaldeps/ecw/include) \
 		-D                           ECW_LIBRARY=$(cygpath -am ../gdaldeps/ecw/lib/vc141/x64/NCSEcw.lib) \

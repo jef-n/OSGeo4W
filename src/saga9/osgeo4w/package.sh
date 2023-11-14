@@ -1,5 +1,5 @@
 export P=saga9
-export V=9.1.3
+export V=9.2.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="wxwidgets-devel libharu-devel gdal-devel proj-devel libpq-devel curl-devel libpng-devel libtiff-devel libjpeg-turbo-devel zlib-devel expat-devel pdal-devel"
@@ -44,6 +44,7 @@ p=${P%$M}
 		-D CMAKE_BUILD_TYPE=Release \
 		-D CMAKE_MODULE_PATH=$(cygpath -am ../osgeo4w/lib/cmake) \
 		-D CURL_LIBRARIES=$(cygpath -am ../osgeo4w/lib/libcurl.lib) \
+		-D PDAL_UTIL_LIBRARY=$(cygpath -am ../osgeo4w/lib/pdalcpp.lib) \
 		-D wxWidgets_CONFIGURATION=mswu \
 		-D wxWidgets_ROOT_DIR=$(cygpath -am ../osgeo4w) \
 		-D wxWidgets_LIB_DIR=$(cygpath -am ../osgeo4w/lib/vc_x64_dll) \

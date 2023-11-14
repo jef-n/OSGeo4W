@@ -163,6 +163,7 @@ nextbinary
 		-D QSCINTILLA_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt5/lib/qscintilla2.lib) \
 		-D DART_TESTING_TIMEOUT=60 \
 		-D PUSH_TO_CDASH=TRUE \
+		-D PDAL_UTIL_LIBRARY=$(cygpath -am $O4W_ROOT/lib/pdalcpp.lib) \
 		$(cygpath -m $SRCDIR)
 
 	if [ -z "$OSGEO4W_SKIP_CLEAN" ]; then
