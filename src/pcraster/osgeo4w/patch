@@ -1,7 +1,7 @@
-diff -ur pcraster-4.4.0/environment/cmake/PCRasterConfiguration.cmake ../pcraster-4.4.0/environment/cmake/PCRasterConfiguration.cmake
---- pcraster-4.4.0/environment/cmake/PCRasterConfiguration.cmake	2022-10-03 11:23:45.000000000 +0200
-+++ ../pcraster-4.4.0/environment/cmake/PCRasterConfiguration.cmake	2022-10-13 10:23:52.092107400 +0200
-@@ -170,7 +170,9 @@
+diff -ur pcraster-4.4.1/environment/cmake/PCRasterConfiguration.cmake ../pcraster-4.4.1/environment/cmake/PCRasterConfiguration.cmake
+--- pcraster-4.4.1/environment/cmake/PCRasterConfiguration.cmake	2023-08-31 16:21:59.000000000 +0200
++++ ../pcraster-4.4.1/environment/cmake/PCRasterConfiguration.cmake	2023-09-03 19:37:18.089779300 +0200
+@@ -181,7 +181,9 @@
  find_program(GDAL_TRANSLATE gdal_translate
      HINTS ${GDAL_INCLUDE_DIRS}/../bin
  )
@@ -12,3 +12,13 @@ diff -ur pcraster-4.4.0/environment/cmake/PCRasterConfiguration.cmake ../pcraste
      set(GDAL_DATA "${GDAL_INCLUDE_DIRS}/../../share/gdal")
  elseif(EXISTS "${GDAL_INCLUDE_DIRS}/../share/gdal")
      set(GDAL_DATA "${GDAL_INCLUDE_DIRS}/../share/gdal")
+diff -ur pcraster-4.4.1/source/pcraster_python/__init__.py.in ../pcraster-4.4.1/source/pcraster_python/__init__.py.in
+--- pcraster-4.4.1/source/pcraster_python/__init__.py.in	2023-08-31 16:21:39.000000000 +0200
++++ ../pcraster-4.4.1/source/pcraster_python/__init__.py.in	2023-11-30 11:14:12.700977000 +0100
+@@ -13,7 +13,7 @@
+ if sys.platform == "win32":
+     pcraster_app_path = shutil.which("pcrcalc.exe")
+     if pcraster_app_path:
+-        pcraster_bin_pathname = pathlib.Path(pcraster_app_path).parent
++        pcraster_bin_pathname = pathlib.Path(pcraster_app_path).parent.absolute()
+         os.add_dll_directory(pcraster_bin_pathname)
