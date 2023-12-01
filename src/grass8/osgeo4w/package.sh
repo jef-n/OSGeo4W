@@ -106,6 +106,8 @@ pacman --noconfirm -Syu --needed \
 
 cd ../$p
 
+[ -n "$OSGEO4W_SKIP_CLEAN" ] || rm -f mswindows/osgeo4w/configure-stamp
+
 PACKAGE_POSTFIX=${V%%.*} bash.exe $xtrace mswindows/osgeo4w/package.sh
 EOF
 
