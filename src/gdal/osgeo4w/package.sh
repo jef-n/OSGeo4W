@@ -1,5 +1,5 @@
 export P=gdal
-export V=3.8.2
+export V=3.8.3
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel hdf5-tools ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-turbo-devel python3-setuptools opencl-devel libtiff-devel arrow-cpp-devel lz4-devel openssl-devel tiledb-devel lerc-devel kealib-devel odbc-cpp-wrapper-devel libjxl-devel"
@@ -144,29 +144,6 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 		-D                OGR_ENABLE_DRIVER_OGDI=ON \
 		-D                   GDAL_USE_MSSQL_NCLI=OFF \
 		-D                       GDAL_USE_OPENCL=ON \
-		-D      OGR_ENABLE_DRIVER_PARQUET_PLUGIN=OFF \
-		-D         OGR_ENABLE_DRIVER_HANA_PLUGIN=ON \
-		-DOGR_DRIVER_HANA_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-hana package." \
-		-D          OGR_ENABLE_DRIVER_OCI_PLUGIN=ON \
-		-DOGR_DRIVER_OCI_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-oracle package." \
-		-D        GDAL_ENABLE_DRIVER_GEOR_PLUGIN=ON \
-		-DGDAL_DRIVER_GEOR_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-oracle package." \
-		-D         GDAL_ENABLE_DRIVER_ECW_PLUGIN=ON \
-		-DGDAL_DRIVER_ECW_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-ecw package." \
-		-D       GDAL_ENABLE_DRIVER_MRSID_PLUGIN=ON \
-		-DGDAL_DRIVER_MRSID_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-mrsid package." \
-		-D        GDAL_ENABLE_DRIVER_HDF5_PLUGIN=ON \
-		-DGDAL_DRIVER_HDF5_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-hdf5 package." \
-		-D         GDAL_ENABLE_DRIVER_KEA_PLUGIN=ON \
-		-DGDAL_DRIVER_KEA_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-kea package." \
-		-D      GDAL_ENABLE_DRIVER_TILEDB_PLUGIN=ON \
-		-DGDAL_DRIVER_TILEDB_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-tiledb package." \
-		-D      OGR_ENABLE_DRIVER_FILEGDB_PLUGIN=ON \
-		-DOGR_DRIVER_FILEGDB_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-filegdb package." \
-		-D         OGR_ENABLE_DRIVER_SOSI_PLUGIN=ON \
-		-DOGR_DRIVER_SOSI_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-sosi package." \
-		-D OGR_ENABLE_DRIVER_MSSQLSPATIAL_PLUGIN=ON \
-		-DOGR_DRIVER_MSSQLSPATIAL_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-mss package." \
 		-D                     Python_EXECUTABLE=$(cygpath -am ../osgeo4w/apps/$PYTHON/python3.exe) \
 		-D             Python_NumPy_INCLUDE_DIRS=$(cygpath -am ../osgeo4w/apps/$PYTHON/Lib/site-packages/numpy/core/include) \
 		-D                       SWIG_EXECUTABLE=$(cygpath -am ../osgeo4w/bin/swig.bat) \
@@ -198,6 +175,18 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 		-D                          LERC_LIBRARY=$(cygpath -am ../osgeo4w/lib/Lerc.lib) \
 		-D                       SWIG_EXECUTABLE=$(cygpath -am ../osgeo4w/bin/swig.bat) \
 		-D             GDAL_EXTRA_LINK_LIBRARIES="$(cygpath -am ../osgeo4w/lib/freetype.lib);$(cygpath -am ../osgeo4w/lib/jpeg.lib);$(cygpath -am ../osgeo4w/lib/tiff.lib);$(cygpath -am ../osgeo4w/lib/uriparser.lib);$(cygpath -am ../osgeo4w/lib/minizip.lib)" \
+		-D OGR_ENABLE_DRIVER_PARQUET_PLUGIN=OFF \
+		-D OGR_ENABLE_DRIVER_HANA_PLUGIN=ON -D OGR_DRIVER_HANA_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-hana package." \
+		-D OGR_ENABLE_DRIVER_OCI_PLUGIN=ON -D OGR_DRIVER_OCI_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-oracle package." \
+		-D OGR_ENABLE_DRIVER_FILEGDB_PLUGIN=ON -D OGR_DRIVER_FILEGDB_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-filegdb package." \
+		-D OGR_ENABLE_DRIVER_SOSI_PLUGIN=ON -D OGR_DRIVER_SOSI_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-sosi package." \
+		-D OGR_ENABLE_DRIVER_MSSQLSPATIAL_PLUGIN=ON -D OGR_DRIVER_MSSQLSPATIAL_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-mss package." \
+		-D GDAL_ENABLE_DRIVER_GEOR_PLUGIN=ON -D GDAL_DRIVER_GEOR_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-oracle package." \
+		-D GDAL_ENABLE_DRIVER_ECW_PLUGIN=ON -D GDAL_DRIVER_ECW_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-ecw package." \
+		-D GDAL_ENABLE_DRIVER_MRSID_PLUGIN=ON -D GDAL_DRIVER_MRSID_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-mrsid package." \
+		-D GDAL_ENABLE_DRIVER_HDF5_PLUGIN=ON -D GDAL_DRIVER_HDF5_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-hdf5 package." \
+		-D GDAL_ENABLE_DRIVER_KEA_PLUGIN=ON -D GDAL_DRIVER_KEA_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-kea package." \
+		-D GDAL_ENABLE_DRIVER_TILEDB_PLUGIN=ON -D GDAL_DRIVER_TILEDB_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-tiledb package." \
 		../../$P-${V%rc*}
 
 	cmake --build .
