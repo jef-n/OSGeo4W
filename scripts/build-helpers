@@ -96,6 +96,9 @@ declare -x errlog
 
 faillog() {
 	log "FAILED: $?"
+	if [ -x "$OSGEO4W_SCRIPTS/fail" ]; then
+		$OSGEO4W_SCRIPTS/fail
+	fi
 	finishlog
 	return 1
 }

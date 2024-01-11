@@ -1,0 +1,350 @@
+diff -ur '--exclude=__pycache__' Python-3.9.18/Doc/requirements.txt ../Python-3.9.18/Doc/requirements.txt
+--- Python-3.9.18/Doc/requirements.txt	2023-08-24 19:59:28.000000000 +0200
++++ ../Python-3.9.18/Doc/requirements.txt	2024-01-13 20:49:21.054213400 +0100
+@@ -3,7 +3,7 @@
+ # Sphinx version is pinned so that new versions that introduce new warnings
+ # won't suddenly cause build failures. Updating the version is fine as long
+ # as no warnings are raised by doing so.
+-sphinx==2.4.4
++sphinx
+ # Docutils version is pinned to a version compatible with Sphinx
+ # version 2.4.4. It can be removed after bumping Sphinx version to at
+ # least 3.5.4.
+diff -ur '--exclude=__pycache__' Python-3.9.18/Doc/tools/extensions/pyspecific.py ../Python-3.9.18/Doc/tools/extensions/pyspecific.py
+--- Python-3.9.18/Doc/tools/extensions/pyspecific.py	2023-08-24 19:59:28.000000000 +0200
++++ ../Python-3.9.18/Doc/tools/extensions/pyspecific.py	2024-01-13 22:16:32.711098700 +0100
+@@ -110,7 +110,10 @@
+ 
+     def run(self):
+         pnode = nodes.compound(classes=['impl-detail'])
+-        label = translators['sphinx'].gettext(self.label_text)
++        try:
++            label = translators['sphinx'].gettext(self.label_text)
++        except:
++            label = self.label_text
+         content = self.content
+         add_text = nodes.strong(label, label)
+         if self.arguments:
+@@ -179,7 +182,11 @@
+         else:
+             args = []
+ 
+-        label = translators['sphinx'].gettext(self._label[min(2, len(args))])
++        try:
++            label = translators['sphinx'].gettext(self._label[min(2, len(args))])
++        except:
++            label = self._label[min(2, len(args))]
++
+         text = label.format(name="``{}``".format(name),
+                             args=", ".join("``{}``".format(a) for a in args if a))
+ 
+@@ -358,7 +365,11 @@
+         else:
+             label = self._removed_label
+ 
+-        label = translators['sphinx'].gettext(label)
++        try:
++            label = translators['sphinx'].gettext(label)
++        except:
++            pass
++
+         text = label.format(deprecated=self.arguments[0], removed=self.arguments[1])
+         if len(self.arguments) == 3:
+             inodes, messages = self.state.inline_text(self.arguments[2],
+diff -ur '--exclude=__pycache__' Python-3.9.18/PCbuild/_bz2.vcxproj ../Python-3.9.18/PCbuild/_bz2.vcxproj
+--- Python-3.9.18/PCbuild/_bz2.vcxproj	2023-08-24 19:59:28.000000000 +0200
++++ ../Python-3.9.18/PCbuild/_bz2.vcxproj	2024-01-11 23:59:48.290576800 +0100
+@@ -94,24 +94,20 @@
+   </PropertyGroup>
+   <ItemDefinitionGroup>
+     <ClCompile>
+-      <AdditionalIncludeDirectories>$(bz2Dir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(OSGEO4W_ROOT)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <PreprocessorDefinitions>WIN32;_FILE_OFFSET_BITS=64;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <DisableSpecificWarnings>4244;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+     </ClCompile>
++    <Link>
++       <AdditionalDependencies>$(OSGEO4W_ROOT)\lib\libbz2.lib;%(AdditionalDependencies)</AdditionalDependencies>
++    </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+     <ClCompile Include="..\Modules\_bz2module.c" />
+-    <ClCompile Include="$(bz2Dir)\blocksort.c" />
+-    <ClCompile Include="$(bz2Dir)\bzlib.c" />
+-    <ClCompile Include="$(bz2Dir)\compress.c" />
+-    <ClCompile Include="$(bz2Dir)\crctable.c" />
+-    <ClCompile Include="$(bz2Dir)\decompress.c" />
+-    <ClCompile Include="$(bz2Dir)\huffman.c" />
+-    <ClCompile Include="$(bz2Dir)\randtable.c" />
+   </ItemGroup>
+   <ItemGroup>
+-    <ClInclude Include="$(bz2Dir)\bzlib.h" />
+-    <ClInclude Include="$(bz2Dir)\bzlib_private.h" />
++    <ClInclude Include="$(OSGEO4W_ROOT)\include\bzlib.h" />
++    <ClInclude Include="$(OSGEO4W_ROOT)\include\bzlib_private.h" />
+   </ItemGroup>
+   <ItemGroup>
+     <ResourceCompile Include="..\PC\python_nt.rc" />
+@@ -125,4 +121,4 @@
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+   <ImportGroup Label="ExtensionTargets">
+   </ImportGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff -ur '--exclude=__pycache__' Python-3.9.18/PCbuild/_hashlib.vcxproj ../Python-3.9.18/PCbuild/_hashlib.vcxproj
+--- Python-3.9.18/PCbuild/_hashlib.vcxproj	2023-08-24 19:59:28.000000000 +0200
++++ ../Python-3.9.18/PCbuild/_hashlib.vcxproj	2024-01-12 00:06:32.422940600 +0100
+@@ -93,6 +93,9 @@
+     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+   </PropertyGroup>
+   <ItemDefinitionGroup>
++    <ClCompile>
++      <AdditionalIncludeDirectories>$(OSGEO4W_ROOT)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++    </ClCompile>
+     <Link>
+       <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
+diff -ur '--exclude=__pycache__' Python-3.9.18/PCbuild/_lzma.vcxproj ../Python-3.9.18/PCbuild/_lzma.vcxproj
+--- Python-3.9.18/PCbuild/_lzma.vcxproj	2023-08-24 19:59:28.000000000 +0200
++++ ../Python-3.9.18/PCbuild/_lzma.vcxproj	2024-01-12 16:49:40.518800100 +0100
+@@ -93,11 +93,11 @@
+   </PropertyGroup>
+   <ItemDefinitionGroup>
+     <ClCompile>
+-      <AdditionalIncludeDirectories>$(lzmaDir)src/liblzma/api;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(OSGEO4W_ROOT)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <PreprocessorDefinitions>WIN32;_FILE_OFFSET_BITS=64;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;LZMA_API_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+     </ClCompile>
+     <Link>
+-      <AdditionalDependencies>$(OutDir)liblzma$(PyDebugExt).lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>$(OSGEO4W_ROOT)/lib/liblzma.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+@@ -111,10 +111,12 @@
+       <Project>{cf7ac3d1-e2df-41d2-bea6-1e2556cdea26}</Project>
+       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+     </ProjectReference>
++<!--
+     <ProjectReference Include="liblzma.vcxproj">
+       <Project>{12728250-16eC-4dc6-94d7-e21dd88947f8}</Project>
+       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+     </ProjectReference>
++-->
+   </ItemGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+   <ImportGroup Label="ExtensionTargets">
+diff -ur '--exclude=__pycache__' Python-3.9.18/PCbuild/_sqlite3.vcxproj ../Python-3.9.18/PCbuild/_sqlite3.vcxproj
+--- Python-3.9.18/PCbuild/_sqlite3.vcxproj	2023-08-24 19:59:28.000000000 +0200
++++ ../Python-3.9.18/PCbuild/_sqlite3.vcxproj	2024-01-12 13:53:04.886043400 +0100
+@@ -93,9 +93,12 @@
+   </PropertyGroup>
+   <ItemDefinitionGroup>
+     <ClCompile>
+-      <AdditionalIncludeDirectories>$(sqlite3Dir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(OSGEO4W_ROOT)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <PreprocessorDefinitions>MODULE_NAME="sqlite3";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+     </ClCompile>
++    <Link>
++      <AdditionalDependencies>$(OSGEO4W_ROOT)\lib\sqlite3_i.lib;%(AdditionalDependencies)</AdditionalDependencies>
++    </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+     <ClInclude Include="..\Modules\_sqlite\cache.h" />
+@@ -127,12 +130,14 @@
+       <Project>{cf7ac3d1-e2df-41d2-bea6-1e2556cdea26}</Project>
+       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+     </ProjectReference>
++<!--
+     <ProjectReference Include="sqlite3.vcxproj">
+       <Project>{a1a295e5-463c-437f-81ca-1f32367685da}</Project>
+       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+     </ProjectReference>
++-->
+   </ItemGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+   <ImportGroup Label="ExtensionTargets">
+   </ImportGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff -ur '--exclude=__pycache__' Python-3.9.18/PCbuild/_ssl.vcxproj ../Python-3.9.18/PCbuild/_ssl.vcxproj
+--- Python-3.9.18/PCbuild/_ssl.vcxproj	2023-08-24 19:59:28.000000000 +0200
++++ ../Python-3.9.18/PCbuild/_ssl.vcxproj	2024-01-12 00:32:27.731533600 +0100
+@@ -99,7 +99,7 @@
+   </ItemDefinitionGroup>
+   <ItemGroup>
+     <ClCompile Include="..\Modules\_ssl.c" />
+-    <ClCompile Include="$(opensslIncludeDir)\applink.c">
++    <ClCompile Include="$(OSGEO4W_ROOT)\include\openssl\applink.c">
+       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;$(PreprocessorDefinitions)</PreprocessorDefinitions>
+     </ClCompile>
+   </ItemGroup>
+@@ -119,4 +119,4 @@
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+   <ImportGroup Label="ExtensionTargets">
+   </ImportGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff -ur '--exclude=__pycache__' Python-3.9.18/PCbuild/find_python.bat ../Python-3.9.18/PCbuild/find_python.bat
+--- Python-3.9.18/PCbuild/find_python.bat	2023-08-24 19:59:28.000000000 +0200
++++ ../Python-3.9.18/PCbuild/find_python.bat	2024-01-13 21:27:32.827197900 +0100
+@@ -57,7 +57,7 @@
+     )
+ )
+ @echo Installing Python via nuget...
+-@"%_Py_NUGET%" install pythonx86 -ExcludeVersion -OutputDirectory "%_Py_EXTERNALS_DIR%"
++@"%_Py_NUGET%" install pythonx86 -ExcludeVersion -OutputDirectory "%_Py_EXTERNALS_DIR%" -Version 3.9.13
+ @rem Quote it here; it's not quoted later because "py -x.y" wouldn't work
+ @if not errorlevel 1 (set PYTHON="%_Py_EXTERNALS_DIR%\pythonx86\tools\python.exe") & (set _Py_Python_Source=found on nuget.org) & goto :found
+ 
+diff -ur '--exclude=__pycache__' Python-3.9.18/PCbuild/openssl.props ../Python-3.9.18/PCbuild/openssl.props
+--- Python-3.9.18/PCbuild/openssl.props	2023-08-24 19:59:28.000000000 +0200
++++ ../Python-3.9.18/PCbuild/openssl.props	2024-01-12 00:35:14.372888500 +0100
+@@ -2,23 +2,21 @@
+ <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <ItemDefinitionGroup>
+     <ClCompile>
+-      <AdditionalIncludeDirectories>$(opensslIncludeDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(OSGEO4W_ROOT)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+     </ClCompile>
+     <Link>
+-      <AdditionalLibraryDirectories>$(opensslOutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
++      <AdditionalLibraryDirectories>$(OSGEO4W_ROOT)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+       <AdditionalDependencies>ws2_32.lib;libcrypto.lib;libssl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
+   </ItemDefinitionGroup>
+   <PropertyGroup>
+-    <_DLLSuffix>-1_1</_DLLSuffix>
+-    <_DLLSuffix Condition="$(Platform) == 'ARM'">$(_DLLSuffix)-arm</_DLLSuffix>
+-    <_DLLSuffix Condition="$(Platform) == 'ARM64'">$(_DLLSuffix)-arm64</_DLLSuffix>
++    <_DLLSuffix>-1_1-x64</_DLLSuffix>
+   </PropertyGroup>
+   <ItemGroup>
+-    <_SSLDLL Include="$(opensslOutDir)\libcrypto$(_DLLSuffix).dll" />
+-    <_SSLDLL Include="$(opensslOutDir)\libcrypto$(_DLLSuffix).pdb" />
+-    <_SSLDLL Include="$(opensslOutDir)\libssl$(_DLLSuffix).dll" />
+-    <_SSLDLL Include="$(opensslOutDir)\libssl$(_DLLSuffix).pdb" />
++    <_SSLDLL Include="$(OSGEO4W_ROOT)\bin\libcrypto$(_DLLSuffix).dll" />
++    <_SSLDLL Include="$(OSGEO4W_ROOT)\bin\libcrypto$(_DLLSuffix).pdb" />
++    <_SSLDLL Include="$(OSGEO4W_ROOT)\bin\libssl$(_DLLSuffix).dll" />
++    <_SSLDLL Include="$(OSGEO4W_ROOT)\bin\libssl$(_DLLSuffix).pdb" />
+   </ItemGroup>
+   <Target Name="_CopySSLDLL" Inputs="@(_SSLDLL)" Outputs="@(_SSLDLL->'$(OutDir)%(Filename)%(Extension)')" AfterTargets="Build">
+     <Copy SourceFiles="@(_SSLDLL)" DestinationFolder="$(OutDir)" />
+@@ -26,4 +24,4 @@
+   <Target Name="_CleanSSLDLL" BeforeTargets="Clean">
+     <Delete Files="@(_SSLDLL->'$(OutDir)%(Filename)%(Extension)')" TreatErrorsAsWarnings="true" />
+   </Target>
+-</Project>
+\ No newline at end of file
++</Project>
+diff -ur '--exclude=__pycache__' Python-3.9.18/PCbuild/pythoncore.vcxproj ../Python-3.9.18/PCbuild/pythoncore.vcxproj
+--- Python-3.9.18/PCbuild/pythoncore.vcxproj	2023-08-24 19:59:28.000000000 +0200
++++ ../Python-3.9.18/PCbuild/pythoncore.vcxproj	2024-01-12 00:29:06.035185900 +0100
+@@ -100,13 +100,12 @@
+   <ItemDefinitionGroup>
+     <ClCompile>
+       <AdditionalOptions>/Zm200  %(AdditionalOptions)</AdditionalOptions>
+-      <AdditionalIncludeDirectories>$(PySourcePath)Python;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+-      <AdditionalIncludeDirectories Condition="$(IncludeExternals)">$(zlibDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(PySourcePath)Python;$(OSGEO4W_ROOT)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <PreprocessorDefinitions>_USRDLL;Py_BUILD_CORE;Py_BUILD_CORE_BUILTIN;Py_ENABLE_SHARED;MS_DLL_ID="$(SysWinVer)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <PreprocessorDefinitions Condition="$(IncludeExternals)">_Py_HAVE_ZLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+     </ClCompile>
+     <Link>
+-      <AdditionalDependencies>version.lib;ws2_32.lib;pathcch.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>version.lib;ws2_32.lib;pathcch.lib;$(OSGEO4W_ROOT)\lib\zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+@@ -293,21 +292,6 @@
+     <ClInclude Include="..\Python\importdl.h" />
+     <ClInclude Include="..\Python\thread_nt.h" />
+     <ClInclude Include="..\Python\wordcode_helpers.h" />
+-  </ItemGroup>
+-  <ItemGroup Condition="$(IncludeExternals)">
+-    <ClInclude Include="$(zlibDir)\crc32.h" />
+-    <ClInclude Include="$(zlibDir)\deflate.h" />
+-    <ClInclude Include="$(zlibDir)\inffast.h" />
+-    <ClInclude Include="$(zlibDir)\inffixed.h" />
+-    <ClInclude Include="$(zlibDir)\inflate.h" />
+-    <ClInclude Include="$(zlibDir)\inftrees.h" />
+-    <ClInclude Include="$(zlibDir)\trees.h" />
+-    <ClInclude Include="$(zlibDir)\zconf.h" />
+-    <ClInclude Include="$(zlibDir)\zconf.in.h" />
+-    <ClInclude Include="$(zlibDir)\zlib.h" />
+-    <ClInclude Include="$(zlibDir)\zutil.h" />
+-  </ItemGroup>
+-  <ItemGroup>
+     <ClCompile Include="..\Modules\_abc.c" />
+     <ClCompile Include="..\Modules\_bisectmodule.c" />
+     <ClCompile Include="..\Modules\_blake2\blake2module.c" />
+@@ -494,22 +478,7 @@
+     <ClCompile Include="..\Python\sysmodule.c" />
+     <ClCompile Include="..\Python\thread.c" />
+     <ClCompile Include="..\Python\traceback.c" />
+-  </ItemGroup>
+-  <ItemGroup Condition="$(IncludeExternals)">
+     <ClCompile Include="..\Modules\zlibmodule.c" />
+-    <ClCompile Include="$(zlibDir)\adler32.c" />
+-    <ClCompile Include="$(zlibDir)\compress.c" />
+-    <ClCompile Include="$(zlibDir)\crc32.c" />
+-    <ClCompile Include="$(zlibDir)\deflate.c">
+-      <DisableSpecificWarnings>4244</DisableSpecificWarnings>
+-    </ClCompile>
+-    <ClCompile Include="$(zlibDir)\infback.c" />
+-    <ClCompile Include="$(zlibDir)\inffast.c" />
+-    <ClCompile Include="$(zlibDir)\inflate.c" />
+-    <ClCompile Include="$(zlibDir)\inftrees.c" />
+-    <ClCompile Include="$(zlibDir)\trees.c" />
+-    <ClCompile Include="$(zlibDir)\uncompr.c" />
+-    <ClCompile Include="$(zlibDir)\zutil.c" />
+   </ItemGroup>
+   <ItemGroup>
+     <ClCompile Include="..\PC\dl_nt.c" />
+diff -ur '--exclude=__pycache__' Python-3.9.18/Tools/msi/lib/lib_files.wxs ../Python-3.9.18/Tools/msi/lib/lib_files.wxs
+--- Python-3.9.18/Tools/msi/lib/lib_files.wxs	2023-08-24 19:59:28.000000000 +0200
++++ ../Python-3.9.18/Tools/msi/lib/lib_files.wxs	2024-01-12 20:39:38.165462700 +0100
+@@ -12,10 +12,11 @@
+             </Component>
+             
+             <?endforeach ?>
+-            
++<!--
+             <Component Id="sqlite3.dll" Directory="DLLs" Guid="*">
+                 <File Name="sqlite3.dll" KeyPath="yes" />
+             </Component>
++-->
+             <Component Id="libcrypto.dll" Directory="DLLs" Guid="*">
+                 <File Name="libcrypto$(var.ssltag).dll" KeyPath="yes" />
+             </Component>
+@@ -53,9 +54,11 @@
+             
+             <?endforeach ?>
+             
++<!--
+             <Component Id="sqlite3.pdb" Directory="DLLs" Guid="*">
+                 <File Name="sqlite3.pdb" />
+             </Component>
++-->
+             <Component Id="libcrypto.pdb" Directory="DLLs" Guid="*">
+                 <File Name="libcrypto$(var.ssltag).pdb" KeyPath="yes" />
+             </Component>
+@@ -93,12 +96,14 @@
+             
+             <?endforeach ?>
+             
++<!--
+             <Component Id="sqlite3_d.dll" Directory="DLLs" Guid="*">
+                 <File Name="sqlite3_d.dll" KeyPath="yes" />
+             </Component>
+             <Component Id="sqlite3_d.pdb" Directory="DLLs" Guid="*">
+                 <File Name="sqlite3_d.pdb" KeyPath="yes" />
+             </Component>
++-->
+             <Component Id="venvlauncher_d.exe" Directory="Lib_venv_scripts_nt__d" Guid="*">
+                 <File Name="python_d.exe" Source="venvlauncher_d.exe" KeyPath="yes" />
+             </Component>
