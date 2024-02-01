@@ -118,7 +118,7 @@ diff -ur '--exclude=__pycache__' Python-3.9.18/PCbuild/_lzma.vcxproj ../Python-3
      </ClCompile>
      <Link>
 -      <AdditionalDependencies>$(OutDir)liblzma$(PyDebugExt).lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>$(OSGEO4W_ROOT)/lib/liblzma.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>$(OSGEO4W_ROOT)/lib/liblzma_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
      </Link>
    </ItemDefinitionGroup>
    <ItemGroup>
@@ -256,7 +256,7 @@ diff -ur '--exclude=__pycache__' Python-3.9.18/PCbuild/pythoncore.vcxproj ../Pyt
      </ClCompile>
      <Link>
 -      <AdditionalDependencies>version.lib;ws2_32.lib;pathcch.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>version.lib;ws2_32.lib;pathcch.lib;$(OSGEO4W_ROOT)\lib\zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>version.lib;ws2_32.lib;pathcch.lib;$(OSGEO4W_ROOT)\lib\zlibstatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
      </Link>
    </ItemDefinitionGroup>
    <ItemGroup>

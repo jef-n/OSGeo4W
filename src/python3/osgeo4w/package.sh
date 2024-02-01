@@ -80,16 +80,14 @@ for a in "" "w"; do
 		cp $S/PCbuild/amd64/python$a.exe install/${PREFIX}python$a$b.exe
 		cp $S/PCbuild/amd64/python$a.exe install/bin/python$a$b.exe
 	done
-	cp $S/PCbuild/amd64/python$a.exe install/${PREFIX}Lib/venv/scripts/nt/
+	cp $S/PCbuild/amd64/venv${a}launcher.exe install/${PREFIX}Lib/venv/scripts/nt/python$a.exe
 done
 
 PY=$(cygpath -aw install/${PREFIX}python.exe)
 
 (
-	cp osgeo4w/bin/{zlib,liblzma}.dll install/${PREFIX}
 	PATH=$(cygpath -au install/$PREFIX):$(cygpath -au install/${PREFIX}Scripts):$PATH
 	python -m ensurepip
-	rm install/${PREFIX%/}/{zlib,liblzma}.dll
 )
 
 for p in core help devel test tcltk tools; do
@@ -109,7 +107,7 @@ sdesc: "Python core interpreter and runtime"
 ldesc: "Python core interpreter and runtime"
 maintainer: $MAINTAINER
 category: Commandline_Utilities
-requires: base msvcrt2019 sqlite3 xz zlib openssl api-ms-win-core-path-HACK
+requires: base msvcrt2019 sqlite3 openssl api-ms-win-core-path-HACK
 external-source: $P
 EOF
 
@@ -186,8 +184,28 @@ EOF
 
 cat <<EOF >sitecustomize.py
 import os
+import sys
 
-for p in os.getenv("PATH").split(";"):
+paths = os.environ['PATH'].split(";")
+
+if 'OSGEO4W_ROOT' not in os.environ:
+    o4w = os.path.normpath(
+        os.path.join(
+            os.path.dirname(os.path.realpath(__file__)),
+            "..", "..", "..", "..")
+    )
+    os.environ['OSGEO4W_ROOT'] = o4w
+    for p in [
+        "bin",
+        "apps\\\\qt5\\\\bin",
+        f"apps\\\\Python$MM",
+        f"apps\\\\Python$MM\\\\Scripts"
+    ]:
+        p = os.path.join(o4w, p)
+        if os.path.exists(p):
+            paths.insert(0, p)
+
+for p in paths:
     if os.path.exists(p):
         os.add_dll_directory(p)
 EOF
