@@ -1,5 +1,5 @@
 export P=libpq
-export V=15.2
+export V=16.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="openssl-devel zlib-devel libiconv-devel"
