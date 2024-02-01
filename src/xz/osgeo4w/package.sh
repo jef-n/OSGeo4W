@@ -9,27 +9,28 @@ source ../../../scripts/build-helpers
 startlog
 
 [ -f $P-$V.tar.bz2 ] || wget -c https://tukaani.org/$P/$P-$V.tar.bz2
-[ -f ../CMakeLists.txt ] || tar -C .. -xjf $P-$V.tar.bz2 --xform "s,^$P-$V,.,"
+[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xjf $P-$V.tar.bz2
 
 vs2019env
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R/$P-devel
 
-cd ../windows/vs2019
+cd ../$P-$V/windows/vs2019
 
 devenv xz_win.sln /upgrade
 devenv xz_win.sln /Build "Release|x64" /out ..\\osgeo4w\\build.log
 
-cd ../../osgeo4w
+cd ../../../osgeo4w
 mkdir -p install
 
 cd install
 mkdir -p bin lib include
 
-cp ../../windows/vs2019/Release/x64/liblzma_dll/liblzma.dll bin
-cp ../../windows/vs2019/Release/x64/liblzma_dll/liblzma.lib lib
-cp -a ../../src/liblzma/api/lzma* include
+cp ../../$P-$V/windows/vs2019/Release/x64/liblzma_dll/liblzma.dll bin
+cp ../../$P-$V/windows/vs2019/Release/x64/liblzma_dll/liblzma.lib lib
+cp ../../$P-$V/windows/vs2019/Release/x64/liblzma/liblzma.lib lib/liblzma_static.lib
+cp -a ../../$P-$V/src/liblzma/api/lzma* include
 
 cd ..
 
@@ -50,7 +51,7 @@ requires: $P
 external-source: $P
 EOF
 
-cp ../COPYING $R/$P-$V-$B.txt
+cp ../$P-$V/COPYING $R/$P-$V-$B.txt
 
 tar -C install -cjvf $R/$P-$V-$B.tar.bz2 bin/liblzma.dll
 tar -C install -cjvf $R/$P-devel/$P-devel-$V-$B.tar.bz2 include lib
