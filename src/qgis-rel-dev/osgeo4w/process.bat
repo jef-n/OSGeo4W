@@ -1,6 +1,11 @@
 @echo off
 call "%~dp0\o4w_env.bat"
 call "%~dp0\gdal-dev-py-env.bat"
+if not exist "%OSGEO4W_ROOT%\apps\grass\@grasspath@\etc\env.bat" goto nograss
+set savedpath=%PATH%
+call "%OSGEO4W_ROOT%\apps\grass\@grasspath@\etc\env.bat"
+path %OSGEO4W_ROOT%\apps\grass\@grasspath@\lib;%OSGEO4W_ROOT%\apps\grass\@grasspath@\bin;%savedpath%
+:nograss
 @echo off
 path %OSGEO4W_ROOT%\apps\@package@\bin;%PATH%
 set QGIS_PREFIX_PATH=%OSGEO4W_ROOT:\=/%/apps/@package@
