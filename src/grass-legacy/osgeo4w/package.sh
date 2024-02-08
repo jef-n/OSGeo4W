@@ -1,11 +1,10 @@
-export P=grass8
-export V=8.3.1
+export P=grass-legacy
+export V=7.8.8
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="gdal-devel proj-devel geos-devel netcdf-devel libjpeg-turbo-devel libpq-devel libtiff-devel sqlite3-devel zstd-devel python3-ply python3-core python3-six python3-pywin32 python3-wxpython liblas-devel cairo-devel freetype-devel"
+export BUILDDEPENDS="gdal-devel proj-devel geos-devel libjpeg-turbo-devel libpng-devel libpq-devel libtiff-devel sqlite3-devel zstd-devel python3-core python3-six python3-pywin32 liblas-devel python3-wxpython"
 
-branch=main
-p=grass-$V
+p=$P-$V
 
 source ../../../scripts/build-helpers
 
@@ -16,7 +15,7 @@ startlog
 MM=${V%.*}
 MM=${MM//./}
 
-[ -f $p.tar.gz ] || wget -O $p.tar.gz https://github.com/OSGeo/grass/archive/refs/tags/$V.tar.gz
+[ -f $p.tar.gz ] || wget -O $p.tar.gz https://github.com/OSGeo/$P/archive/refs/tags/$V.tar.gz
 [ -f ../$p/configure ] || tar -C .. -xzf $p.tar.gz
 [ -f ../$p/patched ] || {
 	patch -d ../$p -p1 --dry-run <patch
@@ -100,28 +99,26 @@ pacman --noconfirm -Syu --needed \
 	mingw-w64-x86_64-libpng \
 	mingw-w64-x86_64-pcre \
 	mingw-w64-x86_64-fftw \
-	mingw-w64-x86_64-lapack \
-	mingw-w64-x86_64-openmp \
-	mingw-w64-x86_64-readline
+	mingw-w64-x86_64-cairo
 
 cd ../$p
 
 [ -n "$OSGEO4W_SKIP_CLEAN" ] || rm -f mswindows/osgeo4w/configure-stamp
 
-PACKAGE_POSTFIX=${V%%.*} bash.exe $xtrace mswindows/osgeo4w/package.sh
+bash.exe $xtrace mswindows/osgeo4w/package.sh
 EOF
 
 	cygstart -w $(cygpath -aw msys64/usr/bin/bash.exe) $(cygpath -am build.sh) || { cat ../$p/mswindows/osgeo4w/package.log; exit 1; }
 )
 
-cp ../$p/mswindows/osgeo4w/package/$P-$V-1.tar.bz2 $R/$P-$V-$B.tar.bz2
+cp ../$p/mswindows/osgeo4w/package/$p-1.tar.bz2 $R/$p-$B.tar.bz2
 cp ../$p/COPYING $R/$P-$V-$B.txt
 
 cat <<EOF >$R/setup.hint
 sdesc: "GRASS GIS ${V%.*}"
 ldesc: "Geographic Resources Analysis Support System (GRASS GIS ${V%.*})"
 category: Desktop
-requires: liblas $RUNTIMEDEPENDS avce00 gpsbabel proj python3-gdal python3-matplotlib libtiff python3-wxpython python3-pillow python3-pip python3-ply python3-pyopengl python3-psycopg2-binary python3-six zstd python3-pywin32 gs netcdf wxwidgets
+requires: liblas $RUNTIMEDEPENDS avce00 gpsbabel proj python3-gdal python3-matplotlib libtiff python3-wxpython python3-pillow python3-pip python3-ply python3-pyopengl python3-psycopg2-binary python3-six zstd python3-pywin32 gs
 maintainer: $MAINTAINER
 EOF
 
