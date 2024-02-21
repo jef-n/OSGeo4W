@@ -52,6 +52,8 @@ if [ -d qgis ]; then
 		git clean -f
 		git reset --hard
 
+		git config pull.rebase false
+
 		if [ "$(git branch --show-current)" != $RELBRANCH ]; then
 			if ! git checkout $RELBRANCH; then
 				git remote set-branches --add origin $RELBRANCH
@@ -61,13 +63,16 @@ if [ -d qgis ]; then
 			fi
 		fi
 
-		git config pull.rebase false
-		git pull
+		i=0
+		until (( i > 10 )) || git pull; do
+			(( ++i ))
+		done
 	fi
 else
 	git clone $REPO --branch $RELBRANCH --single-branch --depth 1 qgis
 	cd qgis
 	git config core.filemode false
+	unset OSGEO4W_SKIP_CLEAN
 fi
 
 if [ -z "$OSGEO4W_SKIP_CLEAN" ]; then
@@ -103,7 +108,7 @@ if [ -n "$version_curr" ]; then
 	fi
 
 	if [ "$V" = "$version" ]; then
-		(( build++ )) || true
+		(( ++build ))
 	fi
 fi
 

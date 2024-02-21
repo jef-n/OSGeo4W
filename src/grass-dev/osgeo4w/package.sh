@@ -19,7 +19,11 @@ if [ -d ../grass ]; then
 	if [ -z "$OSGEO4W_SKIP_CLEAN" ]; then
 		git clean -f
 		git reset --hard
-		git pull
+
+		i=0
+		until (( i > 10 )) || git pull; do
+			(( ++i ))
+		done
 	fi
 
 	cd ../osgeo4w
@@ -62,7 +66,7 @@ if [[ "$version_curr" =~ ^[^-]*-[^-]*-[^-]*$ ]]; then
 	fi
 
 	if [ "$V" = "$version" ]; then
-		(( build++ )) || true
+		(( ++build ))
 	fi
 fi
 

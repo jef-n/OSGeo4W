@@ -71,7 +71,7 @@ if [ -n "$version_curr" ]; then
 	build=$binary_curr
 
 	if [ "$V" = "$version_curr" ]; then
-		(( build++ )) || true
+		(( ++build ))
 	fi
 else
 	build=1

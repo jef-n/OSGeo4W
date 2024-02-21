@@ -4,6 +4,8 @@ export B=tbd
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel hdf5-tools ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-turbo-devel python3-setuptools opencl-devel libtiff-devel arrow-cpp-devel lz4-devel openssl-devel tiledb-devel lerc-devel kealib-devel odbc-cpp-wrapper-devel libjxl-devel"
 
+REPO=https://github.com/OSGeo/gdal.git
+
 source ../../../scripts/build-helpers
 
 export PYTHON=Python39
@@ -24,12 +26,17 @@ if [ -d ../gdal ]; then
 	if [ -z "$OSGEO4W_SKIP_CLEAN" ]; then
 		git clean -f
 		git reset --hard
-		git pull
+
+		git config pull.rebase false
+		i=0
+		until (( i > 10 )) || git pull; do
+			(( ++i ))
+		done
 	fi
 
 	cd ../osgeo4w
 else
-	git clone https://github.com/OSGeo/gdal.git --branch master --single-branch ../gdal
+	git clone $REPO --branch master --single-branch ../gdal
 	git config core.filemode false
 	unset OSGEO4W_SKIP_CLEAN
 fi
@@ -127,7 +134,7 @@ if [[ "$version_curr" =~ ^[^-]*-[^-]*-[^-]*$ ]]; then
 	fi
 
 	if [ "$V" = "$version" ]; then
-		(( build++ )) || true
+		(( ++build ))
 	fi
 fi
 

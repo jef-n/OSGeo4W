@@ -42,12 +42,17 @@ if [ -d qgis ]; then
 		git reset --hard
 
 		git config pull.rebase false
-		git pull
+
+		i=0
+		until (( i > 10 )) || git pull; do
+			(( ++i ))
+		done
 	fi
 else
 	git clone $REPO --branch master --single-branch qgis
 	cd qgis
 	git config core.filemode false
+	unset OSGEO4W_SKIP_CLEAN
 fi
 
 if [ -z "$OSGEO4W_SKIP_CLEAN" ]; then
@@ -83,7 +88,7 @@ if [ -n "$version_curr" ]; then
 	fi
 
 	if [ "$V" = "$version" ]; then
-		(( build++ )) || true
+		(( ++build ))
 	fi
 fi
 

@@ -391,7 +391,7 @@ appendversions() {
 	[ -z "$version_prev" ] || echo "prev: $version_prev-$binary_prev" >>$hint
 	[ -z "$version_test" ] || echo "test: $version_test-$binary_test" >>$hint
 
-	(( OSGEO4W_HINTS++ )) || true
+	(( ++OSGEO4W_HINTS ))
 }
 declare -x appendversions
 
@@ -413,7 +413,7 @@ nextbinary() {
 
 	if [ "$OSGEO4W_BUILDMODE" = "test" ]; then
 		if [ "$version_test" == "$V" ]; then
-			(( binary_test++ )) || true
+			(( ++binary_test ))
 		else
 			binary_test=1
 		fi
@@ -424,7 +424,7 @@ nextbinary() {
 		binary_prev=$binary_curr
 
 		if [ "$version_curr" == "$V" ]; then
-			(( binary_curr++ )) || true
+			(( ++binary_curr ))
 		else
 			version_curr=$V
 			binary_curr=1

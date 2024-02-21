@@ -18,6 +18,16 @@ source ../../../scripts/build-helpers
 
 startlog
 
+# should be fixed in the packages
+find $(find osgeo4w -name cmake) -type f | \
+	xargs sed -i \
+		-e 's#.:/src/osgeo4w/src/[^/]*/osgeo4w/install/#\$ENV{OSGEO4W_ROOT}/#g' \
+		-e 's#.:/src/osgeo4w/src/[^/]*/osgeo4w/osgeo4w/#\$ENV{OSGEO4W_ROOT}/#g' \
+		-e 's#.:\\\\src\\\\osgeo4w\\\\src\\\\[^\\]*\\\\osgeo4w\\\\osgeo4w\\\\#\$ENV{OSGEO4W_ROOT}\\\\#g' \
+		-e 's#.:\\\\src\\\\osgeo4w\\\\src\\\\[^\\]*\\\\osgeo4w\\\\install\\\\#\$ENV{OSGEO4W_ROOT}\\\\#g' \
+		-e 's#C:/Program Files (x86)/qtkeychain#\$ENV{OSGEO4W_ROOT}/apps/Qt5#g' \
+		-e 's#C:/Program Files (x86)/qca#\$ENV{OSGEO4W_ROOT}/apps/Qt5#g'
+
 # Get latest release branch
 RELBRANCH=$(git ls-remote --heads $REPO "refs/heads/release-*_*" | sed -e '/\^{}$/d' -ne 's#^.*refs/heads/release-#release-#p' | sort -V | tail -1)
 RELBRANCH=${RELBRANCH#*/}
@@ -44,6 +54,8 @@ if [ -d qgis ]; then
 		git clean -f
 		git reset --hard
 
+		git config pull.rebase false
+
 		if [ "$(git branch --show-current)" != $LTRBRANCH ]; then
 			if ! git checkout $LTRBRANCH; then
 				git remote set-branches --add origin $LTRBRANCH
@@ -53,13 +65,16 @@ if [ -d qgis ]; then
 			fi
 		fi
 
-		git config pull.rebase false
-		git pull
+		i=0
+		until (( i > 10 )) || git pull; do
+			(( ++i ))
+		done
 	fi
 else
 	git clone $REPO --branch $LTRBRANCH --single-branch --depth 1 qgis
 	cd qgis
 	git config core.filemode false
+	unset OSGEO4W_SKIP_CLEAN
 fi
 
 if [ -z "$OSGEO4W_SKIP_CLEAN" ]; then
@@ -95,7 +110,7 @@ if [ -n "$version_curr" ]; then
 	fi
 
 	if [ "$V" = "$version" ]; then
-		(( build++ )) || true
+		(( ++build ))
 	fi
 fi
 
