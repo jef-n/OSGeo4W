@@ -2,7 +2,7 @@ export P=qgis-rel-dev
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-devel qt5-oci qt5-oci-debug sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt5 python3-sip python3-pyqt-builder python3-devel python3-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-devel qscintilla-devel qt5-devel qwt-devel libspatialite-devel oci-devel qtkeychain-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel oci-devel qtwebkit-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel python3-pyqt-builder pdal pdal-devel grass8 draco-devel transifex-cli"
+export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-devel qt5-oci qt5-oci-debug sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt5 python3-sip python3-pyqt-builder python3-devel python3-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-devel qscintilla-devel qt5-devel qwt-devel libspatialite-devel oci-devel qtkeychain-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel oci-devel qtwebkit-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel python3-pyqt-builder pdal pdal-devel grass8 draco-devel libtiff-devel transifex-cli"
 
 : ${SITE:=qgis.org}
 : ${TARGET:=Nightly}
@@ -17,6 +17,16 @@ export SITE TARGET CC CXX BUILDCONF
 source ../../../scripts/build-helpers
 
 startlog
+
+# should be fixed in the packages
+find $(find osgeo4w -name cmake) -type f | \
+	xargs sed -i \
+		-e 's#.:/src/osgeo4w/src/[^/]*/osgeo4w/install/#\$ENV{OSGEO4W_ROOT}/#g' \
+		-e 's#.:/src/osgeo4w/src/[^/]*/osgeo4w/osgeo4w/#\$ENV{OSGEO4W_ROOT}/#g' \
+		-e 's#.:\\\\src\\\\osgeo4w\\\\src\\\\[^\\]*\\\\osgeo4w\\\\osgeo4w\\\\#\$ENV{OSGEO4W_ROOT}\\\\#g' \
+		-e 's#.:\\\\src\\\\osgeo4w\\\\src\\\\[^\\]*\\\\osgeo4w\\\\install\\\\#\$ENV{OSGEO4W_ROOT}\\\\#g' \
+		-e 's#C:/Program Files (x86)/qtkeychain#\$ENV{OSGEO4W_ROOT}/apps/Qt5#g' \
+		-e 's#C:/Program Files (x86)/qca#\$ENV{OSGEO4W_ROOT}/apps/Qt5#g'
 
 # Get latest release branch
 RELBRANCH=$(git ls-remote --heads $REPO "refs/heads/release-*_*" | sed -e '/\^{}$/d' -ne 's#^.*refs/heads/release-#release-#p' | sort -V | tail -1)
@@ -193,7 +203,6 @@ nextbinary
 		-D QCA_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt5/lib/qca-qt5.lib) \
 		-D QWT_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt5/lib/qwt.lib) \
 		-D QSCINTILLA_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt5/lib/qscintilla2.lib) \
-		-D PDAL_UTIL_LIBRARY=$(cygpath -am $O4W_ROOT/lib/pdalcpp.lib) \
 		-D DART_TESTING_TIMEOUT=60 \
 		-D PUSH_TO_CDASH=TRUE \
 		$(cygpath -m $SRCDIR)
@@ -331,7 +340,7 @@ sdesc: "QGIS nightly build of the $LABEL branch (metapackage with additional fre
 ldesc: "QGIS nightly build of the $LABEL branch (metapackage with additional free dependencies)"
 maintainer: $MAINTAINER
 category: Desktop
-requires: $P proj python3-pyparsing python3-simplejson python3-shapely python3-matplotlib python3-pygments qt5-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-pillow python3-geopandas python3-geographiclib grass8 python3-pyserial gdal-sosi python3-openpyxl python3-remotior-sensus
+requires: $P proj python3-pyparsing python3-simplejson python3-shapely python3-matplotlib python3-pygments qt5-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-pillow python3-geopandas python3-geographiclib grass8 python3-pyserial gdal-sosi python3-autopep8 python3-openpyxl python3-remotior-sensus saga9
 external-source: $P
 EOF
 

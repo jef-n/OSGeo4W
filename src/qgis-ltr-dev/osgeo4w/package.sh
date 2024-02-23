@@ -2,7 +2,7 @@ export P=qgis-ltr-dev
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-devel qt5-oci qt5-oci-debug sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt5 python3-sip python3-pyqt-builder python3-devel python3-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-devel qscintilla-devel qt5-devel qwt-devel libspatialite-devel oci-devel qtkeychain-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel oci-devel qtwebkit-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel python3-pyqt-builder pdal pdal-devel grass8 transifex-cli"
+export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-devel qt5-oci qt5-oci-debug sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt5 python3-sip python3-pyqt-builder python3-devel python3-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-devel qscintilla-devel qt5-devel qwt-devel libspatialite-devel oci-devel qtkeychain-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel oci-devel qtwebkit-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel python3-pyqt-builder pdal pdal-devel grass8 draco-devel transifex-cli"
 
 : ${SITE:=qgis.org}
 : ${TARGET:=Nightly}
@@ -261,11 +261,6 @@ nextbinary
 
 		v=$MAJOR.$MINOR.$PATCH
 
-		SA=python/plugins/sagaprovider
-		SAP=$SA/SagaAlgorithmProvider.py
-		sagadef=$(sed -rne "s/^REQUIRED_VERSION *= *('.*')$/\\1/p" install/apps/$P/$SAP)
-		sed -e "s/^REQUIRED_VERSION *= *'.*'$/REQUIRED_VERSION = @saga@/" install/apps/$P/$SAP >install/apps/$P/$SAP.tmpl
-
 		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       qgis.reg.tmpl    >install/apps/$P/bin/qgis.reg.tmpl
 		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                postinstall.bat  >install/etc/postinstall/$P.bat
 		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                preremove.bat    >install/etc/preremove/$P.bat
@@ -274,37 +269,6 @@ nextbinary
 
 		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g" -e "s/@grasspath@/$(basename $GRASS_PREFIX)/g" qgis.bat         >install/bin/$P.bat
 		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g" -e "s/@grasspath@/$(basename $GRASS_PREFIX)/g" process.bat      >install/bin/qgis_process-$P.bat
-
-		cat <<EOF >install/apps/$P/saga-refresh.bat
-setlocal enabledelayedexpansion
-
-set SAGA_VER=$sagadef
-
-if exist "%OSGEO4W_ROOT%\\apps\\saga\\tools\\dev_tools.dll" (
-	if not exist "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\description.dist" (
-		ren "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\description" description.dist
-		ren "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\SagaNameDecorator.py" SagaNameDecorator.py.dist
-	)
-
-	"%OSGEO4W_ROOT%\\apps\\saga\\saga_cmd" dev_tools 7 -DIRECTORY "%OSGEO4W_ROOT%\\apps\\$P\\$SA" -CLEAR 0
-	for /f "tokens=3 usebackq" %%a in (\`"%OSGEO4W_ROOT%\\apps\\saga\\saga_cmd" -v\`) do set v=%%a
-	for /f "tokens=1,2 delims=." %%a in ("!v!") do set SAGA_VER='%%a.%%b.'
-	del "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\readme.txt"
-) else if exist "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\description.dist" (
-	rmdir /s /q "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\description"
-	del "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\SagaNameDecorator.py"
-
-	ren "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\description.dist" description
-	ren "%OSGEO4W_ROOT%\\apps\\$P\\$SA\\SagaNameDecorator.py.dist" SagaNameDecorator.py.dist
-)
-
-textreplace ^
-	-sf "%OSGEO4W_ROOT%\\apps\\$P\\$SAP.tmpl" ^
-	-df "%OSGEO4W_ROOT%\\apps\\$P\\$SAP" ^
-	-map @saga@ "%SAGA_VER%"
-
-endlocal
-EOF
 
 		cp "$DBGHLP_PATH"/{dbghelp.dll,symsrv.dll} install/apps/$P
 
@@ -369,7 +333,7 @@ sdesc: "QGIS nightly build of the $LABEL branch (metapackage with additional fre
 ldesc: "QGIS nightly build of the $LABEL branch (metapackage with additional free dependencies)"
 maintainer: $MAINTAINER
 category: Desktop
-requires: $P proj python3-pyparsing python3-simplejson python3-shapely python3-matplotlib python3-pygments qt5-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-pillow python3-geopandas python3-geographiclib grass8 python3-pyserial gdal-sosi saga python3-openpyxl python3-remotior-sensus
+requires: $P proj python3-pyparsing python3-simplejson python3-shapely python3-matplotlib python3-pygments qt5-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-pillow python3-geopandas python3-geographiclib grass8 python3-pyserial gdal-sosi python3-openpyxl python3-remotior-sensus saga9
 external-source: $P
 EOF
 
