@@ -33,4 +33,5 @@ set QGIS_PREFIX_PATH=%OSGEO4W_ROOT:\=/%/apps/@package@
 "%OSGEO4W_ROOT%\apps\@package@\crssync"
 
 del /s /q "%OSGEO4W_ROOT%\apps\@package@\python\*.pyc"
+if exist "%OSGEO4W_ROOT%\apps\@package@\python\plugins\sagaprovider" rd /s /q "%OSGEO4W_ROOT%\apps\@package@\python\plugins\sagaprovider"
 exit /b 0
