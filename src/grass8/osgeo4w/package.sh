@@ -1,5 +1,5 @@
 export P=grass8
-export V=8.3.1
+export V=8.3.2
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="gdal-devel proj-devel geos-devel netcdf-devel libjpeg-turbo-devel libpq-devel libtiff-devel sqlite3-devel zstd-devel python3-ply python3-core python3-six python3-pywin32 python3-wxpython liblas-devel cairo-devel freetype-devel"
@@ -20,8 +20,7 @@ MM=${MM//./}
 [ -f ../$p/configure ] || tar -C .. -xzf $p.tar.gz
 [ -f ../$p/patched ] || {
 	patch -d ../$p -p1 --dry-run <patch
-	patch -d ../$p -p1 <patch
-	touch ../$p/patched
+	patch -d ../$p -p1 <patch >../$p/patched
 }
 
 export R=$OSGEO4W_REP/x86_64/release/$P
