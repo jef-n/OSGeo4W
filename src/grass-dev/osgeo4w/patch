@@ -81,10 +81,10 @@ diff --git a/mswindows/osgeo4w/package.sh b/mswindows/osgeo4w/package.sh
 index c638c40ee..9350acc3a 100755
 --- a/mswindows/osgeo4w/package.sh
 +++ b/mswindows/osgeo4w/package.sh
-@@ -111,29 +111,21 @@ DLLS="
+@@ -110,29 +110,21 @@ DLLS="
+ 	/mingw64/bin/zlib1.dll
  	/mingw64/bin/libbz2-1.dll
  	/mingw64/bin/libiconv-2.dll
- 	/mingw64/bin/libexpat-1.dll
 -	/mingw64/bin/libfontconfig-1.dll
  	/mingw64/bin/libgfortran-5.dll
 -	/mingw64/bin/libbrotlidec.dll
@@ -113,7 +113,7 @@ index c638c40ee..9350acc3a 100755
  "
  
  if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
-@@ -149,18 +141,18 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
+@@ -148,18 +140,18 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
  	cp -uv $DLLS dist.x86_64-w64-mingw32/bin
  
  	mkdir -p mswindows/osgeo4w/lib
@@ -139,7 +139,7 @@ index c638c40ee..9350acc3a 100755
  		--with-opengl=windows \
  		--without-x \
  		--with-cxx \
-@@ -168,13 +160,13 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
+@@ -167,13 +159,13 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
  		--enable-largefile \
  		--with-fftw \
  		--with-freetype \
@@ -159,7 +159,7 @@ index c638c40ee..9350acc3a 100755
  		--with-gdal=$PWD/mswindows/osgeo4w/gdal-config \
  		--with-geos=$PWD/mswindows/osgeo4w/geos-config \
  		--with-sqlite \
-@@ -190,10 +182,11 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
+@@ -189,10 +181,11 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
  		--with-lapack-includes=/mingw64/include \
  		--with-openmp \
  		--with-cairo \
@@ -173,7 +173,7 @@ index c638c40ee..9350acc3a 100755
  		--without-pdal
  
  	touch mswindows/osgeo4w/configure-stamp
-@@ -249,7 +242,9 @@ if [ -n "$PACKAGE_PATCH" ]; then
+@@ -248,7 +241,9 @@ if [ -n "$PACKAGE_PATCH" ]; then
  
      # copy dependencies (TODO: to be reduced)
      cp -uv $DLLS apps/grass/grass$POSTFIX/bin
