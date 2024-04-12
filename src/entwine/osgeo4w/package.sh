@@ -3,6 +3,7 @@ export V=3.0.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="curl-devel openssl-devel pdal-devel python3-core"
+export PACKAGES="entwine entwine-devel"
 
 source ../../../scripts/build-helpers
 
@@ -11,7 +12,7 @@ startlog
 [ -f $V.tar.gz ] || wget -q https://github.com/connormanning/$P/archive/$V.tar.gz
 [ -d ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf $V.tar.gz
 
-vs2019env
+vsenv
 cmakeenv
 ninjaenv
 
@@ -41,7 +42,7 @@ mkdir -p $R/$P-devel
 cat <<EOF >$R/setup.hint
 sdesc: "data organization library for massive point clouds (Runtime)"
 ldesc: "Entwine is a data organization library for massive point clouds"
-category: CommandLine_Utilities
+category: Commandline_Utilities
 requires: msvcrt2019 $RUNTIMEDEPENDS pdal-libs openssl curl
 maintainer: $MAINTAINER
 EOF

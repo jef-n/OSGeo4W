@@ -1,8 +1,9 @@
 export P=python3
-export V=3.9.18
+export V=3.12.3
 export B="next $P-core"
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="openssl-devel bzip2-devel xz-devel zlib-devel sqlite3-devel"
+export PACKAGES="python3-core python3-devel python3-help python3-tcltk python3-test python3-tools"
 
 source ../../../scripts/build-helpers
 
@@ -27,10 +28,10 @@ MMM=${V//./}
 
 	fetchenv ../osgeo4w/osgeo4w/bin/o4w_env.bat
 
-	vs2019env
+	vsenv
 
 	# fetch externals - but skip some
-	mkdir -p externals/{bzip2-1.0.8,openssl-bin-1.1.1u,sqlite-3.37.2.0,xz-5.2.5,zlib-1.2.12}
+	mkdir -p externals/{bzip2-1.0.8,sqlite-3.43.1.0,xz-5.2.5,zlib-1.3.1,openssl-3.0.13,openssl-bin-3.0.13}
 	export LANG=C LC_ALL=C PATH=$(cygpath --sysdir)/WindowsPowerShell/v1.0:$PATH
 	cmd /c Tools\\msi\\get_externals.bat
 
@@ -40,7 +41,7 @@ MMM=${V//./}
 		cmd /c Doc\\make.bat htmlhelp
 		[ -f Doc/build/htmlhelp/python$MMM.chm ]
 		cmd /c Tools\\msi\\buildrelease.bat -x64 --skip-msi --skip-nuget --skip-zip
-		touch osgeo4w.built;
+		touch osgeo4w.built
 	}
 )
 
@@ -69,11 +70,11 @@ rm -rf install
 mkdir -p install/{bin,${PREFIX%/}/{DLLs,Tools}}
 
 cp $S/LICENSE						install/${PREFIX}LICENSE.txt
-cp -a $S/Tools/{scripts,demo,i18n,pynche}		install/${PREFIX}Tools/
+cp -a $S/Tools/{scripts,i18n}		                install/${PREFIX}Tools/
 cp $S/{PC/icons/py{,c,d}.ico,PCbuild/amd64/*.{dll,pyd}}	install/${PREFIX}DLLs/
 cp -a $S/Lib						install/${PREFIX}Lib
 cp $S/PCbuild/amd64/python{$M,$MM}.dll			install/${PREFIX}
-cp -a $S/externals/tcltk-8.6.12.0/amd64/lib		install/${PREFIX}tcl
+cp -a $S/externals/tcltk-8.6.13.0/amd64/lib		install/${PREFIX}tcl
 cp $S/PCbuild/amd64/python{$M,$MM}.dll			install/bin
 for a in "" "w"; do
 	for b in "" $M; do
@@ -85,22 +86,11 @@ done
 
 PY=$(cygpath -aw install/${PREFIX}python.exe)
 
-(
-	PATH=$(cygpath -au install/$PREFIX):$(cygpath -au install/${PREFIX}Scripts):$PATH
-	python -m ensurepip
-)
-
 for p in core help devel test tcltk tools; do
 	mkdir -p $R/$P-$p
 	cp $S/LICENSE $R/$P-$p/$P-$p-$V-$B.txt
 done
 
-PIPV=$(sed -ne "s/^Version: //p" install/${PREFIX}Lib/site-packages/pip-*.dist-info/METADATA)
-STV=$(sed -ne "s/^Version: //p" install/${PREFIX}Lib/site-packages/setuptools-*.dist-info/METADATA)
-
-mkdir -p $R/$P-pip $R/$P-setuptools
-cp $S/LICENSE $R/$P-pip/$P-pip-$PIPV-$B.txt
-cp $S/LICENSE $R/$P-setuptools/$P-setuptools-$STV-$B.txt
 
 cat <<EOF >$R/$P-core/setup.hint
 sdesc: "Python core interpreter and runtime"
@@ -126,29 +116,10 @@ install/${PREFIX}DLLs/_testcapi.pyd
 install/${PREFIX}DLLs/_testconsole.pyd
 install/${PREFIX}DLLs/_testimportmultiple.pyd
 install/${PREFIX}DLLs/_testmultiphase.pyd
-install/${PREFIX}Lib/ctypes/test
-install/${PREFIX}Lib/distutils/tests
 install/${PREFIX}Lib/idlelib/idle_test
-install/${PREFIX}Lib/lib2to3/tests
-install/${PREFIX}Lib/sqlite3/test
 install/${PREFIX}Lib/test
-install/${PREFIX}Lib/tkinter/test
-install/${PREFIX}Lib/unittest/test
-install/${PREFIX}tcl/tcl8/8.5/tcltest-2.5.3.tm
+install/${PREFIX}tcl/tcl8/8.5/tcltest-2.5.5.tm
 install/${PREFIX}Tools/scripts/run_tests.py
-EOF
-
-cat <<EOF >pip.lst
-./pip.exe.tmpl
-./pip$M.exe.tmpl
-./pip$VM.exe.tmpl
-install/${PREFIX}Lib/site-packages/pip
-install/${PREFIX}Lib/site-packages/pip-$PIPV.dist-info
-EOF
-
-cat <<EOF >setuptools.lst
-install/${PREFIX}Lib/site-packages/setuptools
-install/${PREFIX}Lib/site-packages/setuptools-$STV.dist-info
 EOF
 
 cat <<EOF >tools.lst
@@ -232,19 +203,13 @@ tar -cjf $R/$P-core/$P-core-$V-$B.tar.bz2 \
 	--xform "s,core-preremove.bat,etc/preremove/$P-core.bat," \
 	--xform "s,ini.bat,etc/ini/$P.bat," \
 	--xform "s,^install/,," \
-	--exclude "install/apps/Python39/DLLs/libcrypto-1_1-x64.dll" \
-	--exclude "install/apps/Python39/DLLs/libcrypto-1_1.dll" \
-	--exclude "install/apps/Python39/DLLs/libssl-1_1-x64.dll" \
-	--exclude "install/apps/Python39/DLLs/libssl-1_1.dll" \
-	--exclude "install/apps/Python39/DLLs/vcruntime140.dll" \
-	--exclude "install/apps/Python39/DLLs/vcruntime140_1.dll" \
-	--exclude "install/apps/Python39/DLLs/*_d.dll" \
-	--exclude "install/apps/Python39/DLLs/*_d.pyd" \
+	--exclude "install/apps/$PYTHON/DLLs/libcrypto-3.dll" \
+	--exclude "install/apps/$PYTHON/DLLs/libssl-3.dll" \
+	--exclude "install/apps/$PYTHON/DLLs/vcruntime140.dll" \
+	--exclude "install/apps/$PYTHON/DLLs/vcruntime140_1.dll" \
 	--exclude __pycache__ \
 	--exclude-from tcltk.lst \
 	--exclude-from test.lst \
-	--exclude-from pip.lst \
-	--exclude-from setuptools.lst \
 	--exclude-from tools.lst \
 	preremove-cached.py \
 	sitecustomize.py \
@@ -374,65 +339,6 @@ tar -cjf $R/$P-tools/$P-tools-$V-$B.tar.bz2 \
 	install/${PREFIX}Tools \
 	tools-preremove.bat
 
-#
-# pip
-#
-
-rm -f pip-postinstall.bat
-
-cat <<EOF >pip-preremove.bat
-python -B "%OSGEO4W_ROOT%\\apps\\Python$MM\\Scripts\\preremove-cached.py" $P-pip
-EOF
-
-cp install/${PREFIX}Scripts/pip$M.exe install/${PREFIX}Scripts/pip.exe
-
-exetmpl install/${PREFIX}Scripts/pip.exe pip
-exetmpl install/${PREFIX}Scripts/pip$M.exe pip
-exetmpl install/${PREFIX}Scripts/pip$VM.exe pip
-
-cat <<EOF >$R/$P-pip/setup.hint
-sdesc: "The PyPA recommended tool for installing Python packages."
-ldesc: "The PyPA recommended tool for installing Python packages."
-maintainer: $MAINTAINER
-category: Commandline_Utilities
-requires: base $P-core
-EOF
-
-tar -cjf $R/$P-pip/$P-pip-$PIPV-$B.tar.bz2 \
-	--xform "s,^pip-postinstall.bat,etc/postinstall/$P-pip.bat," \
-	--xform "s,^pip-preremove.bat,etc/preremove/$P-pip.bat," \
-	--xform s,^./pip.exe.tmpl,${PREFIX}Scripts/pip.exe.tmpl, \
-	--xform s,^./pip$M.exe.tmpl,${PREFIX}Scripts/pip$M.exe.tmpl, \
-	--xform s,^./pip$VM.exe.tmpl,${PREFIX}Scripts/pip$VM.exe.tmpl, \
-	--xform "s,^install/,," \
-	--exclude __pycache__ \
-	-T pip.lst \
-	pip-postinstall.bat \
-	pip-preremove.bat
-
-#
-# setuptools
-#
-
-cat <<EOF >setuptools-preremove.bat
-python -B "%OSGEO4W_ROOT%\\apps\\Python$MM\\Scripts\\preremove-cached.py" $P-setuptools
-EOF
-
-cat <<EOF >$R/$P-setuptools/setup.hint
-sdesc: "setuptools - Easily download, build, install, upgrade, and uninstall Python packages"
-ldesc: "setuptools - Easily download, build, install, upgrade, and uninstall Python packages"
-maintainer: $MAINTAINER
-category: Commandline_Utilities
-requires: base $P-core $P-devel
-EOF
-
-tar -cjf $R/$P-setuptools/$P-setuptools-$STV-$B.tar.bz2 \
-	--xform "s,^setuptools-preremove.bat,etc/preremove/$P-setuptools.bat," \
-	--xform "s,^install/,," \
-	--exclude __pycache__ \
-	setuptools-preremove.bat \
-	-T setuptools.lst
-
 if [ "$OSGEO4W_BUILDMODE" = "test" ]; then
 	v=version_test
 else
@@ -445,12 +351,8 @@ eval $v=$V appendversions $R/$P-devel/setup.hint
 eval $v=$V appendversions $R/$P-test/setup.hint
 eval $v=$V appendversions $R/$P-tcltk/setup.hint
 eval $v=$V appendversions $R/$P-tools/setup.hint
-eval $v=$PIPV appendversions $R/$P-pip/setup.hint
-eval $v=$STV appendversions $R/$P-setuptools/setup.hint
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
-cp $R/$P-$V-$B-src.tar.bz2 $R/$P-setuptools/$P-setuptools-$STV-$B-src.tar.bz2
-cp $R/$P-$V-$B-src.tar.bz2 $R/$P-pip/$P-pip-$PIPV-$B-src.tar.bz2
 
 #
 # check
@@ -465,8 +367,6 @@ find install -type f | sed -e '/\.pyc$/d; s#^install/##;' >/tmp/$P-installed.lst
 	tar -tjf $R/$P-test/$P-test-$V-$B.tar.bz2 | sed -e "s/$/:test/"
 	tar -tjf $R/$P-tcltk/$P-tcltk-$V-$B.tar.bz2 | sed -e "s/$/:tcltk/"
 	tar -tjf $R/$P-tools/$P-tools-$V-$B.tar.bz2 | sed -e "s/$/:tools/"
-	tar -tjf $R/$P-pip/$P-pip-$PIPV-$B.tar.bz2 | sed -e "s/$/:pip/"
-	tar -tjf $R/$P-setuptools/$P-setuptools-$STV-$B.tar.bz2 | sed -e "s/$/:setuptools/"
 ) | egrep -v '(/|\.pyc):' | sort >/tmp/$P-packaged.lst
 
 cut -d: -f1 /tmp/$P-packaged.lst | sort | uniq -d >/tmp/$P-dupes.lst
@@ -479,17 +379,14 @@ fi
 # OpenSSL shipped in openssl
 # sqlite3 in sqlite3
 # python*.dll moved to bin
-# pip to .tmpl
 # msvcrt runtime in msvcrt2019
 if egrep -v \
 	-f <(sed -e 's/:.*$//; /\.pyc$/d; s#^'$PREFIX'##; s/[+.$]/\\&/g; s/(dev)/\\(dev\\)/; s/$/$/;' /tmp/$P-packaged.lst) \
 	/tmp/$P-installed.lst |
 	egrep -v "_d\.(pyd|dll)$" |
 	fgrep -v -x -f <(cat <<EOF
-${PREFIX}DLLs/libcrypto-1_1-x64.dll
-${PREFIX}DLLs/libssl-1_1-x64.dll
-${PREFIX}DLLs/libcrypto-1_1.dll
-${PREFIX}DLLs/libssl-1_1.dll
+${PREFIX}DLLs/libcrypto-3.dll
+${PREFIX}DLLs/libssl-3.dll
 ${PREFIX}DLLs/sqlite3.dll
 ${PREFIX}DLLs/vcruntime140.dll
 ${PREFIX}DLLs/vcruntime140_1.dll
@@ -497,9 +394,6 @@ ${PREFIX}python$M.dll
 ${PREFIX}python$MM.dll
 ${PREFIX}python.exe
 ${PREFIX}pythonw.exe
-${PREFIX}Scripts/pip.exe
-${PREFIX}Scripts/pip${V%.*}.exe
-${PREFIX}Scripts/pip$M.exe
 EOF
 ) >/tmp/$P-unpackaged.lst; then
 	echo UNPACKAGED:
@@ -509,7 +403,6 @@ fi
 
 # whitelist generate files
 # moved python.exe
-# pip templates
 # preremoved-cached.py
 # dlls in bin
 # postinstall/preremove scripts
@@ -519,9 +412,6 @@ if egrep -v \
 	fgrep -v -x -f <(cat <<EOF
 ${PREFIX}python$M.exe
 ${PREFIX}pythonw$M.exe
-${PREFIX}Scripts/pip.exe.tmpl
-${PREFIX}Scripts/pip${V%.*}.exe.tmpl
-${PREFIX}Scripts/pip$M.exe.tmpl
 ${PREFIX}Scripts/preremove-cached.py
 ${PREFIX}Lib/site-packages/sitecustomize.py
 ${PREFIX}Doc/NEWS
@@ -531,11 +421,7 @@ bin/python$M.exe
 bin/python$MM.dll
 bin/pythonw$M.exe
 etc/ini/$P.bat
-etc/postinstall/$P-pip.bat
-etc/postinstall/$P-setuptools.bat
 etc/preremove/$P-core.bat
-etc/preremove/$P-pip.bat
-etc/preremove/$P-setuptools.bat
 etc/preremove/$P-tcltk.bat
 etc/preremove/$P-test.bat
 etc/preremove/$P-tools.bat

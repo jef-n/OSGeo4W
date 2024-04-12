@@ -1,17 +1,18 @@
 export P=freetype
-export V=2.10.2
+export V=2.13.2
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="libpng-devel zlib-devel"
+export PACKAGES="freetype freetype-devel"
 
 source ../../../scripts/build-helpers
 
 startlog
 
 [ -f $P-$V.tar.gz ] || wget https://download.savannah.gnu.org/releases/$P/$P-$V.tar.gz
-[ -f ../CMakeLists.txt ] || tar -C .. -xzf  $P-$V.tar.gz --xform "s,^$P-$V,.,"
+[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz
 
-vs2019env
+vsenv
 cmakeenv
 ninjaenv
 
@@ -31,7 +32,7 @@ cmake -G Ninja \
 	-D PNG_LIBRARY=$(cygpath -am ../osgeo4w/lib/libpng16.lib) \
 	-D PNG_PNG_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D CMAKE_INSTALL_PREFIX=../install \
-	../..
+	../../$P-$V
 ninja
 ninja install
 
@@ -48,9 +49,7 @@ requires: msvcrt2019
 maintainer: $MAINTAINER
 EOF
 
-tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
-	bin/freetype.dll
-
+tar -C install -cjf $R/$P-$V-$B.tar.bz2 bin/freetype.dll
 
 cat <<EOF >$R/$P-devel/setup.hint
 sdesc: "The zlib compression and decompression library (development)"
@@ -70,8 +69,8 @@ tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	include \
 	lib
 
-cp ../docs/LICENSE.TXT $R/$P-$V-$B.txt
-cp ../docs/LICENSE.TXT $R/$P-devel/$P-devel-$P-$V-$B.txt
+cp ../$P-$V/LICENSE.TXT $R/$P-$V-$B.txt
+cp ../$P-$V/LICENSE.TXT $R/$P-devel/$P-devel-$P-$V-$B.txt
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 

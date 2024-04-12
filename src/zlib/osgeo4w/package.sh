@@ -1,8 +1,9 @@
 export P=zlib
-export V=1.2.12
+export V=1.3.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="zlib zlib-devel"
 
 source ../../../scripts/build-helpers
 
@@ -16,7 +17,7 @@ startlog
 	touch ../$P-$V/patched
 }
 
-vs2019env
+vsenv
 cmakeenv
 ninjaenv
 
@@ -29,6 +30,7 @@ cmake -G Ninja \
 	../../$P-$V
 ninja
 ninja install
+cmakefix ../install
 
 cd ..
 

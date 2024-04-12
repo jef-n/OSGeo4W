@@ -1,8 +1,9 @@
 export P=python3-pdal-plugins
-export V=1.2.1
+export V=1.3.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-pip python3-wheel python3-devel python3-numpy pdal-devel"
+export PACKAGES="python3-pdal-plugins"
 
 source ../../../scripts/build-helpers
 
@@ -24,7 +25,7 @@ cd $OSGEO4W_PWD
 
 fetchenv osgeo4w/bin/o4w_env.bat
 
-vs2019env
+vsenv
 cmakeenv
 ninjaenv
 
@@ -40,7 +41,7 @@ cd ../pdal
 
 pip3 install .
 
-export R=$OSGEO4W_REP/x86_64/release/$P
+export R=$OSGEO4W_REP/x86_64/release/python3/$P
 mkdir -p $R/$P
 
 cat <<EOF >$R/setup.hint
@@ -54,10 +55,9 @@ maintainer: $MAINTAINER
 EOF
 
 tar -C ../osgeo4w -cjf $R/$P-$V-$B.tar.bz2 \
-	--xform "s,osgeo4w/apps/Python39/bin/,apps/pdal/plugins/," \
-	osgeo4w/apps/Python39/bin/libpdal_plugin_filter_python.dll \
-	osgeo4w/apps/Python39/bin/libpdal_plugin_reader_numpy.dll
-
+	--xform "s,osgeo4w/apps/$PYTHON/bin/,apps/pdal/plugins/," \
+	osgeo4w/apps/$PYTHON/bin/libpdal_plugin_filter_python.dll \
+	osgeo4w/apps/$PYTHON/bin/libpdal_plugin_reader_numpy.dll
 
 cp ../pdal/LICENSE $R/$P-$V-$B.txt
 

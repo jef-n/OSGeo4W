@@ -1,8 +1,9 @@
 export P=gpsbabel
-export V=1.8.0
+export V=1.9.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="qt5-devel zlib-devel expat-devel gdal-devel"
+export PACKAGES="gpsbabel gpsbabel-gui"
 
 source ../../../scripts/build-helpers
 
@@ -14,7 +15,7 @@ startlog
 
 (
 	fetchenv osgeo4w/bin/o4w_env.bat
-	vs2019env
+	vsenv
 	cmakeenv
 	ninjaenv
 
@@ -30,6 +31,7 @@ startlog
 		-D GPSBABEL_MAPPREVIEW=OFF \
 		../../$P-$V
 	cmake --build .
+	cmakefix ../install
 )
 
 export R=$OSGEO4W_REP/x86_64/release/$P

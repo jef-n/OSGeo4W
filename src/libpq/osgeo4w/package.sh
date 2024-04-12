@@ -3,6 +3,7 @@ export V=16.2
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="openssl-devel zlib-devel libiconv-devel"
+export PACKAGES="libpq libpq-devel"
 
 # perl also used in openssl and qt5
 SBPERL=5.32.1.1
@@ -61,7 +62,7 @@ EOF
 	cp osgeo4w/lib/iconv.dll.lib osgeo4w/lib/iconv.lib
 
 	fetchenv perl/portableshell.bat /SETENV
-	vs2019env
+	vsenv
 
 	export PATH="$PATH:/c/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/amd64/"
 
@@ -117,6 +118,7 @@ tar -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	--exclude lib/libpgcommon.lib \
 	--exclude lib/libpgport.lib \
 	--exclude share/pg_service.conf.sample \
+	bin/pg_config.exe \
 	include \
 	lib \
 	share/psqlrc.sample

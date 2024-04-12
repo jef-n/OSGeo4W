@@ -3,6 +3,7 @@ V=$(date +%Y%m%d)
 B=next
 MAINTAINER=JuergenFischer
 export BUILDDEPENDS="base yarnpkg"
+export PACKAGES="qwc2"
 
 source ../../../scripts/build-helpers
 

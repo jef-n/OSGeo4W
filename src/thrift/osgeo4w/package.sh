@@ -1,8 +1,9 @@
 export P=thrift
-export V=0.16.0
+export V=0.20.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="boost-devel openssl-devel zlib-devel qt5-devel node"
+export PACKAGES="thrift thrift-devel thrift-node"
 
 source ../../../scripts/build-helpers
 
@@ -16,15 +17,16 @@ cd ../osgeo4w
 (
 	fetchenv osgeo4w/bin/o4w_env.bat
 
-	vs2019env
+	vsenv
 	cmakeenv
 	ninjaenv
 
 	mkdir -p build install
-	cd build
 
 	export LIB="$(cygpath -am osgeo4w/lib);$LIB"
 	export INCLUDE="$(cygpath -am osgeo4w/include);$INCLUDE"
+
+	cd build
 
 	cmake -G Ninja \
 		-D CMAKE_BUILD_TYPE=Release \
@@ -37,30 +39,42 @@ cd ../osgeo4w
 		../../$P-$V
 	cmake --build .
 	cmake --install .
+	cmakefix ../install
 )
 
 export R=$OSGEO4W_REP/x86_64/release/$P
-mkdir -p $R/$P-{devel,node}
+mkdir -p $R/$P-{devel,node,qt5}
 
 cat <<EOF >$R/setup.hint
 sdesc: "Apache thrift library (runtime)"
 ldesc: "performant communication and data serialization across languages"
 category: Libs
-requires: msvcrt2019 qt5-libs openssl zlib
+requires: msvcrt2019 openssl zlib
 maintainer: $MAINTAINER
 EOF
 
 cp ../$P-$V/LICENSE $R/$P-$V-$B.txt
 tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
 	bin/thriftmd.dll \
-	bin/thriftqt5md.dll \
 	bin/thriftzmd.dll
+
+cat <<EOF >$R/$P-qt5/setup.hint
+sdesc: "Apache thrift library (qt5; runtime)"
+ldesc: "performant communication and data serialization across languages"
+category: Libs
+requires: $P qt5-libs
+maintainer: $MAINTAINER
+EOF
+
+cp ../$P-$V/LICENSE $R/$P-qt5/$P-qt5-$V-$B.txt
+tar -C install -cjf $R/$P-qt5/$P-qt5-$V-$B.tar.bz2 \
+	bin/thriftqt5md.dll
 
 cat <<EOF >$R/$P-devel/setup.hint
 sdesc: "Apache thrift library (development)"
 ldesc: "performant communication and data serialization across languages"
 category: Libs
-requires: msvcrt2019 $P
+requires: msvcrt2019 $P boost-devel
 maintainer: $MAINTAINER
 external-source: $P
 EOF

@@ -1,8 +1,9 @@
 export P=hdf5
-export V=1.14.0
+export V=1.14.3
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="libjpeg-turbo-devel szip-devel zlib-devel"
+export PACKAGES="hdf5 hdf5-devel hdf5-tools"
 
 source ../../../scripts/build-helpers
 
@@ -11,7 +12,7 @@ startlog
 [ -f $P-$V.tar.bz2 ] || wget https://support.hdfgroup.org/ftp/${P^^}/releases/$P-${V%.*}/$P-$V/src/$P-$V.tar.bz2
 [ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xjf $P-$V.tar.bz2
 
-vs2019env
+vsenv
 cmakeenv
 ninjaenv
 
@@ -34,7 +35,7 @@ cmake -G Ninja \
 	-D HDF5_BUILD_HL_LIB=ON \
 	-D HDF5_BUILD_CPP_LIB=ON \
 	-D ALLOW_UNSUPPORTED=ON \
-	-D SZIP_LIBRARY_RELEASE=$(cygpath -aw ../osgeo4w/lib/szip.lib) \
+	-D SZIP_LIBRARIES=$(cygpath -aw ../osgeo4w/lib/szip.lib) \
 	-D SZIP_INCLUDE_DIR=$(cygpath -aw ../osgeo4w/include) \
 	-D SZIP_DIR=$(cygpath -aw ../osgeo4w) \
 	-D ZLIB_LIBRARY=$(cygpath -aw ../osgeo4w/lib/zlib.lib) \
@@ -44,6 +45,7 @@ cmake -G Ninja \
 	../../$P-$V
 cmake --build .
 cmake --install . || cmake --install .
+cmakefix ../install
 
 cd ..
 

@@ -1,8 +1,9 @@
 export P=node
-export V=16.14.0
+export V=20.11.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="node"
 
 source ../../../scripts/build-helpers
 

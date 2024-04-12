@@ -1,8 +1,9 @@
 export P=openssl
-export V=1.1.1w
+export V=3.0.13
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="openssl openssl-devel openssl-doc"
 
 # perl also used in libpq and qt5
 SBPERL=5.32.0.1
@@ -13,7 +14,10 @@ source ../../../scripts/build-helpers
 startlog
 
 [ -f $P-$V.tar.gz ] || wget https://www.openssl.org/source/$P-$V.tar.gz
-[ -d ../$P-$V ] || tar -C .. -xzf  $P-$V.tar.gz
+[ -d ../$P-$V ] || {
+	tar -C .. -xzf $P-$V.tar.gz
+	rm -f built tested installed
+}
 
 if ! [ -d nasm-$NASM ]; then
 	wget -c https://www.nasm.us/pub/nasm/releasebuilds/$NASM/win64/nasm-$NASM-win64.zip
@@ -28,7 +32,7 @@ if ! [ -d perl ]; then
 	cd ..
 fi
 
-vs2019env
+vsenv
 
 (
 	fetchenv perl/portableshell.bat /SETENV
@@ -36,35 +40,38 @@ vs2019env
 
 	cd ../$P-$V
 
-	if ! [ -f built ]; then
+	if ! [ -f ../osgeo4w/built ]; then
 		perl Configure VC-WIN64A --prefix=$(cygpath -aw ../osgeo4w/install) --openssldir=$(cygpath -aw ../osgeo4w/install/apps/openssl)
 
 		nmake clean
 		nmake
-		nmake test
-		nmake install
-
-		cd ../osgeo4w
-
-		touch built
+		touch ../osgeo4w/built
 	fi
+
+	if ! [ -f ../osgeo4w/tested ]; then
+		nmake test
+		touch ../osgeo4w/tested
+	fi
+
+	if ! [ -f ../osgeo4w/installed ]; then
+		nmake install
+		touch ../osgeo4w/installed
+	fi
+
+	cd ../osgeo4w
 )
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R/$P-devel $R/$P-doc install/etc/postinstall install/etc/ini install/apps/$P/certs
 
 cat <<EOF >install/etc/postinstall/$P.bat
-dllupdate -oite -copy -reboot "%OSGEO4W_ROOT%\\bin\\libcrypto-1_1-x64.dll"
-dllupdate -oite -copy -reboot "%OSGEO4W_ROOT%\\bin\\libssl-1_1-x64.dll"
-if exist "%OSGEO4W_ROOT%\\apps\\Python39\\DLLs" (
-	copy "%OSGEO4W_ROOT%\\bin\\libcrypto-1_1-x64.dll" "%OSGEO4W_ROOT%\\apps\\Python39\\DLLs\\libcrypto-1_1.dll"
-	copy "%OSGEO4W_ROOT%\\bin\\libssl-1_1-x64.dll" "%OSGEO4W_ROOT%\\apps\\Python39\\DLLs\\libssl-1_1.dll"
-)
+dllupdate -oite -copy -reboot "%OSGEO4W_ROOT%\\bin\\libcrypto-3-x64.dll"
+dllupdate -oite -copy -reboot "%OSGEO4W_ROOT%\\bin\\libssl-3-x64.dll"
 exit /b 0
 EOF
 
 cat <<EOF >install/etc/ini/$P.bat
-set OPENSSL_ENGINES=%OSGEO4W_ROOT%\\lib\\engines-1_1
+set OPENSSL_ENGINES=%OSGEO4W_ROOT%\\lib\\engines-3
 set SSL_CERT_FILE=%OSGEO4W_ROOT%\\bin\\curl-ca-bundle.crt
 set SSL_CERT_DIR=%OSGEO4W_ROOT%\\apps\\$P\\certs
 EOF
@@ -77,21 +84,23 @@ requires: base msvcrt2019 curl-ca-bundle
 maintainer: $MAINTAINER
 EOF
 
-cp ../$P-$V/LICENSE $R/$P-$V-$B.txt
+cp ../$P-$V/LICENSE.txt $R/$P-$V-$B.txt
 
 tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
 	apps/openssl/certs \
-	bin/libcrypto-1_1-x64.dll \
-	bin/libssl-1_1-x64.dll \
-	lib/engines-1_1/capi.dll \
-	lib/engines-1_1/padlock.dll \
+	bin/libcrypto-3-x64.dll \
+	bin/libssl-3-x64.dll \
+	lib/engines-3/capi.dll \
+	lib/engines-3/padlock.dll \
+	lib/engines-3/loader_attic.dll \
+	lib/ossl-modules/legacy.dll \
 	etc/postinstall/$P.bat \
 	etc/ini/$P.bat
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 \
 	osgeo4w/package.sh
 
-cp ../$P-$V/LICENSE $R/$P-devel/$P-devel-$V-$B.txt
+cp ../$P-$V/LICENSE.txt $R/$P-devel/$P-devel-$V-$B.txt
 
 cat <<EOF >$R/$P-devel/setup.hint
 sdesc: "OpenSSL Cryptography (Development)"
@@ -110,8 +119,12 @@ tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	include/openssl \
 	lib/libcrypto.lib \
 	lib/libssl.lib \
-	bin/libcrypto-1_1-x64.pdb \
-	bin/libssl-1_1-x64.pdb \
+	bin/libcrypto-3-x64.pdb \
+	bin/libssl-3-x64.pdb \
+	lib/engines-3/capi.pdb \
+	lib/engines-3/padlock.pdb \
+	lib/engines-3/loader_attic.pdb \
+	lib/ossl-modules/legacy.pdb \
 	bin/openssl.pdb
 
 cat <<EOF >$R/$P-doc/setup.hint
@@ -127,6 +140,6 @@ tar -C install -cjf $R/$P-doc/$P-doc-$V-$B.tar.bz2 \
 	--xform s,^html,apps/$P/html, \
 	html
 
-cp ../$P-$V/LICENSE $R/$P-doc/$P-doc-$V-$B.txt
+cp ../$P-$V/LICENSE.txt $R/$P-doc/$P-doc-$V-$B.txt
 
 endlog

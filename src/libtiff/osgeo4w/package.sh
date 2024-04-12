@@ -1,17 +1,23 @@
 export P=libtiff
-export V=4.4.0
+export V=4.6.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="libjpeg-turbo-devel xz-devel zlib-devel zstd-devel libwebp-devel lerc-devel"
+export PACKAGES="libtiff libtiff-devel libtiff-tools"
 
 source ../../../scripts/build-helpers
 
 startlog
 
-[ -f tiff-$V.tar.gz ] || wget http://download.osgeo.org/$P/tiff-$V.tar.gz
-[ -f ../CMakeLists.txt ] || tar -C .. -xzf tiff-$V.tar.gz
+p=${P#lib}
+[ -f $p-$V.tar.gz ] || wget http://download.osgeo.org/$P/$p-$V.tar.gz
+[ -f ../$p-$V/CMakeLists.txt ] || tar -C .. -xzf $p-$V.tar.gz
+[ -f ../$p-$V/patched ] || {
+	patch -d ../$p-$V -p1 --dry-run <patch
+	patch -d ../$p-$V -p1 <patch >../$p-$V/patched
+}
 
-vs2019env
+vsenv
 cmakeenv
 ninjaenv
 
@@ -31,13 +37,14 @@ cmake -G Ninja \
 	-D    LERC_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D        LERC_LIBRARY=$(cygpath -am ../osgeo4w/lib/lerc.lib) \
 	-D    WebP_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
-	-D        WebP_LIBRARY=$(cygpath -am ../osgeo4w/lib/webp.lib) \
+	-D        WebP_LIBRARY=$(cygpath -am ../osgeo4w/lib/libwebp.lib) \
 	-D lzma=ON \
 	-D LIBLZMA_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D     LIBLZMA_LIBRARY=$(cygpath -am ../osgeo4w/lib/liblzma.lib) \
-	../../tiff-$V
+	../../$p-$V
 cmake --build .
 cmake --install . || cmake --install .
+cmakefix ../install
 
 cd ..
 
@@ -48,12 +55,12 @@ cat <<EOF >$R/setup.hint
 sdesc: "A library for manipulating TIFF format image files (runtime)"
 ldesc: "A library for manipulating TIFF format image files (runtime)"
 category: Libs
-requires: msvcrt2019 libjpeg-turbo zlib xz zstd lerc libwebp
+requires: msvcrt2019 libjpeg-turbo zlib zstd lerc libwebp xz
 maintainer: $MAINTAINER
 EOF
 
 tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
-	bin/tiff.dll 
+	bin/tiff.dll
 
 cat <<EOF >$R/$P-devel/setup.hint
 sdesc: "A library for manipulating TIFF format image files (development)"
@@ -82,10 +89,10 @@ tar -C install -cjf $R/$P-tools/$P-tools-$V-$B.tar.bz2 \
 	--exclude bin/tiff.dll \
 	bin
 
-cp ../tiff-$V/COPYRIGHT $R/$P-$V-$B.txt
-cp ../tiff-$V/COPYRIGHT $R/$P-devel/$P-devel-$V-$B.txt
-cp ../tiff-$V/COPYRIGHT $R/$P-tools/$P-tools-$V-$B.txt
+cp ../tiff-$V/LICENSE.md $R/$P-$V-$B.txt
+cp ../tiff-$V/LICENSE.md $R/$P-devel/$P-devel-$V-$B.txt
+cp ../tiff-$V/LICENSE.md $R/$P-tools/$P-tools-$V-$B.txt
 
-tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
+tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/patch
 
 endlog

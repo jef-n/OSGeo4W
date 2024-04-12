@@ -3,6 +3,7 @@ export V=1.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="odbc-cpp-wrapper odbc-cpp-wrapper-devel"
 
 source ../../../scripts/build-helpers
 
@@ -12,7 +13,7 @@ startlog
 [ -d ../$P-$V ] || tar -C .. -xzf $P-$V.tar.gz
 
 (
-	vs2019env
+	vsenv
 	cmakeenv
 	ninjaenv
 
@@ -26,6 +27,7 @@ startlog
 
 	cmake --build .
 	cmake --build . --target install
+	cmakefix ../install
 )
 
 export R=$OSGEO4W_REP/x86_64/release/$P

@@ -3,6 +3,7 @@ export V=5.1.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="sqlite3-devel libiconv-devel geos-devel proj-devel freexl-devel libxml2-devel librttopo-devel zlib-devel"
+export PACKAGES="libspatialite libspatialite-devel"
 
 source ../../../scripts/build-helpers
 
@@ -16,7 +17,7 @@ startlog
 	touch ../$P-$V/patched
 }
 
-vs2019env
+vsenv
 
 rm -rf install
 

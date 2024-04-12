@@ -1,19 +1,20 @@
 export P=qtkeychain
-export V=0.13.2
+export V=0.14.2
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="qt5-devel"
+export PACKAGES="qtkeychain-devel qtkeychain-libs"
 
 source ../../../scripts/build-helpers
 
 startlog
 
-[ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://github.com/frankosterfeld/$P/archive/v$V.tar.gz
+[ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://github.com/frankosterfeld/$P/archive/refs/tags/$V.tar.gz
 [ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz
 
 (
 	fetchenv osgeo4w/bin/o4w_env.bat
-	vs2019env
+	vsenv
 	cmakeenv
 	ninjaenv
 
@@ -28,15 +29,12 @@ startlog
 
 	cmake -G Ninja \
 		-DCMAKE_BUILD_TYPE=Release \
-		-DQT_TRANSLATIONS_DIR=$INSTDIR/apps/Qt5/translations \
-		-DCMAKE_INSTALL_BINDIR=$INSTDIR/apps/Qt5/bin \
-		-DCMAKE_INSTALL_LIBDIR=$INSTDIR/apps/Qt5/lib \
-		-DCMAKE_INSTALL_INCLUDEDIR=$INSTDIR/apps/Qt5/include \
-		-DPKGCONFIG_INSTALL_PREFIX=$INSTDIR/apps/Qt5/lib/pkgconfig \
+		-DCMAKE_INSTALL_PREFIX=$INSTDIR/apps/Qt5 \
 		../../$P-$V
 
 	cmake --build .
 	cmake --install .
+	cmakefix $INSTDIR
 )
 
 export R=$OSGEO4W_REP/x86_64/release/qt5/$P
@@ -44,7 +42,7 @@ mkdir -p $R
 
 for i in devel libs; do
 	mkdir -p $R/$P-$i
-	cp ../$P-$V/COPYING $R/$P-$i
+	cp ../$P-$V/COPYING $R/$P-$i/$P-$i-$V-$B.txt
 done
 
 cat <<EOF >$R/$P-devel/setup.hint
@@ -76,7 +74,7 @@ tar -cvjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 		apps/Qt5/lib/cmake/Qt5Keychain \
 
 tar -cvjf $R/$P-libs/$P-libs-$V-$B.tar.bz2 \
-		apps/Qt5/translations \
+		apps/Qt5/share/qt5keychain/translations \
 		apps/Qt5/bin
 
 cd ..

@@ -1,0 +1,11 @@
+diff -ur a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
+--- a/cpp/CMakeLists.txt
++++ b/cpp/CMakeLists.txt
+@@ -742,6 +742,7 @@
+ endif()
+ 
+ if(ARROW_WITH_LZ4)
++  add_library(LZ4::lz4 ALIAS LZ4::lz4_shared)
+   list(APPEND ARROW_STATIC_LINK_LIBS LZ4::lz4)
+   if(lz4_SOURCE STREQUAL "SYSTEM")
+     list(APPEND ARROW_STATIC_INSTALL_INTERFACE_LIBS LZ4::lz4)

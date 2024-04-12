@@ -1,8 +1,9 @@
 export P=sqlite3
-export V=3.41.1
+export V=3.45.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="sqlite3 sqlite3-devel"
 
 IFS=. read major minor patch < <(echo $V)
 
@@ -23,7 +24,7 @@ fi
 R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R/$P-devel
 
-vs2019env
+vsenv
 
 cat <<EOF >$R/setup.hint
 sdesc: "The SQLite3 library for accessing SQLite3 database files (Runtime)."

@@ -3,16 +3,17 @@ export V=3.4.3
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="laszip laszip-devel"
 
 source ../../../scripts/build-helpers
 
 startlog
 
 [ -f $P-src-$V.tar.gz ] || wget https://github.com/LASzip/LASzip/releases/download/$V/$P-src-$V.tar.gz
-[ -f ../CMakeLists.txt ] || tar -C .. -xzf $P-src-$V.tar.gz --xform "s,^$P-src-$V,.,"
+[ -f ../$P-src-$V/CMakeLists.txt ] || tar -C .. -xzf $P-src-$V.tar.gz
 
 (
-	vs2019env
+	vsenv
 	cmakeenv
 	ninjaenv
 
@@ -25,9 +26,10 @@ startlog
 	cmake -G Ninja \
 		-D CMAKE_BUILD_TYPE=Release \
 		-D CMAKE_INSTALL_PREFIX=../install \
-		../..
+		../../$P-src-$V
 	ninja
 	ninja install
+	cmakefix ../install
 )
 
 export R=$OSGEO4W_REP/x86_64/release/$P

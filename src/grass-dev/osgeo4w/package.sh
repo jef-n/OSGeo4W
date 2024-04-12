@@ -3,9 +3,9 @@ export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="gdal-devel proj-devel geos-devel netcdf-devel libjpeg-turbo-devel libpq-devel libtiff-devel sqlite3-devel zstd-devel python3-ply python3-core python3-six python3-pywin32 python3-wxpython liblas-devel cairo-devel freetype-devel"
+export PACKAGES="grass-dev"
 
-REPO=https://github.com/OSGeo/grass.git
-p=$P
+REPO=https://github.com/OSGeo/grass
 
 source ../../../scripts/build-helpers
 
@@ -28,7 +28,7 @@ if [ -d ../grass ]; then
 
 	cd ../osgeo4w
 else
-	git clone $REPO --branch main --single-branch ../grass
+	git clone $REPO.git --branch main --single-branch ../grass
 	git config core.filemode false
 	unset OSGEO4W_SKIP_CLEAN
 fi
@@ -113,7 +113,7 @@ fi
 	export OSGEO4W_ROOT_MSYS="/${OSGEO4W_ROOT_MSYS:0:1}/${OSGEO4W_ROOT_MSYS:3}"
 
 	export VCPATH=$(
-		vs2019env
+		vsenv >/dev/null
 		echo ${PATH//\/cygdrive/}
 	)
 
@@ -173,7 +173,7 @@ cat <<EOF >$R/setup.hint
 sdesc: "GRASS GIS ${V%.*} nightly"
 ldesc: "Geographic Resources Analysis Support System (GRASS GIS ${V%.*} nightly)"
 category: Desktop
-requires: liblas $RUNTIMEDEPENDS avce00 gpsbabel proj python3-gdal python3-matplotlib libtiff python3-wxpython python3-pillow python3-pip python3-ply python3-pyopengl python3-psycopg2-binary python3-six zstd python3-pywin32 gs netcdf wxwidgets
+requires: liblas $RUNTIMEDEPENDS avce00 gpsbabel proj python3-gdal python3-matplotlib libtiff python3-wxpython python3-pillow python3-pip python3-ply python3-pyopengl python3-psycopg2 python3-six zstd python3-pywin32 gs netcdf wxwidgets
 maintainer: $MAINTAINER
 EOF
 

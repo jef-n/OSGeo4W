@@ -3,6 +3,7 @@ export V=3.12.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="geos geos-devel"
 
 source ../../../scripts/build-helpers
 
@@ -14,8 +15,9 @@ startlog
 	rm -fr build
 }
 
-vs2019env
+vsenv
 cmakeenv
+ninjaenv
 
 mkdir -p install build
 
@@ -27,6 +29,7 @@ cmake -G Ninja \
         ../../$P-$V
 cmake --build .
 cmake --build . --target install || cmake --build . --target install
+cmakefix ../install
 
 cd ..
 

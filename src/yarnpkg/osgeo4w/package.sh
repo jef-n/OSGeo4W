@@ -1,8 +1,9 @@
 export P=yarnpkg
-export V=1.22.17
+export V=1.22.21
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="yarnpkg"
 
 source ../../../scripts/build-helpers
 

@@ -1,6 +1,6 @@
-diff -ur qtwebkit-5.212.0-alpha4/Source/cmake/OptionsQt.cmake ../Source/cmake/OptionsQt.cmake
+diff -ur qtwebkit-5.212.0-alpha4/Source/cmake/OptionsQt.cmake ../qtwebkit-5.212.0-alpha4/Source/cmake/OptionsQt.cmake
 --- qtwebkit-5.212.0-alpha4/Source/cmake/OptionsQt.cmake	2020-03-04 18:16:37.000000000 +0100
-+++ ../Source/cmake/OptionsQt.cmake	2020-10-16 01:49:53.417958000 +0200
++++ ../qtwebkit-5.212.0-alpha4/Source/cmake/OptionsQt.cmake	2024-03-11 11:34:36.344659500 +0100
 @@ -975,9 +975,9 @@
          endforeach ()
      endif ()
@@ -14,9 +14,9 @@ diff -ur qtwebkit-5.212.0-alpha4/Source/cmake/OptionsQt.cmake ../Source/cmake/Op
  endif ()
  
  if (NOT RUBY_FOUND AND RUBY_EXECUTABLE AND NOT RUBY_VERSION VERSION_LESS 1.9)
-diff -ur qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/generate-bytecode-files ../Source/JavaScriptCore/generate-bytecode-files
+diff -ur qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/generate-bytecode-files ../qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/generate-bytecode-files
 --- qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/generate-bytecode-files	2020-03-04 18:16:37.000000000 +0100
-+++ ../Source/JavaScriptCore/generate-bytecode-files	2020-10-16 01:50:57.725175000 +0200
++++ ../qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/generate-bytecode-files	2024-03-11 11:34:36.353181000 +0100
 @@ -116,6 +116,7 @@
      bytecodeJSONFile = args[0]
      bytecodeFile = openOrExit(bytecodeJSONFile, "rb")
@@ -34,9 +34,9 @@ diff -ur qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/generate-bytecode-files .
      except:
          print("Unexpected error parsing {0}: {1}".format(bytecodeJSONFile, sys.exc_info()))
  
-diff -ur qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/inspector/scripts/codegen/objc_generator.py ../Source/JavaScriptCore/inspector/scripts/codegen/objc_generator.py
+diff -ur qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/inspector/scripts/codegen/objc_generator.py ../qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/inspector/scripts/codegen/objc_generator.py
 --- qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/inspector/scripts/codegen/objc_generator.py	2020-03-04 18:16:37.000000000 +0100
-+++ ../Source/JavaScriptCore/inspector/scripts/codegen/objc_generator.py	2020-10-16 01:55:50.195955800 +0200
++++ ../qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/inspector/scripts/codegen/objc_generator.py	2024-03-11 11:34:36.363890600 +0100
 @@ -66,11 +66,11 @@
      @staticmethod
      def category_for_type(_type):
@@ -262,9 +262,9 @@ diff -ur qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/inspector/scripts/codegen
                  return 'inspectorArrayForKey'
              return None
          if (isinstance(_type, EnumType)):
-diff -ur qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/offlineasm/parser.rb ../Source/JavaScriptCore/offlineasm/parser.rb
+diff -ur qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/offlineasm/parser.rb ../qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/offlineasm/parser.rb
 --- qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/offlineasm/parser.rb	2020-03-04 18:16:37.000000000 +0100
-+++ ../Source/JavaScriptCore/offlineasm/parser.rb	2020-10-16 01:53:30.969260700 +0200
++++ ../qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/offlineasm/parser.rb	2024-03-11 11:34:36.375413000 +0100
 @@ -815,11 +815,11 @@
  end
  
@@ -279,9 +279,9 @@ diff -ur qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/offlineasm/parser.rb ../S
      fileList = parser.parseIncludes(nil, "")
      fileListHash(fileList)
  end
-diff -ur qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/Scripts/generate-js-builtins.py ../Source/JavaScriptCore/Scripts/generate-js-builtins.py
+diff -ur qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/Scripts/generate-js-builtins.py ../qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/Scripts/generate-js-builtins.py
 --- qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/Scripts/generate-js-builtins.py	2020-03-04 18:16:37.000000000 +0100
-+++ ../Source/JavaScriptCore/Scripts/generate-js-builtins.py	2020-10-16 12:00:17.462469500 +0200
++++ ../qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/Scripts/generate-js-builtins.py	2024-03-11 11:34:36.385947000 +0100
 @@ -124,7 +124,7 @@
      cli_parser.add_option("-t", "--test", action="store_true", help="Enable test mode.")
  
@@ -291,9 +291,9 @@ diff -ur qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/Scripts/generate-js-built
          raise ParseException("At least one input file or directory expected.")
  
      if not arg_options.output_directory:
-diff -ur qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/Scripts/inline-and-minify-stylesheets-and-scripts.py ../Source/JavaScriptCore/Scripts/inline-and-minify-stylesheets-and-scripts.py
+diff -ur qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/Scripts/inline-and-minify-stylesheets-and-scripts.py ../qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/Scripts/inline-and-minify-stylesheets-and-scripts.py
 --- qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/Scripts/inline-and-minify-stylesheets-and-scripts.py	2020-03-04 18:16:37.000000000 +0100
-+++ ../Source/JavaScriptCore/Scripts/inline-and-minify-stylesheets-and-scripts.py	2020-10-16 01:53:30.975673000 +0200
++++ ../qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/Scripts/inline-and-minify-stylesheets-and-scripts.py	2024-03-11 11:34:36.394966000 +0100
 @@ -67,7 +67,7 @@
      outputContent = re.sub(r'<link rel="stylesheet" href=[\'"]([^\'"]+)[\'"]>', inlineStylesheet, inputContent)
      outputContent = re.sub(r'<script src=[\'"]([^\'"]+)[\'"]></script>', inlineScript, outputContent)
@@ -303,9 +303,9 @@ diff -ur qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/Scripts/inline-and-minify
      outputFile.write(outputContent)
      outputFile.close()
  
-diff -ur qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/Scripts/make-js-file-arrays.py ../Source/JavaScriptCore/Scripts/make-js-file-arrays.py
+diff -ur qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/Scripts/make-js-file-arrays.py ../qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/Scripts/make-js-file-arrays.py
 --- qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/Scripts/make-js-file-arrays.py	2020-03-04 18:16:37.000000000 +0100
-+++ ../Source/JavaScriptCore/Scripts/make-js-file-arrays.py	2020-10-16 01:53:30.978672900 +0200
++++ ../qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/Scripts/make-js-file-arrays.py	2024-03-11 11:34:36.404498200 +0100
 @@ -61,10 +61,10 @@
      sourcePath = arguments[1]
      inputPaths = arguments[2:]
@@ -319,9 +319,9 @@ diff -ur qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/Scripts/make-js-file-arra
      print('#include "{0:s}"'.format(os.path.basename(headerPath)), file=sourceFile)
      print('namespace {0:s} {{'.format(namespace), file=sourceFile)
  
-diff -ur qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/Scripts/UpdateContents.py ../Source/JavaScriptCore/Scripts/UpdateContents.py
+diff -ur qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/Scripts/UpdateContents.py ../qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/Scripts/UpdateContents.py
 --- qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/Scripts/UpdateContents.py	2020-03-04 18:16:37.000000000 +0100
-+++ ../Source/JavaScriptCore/Scripts/UpdateContents.py	2020-10-16 01:53:30.981673800 +0200
++++ ../qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/Scripts/UpdateContents.py	2024-03-11 11:34:36.413071900 +0100
 @@ -43,6 +43,6 @@
      t = True
  
@@ -330,9 +330,9 @@ diff -ur qtwebkit-5.212.0-alpha4/Source/JavaScriptCore/Scripts/UpdateContents.py
 +    f = open(filename, 'w', newline='\n')
      f.write(comp)
      f.close()
-diff -ur qtwebkit-5.212.0-alpha4/Source/ThirdParty/ANGLE/src/libANGLE/renderer/generate_new_renderer.py ../Source/ThirdParty/ANGLE/src/libANGLE/renderer/generate_new_renderer.py
+diff -ur qtwebkit-5.212.0-alpha4/Source/ThirdParty/ANGLE/src/libANGLE/renderer/generate_new_renderer.py ../qtwebkit-5.212.0-alpha4/Source/ThirdParty/ANGLE/src/libANGLE/renderer/generate_new_renderer.py
 --- qtwebkit-5.212.0-alpha4/Source/ThirdParty/ANGLE/src/libANGLE/renderer/generate_new_renderer.py	2020-03-04 18:16:37.000000000 +0100
-+++ ../Source/ThirdParty/ANGLE/src/libANGLE/renderer/generate_new_renderer.py	2020-10-16 01:53:30.984672200 +0200
++++ ../qtwebkit-5.212.0-alpha4/Source/ThirdParty/ANGLE/src/libANGLE/renderer/generate_new_renderer.py	2024-03-11 11:34:36.422587400 +0100
 @@ -189,6 +189,7 @@
  
      return impl_stubs, private_impl_stubs, constructor
@@ -352,9 +352,9 @@ diff -ur qtwebkit-5.212.0-alpha4/Source/ThirdParty/ANGLE/src/libANGLE/renderer/g
  
      # extract impl stubs
      impl_stubs, private_impl_stubs, constructor = parse_impl_header(base_impl)
-diff -ur qtwebkit-5.212.0-alpha4/Source/WebCore/bindings/scripts/generate-bindings.pl ../Source/WebCore/bindings/scripts/generate-bindings.pl
+diff -ur qtwebkit-5.212.0-alpha4/Source/WebCore/bindings/scripts/generate-bindings.pl ../qtwebkit-5.212.0-alpha4/Source/WebCore/bindings/scripts/generate-bindings.pl
 --- qtwebkit-5.212.0-alpha4/Source/WebCore/bindings/scripts/generate-bindings.pl	2020-03-04 18:16:37.000000000 +0100
-+++ ../Source/WebCore/bindings/scripts/generate-bindings.pl	2020-10-16 15:31:38.890455800 +0200
++++ ../qtwebkit-5.212.0-alpha4/Source/WebCore/bindings/scripts/generate-bindings.pl	2024-03-11 11:34:36.431850300 +0100
 @@ -77,6 +77,7 @@
      $outputHeadersDirectory = $outputDirectory;
  }
@@ -363,7 +363,7 @@ diff -ur qtwebkit-5.212.0-alpha4/Source/WebCore/bindings/scripts/generate-bindin
  if ($verbose) {
      print "$generator: $targetIdlFile\n";
  }
-@@ -208,10 +210,12 @@
+@@ -208,10 +209,12 @@
  */
  ";
      open FH, "> ${outputHeadersDirectory}/${headerName}" or die "Cannot open $headerName\n";
@@ -376,9 +376,9 @@ diff -ur qtwebkit-5.212.0-alpha4/Source/WebCore/bindings/scripts/generate-bindin
      print FH $contents;
      close FH;
  }
-diff -ur qtwebkit-5.212.0-alpha4/Source/WebCore/bindings/scripts/preprocess-idls.pl ../Source/WebCore/bindings/scripts/preprocess-idls.pl
+diff -ur qtwebkit-5.212.0-alpha4/Source/WebCore/bindings/scripts/preprocess-idls.pl ../qtwebkit-5.212.0-alpha4/Source/WebCore/bindings/scripts/preprocess-idls.pl
 --- qtwebkit-5.212.0-alpha4/Source/WebCore/bindings/scripts/preprocess-idls.pl	2020-03-04 18:16:37.000000000 +0100
-+++ ../Source/WebCore/bindings/scripts/preprocess-idls.pl	2020-10-16 15:03:48.336113300 +0200
++++ ../qtwebkit-5.212.0-alpha4/Source/WebCore/bindings/scripts/preprocess-idls.pl	2024-03-11 11:34:36.441229200 +0100
 @@ -78,7 +78,9 @@
  
  # Populate $idlFileToInterfaceName and $interfaceNameToIdlFile.
@@ -413,9 +413,9 @@ diff -ur qtwebkit-5.212.0-alpha4/Source/WebCore/bindings/scripts/preprocess-idls
      $supplementalDependencies{$fullPath} = [$interfaceName] if $interfaceNameToIdlFile{$interfaceName};
  }
  
-diff -ur qtwebkit-5.212.0-alpha4/Source/WebCore/bindings/scripts/preprocessor.pm ../Source/WebCore/bindings/scripts/preprocessor.pm
+diff -ur qtwebkit-5.212.0-alpha4/Source/WebCore/bindings/scripts/preprocessor.pm ../qtwebkit-5.212.0-alpha4/Source/WebCore/bindings/scripts/preprocessor.pm
 --- qtwebkit-5.212.0-alpha4/Source/WebCore/bindings/scripts/preprocessor.pm	2020-03-04 18:16:37.000000000 +0100
-+++ ../Source/WebCore/bindings/scripts/preprocessor.pm	2020-10-16 01:53:30.996316100 +0200
++++ ../qtwebkit-5.212.0-alpha4/Source/WebCore/bindings/scripts/preprocessor.pm	2024-03-11 11:34:36.450789800 +0100
 @@ -85,8 +85,8 @@
          if ($preprocessor eq "/usr/bin/gcc") {
              @preprocessorAndFlags = split(' ', $preprocessor);
@@ -427,9 +427,9 @@ diff -ur qtwebkit-5.212.0-alpha4/Source/WebCore/bindings/scripts/preprocessor.pm
              chomp($fileName = `cygpath -w '$fileName'`);
              @preprocessorAndFlags = ($preprocessor, "/nologo", "/EP");
          }
-diff -ur qtwebkit-5.212.0-alpha4/Source/WebCore/css/makegrammar.pl ../Source/WebCore/css/makegrammar.pl
+diff -ur qtwebkit-5.212.0-alpha4/Source/WebCore/css/makegrammar.pl ../qtwebkit-5.212.0-alpha4/Source/WebCore/css/makegrammar.pl
 --- qtwebkit-5.212.0-alpha4/Source/WebCore/css/makegrammar.pl	2020-03-04 18:16:37.000000000 +0100
-+++ ../Source/WebCore/css/makegrammar.pl	2020-10-16 01:53:31.000317500 +0200
++++ ../qtwebkit-5.212.0-alpha4/Source/WebCore/css/makegrammar.pl	2024-03-11 12:00:18.785895300 +0100
 @@ -24,6 +24,7 @@
  use File::Basename;
  use File::Spec;
@@ -458,44 +458,61 @@ diff -ur qtwebkit-5.212.0-alpha4/Source/WebCore/css/makegrammar.pl ../Source/Web
  
      require preprocessor;
  
-@@ -75,7 +78,7 @@
+@@ -73,25 +76,6 @@
+ }
+ 
  my $fileBase = File::Spec->join($outputDir, $filename);
- my @bisonCommand = ($bison, "-d", "-p", $symbolsPrefix, $grammarFilePath, "-o", "$fileBase.cpp");
+-my @bisonCommand = ($bison, "-d", "-p", $symbolsPrefix, $grammarFilePath, "-o", "$fileBase.cpp");
++my @bisonCommand = ($bison, "--defines=$fileBase.h", "-p", $symbolsPrefix, $grammarFilePath, "-o", "$fileBase.cpp");
  push @bisonCommand, "--no-lines" if $^O eq "MSWin32"; # Work around bug in bison >= 3.0 on Windows where it puts backslashes into #line directives.
 -system(@bisonCommand) == 0 or die;
+-
+-open HEADER, ">$fileBase.h" or die;
+-print HEADER << "EOF";
+-#ifndef CSSGRAMMAR_H
+-#define CSSGRAMMAR_H
+-EOF
+-
+-open HPP, "<$fileBase.cpp.h" or open HPP, "<$fileBase.hpp" or die;
+-while (<HPP>) {
+-    print HEADER;
+-}
+-close HPP;
+-
+-print HEADER "#endif\n";
+-close HEADER;
+-
+-unlink("$fileBase.cpp.h");
+-unlink("$fileBase.hpp");
+-
 +system(@bisonCommand) == 0 or die "bison failed $?: " . join(" ", @bisonCommand);
- 
- open HEADER, ">$fileBase.h" or die;
- print HEADER << "EOF";
-diff -ur qtwebkit-5.212.0-alpha4/Source/WebCore/css/makeSelectorPseudoClassAndCompatibilityElementMap.py ../Source/WebCore/css/makeSelectorPseudoClassAndCompatibilityElementMap.py
+diff -ur qtwebkit-5.212.0-alpha4/Source/WebCore/css/makeSelectorPseudoClassAndCompatibilityElementMap.py ../qtwebkit-5.212.0-alpha4/Source/WebCore/css/makeSelectorPseudoClassAndCompatibilityElementMap.py
 --- qtwebkit-5.212.0-alpha4/Source/WebCore/css/makeSelectorPseudoClassAndCompatibilityElementMap.py	2020-03-04 18:16:37.000000000 +0100
-+++ ../Source/WebCore/css/makeSelectorPseudoClassAndCompatibilityElementMap.py	2020-10-16 01:53:31.003315200 +0200
-@@ -57,7 +57,8 @@
++++ ../qtwebkit-5.212.0-alpha4/Source/WebCore/css/makeSelectorPseudoClassAndCompatibilityElementMap.py	2024-04-06 20:11:32.772072700 +0200
+@@ -57,7 +57,7 @@
  def expand_ifdef_condition(condition):
      return condition.replace('(', '_').replace(')', '')
  
 -output_file = open('SelectorPseudoClassAndCompatibilityElementMap.gperf', 'w')
-+
 +output_file = open('SelectorPseudoClassAndCompatibilityElementMap.gperf', 'w', newline='\n')
  
  output_file.write("""
  %{
-diff -ur qtwebkit-5.212.0-alpha4/Source/WebCore/css/makeSelectorPseudoElementsMap.py ../Source/WebCore/css/makeSelectorPseudoElementsMap.py
+diff -ur qtwebkit-5.212.0-alpha4/Source/WebCore/css/makeSelectorPseudoElementsMap.py ../qtwebkit-5.212.0-alpha4/Source/WebCore/css/makeSelectorPseudoElementsMap.py
 --- qtwebkit-5.212.0-alpha4/Source/WebCore/css/makeSelectorPseudoElementsMap.py	2020-03-04 18:16:37.000000000 +0100
-+++ ../Source/WebCore/css/makeSelectorPseudoElementsMap.py	2020-10-16 01:53:31.005315800 +0200
-@@ -57,7 +57,8 @@
++++ ../qtwebkit-5.212.0-alpha4/Source/WebCore/css/makeSelectorPseudoElementsMap.py	2024-04-06 20:11:45.436881400 +0200
+@@ -57,7 +57,7 @@
  def expand_ifdef_condition(condition):
      return condition.replace('(', '_').replace(')', '')
  
 -output_file = open('SelectorPseudoElementTypeMap.gperf', 'w')
-+
 +output_file = open('SelectorPseudoElementTypeMap.gperf', 'w', newline='\n')
  
  output_file.write("""
  %{
-diff -ur qtwebkit-5.212.0-alpha4/Source/WebCore/platform/network/create-http-header-name-table ../Source/WebCore/platform/network/create-http-header-name-table
+diff -ur qtwebkit-5.212.0-alpha4/Source/WebCore/platform/network/create-http-header-name-table ../qtwebkit-5.212.0-alpha4/Source/WebCore/platform/network/create-http-header-name-table
 --- qtwebkit-5.212.0-alpha4/Source/WebCore/platform/network/create-http-header-name-table	2020-03-04 18:16:37.000000000 +0100
-+++ ../Source/WebCore/platform/network/create-http-header-name-table	2020-10-16 01:53:31.009340100 +0200
++++ ../qtwebkit-5.212.0-alpha4/Source/WebCore/platform/network/create-http-header-name-table	2024-03-11 11:34:36.480482100 +0100
 @@ -54,7 +54,7 @@
  
  http_header_names.sort()

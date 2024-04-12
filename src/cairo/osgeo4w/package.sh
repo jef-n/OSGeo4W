@@ -3,33 +3,32 @@ export V=1.17.2
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="zlib-devel libpng-devel freetype-devel"
+export PACKAGES="cairo cairo-devel"
 
 source ../../../scripts/build-helpers
 
 startlog
 
-
 cp osgeo4w/lib/zlib.lib osgeo4w/lib/zdll.lib
 cp osgeo4w/lib/libpng16.lib osgeo4w/lib/libpng.lib
 
-pixman=pixman-0.40.0
+pixman=pixman-0.42.2
 
 [ -f $P-$V.tar.xz ] || wget https://cairographics.org/snapshots/$P-$V.tar.xz
-[ -f ../Makefile.win32 ] || tar -C .. -xJf $P-$V.tar.xz --xform "s,$P-$V,.,"
+[ -f ../$P-$V/Makefile.win32 ] || tar -C .. -xJf $P-$V.tar.xz
 
 [ -f $pixman.tar.gz ] || wget https://www.cairographics.org/releases/$pixman.tar.gz
-[ -f ../pixman/Makefile.win32 ] || tar -C .. -xzf $pixman.tar.gz --xform "s,$pixman,pixman,"
+[ -f ../$P-$V/pixman/Makefile.win32 ] || tar -C ../$P-$V -xzf $pixman.tar.gz --xform "s,$pixman,pixman,"
 
-sed -i "s/CAIRO_HAS_FT_FONT=.*/CAIRO_HAS_FT_FONT=1/" ../build/Makefile.win32.features
+sed -i "s/CAIRO_HAS_FT_FONT=.*/CAIRO_HAS_FT_FONT=1/" ../$P-$V/build/Makefile.win32.features
 
-vs2019env
+vsenv
 
-cd ../pixman
+cd ../$P-$V/pixman
 
 make -f Makefile.win32 CFG=release MMX=off pixman
 
 cd ..
-
 
 make -f Makefile.win32 \
 	CFG=release \
@@ -41,7 +40,7 @@ make -f Makefile.win32 \
 	CFLAGS="-I$(cygpath -am $OSGEO4W_PWD/osgeo4w/include/freetype2)" \
 	LDFLAGS="$(cygpath -am $OSGEO4W_PWD/osgeo4w/lib/freetype.lib)"
 
-cd osgeo4w
+cd ../osgeo4w
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R/$P-devel
@@ -54,7 +53,7 @@ requires: zlib libpng
 maintainer: $MAINTAINER
 EOF
 
-tar -C .. -cjf $R/$P-$V-$B.tar.bz2 \
+tar -C ../$P-$V -cjf $R/$P-$V-$B.tar.bz2 \
 	--xform "s,src/release/,bin/," \
     	src/release/cairo.dll
 
@@ -67,26 +66,26 @@ external-source: $P
 maintainer: $MAINTAINER
 EOF
 
-tar -C .. -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
-    --xform "s,src/release/cairo-static.lib,lib/cairo-static.lib," \
-    --xform "s,src/release/cairo.lib,lib/cairo.lib," \
-    --xform "s,cairo-version.h,include/cairo-version.h," \
-    --xform "s,src/,include/," \
-    cairo-version.h \
-    src/cairo-features.h \
-    src/cairo.h \
-    src/cairo-deprecated.h \
-    src/cairo-win32.h \
-    src/cairo-script.h \
-    src/cairo-ft.h \
-    src/cairo-ps.h \
-    src/cairo-pdf.h \
-    src/cairo-svg.h \
-    src/release/cairo-static.lib \
-    src/release/cairo.lib
+tar -C ../$P-$V -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
+	--xform "s,src/release/cairo-static.lib,lib/cairo-static.lib," \
+	--xform "s,src/release/cairo.lib,lib/cairo.lib," \
+	--xform "s,cairo-version.h,include/cairo-version.h," \
+	--xform "s,src/,include/," \
+	cairo-version.h \
+	src/cairo-features.h \
+	src/cairo.h \
+	src/cairo-deprecated.h \
+	src/cairo-win32.h \
+	src/cairo-script.h \
+	src/cairo-ft.h \
+	src/cairo-ps.h \
+	src/cairo-pdf.h \
+	src/cairo-svg.h \
+	src/release/cairo-static.lib \
+	src/release/cairo.lib
 
-cp ../COPYING $R/$P-$V-$B.txt
-cp ../COPYING $R/$P-devel/$P-devel-$V-$B.txt
+cp ../$P-$V/COPYING $R/$P-$V-$B.txt
+cp ../$P-$V/COPYING $R/$P-devel/$P-devel-$V-$B.txt
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 

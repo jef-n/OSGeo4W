@@ -1,8 +1,9 @@
 export P=libjpeg-turbo
-export V=2.0.7-esr
+export V=3.0.2
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=zlib-devel
+export PACKAGES="libjpeg-turbo libjpeg-turbo-devel libjpeg-turbo-tools"
 
 NASM=2.15.05
 
@@ -19,7 +20,7 @@ if ! [ -d nasm-$NASM ]; then
 fi
 
 (
-	vs2019env
+	vsenv
 	cmakeenv
 	ninjaenv
 
@@ -38,6 +39,7 @@ fi
 
 	cmake --build .
 	cmake --install . || cmake --install .
+	cmakefix ../install
 )
 
 export R=$OSGEO4W_REP/x86_64/release/$P
@@ -69,9 +71,9 @@ external-source: $P
 maintainer: $MAINTAINER
 EOF
 
-cp ../libjpeg-turbo-2.0.7-esr/LICENSE.md $R/$P-$V-$B.txt
-cp ../libjpeg-turbo-2.0.7-esr/LICENSE.md $R/$P-devel/$P-devel-$V-$B.txt
-cp ../libjpeg-turbo-2.0.7-esr/LICENSE.md $R/$P-tools/$P-tools-$V-$B.txt
+cp ../libjpeg-turbo-$V/LICENSE.md $R/$P-$V-$B.txt
+cp ../libjpeg-turbo-$V/LICENSE.md $R/$P-devel/$P-devel-$V-$B.txt
+cp ../libjpeg-turbo-$V/LICENSE.md $R/$P-tools/$P-tools-$V-$B.txt
 
 tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
 	--exclude "*.exe" \

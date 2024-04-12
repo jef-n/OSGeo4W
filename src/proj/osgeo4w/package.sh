@@ -1,8 +1,9 @@
 export P=proj
-export V=9.3.1
+export V=9.4.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="sqlite3-devel libtiff-devel curl-devel"
+export PACKAGES="proj proj-devel proj-runtime-data proj71-runtime proj72-runtime proj80-runtime proj81-runtime proj82-runtime proj90-runtime proj91-runtime proj92-runtime proj93-runtime"
 
 source ../../../scripts/build-helpers
 
@@ -11,7 +12,7 @@ startlog
 [ -f $P-$V.tar.gz ] || wget https://download.osgeo.org/$P/$P-$V.tar.gz
 [ -f ../$P-${V%RC*}/CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz
 
-vs2019env
+vsenv
 cmakeenv
 ninjaenv
 
@@ -42,6 +43,7 @@ cmake -G Ninja \
 	../../$P-${V%RC*}
 cmake --build .
 cmake --build . --target install || cmake --build . --target install
+cmakefix ../install
 
 cd ..
 
@@ -122,7 +124,7 @@ tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	etc/abi/$P-devel \
 	include \
 	lib
-		
+
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 
 endlog

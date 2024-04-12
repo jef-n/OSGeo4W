@@ -1,35 +1,35 @@
 export P=gsl
-export V=2.6
+export V=tbd
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
-
-export sha=f682a568d3a8724ffec01edc72c40423444b1e8b
+export PACKAGES="gsl gsl-devel"
 
 source ../../../scripts/build-helpers
 
 startlog
 
-[ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://github.com/BrianGladman/gsl/archive/$sha.tar.gz
-[ -f ../build.vc ] || tar -C .. -xzf $P-$V.tar.gz --xform "s,^gsl-$sha,.,"
+[ -f master.tar.gz ] || wget https://github.com/BrianGladman/gsl/archive/master.tar.gz
+[ -f ../$P/build.vc ] || tar -C .. -xzf master.tar.gz --xform "s,^gsl-master,$P,"
 
-vs2019env
+V=$(sed -ne "s/^AC_INIT(\\[$P\\],\\[\\(.*\\)\\])/\1/p" ../$P/configure.ac)
 
-cd ../build.vc
-for i in gslhdrs cblasdll gsldll; do
-	devenv gsl.dll.sln /Project $i /Build "Release|x64"
-done
+vsenv
 
-cd ../osgeo4w
+cd ../$P/build.vc
+
+msbuild.exe gsl.dll.sln -t:"gslhdrs;cblasdll;gsldll" -p:Configuration=Release
+
+cd ../../osgeo4w
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R/$P-devel
 
 mkdir -p install/bin install/include/gsl install/lib
 
-cp -r ../gsl install/include/
-cp ../dll/x64/Release/{cblas,gsl}.dll install/bin
-cp ../dll/x64/Release/{cblas,gsl}.lib install/lib
+cp -r ../$P/gsl install/include/
+cp ../$P/dll/x64/Release/{cblas,gsl}.dll install/bin
+cp ../$P/dll/x64/Release/{cblas,gsl}.lib install/lib
 
 cat <<EOF >$R/setup.hint
 sdesc: "GNU Scientific Library (GSL)"

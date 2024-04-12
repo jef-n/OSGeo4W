@@ -3,6 +3,7 @@ export V=2.0.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="libiconv-devel zlib-devel minizip-ng-devel expat-devel xz-devel bzip2-devel"
+export PACKAGES="freexl freexl-devel"
 
 source ../../../scripts/build-helpers
 
@@ -16,7 +17,7 @@ startlog
         touch ../$P-$V/patched
 }
 
-vs2019env
+vsenv
 
 cd ../$P-$V
 

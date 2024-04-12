@@ -1,8 +1,9 @@
 export P=curl
-export V=8.4.0
+export V=8.6.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="openssl-devel zlib-devel"
+export PACKAGES="curl curl-ca-bundle curl-devel"
 
 export VC=15
 export VCARCH=x64
@@ -16,7 +17,7 @@ startlog
 
 wget -O curl-ca-bundle.crt https://curl.se/ca/cacert.pem
 
-vs2019env
+vsenv
 
 cd ../$P-$V/winbuild
 export INCLUDE="$INCLUDE;$(cygpath -aw ../../osgeo4w/osgeo4w/include)"

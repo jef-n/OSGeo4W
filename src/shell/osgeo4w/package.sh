@@ -3,6 +3,7 @@ export V=99.0.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="shell"
 
 source ../../../scripts/build-helpers
 

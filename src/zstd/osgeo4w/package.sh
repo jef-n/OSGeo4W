@@ -1,17 +1,18 @@
 export P=zstd
-export V=1.4.5
+export V=1.5.5
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="zstd zstd-devel"
 
 source ../../../scripts/build-helpers
 
 startlog
 
 [ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://github.com/facebook/$P/archive/v$V.tar.gz
-[ -f ../build/cmake/CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz --xform s,$P-$V,.,
+[ -f ../build/cmake/CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz
 
-vs2019env
+vsenv
 cmakeenv
 ninjaenv
 
@@ -24,9 +25,10 @@ cmake -G Ninja \
 	-D CMAKE_INSTALL_PREFIX=../install \
 	-D ZSTD_LEGACY_SUPPORT=ON \
 	-D ZSTD_BUILD_PROGRAMS=OFF \
-	../../build/cmake
+	../../$P-$V/build/cmake
 ninja
 ninja install
+cmakefix ../install
 
 cd ..
 
@@ -51,8 +53,8 @@ requires: zstd
 external-source: zstd
 EOF
 
-cp ../COPYING $R/$P-$V-$B.txt
-cp ../COPYING $R/$P-devel/$P-devel-$V-$B.txt
+cp ../$P-$V/COPYING $R/$P-$V-$B.txt
+cp ../$P-$V/COPYING $R/$P-devel/$P-devel-$V-$B.txt
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 

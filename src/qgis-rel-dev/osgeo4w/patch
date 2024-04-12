@@ -1,0 +1,22 @@
+diff --git a/src/server/qgis_mapserver.cpp b/src/server/qgis_mapserver.cpp
+index 38d9fe5dcb..1ed9042085 100644
+--- a/src/server/qgis_mapserver.cpp
++++ b/src/server/qgis_mapserver.cpp
+@@ -177,7 +177,7 @@ class TcpServerWorker: public QObject
+           };
+ 
+           // This will delete the connection
+-          QTcpSocket::connect( clientConnection, &QAbstractSocket::disconnected, clientConnection, connectionDeleter, Qt::QueuedConnection );
++          QObject::connect( clientConnection, &QAbstractSocket::disconnected, clientConnection, connectionDeleter, Qt::QueuedConnection );
+ 
+ #if 0     // Debugging output
+           clientConnection->connect( clientConnection, &QAbstractSocket::errorOccurred, clientConnection, [ = ]( QAbstractSocket::SocketError socketError )
+@@ -187,7 +187,7 @@ class TcpServerWorker: public QObject
+ #endif
+ 
+           // Incoming connection parser
+-          QTcpSocket::connect( clientConnection, &QIODevice::readyRead, context, [ = ] {
++          QObject::connect( clientConnection, &QIODevice::readyRead, context, [ = ] {
+ 
+             // Read all incoming data
+             while ( clientConnection->bytesAvailable() > 0 )

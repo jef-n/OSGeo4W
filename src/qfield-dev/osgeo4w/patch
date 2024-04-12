@@ -1,0 +1,54 @@
+diff -ur QField-3.2.2/cmake/qgis-cmake-wrapper.cmake ../QField-3.2.2/cmake/qgis-cmake-wrapper.cmake
+--- QField-3.2.2/cmake/qgis-cmake-wrapper.cmake	2024-03-25 03:54:46.000000000 +0100
++++ ../QField-3.2.2/cmake/qgis-cmake-wrapper.cmake	2024-04-09 13:40:05.601125200 +0200
+@@ -66,22 +66,22 @@
+ if(TRUE) # Should possibly have a "static only" check
+   find_package(PkgConfig QUIET)
+ 
+-  _find_and_link_library(authmethod_basic_a QGIS::Core)
+-  _find_and_link_library(authmethod_esritoken_a QGIS::Core)
+-  _find_and_link_library(authmethod_identcert_a QGIS::Core)
+-  _find_and_link_library(authmethod_oauth2_a QGIS::Core)
+-  _find_and_link_library(authmethod_pkcs12_a QGIS::Core)
+-  _find_and_link_library(authmethod_pkipaths_a QGIS::Core)
+-  _find_and_link_library(provider_postgres_a QGIS::Core)
+-  _find_and_link_library(provider_postgresraster_a QGIS::Core)
+-  _find_and_link_library(provider_wms_a QGIS::Core)
+-  _find_and_link_library(provider_delimitedtext_a QGIS::Core)
+-  _find_and_link_library(provider_arcgisfeatureserver_a QGIS::Core)
+-  _find_and_link_library(provider_arcgismapserver_a QGIS::Core)
+-  _find_and_link_library(provider_spatialite_a QGIS::Core)
+-  _find_and_link_library(provider_wfs_a QGIS::Core)
+-  _find_and_link_library(provider_wcs_a QGIS::Core)
+-  _find_and_link_library(provider_virtuallayer_a QGIS::Core)
++#  _find_and_link_library(authmethod_basic_a QGIS::Core)
++#  _find_and_link_library(authmethod_esritoken_a QGIS::Core)
++#  _find_and_link_library(authmethod_identcert_a QGIS::Core)
++#  _find_and_link_library(authmethod_oauth2_a QGIS::Core)
++#  _find_and_link_library(authmethod_pkcs12_a QGIS::Core)
++#  _find_and_link_library(authmethod_pkipaths_a QGIS::Core)
++#  _find_and_link_library(provider_postgres_a QGIS::Core)
++#  _find_and_link_library(provider_postgresraster_a QGIS::Core)
++#  _find_and_link_library(provider_wms_a QGIS::Core)
++#  _find_and_link_library(provider_delimitedtext_a QGIS::Core)
++#  _find_and_link_library(provider_arcgisfeatureserver_a QGIS::Core)
++#  _find_and_link_library(provider_arcgismapserver_a QGIS::Core)
++#  _find_and_link_library(provider_spatialite_a QGIS::Core)
++#  _find_and_link_library(provider_wfs_a QGIS::Core)
++#  _find_and_link_library(provider_wcs_a QGIS::Core)
++#  _find_and_link_library(provider_virtuallayer_a QGIS::Core)
+ 
+   _qgis_core_add_dependency(PostgreSQL::PostgreSQL PostgreSQL)
+ 
+diff -ur QField-3.2.2/CMakeLists.txt ../QField-3.2.2/CMakeLists.txt
+--- QField-3.2.2/CMakeLists.txt	2024-03-25 03:54:46.000000000 +0100
++++ ../QField-3.2.2/CMakeLists.txt	2024-04-09 12:26:26.087378500 +0200
+@@ -25,7 +25,7 @@
+ # Obtain git revision
+ include(GetGitRevisionDescription)
+ # The vcpkg toolchain to compile dependencies
+-include(VcpkgToolchain)
++# include(VcpkgToolchain)
+ # The default installation paths
+ include(GNUInstallDirs)
+ 

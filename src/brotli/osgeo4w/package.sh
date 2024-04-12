@@ -1,8 +1,9 @@
 export P=brotli
-export V=1.0.9
+export V=1.1.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="brotli brotli-devel"
 
 source ../../../scripts/build-helpers
 
@@ -12,7 +13,7 @@ startlog
 [ -d ../$P-$V ] || tar -C .. -xzf $P-$V.tar.gz
 
 (
-	vs2019env
+	vsenv
 	cmakeenv
 	ninjaenv
 
@@ -25,6 +26,7 @@ startlog
 		../../$P-$V
 	cmake --build .
 	cmake --install .
+	cmakefix ../install
 )
 
 export R=$OSGEO4W_REP/x86_64/release/$P

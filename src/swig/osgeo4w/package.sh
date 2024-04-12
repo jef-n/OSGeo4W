@@ -1,8 +1,9 @@
 export P=swig
-export V=4.0.2
+export V=4.2.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="swig"
 
 source ../../../scripts/build-helpers
 

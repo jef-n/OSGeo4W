@@ -1,10 +1,13 @@
 export P=grass
-export V=7.8.8
+export V=8.3.2
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="gdal-devel proj-devel geos-devel libjpeg-turbo-devel libpng-devel libpq-devel libtiff-devel sqlite3-devel zstd-devel python3-core python3-six python3-pywin32 liblas-devel python3-wxpython"
+export BUILDDEPENDS="gdal-devel proj-devel geos-devel netcdf-devel libjpeg-turbo-devel libpq-devel libtiff-devel sqlite3-devel zstd-devel python3-ply python3-core python3-six python3-pywin32 python3-wxpython liblas-devel cairo-devel freetype-devel"
+export PACKAGES="grass"
 
-p=$P-$V
+REPO=https://github.com/OSGeo/grass
+p=grass-$V
+branch=main
 
 source ../../../scripts/build-helpers
 
@@ -15,12 +18,11 @@ startlog
 MM=${V%.*}
 MM=${MM//./}
 
-[ -f $p.tar.gz ] || wget -O $p.tar.gz https://github.com/OSGeo/$P/archive/refs/tags/$V.tar.gz
+[ -f $p.tar.gz ] || wget -O $p.tar.gz $REPO/archive/refs/tags/$V.tar.gz
 [ -f ../$p/configure ] || tar -C .. -xzf $p.tar.gz
 [ -f ../$p/patched ] || {
 	patch -d ../$p -p1 --dry-run <patch
-	patch -d ../$p -p1 <patch
-	touch ../$p/patched
+	patch -d ../$p -p1 <patch >../$p/patched
 }
 
 export R=$OSGEO4W_REP/x86_64/release/$P
@@ -58,7 +60,7 @@ fi
 	export OSGEO4W_ROOT_MSYS="/${OSGEO4W_ROOT_MSYS:0:1}/${OSGEO4W_ROOT_MSYS:3}"
 
 	export VCPATH=$(
-		vs2019env
+		vsenv >/dev/null
 		echo ${PATH//\/cygdrive/}
 	)
 
@@ -99,7 +101,9 @@ pacman --noconfirm -Syu --needed \
 	mingw-w64-x86_64-libpng \
 	mingw-w64-x86_64-pcre \
 	mingw-w64-x86_64-fftw \
-	mingw-w64-x86_64-cairo
+	mingw-w64-x86_64-lapack \
+	mingw-w64-x86_64-openmp \
+	mingw-w64-x86_64-readline
 
 cd ../$p
 
@@ -111,18 +115,43 @@ EOF
 	cygstart -w $(cygpath -aw msys64/usr/bin/bash.exe) $(cygpath -am build.sh) || { cat ../$p/mswindows/osgeo4w/package.log; exit 1; }
 )
 
-cp ../$p/mswindows/osgeo4w/package/$p-1.tar.bz2 $R/$p-$B.tar.bz2
+cp ../$p/mswindows/osgeo4w/package/$P-$V-1.tar.bz2 $R/$P-$V-$B.tar.bz2
 cp ../$p/COPYING $R/$P-$V-$B.txt
 
 cat <<EOF >$R/setup.hint
 sdesc: "GRASS GIS ${V%.*}"
 ldesc: "Geographic Resources Analysis Support System (GRASS GIS ${V%.*})"
 category: Desktop
-requires: liblas $RUNTIMEDEPENDS avce00 gpsbabel proj python3-gdal python3-matplotlib libtiff python3-wxpython python3-pillow python3-pip python3-ply python3-pyopengl python3-psycopg2-binary python3-six zstd python3-pywin32 gs
+requires: liblas $RUNTIMEDEPENDS avce00 gpsbabel proj python3-gdal python3-matplotlib libtiff python3-wxpython python3-pillow python3-pip python3-ply python3-pyopengl python3-psycopg2 python3-six zstd python3-pywin32 gs netcdf wxwidgets grass8
 maintainer: $MAINTAINER
 EOF
 
+mkdir -p $OSGEO4W_REP/x86_64/release/grass{7,8}
+
+cat <<EOF >$OSGEO4W_REP/x86_64/release/grass7/setup.hint
+sdesc: "GRASS GIS (transitional package)"
+ldesc: "Geographic Resources Analysis Support System (transitional package)"
+category: _obsolete
+requires: grass
+maintainer: $MAINTAINER
+external-source: grass
+EOF
+
+cat <<EOF >$OSGEO4W_REP/x86_64/release/grass8/setup.hint
+sdesc: "GRASS GIS (transitional package)"
+ldesc: "Geographic Resources Analysis Support System (transitional package)"
+category: _obsolete
+requires: grass
+maintainer: $MAINTAINER
+external-source: grass
+EOF
+
 appendversions $R/setup.hint
+
+d=$(mktemp -d)
+tar -C $d -cjf $OSGEO4W_REP/x86_64/release/grass8/grass8-99-1.tar.bz2 .
+tar -C $d -cjf $OSGEO4W_REP/x86_64/release/grass7/grass7-99-1.tar.bz2 .
+rmdir $d
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/patch
 

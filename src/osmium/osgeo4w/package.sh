@@ -1,8 +1,9 @@
 export P=osmium
-export V=1.15.0
+export V=1.16.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="libosmium-devel protozero-devel boost-devel bzip2-devel zlib-devel lz4-devel expat-devel gdal-devel"
+export PACKAGES="osmium"
 
 source ../../../scripts/build-helpers
 
@@ -15,7 +16,7 @@ p=$P-tool
 
 (
 	fetchenv osgeo4w/bin/o4w_env.bat
-	vs2019env
+	vsenv
 	cmakeenv
 	ninjaenv
 
@@ -32,7 +33,7 @@ p=$P-tool
 		-D Boost_USE_STATIC_LIBS=ON \
 		-D Boost_USE_MULTITHREADED=ON \
 		-D Boost_USE_STATIC_RUNTIME=OFF \
-		-D Boost_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/boost-1_74) \
+		-D Boost_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/boost-1_84) \
 		-D Boost_LIBRARY_DIR="$(cygpath -am ../osgeo4w/lib)" \
 		-D EXPAT_LIBRARY=$(cygpath -am ../osgeo4w/lib/libexpat.lib) \
 		-D ZLIB_LIBRARY_RELEASE=$(cygpath -am ../osgeo4w/lib/zlib.lib) \
@@ -46,6 +47,7 @@ p=$P-tool
 	fi
 
 	cmake --build . --target install
+	cmakefix ../install
 )
 
 export R=$OSGEO4W_REP/x86_64/release/$P

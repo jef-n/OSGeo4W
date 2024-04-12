@@ -1,22 +1,18 @@
 export P=openjpeg
-export V=2.4.0
+export V=2.5.2
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="zlib-devel libtiff-devel libpng-devel"
+export PACKAGES="openjpeg openjpeg-devel openjpeg-tools"
 
 source ../../../scripts/build-helpers
 
 startlog
 
 [ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://github.com/uclouvain/$P/archive/v$V.tar.gz
-[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf  $P-$V.tar.gz
-[ -f ../$P-$V/patched ] || {
-	patch -d ../$P-$V -p1 --dry-run <patch
-	patch -d ../$P-$V -p1 <patch
-	touch ../$P-$V/patched
-}
+[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz
 
-vs2019env
+vsenv
 cmakeenv
 ninjaenv
 
@@ -54,6 +50,7 @@ cmake -G Ninja \
 	../../$P-$V
 ninja
 ninja install
+cmakefix ../install
 
 cd ..
 
@@ -98,8 +95,7 @@ tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	include lib
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 \
-	osgeo4w/package.sh \
-	osgeo4w/patch
+	osgeo4w/package.sh
 
 cp ../$P-$V/LICENSE $R/$P-$V-$B.txt
 cp ../$P-$V/LICENSE $R/$P-devel/$P-devel-$V-$B.txt

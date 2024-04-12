@@ -1,15 +1,16 @@
 export P=pdal
-export V=2.6.0
+export V=2.6.3
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="gdal-devel libgeotiff-devel libtiff-devel zlib-devel curl-devel libxml2-devel hdf5-devel openssl-devel zstd-devel laszip-devel proj-devel"
+export BUILDDEPENDS="gdal-devel libgeotiff-devel libtiff-devel zlib-devel curl-devel libxml2-devel hdf5-devel openssl-devel zstd-devel laszip-devel proj-devel draco-devel python3-core python3-devel"
+export PACKAGES="pdal pdal-devel pdal-libs"
 
 source ../../../scripts/build-helpers
 
 startlog
 
-[ -f $P-$V-src.tar.bz2 ] || wget https://github.com/PDAL/PDAL/releases/download/$V/${P^^}-$V-src.tar.bz2
-[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xjf $P-$V-src.tar.bz2 --xform "s,^${P^^}-$V-src,$P-$V,"
+[ -f ${P^^}-$V-src.tar.bz2 ] || wget https://github.com/PDAL/PDAL/releases/download/$V/${P^^}-$V-src.tar.bz2
+[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xjf ${P^^}-$V-src.tar.bz2 --xform "s,^${P^^}-$V-src,$P-$V,"
 if ! [ -f ../$P-$V/patched ]; then
 	patch -p1 -d ../$P-$V --dry-run <patch
 	patch -p1 -d ../$P-$V <patch
@@ -19,7 +20,7 @@ fi
 (
 	set -e
 
-	vs2019env
+	vsenv
 	cmakeenv
 	ninjaenv
 
@@ -37,6 +38,7 @@ fi
 		../../$P-$V
 	cmake --build .
 	cmake --build . --target install || cmake --build . --target install
+	cmakefix ../install
 
 	sed -i -e "s#$(cygpath -am ../install)#\$OSGEO4W_ROOT_MSYS#g" -e "s#$(cygpath -am ../osgeo4w)#\$OSGEO4W_ROOT_MSYS#g" ../install/bin/pdal-config
 	sed -i -e "s#$(cygpath -am ../install)#%OSGEO4W_ROOT%#g"      -e "s#$(cygpath -am ../osgeo4w)#%OSGEO4W_ROOT%#g" ../install/bin/pdal-config.bat

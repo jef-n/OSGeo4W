@@ -1,8 +1,9 @@
 export P=lua
-export V=5.4.4
+export V=5.4.6
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="lua lua-devel"
 
 source ../../../scripts/build-helpers
 
@@ -11,13 +12,13 @@ startlog
 [ -f $P-$V.tar.gz ] || wget http://www.lua.org/ftp/$P-$V.tar.gz
 [ -d ../$P-$V ] || tar -C .. -xzf $P-$V.tar.gz
 
-vs2019env
+vsenv
 
 cd ../$P-$V/src
 
-LOBJ=$(ls -1 *.obj | egrep -v "^luac?\.obj$")
 cl /MD /O2 /W3 /c /DLUA_BUILD_AS_DLL *.c
-link /DLL /IMPLIB:lua.lib /OUT:lua${V%.*}.dll $LOBJ 
+LOBJ=$(ls -1 *.obj | egrep -v "^luac?\.obj$")
+link /DLL /IMPLIB:lua.lib /OUT:lua${V%.*}.dll $LOBJ
 link /OUT:lua.exe lua.obj lua.lib
 lib /OUT:lua-static.lib $LOBJ
 link /OUT:luac.exe luac.obj lua-static.lib

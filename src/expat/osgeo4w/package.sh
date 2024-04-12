@@ -1,17 +1,18 @@
 export P=expat
-export V=2.2.10
+export V=2.6.2
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="expat expat-devel"
 
 source ../../../scripts/build-helpers
 
 startlog
 
 [ -f $P-$V.tar.bz2 ] || wget https://github.com/libexpat/libexpat/releases/download/R_${V//./_}/expat-$V.tar.bz2
-[ -f ../CMakeLists.txt ] || tar -C .. -xjf  $P-$V.tar.bz2 --xform "s,^$P-$V,.,"
+[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xjf  $P-$V.tar.bz2
 
-vs2019env
+vsenv
 cmakeenv
 ninjaenv
 
@@ -21,11 +22,12 @@ cd build
 cmake -G Ninja \
 	-D CMAKE_BUILD_TYPE=Release \
 	-D CMAKE_INSTALL_PREFIX=../install \
-	../..
+	../../$P-$V
 ninja
 ninja install
 
 cd ..
+cmakefix install
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R/$P-devel
@@ -38,6 +40,8 @@ requires: msvcrt2019
 maintainer: $MAINTAINER
 EOF
 
+cp ../$P-$V/COPYING $R/$P-$V-$B.txt
+
 tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
 	bin/libexpat.dll
 
@@ -49,6 +53,8 @@ requires: $P
 maintainer: $MAINTAINER
 external-source: $P
 EOF
+
+cp ../$P-$V/COPYING $R/$P-devel/$P-devel-$V-$B.txt
 
 tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	bin/xmlwf.exe \

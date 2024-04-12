@@ -2,88 +2,78 @@
 
 use strict;
 use warnings;
-use Storable qw(dclone);
-use Data::Dumper;
+
+my @removed = qw/libjpeg grass8 saga9 python3-clcache python3-pyuv python3-attrdict python3-jupyter/;
+my @srcless = qw/alkis-import alkis-import-gid7 alkis-import-gid7i/;
+
+my $OSGEO4W_REP = $ENV{OSGEO4W_REP};
+
+unless(defined $OSGEO4W_REP && $OSGEO4W_REP ne "") {
+	my $b = `git branch --show-current`;
+	chomp $b;
+
+	if($b eq "master") {
+                $OSGEO4W_REP = "/d/src/osgeo4w";
+	} else {
+                $OSGEO4W_REP = "/temp/repo-$b";
+	}
+}
+
+
+# collect packages
 
 my %src;
-my %bin;
-my $pkg;
+open F, "git grep '^export PACKAGES=' -- '*/osgeo4w/package.sh' |";
+while(<F>) {
+	my($pkg, $pkgs) = m#src/([^/]+)/osgeo4w/package.sh:export PACKAGES=(.*\S)\s+$#;
+	die "PACKAGES invalid $_" unless defined $pkg;
 
-system("/usr/bin/rsync -a upload.osgeo.org::download/osgeo4w/v2/x86_64/setup.ini /tmp/setup-master.ini") == 0 or die "Could not download setup.ini";
+	$pkgs =~ s/\s+$//;
+	$pkgs =~ s/^"(.*)"$/$1/;
+	$pkgs =~ s/^'(.*)'$/$1/;
 
-# collect package from source relations
-for my $f ("/tmp/setup-master.ini", "x86_64/setup.ini") {
-	next unless -f $f;
-	open F, $f;
-	while(<F>) {
-		if(/^@ (\S+)\s+$/) {
-			$pkg = $1
-
-		# source: x86_64/release/avce00/avce00-2.0.0-3-src.tar.bz2 1316 1225e82b0adbb05fdee034c206992d28
-		} elsif( my($srcpkg) = /^source:\s+(\S+)\s+\d+\s+\S+\s+$/ ) {
-			next if exists $src{$pkg};
-
-			my ($src, $ver, $bin) = $srcpkg =~ m#^.+/([^/]+)/\1-(.*)-(\d+)-src.tar.bz2$#;
-			die "invalid $srcpkg" unless defined $src && defined $ver && defined $bin;
-
-			unless(-f "src/$src/osgeo4w/package.sh") {
-				unless(-f "$srcpkg") {
-					my($d,$f) = $srcpkg =~ m#^(.*)/(.*)$#;
-					system("mkdir -p '$d'; /usr/bin/rsync -a upload.osgeo.org::download/osgeo4w/v2/$srcpkg $srcpkg") == 0 or next;
-				}
-
-				open I, "tar xOjf $srcpkg osgeo4w/package.sh 2>/dev/null |";
-				while(<I>) {
-					if(/^export\s*P=(\S+)/) {
-						if(-f "src/$1/osgeo4w/package.sh") {
-							$src = $1;
-							last;
-						}
-					}
-				}
-				close I;
-
-				next unless -f "src/$src/osgeo4w/package.sh";
-
-				print STDERR "Package $pkg has source $src\n";
-			}
-
-			$src{$pkg} = $src;
-			push @{ $bin{$src} }, $pkg;
-		}
-	}
-	close F;
+	$src{$_} = $pkg foreach split(/\s+/, $pkgs);
 }
+
+# collect build dependencies
 
 my %fdep;
 my %rdep;
-
-# collect build dependencies
-open F, "git grep BUILDDEPENDS= -- '*/package.sh' |";
+open F, "git grep '^export BUILDDEPENDS=' -- '*/osgeo4w/package.sh' |";
 while(<F>) {
 	s/\s*#.*$//;
 
 	my($pkg, $deps) = m#src/([^/]+)/osgeo4w/package.sh:export BUILDDEPENDS=(.*\S)\s+$#;
-	die "invalid $_" unless defined $pkg;
-
-	next unless exists $src{$pkg};
-
-	$pkg = $src{$pkg};
+	die "BUILDDEPENDS invalid $_" unless defined $pkg;
 
 	next if $deps eq "none";
 
 	$deps =~ s/\s+$//;
 	$deps =~ s/^"(.*)"$/$1/;
+	$deps =~ s/^'(.*)'$/$1/;
 
-	my @deps = split (/\s+/, $deps);
-	@deps = map { die "src for $_ not found" unless exists $src{$_}; $src{$_}; } @deps;
-
-	foreach my $d (@deps) {
+	foreach my $d (map { $src{$_}; } split (/\s+/, $deps)) {
+		next unless defined $d;
 		$rdep{$d}{$pkg} = 1;
 		$fdep{$pkg}{$d} = 1;
 	}
 }
 close F;
+
+$fdep{"python3-pip"}{"python3"} = 1;
+$rdep{"python3"}{"python3-pip"} = 1;
+
+delete $fdep{"python3-pip"}{"python3-pip"};
+delete $rdep{"python3-pip"}{"python3-pip"};
+
+delete $fdep{"python3-pip"}{"python3-setuptools"};
+delete $rdep{"python3-setuptools"}{"python3-pip"};
+
+$fdep{"python3-setuptools"}{"python3"} = 1;
+$rdep{"python3"}{"python3-setuptools"} = 1;
+
+delete $fdep{"python3-setuptools"}{"python3-pip"};
+delete $rdep{"python3-pip"}{"python3-setuptools"};
 
 my @arg = grep !/-$/, @ARGV;
 
@@ -92,6 +82,8 @@ foreach (grep /-$/, @ARGV) {
 	s/-$//;
 	$skip{$_} = 1;
 }
+
+@arg = keys %src unless @arg;
 
 my @todo;
 while(my $p = shift @arg) {
@@ -119,7 +111,7 @@ while(my $p = shift @todo) {
 my @inorder;
 while(keys %todo) {
 	my @p;
-	TODO: foreach my $p (keys %todo) {
+	TODO: foreach my $p (sort keys %todo) {
 		foreach my $q (keys %{ $fdep{$p} }) {
 			next TODO if exists $todo{$q};
 		}
@@ -139,6 +131,6 @@ while(keys %todo) {
 	}
 }
 
-push @inorder, keys %todo;
+die "Remaining packages: " . join(" ", sort keys %todo) if %todo;
 
 print join("\n", @inorder), "\n";

@@ -1,22 +1,13 @@
 export P=gdal
-export V=3.8.4
+export V=3.8.5
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel hdf5-tools ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-turbo-devel python3-setuptools opencl-devel libtiff-devel arrow-cpp-devel lz4-devel openssl-devel tiledb-devel lerc-devel kealib-devel odbc-cpp-wrapper-devel libjxl-devel"
+export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel hdf5-tools ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-turbo-devel python3-setuptools opencl-devel libtiff-devel arrow-cpp-devel lz4-devel openssl-devel tiledb-devel lerc-devel kealib-devel odbc-cpp-wrapper-devel libjxl-devel libxml2-devel"
+export PACKAGES="gdal gdal-devel gdal-ecw gdal-filegdb gdal-hana gdal-hdf5 gdal-kea gdal-mrsid gdal-mss gdal-oracle gdal-sosi gdal-tiledb gdal301-runtime gdal302-runtime gdal303-runtime gdal304-runtime gdal305-runtime gdal306-runtime gdal307-runtime gdal308-runtime python3-gdal"
 
 source ../../../scripts/build-helpers
 
-export PYTHON=Python39
-
 startlog
-
-# should be fixed in the packages
-find $(find osgeo4w -name cmake) -type f | \
-	xargs sed -i \
-		-e 's#.:/src/osgeo4w/src/[^/]*/osgeo4w/install/#\$ENV{OSGEO4W_ROOT}/#g' \
-		-e 's#.:/src/osgeo4w/src/[^/]*/osgeo4w/osgeo4w/#\$ENV{OSGEO4W_ROOT}/#g' \
-		-e 's#.:\\\\src\\\\osgeo4w\\\\src\\\\[^\\]*\\\\osgeo4w\\\\osgeo4w\\\\#\$ENV{OSGEO4W_ROOT}\\\\#g' \
-		-e 's#.:\\\\src\\\\osgeo4w\\\\src\\\\[^\\]*\\\\osgeo4w\\\\install\\\\#\$ENV{OSGEO4W_ROOT}\\\\#g'
 
 [ -f $P-$V.tar.gz ] || {
 	wget -q http://download.osgeo.org/gdal/${V%rc*}/$P-$V.tar.gz
@@ -27,15 +18,8 @@ find $(find osgeo4w -name cmake) -type f | \
 
 if ! [ -f ../$P-${V%rc*}/patched ] && [ -z "$OSGEO4W_SKIP_CLEAN" ]; then
 	patch -p1 -d ../$P-${V%rc*} --dry-run <patch
-	patch -p1 -d ../$P-${V%rc*} <patch
-	touch  ../$P-${V%rc*}/patched
+	patch -p1 -d ../$P-${V%rc*} <patch >../$P-${V%rc*}/patched
 fi
-
-[ -f osgeo4w/apps/$PYTHON/Lib/site-packages/setuptools/command/patched ] || {
-	patch -p0 --dry-run <easy_install.diff
-	patch -p0 <easy_install.diff
-	touch osgeo4w/apps/$PYTHON/Lib/site-packages/setuptools/command/patched
-}
 
 #
 # Download MrSID, ECW and filegdb dependencies
@@ -44,38 +28,48 @@ fi
 mkdir -p gdaldeps
 cd gdaldeps
 
-export MRSID_SDK=MrSID_DSDK-9.5.4.4703-win64-vc14
-export ECW_ZIP=ECWJP2SDKSetup_5.5.0.1882-Update2-Windows.zip
-export ECW_EXE=ECWJP2SDKSetup_5.5.0.1882.exe
-
-for i in \
-	https://raw.githubusercontent.com/Esri/file-geodatabase-api/master/FileGDB_API_1.5/FileGDB_API_1_5_VS2015.zip \
-	https://downloads.hexagongeospatial.com/software/2020/ECW/$ECW_ZIP \
-	http://bin.lizardtech.com/download/developer/$MRSID_SDK.zip \
-	; do
-	[ -f "${i##*/}" ] || wget -q "$i"
-done
+export MRSID_SDK=MrSID_DSDK-9.5.5.5244-win64-vc17
+export ECW_ZIP=ECWJP2SDKSetup_5.5.0.2268-Update4-Windows.zip
+export ECW_EXE=ECWJP2SDKSetup_5.5.0.2268.exe
 
 mkdir -p filegdb
 [ -d filegdb/done ] || {
-	unzip -q -o -d filegdb FileGDB_API_1_5_VS2015.zip "bin64/*" "lib64/*" "include/*" license/userestrictions.txt
+	[ -f FileGDB_API_VS2019.zip ] || wget -q https://github.com/Esri/file-geodatabase-api/raw/master/FileGDB_API_1.5.2/FileGDB_API_VS2019.zip
+	sha256sum -c FileGDB_API_VS2019.zip.sha256sum
+	unzip -q -o -d filegdb FileGDB_API_VS2019.zip "bin64/*" "lib64/*" "include/*" license/userestrictions.txt
 	touch filegdb/done
 }
 
 mkdir -p ecw
-[ -f $ECW_EXE ] || unzip -q $ECW_ZIP $ECW_EXE ERDAS_ECW_JPEG2000_SDK.pdf
 [ -f ecw/done ] || {
-	7z x -aoa -oecw $ECW_EXE \
+	[ -f $ECW_ZIP ] || { echo ECW SDK download $ECW_ZIP missing; false; }
+	sha256sum -c $ECW_ZIP.sha256sum
+	[ -f $ECW_EXE ] || unzip -q $ECW_ZIP $ECW_EXE
+
+	[ -x 7z.exe ] || {
+		[ -f 7z2404-x64.exe ] || wget -q https://7-zip.org/a/7z2404-x64.exe
+		sha256sum -c 7z2404-x64.exe.sha256sum
+		7z x 7z2404-x64.exe 7z.exe 7z.dll
+		chmod +x 7z.exe 7z.dll
+	}
+
+	./7z x -aoa -oecw $ECW_EXE \
 		'$0/include/*' \
-		'lib/vc141/x64/NCSEcw.lib' \
-		'lib/vc141/x64/NCSEcwS.lib' \
+		lib/vc141/x64/NCSEcw.lib \
+		lib/vc141/x64/NCSEcwS.lib \
 		'bin/vc141/x64/*' \
-		'$TEMP/ecwjp2_sdk/Server_Read-Only_EndUser.rtf'
+		'$TEMP/ecwjp2_sdk/Server_Read-Only_EndUser.rtf' \
+		ERDAS_ECW_JPEG2000_SDK.pdf
+
 	mv 'ecw/$0/include' ecw/include
 	rmdir 'ecw/$0'
 	touch ecw/done
 }
+
 [ -f $MRSID_SDK/done ] || {
+	[ -f "$MRSID_SDK.zip" ] || wget -q "https://bin.extensis.com/download/developer/$MRSID_SDK.zip"
+	sha256sum -c $MRSID_SDK.zip.sha256sum
+
 	unzip -o -q $MRSID_SDK.zip \
 		"$MRSID_SDK/Raster_DSDK/include/*" \
 		"$MRSID_SDK/Raster_DSDK/lib/*" \
@@ -113,12 +107,12 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 (
 	fetchenv osgeo4w/bin/o4w_env.bat
 
-	vs2019env
+	vsenv
 	cmakeenv
 	ninjaenv
 
-	export INCLUDE="$(cygpath -am osgeo4w/include);$(cygpath -am osgeo4w/apps/$PYTHON/include);$(cygpath -am osgeo4w/include/boost-1_74);$INCLUDE"
-	export LIB="$(cygpath -am osgeo4w/lib);$LIB"
+	export INCLUDE="$(cygpath -am osgeo4w/include);$(cygpath -am osgeo4w/apps/$PYTHON/include);$(cygpath -am osgeo4w/include/boost-1_84);$(cygpath -aw "$(find $VCINSTALLDIR -iname atlbase.h -printf '%h')");$INCLUDE"
+	export LIB="$(cygpath -am osgeo4w/lib);$(cygpath -aw "$(find $VCINSTALLDIR -path "*/x64/*" -iname atls.lib -printf '%h')");$LIB"
 
 	[ -n "$OSGEO4W_SKIP_CLEAN" ] || rm -rf build-$V
 
@@ -156,7 +150,7 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 		-D                         MYSQL_LIBRARY=$(cygpath -am ../osgeo4w/lib/libmysql.lib) \
 		-D                    MSSQL_ODBC_VERSION=18 \
 		-D                    MSSQL_ODBC_LIBRARY=$(cygpath -am ../osgeo4w/lib/msodbcsql18.lib) \
-		-D                  OPENJPEG_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/openjpeg-2.4) \
+		-D                  OPENJPEG_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/openjpeg-2.5) \
 		-D                           Oracle_ROOT=$(cygpath -am ../osgeo4w) \
 		-D                        Oracle_LIBRARY=$(cygpath -am ../osgeo4w/lib/oci.lib) \
 		-D                          JPEG_LIBRARY=$(cygpath -am ../osgeo4w/lib/jpeg.lib) \
@@ -174,23 +168,24 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 		-D                              HDF5_DIR=$(cygpath -am ../osgeo4w/share/cmake) \
 		-D                          LERC_LIBRARY=$(cygpath -am ../osgeo4w/lib/Lerc.lib) \
 		-D                       SWIG_EXECUTABLE=$(cygpath -am ../osgeo4w/bin/swig.bat) \
-		-D             GDAL_EXTRA_LINK_LIBRARIES="$(cygpath -am ../osgeo4w/lib/freetype.lib);$(cygpath -am ../osgeo4w/lib/jpeg.lib);$(cygpath -am ../osgeo4w/lib/tiff.lib);$(cygpath -am ../osgeo4w/lib/uriparser.lib);$(cygpath -am ../osgeo4w/lib/minizip.lib)" \
+		-D             GDAL_EXTRA_LINK_LIBRARIES="$(cygpath -am ../osgeo4w/lib/freetype.lib);$(cygpath -am ../osgeo4w/lib/jpeg.lib);$(cygpath -am ../osgeo4w/lib/tiff.lib);$(cygpath -am ../osgeo4w/lib/minizip.lib)" \
 		-D OGR_ENABLE_DRIVER_PARQUET_PLUGIN=OFF \
-		-D OGR_ENABLE_DRIVER_HANA_PLUGIN=ON -D OGR_DRIVER_HANA_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-hana package." \
-		-D OGR_ENABLE_DRIVER_OCI_PLUGIN=ON -D OGR_DRIVER_OCI_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-oracle package." \
-		-D OGR_ENABLE_DRIVER_FILEGDB_PLUGIN=ON -D OGR_DRIVER_FILEGDB_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-filegdb package." \
-		-D OGR_ENABLE_DRIVER_SOSI_PLUGIN=ON -D OGR_DRIVER_SOSI_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-sosi package." \
-		-D OGR_ENABLE_DRIVER_MSSQLSPATIAL_PLUGIN=ON -D OGR_DRIVER_MSSQLSPATIAL_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-mss package." \
-		-D GDAL_ENABLE_DRIVER_GEOR_PLUGIN=ON -D GDAL_DRIVER_GEOR_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-oracle package." \
-		-D GDAL_ENABLE_DRIVER_ECW_PLUGIN=ON -D GDAL_DRIVER_ECW_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-ecw package." \
-		-D GDAL_ENABLE_DRIVER_MRSID_PLUGIN=ON -D GDAL_DRIVER_MRSID_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-mrsid package." \
-		-D GDAL_ENABLE_DRIVER_HDF5_PLUGIN=ON -D GDAL_DRIVER_HDF5_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-hdf5 package." \
-		-D GDAL_ENABLE_DRIVER_KEA_PLUGIN=ON -D GDAL_DRIVER_KEA_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-kea package." \
-		-D GDAL_ENABLE_DRIVER_TILEDB_PLUGIN=ON -D GDAL_DRIVER_TILEDB_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the gdal-tiledb package." \
+		-D OGR_ENABLE_DRIVER_HANA_PLUGIN=ON -D OGR_DRIVER_HANA_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the $P-hana package." \
+		-D OGR_ENABLE_DRIVER_OCI_PLUGIN=ON -D OGR_DRIVER_OCI_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the $P-oracle package." \
+		-D OGR_ENABLE_DRIVER_FILEGDB_PLUGIN=ON -D OGR_DRIVER_FILEGDB_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the $P-filegdb package." \
+		-D OGR_ENABLE_DRIVER_SOSI_PLUGIN=ON -D OGR_DRIVER_SOSI_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the $P-sosi package." \
+		-D OGR_ENABLE_DRIVER_MSSQLSPATIAL_PLUGIN=ON -D OGR_DRIVER_MSSQLSPATIAL_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the $P-mss package." \
+		-D GDAL_ENABLE_DRIVER_GEOR_PLUGIN=ON -D GDAL_DRIVER_GEOR_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the $P-oracle package." \
+		-D GDAL_ENABLE_DRIVER_ECW_PLUGIN=ON -D GDAL_DRIVER_ECW_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the $P-ecw package." \
+		-D GDAL_ENABLE_DRIVER_MRSID_PLUGIN=ON -D GDAL_DRIVER_MRSID_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the $P-mrsid package." \
+		-D GDAL_ENABLE_DRIVER_HDF5_PLUGIN=ON -D GDAL_DRIVER_HDF5_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the $P-hdf5 package." \
+		-D GDAL_ENABLE_DRIVER_KEA_PLUGIN=ON -D GDAL_DRIVER_KEA_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the $P-kea package." \
+		-D GDAL_ENABLE_DRIVER_TILEDB_PLUGIN=ON -D GDAL_DRIVER_TILEDB_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the $P-tiledb package." \
 		../../$P-${V%rc*}
 
 	cmake --build .
 	cmake --build . --target install || cmake --build . --target install
+	cmakefix ../install
 )
 
 mkdir -p install/etc/{postinstall,preremove}
@@ -235,26 +230,28 @@ SET GDAL_DATA=%OSGEO4W_ROOT%\\apps\\$P\\share\\gdal
 SET GDAL_DRIVER_PATH=%OSGEO4W_ROOT%\\apps\\$P\\lib\\gdalplugins
 EOF
 
+extradesc=""
+
 cat <<EOF >$R/setup.hint
-sdesc: "The GDAL/OGR library and commandline tools"
-ldesc: "The GDAL/OGR library and commandline tools"
+sdesc: "The GDAL/OGR library and commandline tools$extradesc"
+ldesc: "The GDAL/OGR library and commandline tools$extradesc"
 maintainer: $MAINTAINER
 category: Libs Commandline_Utilities
 requires: msvcrt2019 $P$abi-runtime
 EOF
 
 cat <<EOF >$R/$P$abi-runtime/setup.hint
-sdesc: "The GDAL/OGR $major.$minor runtime library"
-ldesc: "The GDAL/OGR $major.$minor runtime library"
+sdesc: "The GDAL/OGR $major.$minor runtime library$extradesc"
+ldesc: "The GDAL/OGR $major.$minor runtime library$extradesc"
 maintainer: $MAINTAINER
 category: Libs Commandline_Utilities
-requires: msvcrt2019 libpng curl geos libmysql sqlite3 netcdf libpq expat xerces-c hdf4 ogdi libiconv openjpeg libspatialite freexl xz zstd poppler msodbcsql libjpeg-turbo arrow-cpp thrift brotli opencl libjxl $RUNTIMEDEPENDS
+requires: msvcrt2019 libpng curl geos libmysql sqlite3 netcdf libpq expat xerces-c hdf4 ogdi libiconv openjpeg libspatialite freexl xz zstd lz4 poppler msodbcsql libjpeg-turbo arrow-cpp thrift brotli libjxl libxml2 opencl $RUNTIMEDEPENDS
 external-source: $P
 EOF
 
 cat <<EOF >$R/$P-devel/setup.hint
-sdesc: "The GDAL/OGR headers and libraries"
-ldesc: "The GDAL/OGR headers and libraries"
+sdesc: "The GDAL/OGR headers and libraries$extradesc"
+ldesc: "The GDAL/OGR headers and libraries$extradesc"
 maintainer: $MAINTAINER
 category: Libs Commandline_Utilities
 requires: $P
@@ -262,8 +259,8 @@ external-source: $P
 EOF
 
 cat <<EOF >$R/python3-$P/setup.hint
-sdesc: "The GDAL/OGR Python3 Bindings and Scripts"
-ldesc: "The GDAL/OGR Python3 Bindings and Scripts"
+sdesc: "The GDAL/OGR Python3 Bindings and Scripts$extradesc"
+ldesc: "The GDAL/OGR Python3 Bindings and Scripts$extradesc"
 category: Libs
 requires: $P$abi-runtime python3-core python3-numpy
 maintainer: $MAINTAINER
@@ -271,8 +268,8 @@ external-source: $P
 EOF
 
 cat <<EOF >$R/$P-oracle/setup.hint
-sdesc: "OGR OCI and GDAL GeoRaster Plugins for Oracle"
-ldesc: "OGR OCI and GDAL GeoRaster Plugins for Oracle"
+sdesc: "OGR OCI and GDAL GeoRaster Plugins for Oracle$extradesc"
+ldesc: "OGR OCI and GDAL GeoRaster Plugins for Oracle$extradesc"
 category: Libs
 requires: $P$abi-runtime oci
 maintainer: $MAINTAINER
@@ -280,8 +277,8 @@ external-source: $P
 EOF
 
 cat <<EOF >$R/$P-filegdb/setup.hint
-sdesc: "OGR FileGDB Driver"
-ldesc: "OGR FileGDB Driver"
+sdesc: "OGR FileGDB Driver$extradesc"
+ldesc: "OGR FileGDB Driver$extradesc"
 category: Libs
 maintainer: $MAINTAINER
 requires: $P$abi-runtime
@@ -289,8 +286,8 @@ external-source: $P
 EOF
 
 cat <<EOF >$R/$P-ecw/setup.hint
-sdesc: "ECW Raster Plugin for GDAL"
-ldesc: "ECW Raster Plugin for GDAL"
+sdesc: "ECW Raster Plugin for GDAL$extradesc"
+ldesc: "ECW Raster Plugin for GDAL$extradesc"
 category: Libs
 requires: $P$abi-runtime
 maintainer: $MAINTAINER
@@ -298,8 +295,8 @@ external-source: $P
 EOF
 
 cat <<EOF >$R/$P-mrsid/setup.hint
-sdesc: "MrSID Raster Plugin for GDAL"
-ldesc: "MrSID Raster Plugin for GDAL"
+sdesc: "MrSID Raster Plugin for GDAL$extradesc"
+ldesc: "MrSID Raster Plugin for GDAL$extradesc"
 category: Libs
 maintainer: $MAINTAINER
 requires: $P$abi-runtime
@@ -307,8 +304,8 @@ external-source: $P
 EOF
 
 cat <<EOF >$R/$P-sosi/setup.hint
-sdesc: "OGR SOSI Driver"
-ldesc: "The OGR SOSI Driver enables OGR to read data in Norwegian SOSI standard (.sos)"
+sdesc: "OGR SOSI Driver$extradesc"
+ldesc: "The OGR SOSI Driver enables OGR to read data in Norwegian SOSI standard (.sos)$extradesc"
 category: Libs
 requires: $P$abi-runtime
 maintainer: $MAINTAINER
@@ -316,8 +313,8 @@ external-source: $P
 EOF
 
 cat <<EOF >$R/$P-mss/setup.hint
-sdesc: "OGR plugin with SQL Native Client support for MSSQL Bulk Copy"
-ldesc: "OGR plugin with SQL Native Client support for MSSQL Bulk Copy"
+sdesc: "OGR plugin with SQL Native Client support for MSSQL Bulk Copy$extradesc"
+ldesc: "OGR plugin with SQL Native Client support for MSSQL Bulk Copy$extradesc"
 category: Libs
 requires: $P$abi-runtime
 maintainer: $MAINTAINER
@@ -325,8 +322,8 @@ external-source: $P
 EOF
 
 cat <<EOF >$R/$P-hdf5/setup.hint
-sdesc: "HDF5 Plugin for GDAL"
-ldesc: "HDF5 Plugin for GDAL"
+sdesc: "HDF5 Plugin for GDAL$extradesc"
+ldesc: "HDF5 Plugin for GDAL$extradesc"
 category: Libs
 maintainer: $MAINTAINER
 requires: $P$abi-runtime hdf5
@@ -334,8 +331,8 @@ external-source: $P
 EOF
 
 cat <<EOF >$R/$P-kea/setup.hint
-sdesc: "KEA Plugin for GDAL"
-ldesc: "KEA Plugin for GDAL"
+sdesc: "KEA Plugin for GDAL$extradesc"
+ldesc: "KEA Plugin for GDAL$extradesc"
 category: Libs
 maintainer: $MAINTAINER
 requires: $P$abi-runtime kealib
@@ -343,8 +340,8 @@ external-source: $P
 EOF
 
 cat <<EOF >$R/$P-tiledb/setup.hint
-sdesc: "TILEDB plugin for GDAL"
-ldesc: "TILEDB plugin for GDAL"
+sdesc: "TILEDB plugin for GDAL$extradesc"
+ldesc: "TILEDB plugin for GDAL$extradesc"
 category: Libs
 requires: $P$abi-runtime tiledb
 maintainer: $MAINTAINER
@@ -352,8 +349,8 @@ external-source: $P
 EOF
 
 cat <<EOF >$R/$P-hana/setup.hint
-sdesc: "HANA plugin for GDAL"
-ldesc: "HANA plugin for GDAL"
+sdesc: "HANA plugin for GDAL$extradesc"
+ldesc: "HANA plugin for GDAL$extradesc"
 category: Libs
 requires: $P$abi-runtime odbc-cpp-wrapper
 maintainer: $MAINTAINER
@@ -474,7 +471,6 @@ tar -C install -cjvf $R/$P-$V-$B.tar.bz2 \
 
 tar -C .. -cjvf $R/$P-$V-$B-src.tar.bz2 \
 	osgeo4w/package.sh \
-	osgeo4w/easy_install.diff \
 	osgeo4w/patch
 
 (

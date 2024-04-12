@@ -1,30 +1,43 @@
 export P=libxml2
-export V=2.9.10
+export V=2.12.5
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="zlib-devel libiconv-devel xz-devel"
+export PACKAGES="libxml2 libxml2-devel"
 
 source ../../../scripts/build-helpers
 
 startlog
 
-cp -uv osgeo4w/lib/iconv.dll.lib osgeo4w/lib/iconv.lib
+[ -f $P-$V.tar.xz ] || wget -c https://download.gnome.org/sources/$P/${V%.*}/$P-$V.tar.xz
+[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xJf $P-$V.tar.xz
 
-[ -f $P-$V.tar.gz ] || wget -c ftp://xmlsoft.org/$P/$P-$V.tar.gz
-[ -f ../CMakeLists.txt ] || tar -C .. -xzf  $P-$V.tar.gz --xform "s,^$P-$V,.,"
+vsenv
+cmakeenv
+ninjaenv
 
-vs2019env
+mkdir -p install build
 
-mkdir -p install
+cd build
 
-cd ../win32
-cscript configure.js compiler=msvc prefix=$(cygpath -w ../osgeo4w/install) iconv=yes zlib=yes lzma=yes include=$(cygpath -aw ../osgeo4w/osgeo4w/include) lib=$(cygpath -aw ../osgeo4w/osgeo4w/lib)
+export LIB="$(cygpath -aw ../osgeo4w/lib);$LIB"
+export INCLUDE="$(cygpath -aw ../osgeo4w/include);$INCLUDE"
 
-nmake /f Makefile.msvc
-touch bin.msvc/ignore.pdb
-nmake /f Makefile.msvc install
+cmake -G Ninja \
+	-D CMAKE_BUILD_TYPE=Release \
+	-D CMAKE_INSTALL_PREFIX=../install \
+	-D ZLIB_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
+	-D ZLIB_LIBRARY=$(cygpath -am ../osgeo4w/lib/zlib.lib) \
+	-D LZMA_LIBRARY=$(cygpath -am ../osgeo4w/lib/liblzma.lib) \
+	-D Iconv_LIBRARY=$(cygpath -am ../osgeo4w/lib/iconv.dll.lib) \
+	-D LIBLZMA_LIBRARY_DEBUG=none \
+	-D LIBXML2_WITH_PYTHON=OFF \
+	../../$P-$V
+cmake --build .
+cmake --build . --target install
+cmakefix ../install
 
-cd ../osgeo4w
+cd ..
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R/$P-devel
@@ -52,15 +65,12 @@ maintainer: $MAINTAINER
 EOF
 
 tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
-	include \
-	lib/libxml2.lib \
-	lib/libxml2_a.lib \
-	lib/libxml2_a_dll.lib
+	include lib
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 \
 	osgeo4w/package.sh
 
-cp ../COPYING $R/$P-$V-$B.txt 
-cp ../COPYING $R/$P-devel/$P-devel-$V-$B.txt 
+cp ../$P-$V/Copyright $R/$P-$V-$B.txt
+cp ../$P-$V/Copyright $R/$P-devel/$P-devel-$V-$B.txt
 
 endlog

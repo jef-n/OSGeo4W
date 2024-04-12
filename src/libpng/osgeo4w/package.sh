@@ -1,20 +1,21 @@
 export P=libpng
-export V=1.6.37
+export V=1.6.43
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=zlib-devel
+export PACKAGES="libpng libpng-devel"
 
 source ../../../scripts/build-helpers
 
 startlog
 
 [ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://sourceforge.net/projects/libpng/files/libpng16/$V/$P-$V.tar.gz/download
-[ -f ../CMakeLists.txt ] || tar -C .. -xzf  $P-$V.tar.gz --xform "s,^$P-$V,.,"
+[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R/$P-devel
 
-vs2019env
+vsenv
 cmakeenv
 ninjaenv
 
@@ -26,9 +27,10 @@ cmake -G Ninja \
 	-D ZLIB_LIBRARY=$(cygpath -am ../osgeo4w/lib/zlib.lib) \
 	-D ZLIB_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D CMAKE_INSTALL_PREFIX=../install \
-	../..
+	../../$P-$V
 ninja
 ninja install
+cmakefix ../install
 
 cd ..
 
@@ -58,8 +60,8 @@ tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	lib \
 	share
 
-cp ../LICENSE $R/$P-$V-$B.txt
-cp ../LICENSE $R/$P-devel/$P-devel-$P-$V-$B.txt
+cp ../$P-$V/LICENSE $R/$P-$V-$B.txt
+cp ../$P-$V/LICENSE $R/$P-devel/$P-devel-$P-$V-$B.txt
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 

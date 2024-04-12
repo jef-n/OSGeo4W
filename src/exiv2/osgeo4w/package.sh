@@ -1,17 +1,18 @@
 export P=exiv2
-export V=0.27.3
+export V=0.28.2
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="expat-devel zlib-devel libiconv-devel"
+export BUILDDEPENDS="expat-devel zlib-devel libiconv-devel brotli-devel"
+export PACKAGES="exiv2 exiv2-devel exiv2-tools"
 
 source ../../../scripts/build-helpers
 
 startlog
 
-[ -f $P-$V-Source.tar.gz ] || wget https://www.exiv2.org/builds/$P-$V-Source.tar.gz
-[ -f ../CMakeLists.txt ] || tar -C .. -xzf  $P-$V-Source.tar.gz --xform "s,^$P-$V-Source,.,"
+[ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://github.com/${P^}/$P/archive/refs/tags/v$V.tar.gz
+[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz
 
-vs2019env
+vsenv
 cmakeenv
 ninjaenv
 
@@ -27,11 +28,16 @@ cmake -G Ninja \
 	-D EXPAT_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D Iconv_LIBRARY=$(cygpath -am ../osgeo4w/lib/iconv.dll.lib) \
 	-D Iconv_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
+	-D BROTLIDEC_LIBRARY=$(cygpath -am ../osgeo4w/lib/brotlidec.lib) \
+	-D BROTLICOMMON_LIBRARY=$(cygpath -am ../osgeo4w/lib/brotlicommon.lib) \
+	-D BROTLI_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D EXIV2_BUILD_SAMPLES=OFF \
+	-D EXIV2_ENABLE_INIH=OFF \
 	-D CMAKE_INSTALL_PREFIX=../install \
-	../..
+	../../$P-$V
 ninja
 ninja install
+cmakefix ../install
 
 cd ..
 
@@ -43,7 +49,7 @@ sdesc: "Image metadata library (runtime)"
 ldesc: "Image metadata library (runtime)"
 maintainer: JuergenFischer
 category: Libs
-requires: msvcrt2019 expat zlib libiconv
+requires: msvcrt2019 expat zlib libiconv brotli
 EOF
 
 cat <<EOF >$R/$P-devel/setup.hint
@@ -69,8 +75,8 @@ tar -C install -cjf $R/$P-tools/$P-tools-$V-$B.tar.bz2 --exclude "*.dll" bin
 tar -C install -cjf $R/$P-$V-$B.tar.bz2 --exclude "*.exe" bin
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 
-cp ../COPYING $R/$P-devel/$P-devel-$V-$B.txt
-cp ../COPYING $R/$P-tools/$P-tools-$V-$B.txt
-cp ../COPYING $R/$P-$V-$B.txt
+cp ../$P-$V/COPYING $R/$P-devel/$P-devel-$V-$B.txt
+cp ../$P-$V/COPYING $R/$P-tools/$P-tools-$V-$B.txt
+cp ../$P-$V/COPYING $R/$P-$V-$B.txt
 
 endlog

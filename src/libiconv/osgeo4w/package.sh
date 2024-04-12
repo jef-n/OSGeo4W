@@ -1,50 +1,36 @@
 export P=libiconv
-export V=1.16
+export V=1.17
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="libiconv libiconv-devel"
 
 source ../../../scripts/build-helpers
 
 startlog
 
 [ -f "$P-$V.tar.gz" ] || wget "https://ftp.gnu.org/pub/gnu/$P/$P-$V.tar.gz"
-[ -f "configure" ] || tar -C .. -xzf $P-$V.tar.gz --xform "s,^$P-$V,.,"
+[ -f "configure" ] || tar -C .. -xzf $P-$V.tar.gz
 
-if ! [ -x ar-lib ]; then
-	wget -O ar-lib "http://git.savannah.gnu.org/gitweb/?p=automake.git;a=blob_plain;f=lib/ar-lib;hb=HEAD"
-	chmod a+x ar-lib
-fi
+vsenv
 
-if ! [ -x compile ]; then
-	wget -O compile "http://git.savannah.gnu.org/gitweb/?p=automake.git;a=blob_plain;f=lib/compile;hb=HEAD"
-	chmod a+x compile
-fi
+cd ../$P-$V
 
-perl -i -pe "s/void libcharset_set_relocation_prefix/void LIBCHARSET_DLL_EXPORTED libcharset_set_relocation_prefix/" ../libcharset/include/libcharset.h
-
-vs2019env
-
-cd ..
-
-./configure \
+PATH=/bin:$PATH ./configure \
 	--host=x86_64-w64-mingw32 \
 	--prefix=$OSGEO4W_PWD/install \
-	CC="$OSGEO4W_PWD/compile cl -nologo" \
-	CFLAGS="-MD" \
-	CXX="$OSGEO4W_PWD/compile cl -nologo" \
-	CXXFLAGS="-MD" \
-	CPPFLAGS="-D_WIN32_WINNT=_WIN32_WINNT_WIN8" \
-       	LD="link" \
-	NM="dumpbin -symbols" \
+	 CC="$PWD/build-aux/compile cl -nologo"   CFLAGS="-MD" \
+	CXX="$PWD/build-aux/compile cl -nologo" CXXFLAGS="-MD" CPPFLAGS="-D_WIN32_WINNT=_WIN32_WINNT_WIN8" \
+	 AR="$PWD/build-aux/ar-lib lib" \
+         NM="dumpbin -symbols" \
+	LD="link" \
 	STRIP=":" \
-	AR="$OSGEO4W_PWD/ar-lib lib" \
 	RANLIB=":"
+
 make clean
+make
 # make check
 make install
-
-mkdir -p osgeo4w/install/bin
 
 R=$OSGEO4W_REP/x86_64/release/$P
 
@@ -77,6 +63,6 @@ requires: $P
 maintainer: $MAINTAINER
 EOF
 
-tar -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
+tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 
 endlog

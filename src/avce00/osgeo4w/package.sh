@@ -3,21 +3,22 @@ export V=2.0.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="avce00"
 
 source ../../../scripts/build-helpers
 
 startlog
 
 [ -f $P-$V.tar.gz ] || wget http://avce00.maptools.org/dl/$P-$V.tar.gz
-[ -f ../makefile.vc ] || tar -C .. -xzf  $P-$V.tar.gz --xform "s,^$P-$V,.,"
+[ -f ../makefile.vc ] || tar -C .. -xzf  $P-$V.tar.gz
 
-vs2019env
+vsenv
 
-cd ..
+cd ../$P-$V
 
 nmake /f makefile.vc
 
-cd osgeo4w
+cd ../osgeo4w
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R/$P-devel
@@ -52,7 +53,7 @@ cat <<EOF >$R/$P-$V-$B.txt
  DEALINGS IN THE SOFTWARE.
 EOF
 
-tar -C .. -cjf $R/$P-$V-$B.tar.bz2 \
+tar -C ../$P-$V -cjf $R/$P-$V-$B.tar.bz2 \
 	--xform "s,^,bin/," \
 	avcexport.exe \
 	avcimport.exe \

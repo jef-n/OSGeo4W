@@ -2,7 +2,8 @@ export P=qgis-ltr
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-devel qt5-oci qt5-oci-debug sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt5 python3-sip python3-pyqt-builder python3-devel python3-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-devel qscintilla-devel qt5-devel qwt-devel libspatialite-devel oci-devel qtkeychain-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel oci-devel qtwebkit-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel python3-pyqt-builder pdal pdal-devel grass8 draco-devel"
+export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-devel qt5-oci sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt5 python3-sip python3-pyqt-builder python3-devel python3-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-devel qscintilla-devel qt5-devel qwt-devel libspatialite-devel oci-devel qtkeychain-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel qtwebkit-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel pdal pdal-devel grass draco-devel"
+export PACKAGES="qgis-ltr qgis-ltr-common qgis-ltr-deps qgis-ltr-devel qgis-ltr-full qgis-ltr-full-free qgis-ltr-grass-plugin qgis-ltr-oracle-provider qgis-ltr-pdb qgis-ltr-server"
 
 : ${SITE:=qgis.org}
 : ${TARGET:=Release}
@@ -84,11 +85,12 @@ nextbinary
 
 	fetchenv osgeo4w/bin/o4w_env.bat
 
-	vs2019env
+	vsenv
 	cmakeenv
 	ninjaenv
+	ccacheenv
 
-	export BUILDNAME=$P-$V-$TARGET-VC16-x86_64
+	export BUILDNAME=$P-$V-$TARGET-VC17-x86_64
 	export BUILDDIR=$PWD/build
 	export INSTDIR=$PWD/install
 	export SRCDIR=$(cygpath -am ../qgis)
@@ -97,13 +99,13 @@ nextbinary
 
 	mkdir -p $BUILDDIR
 
-	fetchenv msvc-env.bat
+	unset PYTHONPATH
+	export INCLUDE="$(cygpath -aw $OSGEO4W_ROOT/apps/Qt5/include);$(cygpath -aw $OSGEO4W_ROOT/include);$INCLUDE"
+	export LIB="$(cygpath -aw $OSGEO4W_ROOT/apps/Qt5/lib);$(cygpath -aw $OSGEO4W_ROOT/lib);$LIB"
 
-	[ -f "$GRASS" ] || { echo GRASS not set; false; }
-	[ -d "$GRASS_PREFIX" ] || { echo no directory GRASS_PREFIX $GRASS_PREFIX; false; }
-	[ -d "$DBGHLP_PATH" ] || { echo no directory $DBGHLP_PATH $DBGHLP_PATH; false; }
-
+	export GRASS=$(cygpath -aw $O4W_ROOT/bin/grass*.bat)
 	export GRASS_VERSION=$(cmd /c $GRASS --config version | sed -e "s/\r//")
+	export GRASS_PREFIX=$(cmd /c $GRASS --config path | sed -e "s/\r//")
 
 	cd $BUILDDIR
 
@@ -139,7 +141,7 @@ nextbinary
 		-D WITH_CUSTOM_WIDGETS=TRUE \
 		-D CMAKE_BUILD_TYPE=$BUILDCONF \
 		-D CMAKE_CONFIGURATION_TYPES="$BUILDCONF" \
-		-D SETUPAPI_LIBRARY="$SETUPAPI_LIBRARY" \
+		-D SETUPAPI_LIBRARY="$(cygpath -am "/cygdrive/c/Program Files (x86)/Windows Kits/10/Lib/$UCRTVersion/um/x64/SetupAPI.Lib")" \
 		-D PROJ_INCLUDE_DIR=$(cygpath -am $O4W_ROOT/include) \
 		-D GEOS_LIBRARY=$(cygpath -am "$O4W_ROOT/lib/geos_c.lib") \
 		-D SQLITE3_LIBRARY=$(cygpath -am "$O4W_ROOT/lib/sqlite3_i.lib") \
@@ -215,6 +217,7 @@ nextbinary
 
 	echo INSTALL: $(date)
 	cmake --build $(cygpath -am $BUILDDIR) --target install --config $BUILDCONF
+	cmakefix $INSTDIR
 
 	echo PACKAGE: $(date)
 
@@ -240,7 +243,7 @@ nextbinary
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                postinstall-grass.bat >install/etc/postinstall/$P-grass-plugin.bat
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                preremove-grass.bat   >install/etc/preremove/$P-grass-plugin.bat
 
-	cp "$DBGHLP_PATH"/{dbghelp.dll,symsrv.dll} install/apps/$P
+	cp "/cygdrive/c/Program Files (x86)/Windows Kits/10/Debuggers/x64/"{dbghelp.dll,symsrv.dll} install/apps/$P
 
 	mv install/apps/$P/bin/qgis.exe install/bin/$P-bin.exe
 	cp qgis.vars                    install/bin/$P-bin.vars
@@ -262,7 +265,7 @@ sdesc: "QGIS (common; long term release)"
 ldesc: "QGIS (common; long term release)"
 maintainer: $MAINTAINER
 category: Libs
-requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl gdal libspatialite zlib libiconv libspatialindex qt5-libs qt5-qml qt5-tools qtwebkit-libs qca qwt-libs python3-sip python3-core python3-pyqt5 python3-psycopg2-binary python3-qscintilla python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-gdal python3-requests python3-plotly python3-pyproj python3-owslib qtkeychain-libs libzip opencl exiv2 hdf5 pdal pdal-libs
+requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl gdal libspatialite zlib libiconv libspatialindex qt5-libs qt5-qml qt5-tools qtwebkit-libs qca qwt-libs python3-sip python3-core python3-pyqt5 python3-psycopg2 python3-qscintilla python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-gdal python3-requests python3-plotly python3-pyproj python3-owslib qtkeychain-libs libzip opencl exiv2 hdf5 pdal pdal-libs
 external-source: $P
 EOF
 
@@ -405,7 +408,7 @@ sdesc: "GRASS plugin for QGIS (long term release)"
 ldesc: "GRASS plugin for QGIS (long term release)"
 maintainer: $MAINTAINER
 category: Libs
-requires: $P grass8
+requires: $P grass
 external-source: $P
 EOF
 
@@ -458,7 +461,7 @@ ldesc: "QGIS Desktop Full Free (meta package; long term release)
 without proprietary extensions"
 maintainer: $MAINTAINER
 category: Desktop
-requires: $P proj $P-grass-plugin python3-pyparsing python3-simplejson python3-shapely python3-matplotlib gdal-sosi python3-pygments qt5-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-setuptools python3-pillow python3-geopandas python3-geographiclib python3-pyserial python3-pypdf2 python3-reportlab python3-openpyxl python3-remotior-sensus saga9
+requires: $P proj $P-grass-plugin python3-pyparsing python3-simplejson python3-shapely python3-matplotlib gdal-sosi python3-pygments qt5-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-setuptools python3-pillow python3-geopandas python3-geographiclib python3-pyserial python3-pypdf2 python3-reportlab python3-openpyxl python3-remotior-sensus saga
 external-source: $P
 EOF
 
@@ -503,7 +506,6 @@ EOF
 
 	/bin/tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 \
 		osgeo4w/package.sh \
-		osgeo4w/msvc-env.bat \
 		osgeo4w/process.bat \
 		osgeo4w/designer.bat \
 		osgeo4w/python.bat \

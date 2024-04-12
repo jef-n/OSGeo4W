@@ -3,15 +3,16 @@ export V=1.9.3
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="libspatialindex libspatialindex-devel"
 
 source ../../../scripts/build-helpers
 
 startlog
 
 [ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://github.com/$P/$P/archive/$V.tar.gz
-[ -f ../CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz --xform s,$P-$V,.,
+[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz
 
-vs2019env
+vsenv
 cmakeenv
 ninjaenv
 
@@ -21,9 +22,10 @@ cd build
 cmake -G Ninja \
 	-D CMAKE_BUILD_TYPE=Release \
 	-D CMAKE_INSTALL_PREFIX=../install \
-	../..
+	../../$P-$V
 ninja
 ninja install
+cmakefix ../install
 
 cd ..
 
@@ -52,7 +54,7 @@ EOF
 tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 include lib
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 
-cp ../COPYING $R/$P-$V-$B.txt
-cp ../COPYING $R/$P-devel/$P-devel-$V-$B.txt
+cp ../$P-$V/COPYING $R/$P-$V-$B.txt
+cp ../$P-$V/COPYING $R/$P-devel/$P-devel-$V-$B.txt
 
 endlog

@@ -1,8 +1,9 @@
 export P=qscintilla
-export V=2.13.4
+export V=2.14.1
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="qt5-devel python3-devel python3-setuptools python3-pyqt5 python3-pyqt-builder"
+export BUILDDEPENDS="qt5-devel python3-devel python3-setuptools python3-pip python3-pyqt5 python3-pyqt-builder python3-pyqt5-sip"
+export PACKAGES="python3-qscintilla qscintilla qscintilla-devel"
 
 source ../../../scripts/build-helpers
 
@@ -16,7 +17,7 @@ export qsc=QScintilla_src-$V
 
 (
 	fetchenv osgeo4w/bin/o4w_env.bat
-	vs2019env
+	vsenv
 
 	export LIB="$LIB;$(cygpath -am osgeo4w/lib)"
 	export INCLUDE="$INCLUDE;$(cygpath -am osgeo4w/include)"
@@ -29,7 +30,8 @@ export qsc=QScintilla_src-$V
 
 	cd ../Python
 	cp pyproject-qt5.toml pyproject.toml
-	sip-install
+	pip3 install .
+	P=python3-qscintilla packagewheel
 )
 
 export R=$OSGEO4W_REP/x86_64/release/qt5/$P

@@ -1,8 +1,9 @@
 export P=proj-data
-export V=1.16
+export V=1.17
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="proj-data"
 
 source ../../../scripts/build-helpers
 

@@ -3,6 +3,7 @@ export V=0.11.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=base
+export PACKAGES="imposm3"
 
 export GO_MSI=go1.21.1.windows-amd64.msi
 
@@ -35,7 +36,7 @@ msysarch=msys2-base-x86_64-20230526.tar.xz
 
 	cmd.exe /c pacman --noconfirm -Syuu --needed
 
-	cmd="pacman --noconfirm -Sy --needed mingw-w64-x86_64-gcc mingw-w64-x86_64-leveldb"
+	cmd="pacman --noconfirm -Sy --needed mingw-w64-x86_64-gcc mingw-w64-x86_64-leveldb mingw-w64-x86_64-geos"
 	cmd.exe /c $cmd || cmd.exe /c $cmd || cmd.exe /c $cmd
 
 	export PATH="$PWD/msys64/mingw64/bin:$PATH:$PWD/go/Go/bin"
@@ -66,7 +67,7 @@ ldesc: "Imposm is an importer for OpenStreetMap data. It reads PBF files and
 imports the data into PostgreSQL/PostGIS. It can also automatically update the
 database with the latest changes from OSM."
 category: Commandline_Utilities
-requires: geos
+requires: 
 maintainer: $MAINTAINER
 EOF
 

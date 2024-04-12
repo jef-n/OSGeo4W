@@ -1,8 +1,9 @@
 export P=qca
-export V=2.3.1
+export V=2.3.8
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="qt5-devel openssl-devel"
+export PACKAGES="qca qca-devel"
 
 source ../../../scripts/build-helpers
 
@@ -12,17 +13,16 @@ startlog
 
 [ -f $P-$V.tar.xz ] || wget https://download.kde.org/stable/$P/$V/$P-$V.tar.xz
 [ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xJf $P-$V.tar.xz
-[ -f patched ] || {
+[ -f ../$P-$V/patched ] || {
 	patch -d ../$P-$V -p1 --dry-run <qca.diff
-	patch -d ../$P-$V -p1 <qca.diff
-	touch patched
+	patch -d ../$P-$V -p1 <qca.diff >../$P-$V/patched
 }
 
 mkdir -p install build
 export INSTDIR=$(cygpath -am install)
 
 (
-	vs2019env
+	vsenv
 	cmakeenv
 	ninjaenv
 
@@ -48,6 +48,7 @@ export INSTDIR=$(cygpath -am install)
 		../../$P-$V
 	cmake --build .
 	cmake --install .
+	cmakefix $INSTDIR
 )
 
 export R=$OSGEO4W_REP/x86_64/release/$P
@@ -93,6 +94,5 @@ tar -cvjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	apps/Qt5/lib/cmake/ \
 
 cd ..
-
 
 endlog

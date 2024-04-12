@@ -78,7 +78,7 @@ index ecb6e951f..4d6e04696 100644
      --with-opengl=windows \
      --with-bzlib \
 diff --git a/mswindows/osgeo4w/package.sh b/mswindows/osgeo4w/package.sh
-index c638c40ee..9350acc3a 100755
+index b3113292c..713396f3c 100755
 --- a/mswindows/osgeo4w/package.sh
 +++ b/mswindows/osgeo4w/package.sh
 @@ -110,29 +110,21 @@ DLLS="

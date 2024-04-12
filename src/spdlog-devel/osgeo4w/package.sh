@@ -1,8 +1,9 @@
 export P=spdlog-devel
-export V=1.10.0
+export V=1.13.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES=spdlog-devel
 
 source ../../../scripts/build-helpers
 
@@ -13,7 +14,7 @@ export p=${P%-devel}
 [ -d ../$p-$V ] || tar -C .. -xzf $p-$V.tar.gz
 
 (
-	vs2019env
+	vsenv
 	cmakeenv
 	ninjaenv
 
@@ -26,6 +27,7 @@ export p=${P%-devel}
 		../../$p-$V
 	cmake --build .
 	cmake --install .
+	cmakefix ../install
 )
 
 export R=$OSGEO4W_REP/x86_64/release/$P

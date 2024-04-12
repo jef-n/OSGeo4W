@@ -3,6 +3,7 @@ export V=manual
 export B=0
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="oci oci-devel"
 
 source ../../../scripts/build-helpers
 
@@ -48,8 +49,7 @@ EOF
 tar -cjf $R/$P-$V-$B.tar.bz2 \
 	--xform "s,basic/instantclient_${V//./_},bin," \
 	basic/instantclient_${V//./_}/oci.dll \
-	basic/instantclient_${V//./_}/oraociicus19.dll \
-	basic/instantclient_${V//./_}/oraons.dll
+	basic/instantclient_${V//./_}/oraociicus.dll
 
 tar -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	--xform "s,sdk/instantclient_${V//./_}/sdk/lib/msvc,lib," \

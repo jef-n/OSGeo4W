@@ -1,27 +1,23 @@
-export P=bzip2
+export P=bzip2-devel
 export V=1.0.8
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="bzip2-devel"
 
 source ../../../scripts/build-helpers
 
 startlog
 
-[ -f $P-$V.tar.gz ] || wget https://sourceware.org/pub/$P/$P-$V.tar.gz
-[ -f ../Makefile ] || tar -C .. -xzf  $P-$V.tar.gz --xform "s,^$P-$V,.,"
+p=${P%-devel}
+[ -f $p-$V.tar.gz ] || wget https://sourceware.org/pub/$p/$p-$V.tar.gz
+[ -f ../$p-$V/Makefile ] || tar -C .. -xzf $p-$V.tar.gz
 
-vs2019env
+vsenv
 
-cd ..
+cd ../$p-$V
 
 nmake /f makefile.msc
-
-P=$P-devel
-
-R=$OSGEO4W_REP/x86_64/release/$P
-
-mkdir -p $R
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R
@@ -42,6 +38,6 @@ EOF
 
 cp LICENSE $R/$P-$V-$B.txt
 
-tar -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
+tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 
 endlog

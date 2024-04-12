@@ -1,17 +1,18 @@
 export P=libharu
-export V=2.3.0
+export V=2.4.4
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="libpng-devel zlib-devel"
+export PACKAGES="libharu libharu-devel"
 
 source ../../../scripts/build-helpers
 
 startlog
 
-[ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://github.com/$P/$P/archive/RELEASE_${V//./_}.tar.gz
-[ -f ../CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz --xform "s,$P-RELEASE_${V//./_},.,"
+[ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://github.com/$P/$P/archive/refs/tags/v$V.tar.gz
+[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz
 
-vs2019env
+vsenv
 cmakeenv
 ninjaenv
 
@@ -25,9 +26,10 @@ cmake -G Ninja \
         -D ZLIB_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
         -D PNG_LIBRARY=$(cygpath -am ../osgeo4w/lib/libpng16.lib) \
         -D PNG_PNG_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
-	../..
+	../../$P-$V
 ninja
 ninja install
+cmakefix ../install
 
 cd ..
 
@@ -81,7 +83,7 @@ EOF
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 
-tar -C install -cjf $R/$P-$V-$B.tar.bz2 bin/libhpdf.dll
+tar -C install -cjf $R/$P-$V-$B.tar.bz2 bin/hpdf.dll
 
 tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	--exclude "lib/libpng16.lib" \

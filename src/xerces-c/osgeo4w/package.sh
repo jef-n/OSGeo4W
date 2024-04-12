@@ -1,17 +1,18 @@
 export P=xerces-c
-export V=3.2.3
+export V=3.2.5
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="xerces-c xerces-c-devel xerces-c-doc xerces-c-tools"
 
 source ../../../scripts/build-helpers
 
 startlog
 
-[ -f $P-$V.tar.gz ] || wget https://apache.lauf-forum.at//xerces/c/3/sources/$P-$V.tar.gz
-[ -f ../CMakeLists.txt ] || tar -C .. -xzf  $P-$V.tar.gz --xform "s,^$P-$V,.,"
+[ -f $P-$V.tar.gz ] || wget https://downloads.apache.org/xerces/c/${V%%.*}/sources/xerces-c-$V.tar.gz
+[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz
 
-vs2019env
+vsenv
 cmakeenv
 ninjaenv
 
@@ -21,9 +22,10 @@ cd build
 cmake -G Ninja \
 	-D CMAKE_BUILD_TYPE=Release \
 	-D CMAKE_INSTALL_PREFIX=../install \
-	../..
+	../../$P-$V
 ninja
 ninja install
+cmakefix ../install
 
 cd ..
 
@@ -65,18 +67,21 @@ external-source: $P
 maintainer: $MAINTAINER
 EOF
 
-cp ../LICENSE $R/$P-$V-$B.txt
-cp ../LICENSE $R/$P-devel/$P-devel-$V-$B.txt
-cp ../LICENSE $R/$P-tools/$P-tools-$V-$B.txt
-cp ../LICENSE $R/$P-doc/$P-doc-$V-$B.txt
+v=${V%.*}
+v=${v/./_}
+
+cp ../$P-$V/LICENSE $R/$P-$V-$B.txt
+cp ../$P-$V/LICENSE $R/$P-devel/$P-devel-$V-$B.txt
+cp ../$P-$V/LICENSE $R/$P-tools/$P-tools-$V-$B.txt
+cp ../$P-$V/LICENSE $R/$P-doc/$P-doc-$V-$B.txt
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 
 tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
-	bin/xerces-c_3_2.dll
+	bin/xerces-c_$v.dll
 
 tar -C install -cjf $R/$P-tools/$P-tools-$V-$B.tar.bz2 \
-	--exclude bin/xerces-c_3_2.dll \
+	--exclude bin/xerces-c_$v.dll \
 	bin
 
 tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \

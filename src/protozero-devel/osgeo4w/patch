@@ -1,0 +1,12 @@
+diff -ur protozero-1.7.1/CMakeLists.txt ../protozero-1.7.1/CMakeLists.txt
+--- protozero-1.7.1/CMakeLists.txt	2022-01-10 11:02:41.000000000 +0100
++++ ../protozero-1.7.1/CMakeLists.txt	2024-03-04 10:22:13.436722300 +0100
+@@ -137,7 +137,7 @@
+ 
+ #-----------------------------------------------------------------------------
+ 
+-add_subdirectory(doc)
++# add_subdirectory(doc)
+ 
+ if(BUILD_TESTING)
+     enable_testing()

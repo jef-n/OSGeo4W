@@ -2,7 +2,8 @@ export P=python3-lxml
 export V=pip
 export B=pip
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-pip python3-wheel python3-setuptools libxml2-devel libxslt-devel zlib-devel"
+export BUILDDEPENDS="python3-pip python3-wheel python3-setuptools python3-devel libxml2-devel libxslt-devel zlib-devel"
+export PACKAGES="python3-lxml"
 
 source ../../../scripts/build-helpers
 
@@ -17,6 +18,6 @@ EOF
 
 cp osgeo4w/lib/libxml2.lib osgeo4w/lib/xml2.lib
 
-adddepends="libxml2 libxslt" packagewheel
+adddepends="libxml2 libxslt" packagewheel --only-binary Cython
 
 endlog

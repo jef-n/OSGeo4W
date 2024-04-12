@@ -3,36 +3,41 @@ export V=5.212.0-alpha4
 export B="next qtwebkit-libs"
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="qt5-devel icu-devel python3-core sqlite3-devel libjpeg-turbo-devel libpng-devel zlib-devel libxml2-devel libwebp-devel libiconv-devel"
+export PACKAGES="qtwebkit-devel qtwebkit-libs qtwebkit-symbols"
 
 source ../../../scripts/build-helpers
 
 startlog
 
-			
 [ -f $P-$V.tar.xz ] || wget -q -O $P-$V.tar.xz https://github.com/$P/$P/releases/download/$P-$V/$P-$V.tar.xz
-[ -f ../CMakeLists.txt ] || tar -C .. -xJf $P-$V.tar.xz --xform "s,^$P-$V,.,"
-[ -f patched ] || {
-	patch -d .. -p1 --dry-run <$P.diff
-	patch -d .. -p1 <$P.diff
-	touch patched
+[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xJf $P-$V.tar.xz
+[ -f ../$P-$V/patched ] || {
+	patch -d ../$P-$V -p1 --dry-run <$P.diff
+	patch -d ../$P-$V -p1 <$P.diff >../$P-$V/patched
 }
 
 mkdir -p build install
 
 (
 	fetchenv osgeo4w/bin/o4w_env.bat
-	vs2019env
+	vsenv
 	cmakeenv
 	ninjaenv
 
-	# TODO install gperf and ruby into cygwin
-	type -p gperf
+        [ -x osgeo4w/bin/gperf.exe ] || {
+                [ -f gperf-3.0.1.zip ] || curl -O https://altushost-swe.dl.sourceforge.net/project/gnuwin32/gperf/3.0.1/gperf-3.0.1-bin.zip
+                unzip -p gperf-3.0.1-bin.zip bin/gperf.exe >osgeo4w/bin/gperf.exe
+                chmod a+rx osgeo4w/bin/gperf.exe
+        }
+
+	type -a gperf
 	type -p ruby
 	type -p python
 
-	cd build
-
+	export INCLUDE="$(cygpath -aw osgeo4w/include);$INCLUDE"
 	export LIB="$(cygpath -aw osgeo4w/lib);$LIB"
+
+	cd build
 
 	[ -f CMakeCache.txt ] || cmake -G Ninja \
 		-Wno-dev \
@@ -52,13 +57,16 @@ mkdir -p build install
 		-D PC_ICU_LIBRARY_DIRS="$(cygpath -am ../osgeo4w/lib)" \
 		-D PC_ICU_INCLUDE_DIRS="$(cygpath -am ../osgeo4w/include)" \
 		-D ICU_I18N_LIBRARY="$(cygpath -am ../osgeo4w/lib/icuin.lib)" \
-		../..
+		../../$P-$V
 	touch ../configured
 
 	[ -f ../built ] || ninja -k 10 || ninja
 	touch ../built
 
-	[ -f ../installed ] || ninja install
+	[ -f ../installed ] || {
+		ninja install
+		cmakefix ../install
+	}
 	touch ../installed
 )
 
@@ -79,8 +87,8 @@ tar -C install -cjf $R/$P-libs/$P-libs-$V-$B.tar.bz2 \
 	apps/Qt5/bin/ \
 	apps/Qt5/lib/qml/
 
-cp ../LICENSE.LGPLv21 $R/$P-libs/$P-libs-$V-$B.txt
-	
+cp ../$P-$V/LICENSE.LGPLv21 $R/$P-libs/$P-libs-$V-$B.txt
+
 cat <<EOF >$R/$P-devel/setup.hint
 sdesc: "WebKit for Qt5 (development)"
 ldesc: "WebKit for Qt5 (development)"
@@ -98,7 +106,7 @@ tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	apps/Qt5/lib/Qt5WebKit.lib \
 	apps/Qt5/lib/Qt5WebKitWidgets.lib
 
-cp ../LICENSE.LGPLv21 $R/$P-devel/$P-devel-$V-$B.txt
+cp ../$P-$V/LICENSE.LGPLv21 $R/$P-devel/$P-devel-$V-$B.txt
 
 cat <<EOF >$R/$P-symbols/setup.hint
 sdesc: "WebKit for Qt5 (symbols)"
@@ -113,7 +121,7 @@ tar -C install -cjf $R/$P-symbols/$P-symbols-$V-$B.tar.bz2 \
 	apps/Qt5/bin/Qt5WebKit.pdb \
 	apps/Qt5/bin/Qt5WebKitWidgets.pdb
 
-cp ../LICENSE.LGPLv21 $R/$P-symbols/$P-symbols-$V-$B.txt
+cp ../$P-$V/LICENSE.LGPLv21 $R/$P-symbols/$P-symbols-$V-$B.txt
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/$P.diff
 

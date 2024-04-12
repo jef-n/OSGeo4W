@@ -3,12 +3,13 @@ export V=manual
 export B=0
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="msodbcsql msodbcsql-devel"
 
 source ../../../scripts/build-helpers
 
 startlog
 
-wget -q -c -O $P.msi "https://go.microsoft.com/fwlink/?linkid=2214634"
+wget -q -c -O $P.msi "https://go.microsoft.com/fwlink/?linkid=2249006"
 
 msiexec /a $P.msi /qb "TARGETDIR=$(cygpath -aw extract)"
 

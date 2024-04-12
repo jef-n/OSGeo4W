@@ -1,8 +1,9 @@
 export P=minizip-ng-devel
-export V=3.0.2
+export V=4.0.4
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="zlib-devel xz-devel bzip2-devel"
+export PACKAGES="minizip-ng-devel"
 
 source ../../../scripts/build-helpers
 
@@ -10,9 +11,9 @@ startlog
 
 p=${P%-devel}
 [ -f $p-$V.tar.gz ] || wget -O $p-$V.tar.gz https://github.com/zlib-ng/$p/archive/refs/tags/$V.tar.gz
-[ -f ../$p-$V/CMakeLists.txt ] || tar -C .. -xzf  $p-$V.tar.gz
+[ -f ../$p-$V/CMakeLists.txt ] || tar -C .. -xzf $p-$V.tar.gz
 
-vs2019env
+vsenv
 cmakeenv
 ninjaenv
 
@@ -31,6 +32,7 @@ cmake -G Ninja \
 	../../$p-$V
 ninja
 ninja install
+cmakefix ../install
 
 cd ..
 
@@ -40,12 +42,12 @@ mkdir -p $R
 cat <<EOF >$R/setup.hint
 sdesc: "zip manipulation library (development)"
 category: Libs
-requires: zlib
+requires: zlib xz
 maintainer: $MAINTAINER
 EOF
 
 tar -C install -cjf $R/$P-$V-$B.tar.bz2 include lib
-cp ../$P-$V/LICENSE $R/$P-$V-$B.txt
+cp ../$p-$V/LICENSE $R/$P-$V-$B.txt
 tar      -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 
 endlog

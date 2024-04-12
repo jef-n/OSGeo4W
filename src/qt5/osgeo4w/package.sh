@@ -3,11 +3,11 @@ export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="openssl-devel sqlite3-devel zlib-devel libjpeg-turbo-devel libtiff-devel libpng-devel oci-devel libwebp-devel libmysql-devel zstd-devel libpq-devel icu-devel freetype-devel node"
+export PACKAGES="qt5-devel qt5-docs qt5-libs-symbols qt5-oci qt5-qml qt5-tools"
 
 # perl also used in openssl and libpq
 SBPERL=5.32.0.1
 PY2=2.7.18
-export VCSDK=10.0.20348.0
 
 source ../../../scripts/build-helpers
 
@@ -18,11 +18,17 @@ if ! [ -d ../qt5 ]; then
 	cd ../qt5
 	git checkout kde/5.15
 	perl init-repository
-	patch -p1 --dry-run <../osgeo4w/patch
-	patch -p1 <../osgeo4w/patch
 else
 	cd ../qt5
+	git submodule foreach git reset --hard
+	git submodule update --recursive
 fi
+
+# Fix for MSSQL change (https://github.com/qgis/QGIS/issues/50865)
+patch -p1 --dry-run <../osgeo4w/patch
+patch -p1 <../osgeo4w/patch
+
+chmod a+x gnuwin32/bin/*.exe
 
 export V=$(sed -ne "s/MODULE_VERSION *= *\([^ ]*\) *$/\1/p" qtbase/.qmake.conf)
 nextbinary qt5-libs
@@ -43,12 +49,13 @@ fi
 
 export PATH="$(cygpath -a py2):$PATH:/bin:/usr/bin"
 
-vs2019env
+vsenv
 cmakeenv
 ninjaenv
 
 # meet cute expectations
 cp osgeo4w/lib/sqlite3_i.lib osgeo4w/lib/sqlite3.lib
+for i in osgeo4w/lib/libwebp*.lib; do cp $i ${i/libwebp/webp}; done
 
 mkdir -p build install
 
@@ -57,26 +64,27 @@ cd build
 [ -f jom.exe ] || {
 	wget -q http://download.qt.io/official_releases/jom/jom_1_1_3.zip
 	unzip jom_1_1_3.zip jom.exe
+	chmod a+rx jom.exe
 }
 
 export DESTDIR=../install
 export APPDIR=$DESTDIR/apps/$P
 export O4W=../osgeo4w
-export INCLUDE="$(cygpath -aw $O4W/include);$INCLUDE"
-export LIB="$(cygpath -aw $O4W/lib);$LIB"
-
-# echo "INCLUDE:;$INCLUDE" | sed -e "s/;/\n  /g"
-# echo "LIB:;$LIB" | sed -e "s/;/\n  /g"
+export INCLUDE="$(cygpath -aw $O4W/include);$(cygpath -aw "$(find $VCINSTALLDIR -iname atlbase.h -printf '%h')");$INCLUDE"
+export LIB="$(cygpath -aw $O4W/lib);$(cygpath -aw "$(find $VCINSTALLDIR -path "*/x64/*" -iname atls.lib -printf '%h')");$LIB"
 
 [ -f ../installed ] || {
 	(
 		fetchenv ../perl/portableshell.bat /SETENV
 
-		export PATH=$O4W/apps/node:$PATH
+		export PATH=$(cygpath -a $O4W/apps/node):$PATH
 
-		cmd /c ..\\..\\qt5\\configure.bat -v \
+		cmd /c ..\\..\\$P\\configure.bat -v \
 			-opensource \
 			-confirm-license \
+			-release \
+			-force-debug-info \
+			-separate-debug-info \
 			-nomake tests \
 			-nomake examples \
 			-prefix $(cygpath -aw $APPDIR) \
@@ -93,26 +101,31 @@ export LIB="$(cygpath -aw $O4W/lib);$LIB"
 			-sql-psql \
 			-plugin-sql-oci \
 			-plugin-sql-mysql \
-			-force-debug-info \
 			-icu \
 			-mp
 
-		export PATH=$O4W/bin:$PATH
+		export PATH=$(cygpath -a $O4W/bin):$PATH
 
 		# build everything and maybe to the first error
-		[ -f ../built ] || ./jom /k || ./jom /j1
-		touch ../built
+		[ -f ../built ] || {
+			./jom /k || ./jom /j1
+			touch ../built
+			rm -f ../installed
+		}
 
-		[ -f ../installed ] || ./jom install
-		touch ../installed
+		[ -f ../installed ] || {
+			./jom install
+			cmakefix $DESTDIR
+			touch ../installed
+			rm -f /tmp/qt.files
+		}
 
-		rm -f /tmp/qt.files
 	)
 }
 
 cd ../install
 
-rm -f /tmp/{tools,libs,devel,symbols,docs,qml,oci}.{release,debug}
+rm -f /tmp/{tools,libs,devel,symbols,docs,qml,oci}
 
 [ -f /tmp/qt.files ] || find apps -type f >/tmp/qt.files
 rm -f /tmp/qt.unknown
@@ -120,19 +133,6 @@ rm -f /tmp/qt.unknown
 # classify files
 while read f; do
         e=${f##*.}
-
-	case "$e" in
-	exe|dll|pdb|prl|lib)
-		if [ -f "${f%d.$e}.$e" ]; then
-			v=debug
-		else
-			v=release
-		fi
-		;;
-	*)
-		v=release
-		;;
-	esac
 
         case "$e" in
         exe)
@@ -239,11 +239,6 @@ while read f; do
 			;;
 
 		apps/qt5/lib/metatypes/*_metatypes.json)
-			if [ -f "${f%d_metatypes.json}_metatypes.json" ]; then
-				v=debug
-			else
-				v=release
-			fi
 			;;
 
 		*)
@@ -254,13 +249,13 @@ while read f; do
 
         esac
 
-        echo $f >>/tmp/$p.$v
+        echo $f >>/tmp/$p
 done </tmp/qt.files
 
 set -x
 
 export R=$OSGEO4W_REP/x86_64/release/$P
-mkdir -p $R/$P-{devel,qml,qml-debug,tools,docs,libs,libs-symbols,libs-debug,libs-debug-symbols,oci,oci-debug}
+mkdir -p $R/$P-{devel,qml,tools,docs,libs,libs-symbols,oci}
 
 #
 # libs (files + ini bat + qt.conf)
@@ -309,23 +304,7 @@ tar -cjf $R/$P-libs/$P-libs-$V-$B.tar.bz2 \
 	../qt5.bat \
 	../qt5.conf \
 	.././qt5.conf \
-	-T /tmp/libs.release
-
-#
-# libs-debug
-#
-
-cat <<EOF >$R/$P-libs-debug/setup.hint
-sdesc: "Qt5 runtime libraries (debug version)"
-ldesc: "Qt5 runtime libraries (debug version)"
-maintainer: $MAINTAINER
-category: Libs
-requires: $P-libs
-external-source: $P
-EOF
-
-tar -cjf $R/$P-libs-debug/$P-libs-debug-$V-$B.tar.bz2 \
-	-T /tmp/libs.debug
+	-T /tmp/libs
 
 #
 # libs-symbols
@@ -341,23 +320,7 @@ external-source: $P
 EOF
 
 tar -cjf $R/$P-libs-symbols/$P-libs-symbols-$V-$B.tar.bz2 \
-	-T /tmp/symbols.release
-
-#
-# libs-debug-symbols
-#
-
-cat <<EOF >$R/$P-libs-debug-symbols/setup.hint
-sdesc: "Qt5 runtime libraries (debug version; symbol files)"
-ldesc: "Qt5 runtime libraries (debug version; symbol files)"
-maintainer: $MAINTAINER
-category: Libs
-requires: $P-libs-debug
-external-source: $P
-EOF
-
-tar -cjf $R/$P-libs-debug-symbols/$P-libs-debug-symbols-$V-$B.tar.bz2 \
-	-T /tmp/symbols.debug
+	-T /tmp/symbols
 
 #
 # oci
@@ -373,23 +336,8 @@ external-source: $P
 EOF
 
 tar -cjf $R/$P-oci/$P-oci-$V-$B.tar.bz2 \
-	-T /tmp/oci.release
+	-T /tmp/oci
 
-#
-# sql oci debug
-#
-
-cat <<EOF >$R/$P-oci-debug/setup.hint
-sdesc: "Qt5 OCI SQL plugin (debug version)"
-ldesc: "Qt5 OCI SQL plugin (debug version)"
-maintainer: $MAINTAINER
-category: Libs
-requires: $P-libs-debug oci
-external-source: $P
-EOF
-
-tar -cjf $R/$P-oci-debug/$P-oci-debug-$V-$B.tar.bz2 \
-	-T /tmp/oci.debug
 
 #
 # tools
@@ -404,9 +352,8 @@ requires: $P-libs
 external-source: $P
 EOF
 
-! [ -f /tmp/tools.debug ]
 tar -cjf $R/$P-tools/$P-tools-$V-$B.tar.bz2 \
-	-T /tmp/tools.release
+	-T /tmp/tools
 
 #
 # devel
@@ -417,13 +364,12 @@ sdesc: "Qt5 headers and libraries (Development)"
 ldesc: "Qt5 headers and libraries (Development)"
 maintainer: $MAINTAINER
 category: Libs
-requires: $P-libs $P-libs-debug
+requires: $P-libs
 external-source: $P
 EOF
 
 tar -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
-	-T /tmp/devel.release \
-	-T /tmp/devel.debug
+	-T /tmp/devel
 
 #
 # documentation (TODO; requires sphinx for Python2?)
@@ -438,9 +384,8 @@ requires:
 external-source: $P
 EOF
 
-! [ -f /tmp/docs.debug ]
 tar -cjf $R/$P-docs/$P-docs-$V-$B.tar.bz2 \
-	-T /tmp/docs.release
+	-T /tmp/docs
 
 #
 # QtQuick / QML
@@ -456,19 +401,7 @@ external-source: $P
 EOF
 
 tar -cjf $R/$P-qml/$P-qml-$V-$B.tar.bz2 \
-	-T /tmp/qml.release
-
-cat <<EOF >$R/$P-qml-debug/setup.hint
-sdesc: "Qt5 QML (debug)"
-ldesc: "Qt5 QML (debug)"
-maintainer: $MAINTAINER
-category: Libs
-requires: $P-libs-debug
-external-source: $P
-EOF
-
-tar -cjf $R/$P-qml-debug/$P-qml-debug-$V-$B.tar.bz2 \
-	-T /tmp/qml.debug
+	-T /tmp/qml
 
 #
 # source
@@ -482,7 +415,7 @@ tar -cjf $R/$P-$V-$B-src.tar.bz2 \
 # license
 #
 
-for i in devel qml qml-debug tools docs libs libs-symbols libs-debug libs-debug-symbols oci oci-debug; do
+for i in devel qml tools docs libs libs-symbols oci; do
 	cp ../../$P/LICENSE.GPLv3 $R/$P-$i/$P-$i-$V-$B.txt
 done
 
@@ -490,7 +423,7 @@ done
 # check
 #
 
-for i in devel qml qml-debug tools docs libs libs-symbols libs-debug libs-debug-symbols oci oci-debug; do
+for i in devel qml tools docs libs libs-symbols oci; do
 	tar -tjf $R/$P-$i/$P-$i-$V-$B.tar.bz2
 done >/tmp/qt.installed
 

@@ -1,19 +1,19 @@
-diff -ur qwt-6.1.6/qwtbuild.pri ../qwt-6.1.6/qwtbuild.pri
---- qwt-6.1.6/qwtbuild.pri	2020-12-28 12:14:02.671245300 +0100
-+++ ../qwt-6.1.6/qwtbuild.pri	2022-04-21 20:33:24.455480900 +0200
-@@ -29,8 +29,7 @@
+diff -ur qwt-6.2.0/qwtbuild.pri ../qwt-6.2.0/qwtbuild.pri
+--- qwt-6.2.0/qwtbuild.pri	2021-07-18 13:19:33.656367800 +0200
++++ ../qwt-6.2.0/qwtbuild.pri	2024-03-11 15:38:38.505616000 +0100
+@@ -54,7 +54,8 @@
      # might need a debug version.
      # Enable debug_and_release + build_all if you want to build both.
  
 -    CONFIG           += debug_and_release
--    CONFIG           += build_all
 +    CONFIG           += release
++    CONFIG           += force_symbol_info
+     CONFIG           += build_all
  }
  else {
- 
-diff -ur qwt-6.1.6/qwtconfig.pri ../qwt-6.1.6/qwtconfig.pri
---- qwt-6.1.6/qwtconfig.pri	2020-12-28 12:14:02.675245400 +0100
-+++ ../qwt-6.1.6/qwtconfig.pri	2022-04-21 20:34:24.554229200 +0200
+diff -ur qwt-6.2.0/qwtconfig.pri ../qwt-6.2.0/qwtconfig.pri
+--- qwt-6.2.0/qwtconfig.pri	2021-07-18 13:19:33.656367800 +0200
++++ ../qwt-6.2.0/qwtconfig.pri	2024-03-11 14:32:12.065451300 +0100
 @@ -24,13 +24,13 @@
  }
  
@@ -60,7 +60,7 @@ diff -ur qwt-6.1.6/qwtconfig.pri ../qwt-6.1.6/qwtconfig.pri
  
  ######################################################################
  # Build the static/shared libraries.
-@@ -163,13 +163,3 @@
+@@ -166,13 +166,3 @@
  
      QWT_CONFIG += QwtFramework
  }
@@ -72,68 +72,46 @@ diff -ur qwt-6.1.6/qwtconfig.pri ../qwt-6.1.6/qwtconfig.pri
 -
 -unix {
 -
--    #QWT_CONFIG     += QwtPkgConfig
+-    QWT_CONFIG     += QwtPkgConfig
 -}
-diff -ur qwt-6.1.6/src/qwt_null_paintdevice.cpp ../qwt-6.1.6/src/qwt_null_paintdevice.cpp
---- qwt-6.1.6/src/qwt_null_paintdevice.cpp	2020-12-28 12:14:02.367238900 +0100
-+++ ../qwt-6.1.6/src/qwt_null_paintdevice.cpp	2022-04-21 20:33:24.462482000 +0200
-@@ -11,6 +11,7 @@
- #include <qpaintengine.h>
- #include <qpainterpath.h>
- #include <qpixmap.h>
-+#include <qpainterpath.h>
- 
- class QwtNullPaintDevice::PrivateData
- {
-diff -ur qwt-6.1.6/src/qwt_painter.cpp ../qwt-6.1.6/src/qwt_painter.cpp
---- qwt-6.1.6/src/qwt_painter.cpp	2020-12-28 12:14:02.555242800 +0100
-+++ ../qwt-6.1.6/src/qwt_painter.cpp	2022-04-21 20:33:24.465482900 +0200
-@@ -28,6 +28,7 @@
- #include <qpaintengine.h>
- #include <qapplication.h>
- #include <qdesktopwidget.h>
-+#include <qpainterpath.h>
- 
- #if QT_VERSION >= 0x050000
- #include <qwindow.h>
-diff -ur qwt-6.1.6/src/qwt_painter.h ../qwt-6.1.6/src/qwt_painter.h
---- qwt-6.1.6/src/qwt_painter.h	2020-12-28 12:14:01.119212800 +0100
-+++ ../qwt-6.1.6/src/qwt_painter.h	2022-04-21 20:33:24.468485500 +0200
-@@ -17,6 +17,7 @@
- #include <qpen.h>
- #include <qline.h>
+diff -ur qwt-6.2.0/src/qwt_painter.h ../qwt-6.2.0/src/qwt_painter.h
+--- qwt-6.2.0/src/qwt_painter.h	2021-07-18 13:19:31.748327500 +0200
++++ ../qwt-6.2.0/src/qwt_painter.h	2024-03-11 14:34:22.619547700 +0100
+@@ -15,6 +15,7 @@
  #include <qpalette.h>
+ #include <qpolygon.h>
+ #include <qpen.h>
 +#include <qpainterpath.h>
  
- class QPainter;
- class QBrush;
-@@ -31,7 +32,6 @@
- class QwtInterval;
- 
+ class QwtScaleMap;
+ class QwtColorMap;
+@@ -28,7 +29,6 @@
+ class QFontMetrics;
+ class QFontMetricsF;
  class QTextDocument;
 -class QPainterPath;
  
  /*!
-   \brief A collection of QPainter workarounds
-diff -ur qwt-6.1.6/src/qwt_plot_renderer.cpp ../qwt-6.1.6/src/qwt_plot_renderer.cpp
---- qwt-6.1.6/src/qwt_plot_renderer.cpp	2020-12-28 12:14:02.435240300 +0100
-+++ ../qwt-6.1.6/src/qwt_plot_renderer.cpp	2022-04-21 20:33:24.470484500 +0200
-@@ -35,6 +35,7 @@
- #endif
+    \brief A collection of QPainter workarounds
+diff -ur qwt-6.2.0/src/qwt_plot_renderer.cpp ../qwt-6.2.0/src/qwt_plot_renderer.cpp
+--- qwt-6.2.0/src/qwt_plot_renderer.cpp	2021-07-18 13:19:33.316360600 +0200
++++ ../qwt-6.2.0/src/qwt_plot_renderer.cpp	2024-03-11 14:28:41.517310600 +0100
+@@ -34,6 +34,7 @@
+ #define QWT_FORMAT_SVG 1
  #endif
  #endif
 +#include <qpainterpath.h>
  
  #ifndef QT_NO_PRINTER
  #define QWT_FORMAT_PDF 1
-diff -ur qwt-6.1.6/src/qwt_widget_overlay.cpp ../qwt-6.1.6/src/qwt_widget_overlay.cpp
---- qwt-6.1.6/src/qwt_widget_overlay.cpp	2020-12-28 12:14:02.479241300 +0100
-+++ ../qwt-6.1.6/src/qwt_widget_overlay.cpp	2022-04-21 20:33:24.472484600 +0200
-@@ -14,6 +14,7 @@
+diff -ur qwt-6.2.0/src/qwt_widget_overlay.cpp ../qwt-6.2.0/src/qwt_widget_overlay.cpp
+--- qwt-6.2.0/src/qwt_widget_overlay.cpp	2021-07-18 13:19:33.364361700 +0200
++++ ../qwt-6.2.0/src/qwt_widget_overlay.cpp	2024-03-11 14:28:41.529374900 +0100
+@@ -15,6 +15,7 @@
  #include <qpainterpath.h>
  #include <qimage.h>
  #include <qevent.h>
 +#include <qpainterpath.h>
  
- static QImage::Format qwtMaskImageFormat()
- {
+ #include <cstdlib>
+ 

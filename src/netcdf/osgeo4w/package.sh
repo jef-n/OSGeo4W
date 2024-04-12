@@ -2,7 +2,8 @@ export P=netcdf
 export V=4.9.2
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="hdf4-devel hdf5-devel curl-devel zlib-devel hdf5-tools szip-devel"
+export BUILDDEPENDS="hdf4-devel hdf5-devel curl-devel zlib-devel hdf5-tools szip-devel bzip2-devel zstd-devel libxml2-devel"
+export PACKAGES="netcdf netcdf-devel netcdf-tools"
 
 source ../../../scripts/build-helpers
 
@@ -39,7 +40,7 @@ EOF
 	touch ../$P-c-$V/patched
 fi
 
-vs2019env
+vsenv
 cmakeenv
 ninjaenv
 
@@ -49,16 +50,28 @@ cd build
 cmake -G Ninja \
 	-D CMAKE_BUILD_TYPE=Release \
 	-D CMAKE_INSTALL_PREFIX=$(cygpath -aw ../install) \
-	-D CMAKE_MODULE_PATH='${CMAKE_ROOT}/cmake/modules/ ${CMAKE_SOURCE_DIR}/cmake/modules/ ${CMAKE_SOURCE_DIR}/cmake/modules/windows' \
+	-D CMAKE_MODULE_PATH='${CMAKE_ROOT}/cmake/modules/;${CMAKE_SOURCE_DIR}/cmake/modules/;${CMAKE_SOURCE_DIR}/cmake/modules/windows' \
 	-D HDF5_DIR=$(cygpath -am ../osgeo4w/share/cmake) \
 	-D HDF5_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D CURL_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D CURL_LIBRARY=$(cygpath -am ../osgeo4w/lib/libcurl.lib) \
 	-D ZLIB_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D ZLIB_LIBRARY=$(cygpath -am ../osgeo4w/lib/zlib.lib) \
+	-D Zstd_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
+	-D Zstd_LIBRARIES=$(cygpath -am ../osgeo4w/lib/zstd.lib) \
+	-D BZip2_LIBRARIES=$(cygpath -am ../osgeo4w/lib/libbz2.lib) \
+	-D BZip2_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
+	-D Szip_LIBRARIES=$(cygpath -am ../osgeo4w/lib/szip.lib) \
+	-D Szip_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
+	-D LIBXML2_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/libxml2) \
+	-D LIBXML2_LIBRARY=$(cygpath -am ../osgeo4w/lib/libxml2.lib) \
+	-D ENABLE_MMAP=OFF \
+	-D BUILD_EXAMPLES=OFF \
+	-D PACKAGE_PREFIX_DIR=$(cygpath -am ../osgeo4w/cmake) \
 	../../$P-c-$V
-ninja
-ninja install
+cmake --build .
+cmake --build . --target install
+cmakefix ../install
 
 cd ..
 

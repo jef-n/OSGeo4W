@@ -1,17 +1,24 @@
-export P=libkml
+export P=libkml-devel
 export V=1.3.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="zlib-devel expat-devel boost-devel"
+export BUILDDEPENDS="zlib-devel expat-devel boost-devel uriparser-devel"
+export PACKAGES="libkml-devel"
 
 source ../../../scripts/build-helpers
 
 startlog
 
-[ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://github.com/$P/$P/archive/$V.tar.gz
-[ -f ../CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz --xform "s,^$P-$V,.,"
+p=${P%-devel}
+[ -f $p-$V.tar.gz ] || wget -O $p-$V.tar.gz https://github.com/$p/$p/archive/$V.tar.gz
+[ -f ../$p-$V/CMakeLists.txt ] || tar -C .. -xzf $p-$V.tar.gz
+[ -f ../$p-$V/patched ] || {
+	patch -p1 -d ../$p-$V --dry-run <patch
+	patch -p1 -d ../$p-$V <patch
+	touch ../$p-$V/patched
+}
 
-vs2019env
+vsenv
 cmakeenv
 ninjaenv
 
@@ -21,44 +28,45 @@ export EP_BASE=$(cygpath -am external)
 
 cd build
 
-export CC=cl.exe
-export CXX=cl.exe
-
 cmake -G Ninja \
 	-D CMAKE_BUILD_TYPE=Release \
 	-D CMAKE_INSTALL_PREFIX=../install \
 	-D BUILD_SHARED_LIBS=OFF \
+	-D CMAKE_CXX_FLAGS="/DWIN32 /D_WINDOWS /W3 /GR /EHsc /DURI_STATIC_BUILD" \
+	-D CMAKE_C_FLAGS="/DWIN32 /D_WINDOWS /W3 /DURI_STATIC_BUILD" \
 	-D EXPAT_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D EXPAT_LIBRARY=$(cygpath -am ../osgeo4w/lib/libexpat.lib) \
 	-D ZLIB_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D ZLIB_LIBRARY=$(cygpath -am ../osgeo4w/lib/zlib.lib) \
-	-D Boost_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/boost-1_74) \
-	../..
-ninja
-ninja install
+	-D URIPARSER_LIBRARY=$(cygpath -am ../osgeo4w/lib/uriparser.lib) \
+	-D URIPARSER_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/uriparser) \
+	-D Boost_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/boost-1_84) \
+	../../$p-$V
+cmake --build .
+cmake --build . --target install
+cmakefix ../install
 
 cd ..
 
-export R=$OSGEO4W_REP/x86_64/release/$P-devel
+export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R
 
 cat <<EOF >$R/setup.hint
 sdesc: "LibKML (Development)"
 ldesc: " LibKML (Development)"
 category: Libs
-requires: boost-devel
+requires: boost-devel uriparser-devel
 maintainer: $MAINTAINER
 EOF
 
-tar -C install -cjf $R/$P-devel-$V-$B.tar.bz2 \
+tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
 	cmake \
 	include/kml \
 	include/minizip \
-	include/uriparser \
 	lib
 
-cp ../COPYING $R/$P-devel-$V-$B.txt
+cp ../$p-$V/COPYING $R/$P-$V-$B.txt
 
-tar -C .. -cjf $R/$P-devel-$V-$B-src.tar.bz2 osgeo4w/package.sh
+tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 
 endlog

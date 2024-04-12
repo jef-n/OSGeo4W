@@ -3,21 +3,22 @@ export V=1.1.2
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="setup"
 
-export ZLIB_VER=1.2.11
-export BZIP2_VER=1.0.6
+export ZLIB_VER=1.3.1
+export BZIP2_VER=1.0.8
 
 source ../../../scripts/build-helpers
 
 startlog
 
-vs2019env
+vsenv
 cmakeenv
 ninjaenv
 
 [ -f zlib-${ZLIB_VER}.tar.gz ] || wget https://www.zlib.net/zlib-${ZLIB_VER}.tar.gz
 [ -d zlib-${ZLIB_VER} ] || tar xzf zlib-${ZLIB_VER}.tar.gz
-[ -f bzip2-${BZIP2_VER}.tar.gz ] || wget -O bzip2-${BZIP2_VER}.tar.gz https://sourceforge.net/projects/bzip2/files/bzip2-${BZIP2_VER}.tar.gz/download
+[ -f bzip2-${BZIP2_VER}.tar.gz ] || wget -O bzip2-${BZIP2_VER}.tar.gz https://sourceware.org/pub/bzip2/bzip2-${BZIP2_VER}.tar.gz
 [ -d bzip2-${BZIP2_VER} ] || tar xzf bzip2-${BZIP2_VER}.tar.gz
 
 mkdir -p build install
@@ -65,19 +66,18 @@ textreplace -std -t bin\setup.bat
 EOF
 
 cat <<EOF >install/etc/preremove/$P.bat
-del "%OSGEO4W_STARTMENU%\Setup.lnk"
-del "%OSGEO4W_DESKTOP%\Setup.lnk"
+del "%OSGEO4W_STARTMENU%\\Setup.lnk"
+del "%OSGEO4W_DESKTOP%\\Setup.lnk"
 EOF
 
 cat <<EOF >install/bin/setup.bat.tmpl
-@copy "@osgeo4w@\bin\osgeo4w-setup.exe" "@osgeo4w@\bin\osgeo4w-setup-work.exe"
-@start /B "Running Setup" "@osgeo4w@\bin\osgeo4w-setup-work.exe" -R "@osgeo4w@" %*
+@copy "@osgeo4w@\\bin\\osgeo4w-setup.exe" "@osgeo4w@\\bin\\osgeo4w-setup-work.exe"
+@start /B "Running Setup" "@osgeo4w@\\bin\\osgeo4w-setup-work.exe" -R "@osgeo4w@" %*
 EOF
 
 rm -f install/bin/osgeo4w-setup.exe
 
 if [ -f OSGeo_DigiCert_Signing_Cert.p12 -a -f OSGeo_DigiCert_Signing_Cert.pass ]; then
-
 	osslsigncode sign \
 		-pkcs12 OSGeo_DigiCert_Signing_Cert.p12 \
 		-pass $(<OSGeo_DigiCert_Signing_Cert.pass) \

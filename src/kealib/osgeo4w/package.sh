@@ -1,8 +1,9 @@
 export P=kealib
-export V=1.4.14
+export V=1.5.3
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="base hdf5-devel hdf5-tools"
+export PACKAGES="kealib kealib-devel"
 
 source ../../../scripts/build-helpers
 
@@ -11,17 +12,10 @@ startlog
 [ -f $P-$V.tar.gz ] || wget https://github.com/ubarsc/$P/releases/download/$P-$V/$P-$V.tar.gz
 [ -d ../$P-$V ] || tar -C .. -xzf $P-$V.tar.gz
 
-find $(find osgeo4w -name cmake) -type f | \
-        xargs sed -i \
-                -e 's#.:/src/osgeo4w/src/[^/]*/osgeo4w/install/#\$ENV{OSGEO4W_ROOT}/#g' \
-                -e 's#.:/src/osgeo4w/src/[^/]*/osgeo4w/osgeo4w/#\$ENV{OSGEO4W_ROOT}/#g' \
-                -e 's#.:\\\\src\\\\osgeo4w\\\\src\\\\[^\\]*\\\\osgeo4w\\\\osgeo4w\\\\#\$ENV{OSGEO4W_ROOT}\\\\#g' \
-                -e 's#.:\\\\src\\\\osgeo4w\\\\src\\\\[^\\]*\\\\osgeo4w\\\\install\\\\#\$ENV{OSGEO4W_ROOT}\\\\#g'
-
 (
 	fetchenv osgeo4w/bin/o4w_env.bat
 
-	vs2019env
+	vsenv
 	cmakeenv
 	ninjaenv
 
@@ -34,11 +28,11 @@ find $(find osgeo4w -name cmake) -type f | \
 	cmake -G Ninja \
 		-D CMAKE_BUILD_TYPE=Release \
 		-D CMAKE_INSTALL_PREFIX=../install \
-		-D CMAKE_MODULE_PATH=$(cygpath -am osgeo4w/share/cmake) \
 		../../$P-$V
 
 	cmake --build .
 	cmake --build . --target install
+	cmakefix ../install
 )
 
 export R=$OSGEO4W_REP/x86_64/release/$P

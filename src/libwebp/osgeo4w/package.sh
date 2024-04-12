@@ -2,9 +2,11 @@ export P=libwebp
 export V=1.3.2
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="libtiff-devel libpng-devel libjpeg-turbo-devel zlib-devel"
+export BUILDDEPENDS="libpng-devel libjpeg-turbo-devel zlib-devel"
+export PACKAGES="libwebp libwebp-devel libwebp-tools"
 
 source ../../../scripts/build-helpers
+
 
 startlog
 
@@ -12,17 +14,21 @@ startlog
 [ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz
 
 (
-	vs2019env
+	vsenv
 	cmakeenv
 	ninjaenv
 
 	mkdir -p build install
 	cd build
 
+# BUILDDEPENDS="libtiff-devel"
+#		-D TIFF_LIBRARY=$(cygpath -am ../osgeo4w/lib/tiff.lib) \
+#		-D TIFF_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
+#		-D CMAKE_C_FLAGS_RELEASE="/MD /O2 /Ob2 /DNDEBUG /DWEBP_EXTERN=__declspec(dllexport) /DWEBP_DLL" \
+
 	cmake -G Ninja \
 		-D CMAKE_BUILD_TYPE=Release \
 		-D CMAKE_INSTALL_PREFIX=../install \
-		-D CMAKE_C_FLAGS_RELEASE="/MD /O2 /Ob2 /DNDEBUG /DWEBP_EXTERN=__declspec(dllexport) /DWEBP_DLL" \
 		-D WEBP_BUILD_EXTRAS=OFF \
 		-D BUILD_SHARED_LIBS=ON \
 		-D ZLIB_LIBRARY=$(cygpath -am ../osgeo4w/lib/zlib.lib) \
@@ -31,12 +37,11 @@ startlog
 		-D PNG_PNG_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 		-D JPEG_LIBRARY=$(cygpath -am ../osgeo4w/lib/jpeg.lib) \
 		-D JPEG_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
-		-D TIFF_LIBRARY=$(cygpath -am ../osgeo4w/lib/tiff.lib) \
-		-D TIFF_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 		../../$P-$V
 
 	cmake --build .
 	cmake --install . || cmake --install .
+	cmakefix ../install
 )
 
 export R=$OSGEO4W_REP/x86_64/release/$P

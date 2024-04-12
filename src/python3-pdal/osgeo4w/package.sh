@@ -3,6 +3,7 @@ export V=3.2.3
 export B=pip
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-pip python3-wheel python3-devel python3-setuptools python3-numpy python3-pybind11 python3-packaging python3-pyparsing pdal-devel"
+export PACKAGES="python3-pdal"
 
 source ../../../scripts/build-helpers
 
@@ -24,7 +25,7 @@ cd $OSGEO4W_PWD
 
 fetchenv osgeo4w/bin/o4w_env.bat
 
-vs2019env
+vsenv
 cmakeenv
 ninjaenv
 
@@ -35,7 +36,7 @@ EOF
 
 export INCLUDE="$(cygpath -am osgeo4w/include);\$INCLUDE"
 export LIB="$(cygpath -am osgeo4w/lib);\$LIB"
-export CMAKE_PREFIX_PATH="$(cygpath -am osgeo4w/apps/Python39/Lib/site-packages/pybind11)"
+export CMAKE_PREFIX_PATH="$(cygpath -am osgeo4w/apps/$PYTHON/Lib/site-packages/pybind11)"
 
 cd ../pdalextension
 

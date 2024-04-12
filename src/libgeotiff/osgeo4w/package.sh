@@ -3,6 +3,7 @@ export V=1.7.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="proj-devel libtiff-devel"
+export PACKAGES="libgeotiff libgeotiff-devel"
 
 source ../../../scripts/build-helpers
 
@@ -11,7 +12,7 @@ startlog
 [ -f $P-$V.tar.gz ] || wget http://download.osgeo.org/geotiff/$P/$P-$V.tar.gz
 [ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz
 
-vs2019env
+vsenv
 cmakeenv
 ninjaenv
 
@@ -29,6 +30,7 @@ cmake -G Ninja \
 	../../$P-$V
 ninja
 ninja install
+cmakefix ../install
 
 cd ..
 
@@ -52,8 +54,8 @@ external-source: $P
 maintainer: $MAINTAINER
 EOF
 
-cp ../$P-$V/COPYING $R/$P-$V-$B.txt
-cp ../$P-$V/COPYING $R/$P-devel/$P-devel-$V-$B.txt
+cp ../$P-$V/LICENSE $R/$P-$V-$B.txt
+cp ../$P-$V/LICENSE $R/$P-devel/$P-devel-$V-$B.txt
 
 tar -C install -cjf $R/$P-$V-$B.tar.bz2 bin
 tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 include lib

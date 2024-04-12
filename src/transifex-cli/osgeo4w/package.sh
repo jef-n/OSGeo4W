@@ -1,8 +1,9 @@
 export P=transifex-cli
-export V=1.6.5
+export V=1.6.10
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="transifex-cli"
 
 export GO_MSI=go1.19.2.windows-amd64.msi
 
@@ -10,10 +11,8 @@ source ../../../scripts/build-helpers
 
 startlog
 
-[ -d ../$P  ] || git clone https://github.com/transifex/cli ../$P
-cd ../$P
-git checkout v$V
-cd ../osgeo4w
+[ -f "$P-$V.tar.gz" ] || curl -JL --output $P-$V.tar.gz https://github.com/${P/-//}/archive/refs/tags/v$V.tar.gz
+[ -f ../$P-$V ] || tar -C .. -xzf $P-$V.tar.gz --xform "s,cli-$V,$P-$V,"
 
 (
 	set -e
@@ -32,7 +31,7 @@ cd ../osgeo4w
 
 	export GOPATH=$(cygpath -aw ../Go)
 
-	cd ../$P
+	cd ../$P-$V
 	go build -o ../osgeo4w/tx.exe
 )
 
@@ -43,6 +42,7 @@ cat <<EOF >$R/setup.hint
 sdesc: "transifex command line client."
 ldesc: "transifex command line client."
 requires: 
+category: Commandline_Utilities
 maintainer: $MAINTAINER
 EOF
 
@@ -50,7 +50,7 @@ tar -cjf $R/$P-$V-$B.tar.bz2 \
 	--xform "s,tx.exe,bin/tx.exe," \
 	tx.exe
 
-cp ../$P/LICENSE $R/$P-$V-$B.txt
+cp ../$P-$V/LICENSE $R/$P-$V-$B.txt
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 

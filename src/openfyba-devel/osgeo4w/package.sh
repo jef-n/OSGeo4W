@@ -1,22 +1,26 @@
-export P=openfyba
-export V=20150103
-export B="next openfyba-devel"
+export P=openfyba-devel
+export V=tbd
+export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="openfyba-devel"
 
 source ../../../scripts/build-helpers
 
 startlog
 
-[ -f master.tar.gz ] || wget -q https://github.com/kartverket/fyba/archive/master.tar.gz
-[ -f ../CMakeLists.txt ] || tar -C .. -xzf master.tar.gz --xform "s,^fyba-master,.,"
+export V=$(date +%Y%m%d)
+
+p=${P%-devel}
+[ -f master.tar.gz ] || wget https://github.com/kartverket/fyba/archive/master.tar.gz
+[ -f ../$p-$V/CMakeLists.txt ] || tar -C .. -xzf master.tar.gz --xform "s,^fyba-master,$p-$V,"
 [ -f patched ] || {
-	patch -d .. -p1 --dry-run <diff
-	patch -d .. -p1 <diff
+	patch -d ../$p-$V -p1 --dry-run <diff
+	patch -d ../$p-$V -p1 <diff
 	touch patched
 }
 
-vs2019env
+vsenv
 cmakeenv
 ninjaenv
 
@@ -27,13 +31,12 @@ cd build
 cmake -G Ninja \
 	-D CMAKE_BUILD_TYPE=Release \
 	-D CMAKE_INSTALL_PREFIX=../install \
-	../..
+	../../$p-$V
 ninja
 ninja install
+cmakefix ../install
 
 cd ..
-
-P=$P-devel
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R

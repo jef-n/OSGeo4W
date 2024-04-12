@@ -3,6 +3,7 @@ export V=0.0.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES=api-ms-win-core-path-HACK
 
 source ../../../scripts/build-helpers
 
@@ -16,10 +17,10 @@ cd $P
 (
 	set -e
 
-	vs2019env
+	vsenv
 
 	set -x
-	devenv api-ms-win-core-path-blender.sln /Build "Release|x64"
+	msbuild.exe /p:PlatformToolset=v143,Platform=x64,Configuration=Release api-ms-win-core-path-blender.sln
 )
 
 cd ../osgeo4w
@@ -28,12 +29,12 @@ export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R
 
 cat <<EOF >$R/setup.hint
-sdesc: "Hack to make python 3.9 work on Windows 7"
+sdesc: "Hack to make python 3 work on Windows 7"
 ldesc: "This is an implementation of api-ms-win-core-path-l1-1-0.dll based on
 Wine code. Originally  made to run Blender 2.93 (specifically, Python 3.9) on Windows
 7."
 maintainer: $MAINTAINER
-category: Libraries
+category: Libs
 requires: msvcrt2019 base
 EOF
 

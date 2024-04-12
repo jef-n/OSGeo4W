@@ -3,6 +3,7 @@ export V=1.00
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="wingetopt-devel"
 
 source ../../../scripts/build-helpers
 
@@ -13,7 +14,7 @@ export p=${P%-devel}
 [ -f ../$p-$V/CMakeLists.txt ] || tar -C .. -xzf $p-$V.tar.gz
 
 (
-	vs2019env
+	vsenv
 	cmakeenv
 	ninjaenv
 
@@ -29,6 +30,7 @@ export p=${P%-devel}
 		../../$p-$V
 	cmake --build .
 	cmake --build . --target install
+	cmakefix ../install
 )
 
 export R=$OSGEO4W_REP/x86_64/release/$P

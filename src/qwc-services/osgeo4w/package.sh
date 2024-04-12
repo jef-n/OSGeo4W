@@ -3,7 +3,7 @@ export V=1.3.4
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-core python3-virtualenv"
-export PYTHON=Python39
+export PACKAGES="qwc-services"
 export SERVICENAME="Apache OSGeo4W Web server"
 
 source ../../../scripts/build-helpers
@@ -48,7 +48,7 @@ for repo in $REPOS; do
     fi
 done
 
-for i in qwc-ldap-auth qwc-config-generator qwc-admin-gui; do
+for i in qwc-admin-gui; do
 	patch -d $i -p1 --dry-run <../osgeo4w/$i.diff
 	patch -d $i -p1 <../osgeo4w/$i.diff
 done
@@ -1266,8 +1266,6 @@ EOF
 	set -e
 	fetchenv osgeo4w/bin/o4w_env.bat
 
-	cp osgeo4w/bin/libcrypto-1_1-x64.dll osgeo4w/bin/libssl-1_1-x64.dll osgeo4w/apps/Python39/DLLs
-
 	rm -fr venv
 
 	virtualenv venv
@@ -1276,7 +1274,7 @@ EOF
 	export PIP_LOG=$(cygpath -am pip.log)
 	savelog $PIP_LOG
 
-	pip install --ignore-installed --no-cache-dir \
+	pip3 install --ignore-installed --no-cache-dir \
 		Flask-WeasyPrint \
 		Flask==2.0.2 \
 		Flask-Bootstrap==3.3.7.1 \
@@ -1388,8 +1386,6 @@ tar -cjf $R/$P/$P-$V-$B-src.tar.bz2 \
 	-C .. \
 	osgeo4w/package.sh \
 	osgeo4w/diff \
-	osgeo4w/qwc-ldap-auth.diff \
-	osgeo4w/qwc-config-generator.diff \
 	osgeo4w/qwc-admin-gui.diff
 
 cp ../$P-core/LICENSE $R/$P/$P-$V-$B.txt

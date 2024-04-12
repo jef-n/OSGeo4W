@@ -1,29 +1,31 @@
 export P=boost
-export V=1.74.0
+export V=1.84.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="boost boost-devel"
 
 source ../../../scripts/build-helpers
 
 startlog
 
-[ -f ${P}_${V//./_}.tar.gz ] || wget -c https://dl.bintray.com/boostorg/release/$V/source/${P}_${V//./_}.tar.gz
-[ -f ../bootstrap.bat ] || tar -C .. -xzf ${P}_${V//./_}.tar.gz --xform "s,^${P}_${V//./_},.,"
-
-VCARCH=x86 vs2019env	# oddness: boost wants the 32bit tools even for 64-bit
+s=${P}_${V//./_}
+[ -f $s.tar.bz2 ] || wget -c https://boostorg.jfrog.io/artifactory/main/release/$V/source/$s.tar.bz2
+[ -f ../$s/bootstrap.bat ] || tar -C .. -xjf $s.tar.bz2
 
 mkdir -p build stage install
 
-cd ..
+vsenv
 
-cmd /c bootstrap vc142
+cd ../$s
+
+cmd /c bootstrap vc143
 
 ./b2 \
-	--build-dir=osgeo4w/build \
-	--stagedir=osgeo4w/stage \
+	--build-dir=../osgeo4w/build \
+	--stagedir=../osgeo4w/stage \
 	--build-type=minimal \
-	--toolset=msvc-14.2 \
+	--toolset=msvc-14.3 \
 	-j 4 \
 	address-model=64 \
 	architecture=x86 \
@@ -32,12 +34,14 @@ cmd /c bootstrap vc142
 	variant=release
 
 ./b2 install \
-	--exec-libdir=osgeo4w/install \
-	--libdir=osgeo4w/install/lib \
-	--includedir=osgeo4w/install/include \
-	--cmakedir=osgeo4w/install/share/cmake
+	--exec-libdir=../osgeo4w/install \
+	--libdir=../osgeo4w/install/lib \
+	--includedir=../osgeo4w/install/include \
+	--cmakedir=../osgeo4w/install/share/cmake
 
-cd osgeo4w
+cmakefix ../osgeo4w/install
+
+cd ../osgeo4w
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R/$P-devel
@@ -72,7 +76,7 @@ tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 
-cp ../LICENSE_1_0.txt $R/$P-$V-$B.txt
-cp ../LICENSE_1_0.txt $R/$P-devel/$P-devel-$V-$B.txt
+cp ../$s/LICENSE_1_0.txt $R/$P-$V-$B.txt
+cp ../$s/LICENSE_1_0.txt $R/$P-devel/$P-devel-$V-$B.txt
 
 endlog

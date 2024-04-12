@@ -1,28 +1,48 @@
 export P=opencl
-export V=2.0.10
+export V=2023.12.14
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="opencl opencl-devel"
 
 source ../../../scripts/build-helpers
 
 startlog
 
-[ -f $P-$V.tar.gz ] || wget -q -O $P-$V.tar.gz https://github.com/KhronosGroup/OpenCL-Headers/archive/master.tar.gz
-[ -f cl2.hpp ] || wget -O cl2.hpp https://github.com/KhronosGroup/OpenCL-CLHPP/releases/download/v$V/cl2.hpp
+p=OpenCL-SDK-v$V-Source
+[ -f $p.tar.gz ] || wget https://github.com/KhronosGroup/OpenCL-SDK/releases/download/v$V/$p.tar.gz
+[ -d ../$p ] || tar -C .. -xzf $p.tar.gz
 
-[ -d include ] || tar -xzvf $P-$V.tar.gz \
-	--xform s,OpenCL-Headers-master/LICENSE,LICENSE, \
-	--xform s,OpenCL-Headers-master/,include/, \
-	OpenCL-Headers-master/LICENSE \
-	OpenCL-Headers-master/CL/
-[ -f include/CL/cl2.hpp ] || cp cl2.hpp include/CL/
+vsenv
+cmakeenv
+ninjaenv
+
+mkdir -p build install
+
+cd build
+
+cmake -G Ninja \
+	-D CMAKE_BUILD_TYPE=Release \
+	-D CMAKE_INSTALL_PREFIX=$(cygpath -am ../install) \
+	-D BUILD_TESTING=OFF \
+	-D BUILD_DOCS=OFF \
+	-D BUILD_EXAMPLES=OFF \
+	-D BUILD_TESTS=OFF \
+	-D OPENCL_SDK_BUILD_SAMPLES=OFF \
+	-D OPENCL_SDK_TEST_SAMPLES=OFF \
+	../../$p
+
+cmake --build .
+cmake --build . --target install
+cmakefix ../install
+
+cd ..
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R/$P-devel
 
-cp LICENSE $R/$P-$V-$B.txt
-cp LICENSE $R/$P-devel/$P-devel-$V-$B.txt
+cp ../$p/LICENSE $R/$P-$V-$B.txt
+cp ../$p/LICENSE $R/$P-devel/$P-devel-$V-$B.txt
 
 cat <<EOF >$R/$P-devel/setup.hint
 sdesc: "KhronosGroup OpenCL development files"
@@ -41,31 +61,27 @@ category: Libs
 requires: 
 EOF
 
-mkdir -p etc/postinstall etc/preremove
+mkdir -p install/etc/{postinstall,preremove}
 
-cat <<EOF >etc/postinstall/$P.bat
-dllupdate -copy -reboot "%OSGEO4W_ROOT%\bin\opencl.dll"
-if exist %WINDIR%\system32\opencl.dll del "%OSGEO4W_ROOT%\bin\opencl.dll"
+cat <<EOF >install/etc/postinstall/$P.bat
+dllupdate -copy -reboot "%OSGEO4W_ROOT%\\bin\\opencl.dll"
+if exist %WINDIR%\\system32\\opencl.dll del "%OSGEO4W_ROOT%\\bin\\opencl.dll"
 EOF
 
-cat <<EOF >etc/preremove/$P.bat
-dllupdate -unref -reboot "%OSGEO4W_ROOT%\bin\opencl.dll"
+cat <<EOF >install/etc/preremove/$P.bat
+dllupdate -unref -reboot "%OSGEO4W_ROOT%\\bin\\opencl.dll"
 EOF
 
-tar -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
-	--xform s,opencl.lib,lib/opencl.lib, \
-	include/CL \
-	opencl.lib
+tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
+	include \
+	share \
+	lib
 
-tar -cjf $R/$P-$V-$B.tar.bz2 \
-	--xform s,opencl.dll,bin/opencl.dll, \
-	etc/postinstall/ \
-	etc/preremove/ \
-	opencl.dll
+tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
+	etc \
+	bin/opencl.dll
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 \
-	osgeo4w/package.sh \
-	osgeo4w/opencl.lib \
-	osgeo4w/opencl.dll
+	osgeo4w/package.sh
 
 endlog

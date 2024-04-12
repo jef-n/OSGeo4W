@@ -24,7 +24,7 @@ diff -ur freexl-2.0.0/makefile.vc ../freexl-2.0.0/makefile.vc
 +		$(OSGEO4W_ROOT)\lib\zlib.lib \
 +		$(OSGEO4W_ROOT)\lib\liblzma.lib \
 +		$(OSGEO4W_ROOT)\lib\libbz2.lib \
-+		advapi32.lib crypt32.lib
++		advapi32.lib crypt32.lib bcrypt.lib
  	if exist $(FREEXL_DLL).manifest mt -manifest \
 -		$(FREEXL_DLL).manifest -outputresource:$(FREEXL_DLL);2 
 +		$(FREEXL_DLL).manifest -outputresource:$(FREEXL_DLL);2
@@ -38,27 +38,3 @@ diff -ur freexl-2.0.0/makefile.vc ../freexl-2.0.0/makefile.vc
 -	copy headers\freexl.h $(INSTDIR)\include	
 -
 +	copy headers\freexl.h $(INSTDIR)\include
-diff -ur freexl-2.0.0/src/freexl_ods.c ../freexl-2.0.0/src/freexl_ods.c
---- freexl-2.0.0/src/freexl_ods.c	2023-07-25 07:12:29.000000000 +0200
-+++ ../freexl-2.0.0/src/freexl_ods.c	2023-08-04 23:48:08.784973500 +0200
-@@ -83,7 +83,7 @@
- #include "freexl.h"
- #include "freexl_internals.h"
- 
--#include <minizip/unzip.h>
-+#include <unzip.h>
- 
- #ifdef _WIN32
- #define strcasecmp	_stricmp
-diff -ur freexl-2.0.0/src/freexl_xlsx.c ../freexl-2.0.0/src/freexl_xlsx.c
---- freexl-2.0.0/src/freexl_xlsx.c	2023-07-25 07:12:29.000000000 +0200
-+++ ../freexl-2.0.0/src/freexl_xlsx.c	2023-08-04 23:48:08.786971600 +0200
-@@ -84,7 +84,7 @@
- #include "freexl.h"
- #include "freexl_internals.h"
- 
--#include <minizip/unzip.h>
-+#include <unzip.h>
- 
- #ifdef _WIN32
- #define strcasecmp	_stricmp

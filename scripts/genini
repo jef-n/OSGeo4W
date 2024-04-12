@@ -60,6 +60,8 @@ unless($alllicenses) {
             my($first,$second,$comment) = split / /;
             $licmap{$second} = $first;
         }
+    } else {
+        warn "license.map not found";
     }
 
     if( open F, "acceptable.lst" ) {
@@ -68,6 +70,8 @@ unless($alllicenses) {
             my($id,$comment) = split / /;
             $acceptable{$id} = 1;
         }
+    } else {
+        warn "acceptable.lst not found";
     }
 }
 

@@ -1,8 +1,9 @@
 export P=osm2pgsql
-export V=1.8.1
+export V=1.11.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="expat-devel proj-devel bzip2-devel zlib-devel boost-devel libpq-devel wingetopt-devel lua-devel"
+export PACKAGES="osm2pgsql"
 
 source ../../../scripts/build-helpers
 
@@ -10,22 +11,28 @@ startlog
 
 [ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://github.com/openstreetmap/$P/archive/refs/tags/$V.tar.gz
 [ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz
+[ -f include/nlohmann/json.hpp ] || {
+	mkdir -p include/nlohmann
+	curl -JL --output include/nlohmann/json.hpp https://github.com/nlohmann/json/releases/download/v3.11.3/json.hpp
+}
+
 
 (
-	vs2019env
+	vsenv
 	cmakeenv
 	ninjaenv
 
 	mkdir -p build install
 	cd build
 
-	export LIB="$(cygpath -am osgeo4w/lib);$LIB"
-	export INCLUDE="$(cygpath -am osgeo4w/include);$INCLUDE"
+	export LIB="$(cygpath -am ../osgeo4w/lib);$LIB"
+	export INCLUDE="$(cygpath -am ../include);$(cygpath -am ../osgeo4w/include);$INCLUDE"
 
 	cmake -G Ninja \
 		-D CMAKE_BUILD_TYPE=Release \
 		-D CMAKE_INSTALL_PREFIX=../install \
 		-D CMAKE_CXX_STANDARD=17 \
+		-D NLOHMANN_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 		-D EXPAT_LIBRARY=$(cygpath -am ../osgeo4w/lib/libexpat.lib) \
 		-D EXPAT_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 		-D ZLIB_INCLUDE_DIR=$(cygpath -aw ../osgeo4w/include) \
@@ -37,7 +44,7 @@ startlog
 		-D Boost_USE_STATIC_LIBS=ON \
 		-D Boost_USE_MULTITHREADED=ON \
 		-D Boost_USE_STATIC_RUNTIME=OFF \
-		-D Boost_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/boost-1_74) \
+		-D Boost_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/boost-1_84) \
 		-D Boost_LIBRARY_DIR="$(cygpath -am ../osgeo4w/lib)" \
 		-D PROJ6_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 		-D PROJ6_LIBRARY=$(cygpath -am ../osgeo4w/lib/proj.lib) \
@@ -46,6 +53,7 @@ startlog
 		../../$P-$V
 	cmake --build .
 	cmake --build . --target install
+	cmakefix ../install
 )
 
 export R=$OSGEO4W_REP/x86_64/release/$P

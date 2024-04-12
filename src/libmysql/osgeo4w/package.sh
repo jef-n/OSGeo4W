@@ -1,41 +1,42 @@
 export P=libmysql
-export V=8.0.21
+export V=8.2.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS=openssl-devel
+export BUILDDEPENDS="openssl-devel zlib-devel zstd-devel curl-devel icu-devel"
+export PACKAGES="libmysql libmysql-devel"
 
 source ../../../scripts/build-helpers
 
 startlog
 
 p=${P#lib}
-[ -f $p-$V.tar.gz ] || wget https://dev.mysql.com/get/Downloads/MySQL-${V%.*}/$p-$V.tar.gz
-[ -f ../CMakeLists.txt ] || tar -C .. -xzf $p-$V.tar.gz --xform "s,^$p-$V,.,"
+[ -f $p-boost-$V.tar.gz ] || wget https://downloads.mysql.com/archives/get/p/23/file/$p-boost-$V.tar.gz
+[ -f ../$p-$V/CMakeLists.txt ] || tar -C .. -xzf $p-boost-$V.tar.gz
 
-vs2019env
+vsenv
 cmakeenv
+ninjaenv
 
 mkdir -p build install
 cd build
 
-buildcfg=RelWithDebInfo
-
-cmake -G "Visual Studio 16 2019" -A x64 -D MSVC_TOOLSET_VERSION=142 \
-	-D CMAKE_CONFIGURATION_TYPES=$buildcfg \
+cmake -G Ninja \
+	-D CMAKE_BUILD_TYPE=RelWithDebInfo \
 	-D CMAKE_INSTALL_PREFIX=../install \
-	-D DOWNLOAD_BOOST=1 -D WITH_BOOST=../boost \
+	-D WITH_BOOST=../../$p-$V/boost \
 	-D WITH_SSL=yes \
 	-D OPENSSL_ROOT_DIR=$(cygpath -am ../osgeo4w/) \
 	-D WITHOUT_SERVER=ON \
-	../..
-cd ..
+	../../$p-$V
 
-cmake --build build --config $buildcfg
-cmake --install build --config $buildcfg
+cmake --build .
+cmake --build . --target install
+cmakefix ../install
+
+cd ..
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R/$P-devel
-
 
 cat <<EOF >$R/setup.hint
 sdesc: "MySQL Client Library (Runtime)"
@@ -63,8 +64,8 @@ tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	--exclude "include/openssl/applink.c" \
 	include lib
 
-cp ../LICENSE $R/$P-$V-$B.txt
-cp ../LICENSE $R/$P-devel/$P-devel-$P-$V-$B.txt
+cp ../$p-$V/LICENSE $R/$P-$V-$B.txt
+cp ../$p-$V/LICENSE $R/$P-devel/$P-devel-$P-$V-$B.txt
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 

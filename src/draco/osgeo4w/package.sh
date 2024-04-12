@@ -1,8 +1,9 @@
 export P=draco
-export V=1.5.6
+export V=1.5.7
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-core"
+export PACKAGES="draco draco-devel"
 
 source ../../../scripts/build-helpers
 
@@ -19,7 +20,7 @@ fi
 (
 	set -e
 
-	vs2019env
+	vsenv
 	cmakeenv
 	ninjaenv
 
@@ -36,6 +37,7 @@ fi
 		../../$P-$V
 	cmake --build .
 	cmake --build . --target install || cmake --build . --target install
+	cmakefix ../install
 )
 
 export R=$OSGEO4W_REP/x86_64/release/$P

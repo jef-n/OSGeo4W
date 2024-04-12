@@ -3,18 +3,19 @@ export V=2.1.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="szip szip-devel"
 
 source ../../../scripts/build-helpers
 
 startlog
 
 [ -f $P-$V.tar.gz ] || wget https://support.hdfgroup.org/ftp/lib-external/$P/$V/src/$P-$V.tar.gz
-[ -f ../CMakeLists.txt ] || tar -C .. --xform s,$P-$V,., -xzf $P-$V.tar.gz
+[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R/$P-devel
 
-vs2019env
+vsenv
 cmakeenv
 ninjaenv
 
@@ -26,9 +27,10 @@ cmake -G Ninja \
 	-D CMAKE_BUILD_TYPE=Release \
 	-D BUILD_SHARED_LIBS=ON \
 	-D CMAKE_INSTALL_PREFIX=../install \
-	../..
-ninja
-ninja install
+	../../$P-$V
+cmake --build .
+cmake --build . --target install
+cmakefix ../install
 
 cd ..
 
@@ -49,8 +51,8 @@ external-source: $P
 maintainer: $MAINTAINER
 EOF
 
-cp ../COPYING $R/$P-$V-$B.txt
-cp ../COPYING $R/$P-devel/$P-devel-$V-$B.txt
+cp ../$P-$V/COPYING $R/$P-$V-$B.txt
+cp ../$P-$V/COPYING $R/$P-devel/$P-devel-$V-$B.txt
 
 tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
 	bin/szip.dll

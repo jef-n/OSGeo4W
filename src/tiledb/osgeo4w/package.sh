@@ -3,6 +3,7 @@ export V=2.8.2
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="base bzip2-devel lz4-devel zlib-devel zstd-devel spdlog-devel"
+export PACKAGES="tiledb tiledb-devel"
 
 source ../../../scripts/build-helpers
 
@@ -16,7 +17,7 @@ startlog
 
 	fetchenv osgeo4w/bin/o4w_env.bat
 
-	vs2019env
+	vsenv
 	ninjaenv
 	cmakeenv
 
@@ -29,7 +30,6 @@ startlog
 	cmake -G Ninja \
 		-D CMAKE_BUILD_TYPE=Release \
 		-D CMAKE_INSTALL_PREFIX=../install \
-		-D CMAKE_MODULE_PATH=$(cygpath -am ../osgeo4w/lib) \
 		-D TILEDB_SUPERBUILD=OFF \
 		-D TILEDB_VERBOSE=ON \
 		-D TILEDB_TESTS=OFF \
@@ -47,6 +47,7 @@ startlog
 		../../TileDB-$V
 	cmake --build .
 	cmake --install .
+	cmakefix ../install
 )
 
 export R=$OSGEO4W_REP/x86_64/release/$P

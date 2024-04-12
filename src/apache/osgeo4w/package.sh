@@ -1,8 +1,9 @@
 export P=apache
-export V=2.4.52
+export V=2.4.58
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES=apache
 
 export SERVICENAME="Apache OSGeo4W Web Server"
 
@@ -12,9 +13,10 @@ startlog
 
 v=${V%.*}
 v=${v/./}
+z=httpd-$V-240131-win64-VS17.zip
 
-[ -f "httpd-$V-win64-VC16.zip" ] || curl -L -A Mozilla/5.0 -O https://www.apachelounge.com/download/VS16/binaries/httpd-$V-win64-VS16.zip
-[ -d Apache$v ] || unzip httpd-$V-win64-VS16.zip Apache$v
+[ -f $z ] || curl -L -A Mozilla/5.0 -O https://www.apachelounge.com/download/VS17/binaries/$z
+[ -d Apache$v ] || unzip $z "Apache$v/*"
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R

@@ -1,19 +1,20 @@
 export P=snappy-devel
-export V=1.1.9
+export V=1.1.10
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES=snappy-devel
 
 source ../../../scripts/build-helpers
 
 startlog
 
 export p=${P%-devel}
-[ -f $p-$V.tar.gz ] || wget -O $p-$V.tar.gz https://github.com/google/$p/archive/refs/tags/$p.tar.gz
+[ -f $p-$V.tar.gz ] || wget -O $p-$V.tar.gz https://github.com/google/$p/archive/refs/tags/$V.tar.gz
 [ -d ../$p-$V ] || tar -C .. -xzf $p-$V.tar.gz
 
 (
-	vs2019env
+	vsenv
 	cmakeenv
 	ninjaenv
 
@@ -30,6 +31,7 @@ export p=${P%-devel}
 		../../$p-$V
 	cmake --build .
 	cmake --install .
+	cmakefix ../install
 )
 
 export R=$OSGEO4W_REP/x86_64/release/$P
@@ -39,6 +41,7 @@ cat <<EOF >$R/setup.hint
 sdesc: "snappy compression (development)"
 ldesc: "snappy compression (development)"
 category: Libs
+requires: 
 maintainer: $MAINTAINER
 EOF
 

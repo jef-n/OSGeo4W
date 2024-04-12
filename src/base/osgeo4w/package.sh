@@ -3,6 +3,7 @@ export V=1.0.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="base"
 
 source ../../../scripts/build-helpers
 
@@ -10,7 +11,7 @@ startlog
 
 cd ..
 
-vs2019env
+vsenv
 
 nmake /f makefile.vc
 

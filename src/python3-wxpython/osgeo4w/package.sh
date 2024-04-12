@@ -2,7 +2,8 @@ export P=python3-wxpython
 export V=4.2.1
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="base python3-core python3-setuptools python3-wheel python3-devel python3-attrdict wxwidgets-devel"
+export BUILDDEPENDS="base python3-core python3-setuptools python3-wheel python3-devel python3-pip python3-attrdict3 wxwidgets-devel python3-numpy python3-pillow python3-six"
+export PACKAGES="python3-wxpython"
 
 source ../../../scripts/build-helpers
 
@@ -21,7 +22,7 @@ startlog
 
 (
 	fetchenv osgeo4w/bin/o4w_env.bat
-	vs2019env
+	vsenv
 
 	type cl.exe
 
@@ -29,7 +30,7 @@ startlog
 
 	export INCLUDE="$(cygpath -aw ../osgeo4w/osgeo4w/lib/vc_x64_dll/mswu);$(cygpath -aw ../osgeo4w/osgeo4w/include);$INCLUDE"
 	export LIB="$(cygpath -aw ../osgeo4w/osgeo4w/lib/vc_x64_dll);$LIB"
-	python3 build.py build_py --release --x64 --use_syswx --extra_waf='--msvc_version="msvc 16.11"'
+	python3 build.py build_py --release --x64 --use_syswx --extra_waf='--msvc_version="msvc 17.9"'
 
 	python3 build.py bdist_wheel
 

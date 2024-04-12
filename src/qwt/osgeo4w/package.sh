@@ -1,8 +1,9 @@
 export P=qwt
-export V=6.1.6
+export V=6.2.0
 export B="next qwt-libs"
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=qt5-devel
+export PACKAGES="qwt-devel qwt-doc qwt-libs"
 
 source ../../../scripts/build-helpers
 
@@ -12,22 +13,21 @@ set -e
 
 [ -f qwt-$V.tar.bz2 ] || wget https://deac-ams.dl.sourceforge.net/project/$P/$P/$V/qwt-$V.tar.bz2
 [ -f ../$P-$V/qwtbuild.pri ] || tar -C .. -xjf $P-$V.tar.bz2
-[ -f patched ] || {
+[ -f ../$P-$V/patched ] || {
 	patch -d ../$P-$V -p1 --dry-run <diff
-	patch -d ../$P-$V -p1 <diff
-	touch patched
+	patch -d ../$P-$V -p1 <diff >../$P-$V/patched
 }
 
 (
 	fetchenv osgeo4w/bin/o4w_env.bat
-	vs2019env
+	vsenv
 
 	mkdir -p install
 
 	cd ../$P-$V
 
 	[ -f Makefile ] && nmake distclean
-	qmake qwt.pro
+	qmake CONFIG-=debug_and_release CONFIG-=debug CONFIG+=release CONFIG+=force_with_debug CONFIG-=examples qwt.pro
 	nmake clean
 	nmake
 	nmake install
@@ -54,7 +54,7 @@ sdesc: "Qt5 widgets library for technical applications (Runtime)"
 ldesc: "Qt5 widgets library for technical applications (Runtime)"
 maintainer: $MAINTAINER
 category: Libs
-requires: $P-libs
+requires: $P-libs qt5-libs
 external-source: $P
 EOF
 

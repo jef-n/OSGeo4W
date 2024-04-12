@@ -1,8 +1,9 @@
 export P=ffmpeg
-export V=5.1
+export V=6.1.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
+export PACKAGES="ffmpeg ffmpeg-devel"
 
 NASM=2.15.05
 
@@ -22,7 +23,7 @@ fi
 	set -e
 	export PATH=$PATH:$(cygpath -a nasm-$NASM)
 
-	vs2019env
+	vsenv
 
 	export LIB="$(cygpath -aw ../osgeo4w/lib);$LIB"
 	export INCLUDE="$(cygpath -aw ../osgeo4w/include);$INCLUDE"

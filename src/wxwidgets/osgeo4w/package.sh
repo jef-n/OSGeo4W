@@ -1,8 +1,9 @@
 export P=wxwidgets
-export V=3.2.1
+export V=3.2.4
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="zlib-devel expat-devel libjpeg-turbo-devel libpng-devel libtiff-devel xz-devel"
+export PACKAGES="wxwidgets wxwidgets-devel wxwidgets-tools"
 
 
 source ../../../scripts/build-helpers
@@ -11,7 +12,7 @@ startlog
 
 [ -d ../$P-$V ] || git clone --recurse-submodules https://github.com/wxWidgets/wxWidgets --branch v$V --single-branch ../$P-$V
 
-vs2019env
+vsenv
 cmakeenv
 ninjaenv
 
@@ -31,6 +32,7 @@ cmake -G Ninja \
 	../../$P-$V
 cmake --build .
 cmake --install .
+cmakefix ../install
 
 cd ..
 

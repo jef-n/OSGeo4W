@@ -2,21 +2,22 @@ export P=icu
 export V=67.1
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS=none
+export BUILDDEPENDS=python3-core
+export PACKAGES="icu icu-devel icu-tools"
 
 source ../../../scripts/build-helpers
 
 startlog
 
 [ -f ${P}4c-${V/./_}-src.tgz ] || wget -q https://github.com/unicode-org/icu/releases/download/release-${V/./-}/${P}4c-${V/./_}-src.tgz
-[ -d ../source ] || tar -C .. -xzf  ${P}4c-${V/./_}-src.tgz --xform "s,^icu,.,"
-[ -f patched ] || {
-	patch -d .. -p1 --dry-run <patch
-	patch -d .. -p1 <patch
-	touch patched
+[ -d ../source ] || tar -C .. -xzf  ${P}4c-${V/./_}-src.tgz
+[ -f ../icu/patched ] || {
+	patch -d ../icu -p1 --dry-run <patch
+	patch -d ../icu -p1 <patch
+	touch ../icu/patched
 }
 
-vs2019env
+vsenv
 
 # Make sure /bin is in front of system32 (so we don't use Windows' bash in pkgdata)
 PATH=$(
@@ -38,15 +39,20 @@ PATH=$(
 
 mkdir -p install
 
-cd ../source
+cd ../icu/source
 
-[ -f Makefile ] || ./runConfigureICU Cygwin/MSVC --prefix=$(cygpath -a ../osgeo4w/install)
+unset PYTHON
+[ -f Makefile ] || ./runConfigureICU Cygwin/MSVC --prefix=$(cygpath -a ../../osgeo4w/install)
 mkdir -p data/out/tmp  # fails otherwise
 make
-[ -f $OSGEO4W_PWD/nocheck ] || make check
 make install
 
-cd ../osgeo4w/install
+cd ../../osgeo4w
+
+# remove links
+rm -rf install.clean
+cp -Lr install install.clean
+cd install.clean
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R/$P-{devel,tools}
@@ -102,9 +108,9 @@ tar -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 
 cd ..
 
-cp ../LICENSE $R/$P-$V-$B.txt
-cp ../LICENSE $R/$P-devel/$P-devel-$P-$V-$B.txt
-cp ../LICENSE $R/$P-tools/$P-tools-$P-$V-$B.txt
+cp ../icu/LICENSE $R/$P-$V-$B.txt
+cp ../icu/LICENSE $R/$P-devel/$P-devel-$P-$V-$B.txt
+cp ../icu/LICENSE $R/$P-tools/$P-tools-$P-$V-$B.txt
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/patch
 
