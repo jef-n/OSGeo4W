@@ -1,5 +1,36 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2ecd9ab0..60a30071 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -85,17 +85,15 @@ if (USE_OPENCL)
+ endif()
+ 
+ # Configure CCache if available
+-if(NOT MSVC)
+-  option(USE_CCACHE "Use ccache" ON)
+-  if (USE_CCACHE)
+-    find_program(CCACHE_FOUND ccache)
+-    if(CCACHE_FOUND)
+-        set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+-        set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
+-        message(STATUS "ccache found")
+-    endif(CCACHE_FOUND)
+-  endif(USE_CCACHE)
+-endif(NOT MSVC)
++option(USE_CCACHE "Use ccache" ON)
++if (USE_CCACHE)
++  find_program(CCACHE_FOUND ccache)
++  if(CCACHE_FOUND)
++    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
++    set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
++    message(STATUS "ccache found")
++  endif(CCACHE_FOUND)
++endif(USE_CCACHE)
+ 
+ if (IOS)
+     set (DEFAULT_FORCE_STATIC_LIBS TRUE)
 diff --git a/src/server/qgis_mapserver.cpp b/src/server/qgis_mapserver.cpp
-index 38d9fe5dcb..1ed9042085 100644
+index 38d9fe5d..1ed90420 100644
 --- a/src/server/qgis_mapserver.cpp
 +++ b/src/server/qgis_mapserver.cpp
 @@ -177,7 +177,7 @@ class TcpServerWorker: public QObject

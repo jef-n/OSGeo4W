@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e69f5558320..f2a80042cbd 100644
+index e69f555832..f2a80042cb 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -85,17 +85,15 @@ if (USE_OPENCL)
@@ -30,7 +30,7 @@ index e69f5558320..f2a80042cbd 100644
  if (IOS)
      set (DEFAULT_FORCE_STATIC_LIBS TRUE)
 diff --git a/external/mdal/frmts/mdal_h2i.cpp b/external/mdal/frmts/mdal_h2i.cpp
-index 0b2ca0f33db..be5b2b6834a 100644
+index 0b2ca0f33d..be5b2b6834 100644
 --- a/external/mdal/frmts/mdal_h2i.cpp
 +++ b/external/mdal/frmts/mdal_h2i.cpp
 @@ -137,7 +137,7 @@ bool MDAL::DriverH2i::parseJsonFile( const std::string filePath, MetadataH2i &me
@@ -43,7 +43,7 @@ index 0b2ca0f33db..be5b2b6834a 100644
      return false;
    }
 diff --git a/external/mdal/mdal_utils.cpp b/external/mdal/mdal_utils.cpp
-index efcbc1b6489..4691f00b99a 100644
+index efcbc1b648..4691f00b99 100644
 --- a/external/mdal/mdal_utils.cpp
 +++ b/external/mdal/mdal_utils.cpp
 @@ -17,7 +17,9 @@
@@ -101,7 +101,7 @@ index efcbc1b6489..4691f00b99a 100644
  #else
    d->mLibrary = dlopen( d->mLibraryFile.c_str(), RTLD_LAZY );
 diff --git a/external/qspatialite/CMakeLists.txt b/external/qspatialite/CMakeLists.txt
-index 33536dafe91..527f383303c 100644
+index 33536dafe9..527f383303 100644
 --- a/external/qspatialite/CMakeLists.txt
 +++ b/external/qspatialite/CMakeLists.txt
 @@ -7,18 +7,18 @@ add_definitions(-DQT_SHARED)
@@ -131,7 +131,7 @@ index 33536dafe91..527f383303c 100644
  
  install(TARGETS qsqlspatialite
 diff --git a/external/qspatialite/qsql_spatialite.cpp b/external/qspatialite/qsql_spatialite.cpp
-index 0e8f15a25f7..5a75a04748b 100644
+index 0e8f15a25f..5a75a04748 100644
 --- a/external/qspatialite/qsql_spatialite.cpp
 +++ b/external/qspatialite/qsql_spatialite.cpp
 @@ -632,7 +632,7 @@ bool QSpatiaLiteDriver::open( const QString &db, const QString &, const QString
@@ -144,7 +144,7 @@ index 0e8f15a25f7..5a75a04748b 100644
    {
      option = option.trimmed();
 diff --git a/external/untwine/api/QgisUntwine_win.cpp b/external/untwine/api/QgisUntwine_win.cpp
-index 7469655df8f..47d355ce367 100644
+index 7469655df8..47d355ce36 100644
 --- a/external/untwine/api/QgisUntwine_win.cpp
 +++ b/external/untwine/api/QgisUntwine_win.cpp
 @@ -28,7 +28,7 @@ bool QgisUntwine::start(Options& options)
@@ -157,7 +157,7 @@ index 7469655df8f..47d355ce367 100644
      ZeroMemory(&processInfo, sizeof(PROCESS_INFORMATION));
      ZeroMemory(&startupInfo, sizeof(STARTUPINFO));
 diff --git a/python/PyQt6/gui/gui_auto.sip b/python/PyQt6/gui/gui_auto.sip
-index c668cc6c9a9..46863b186a8 100644
+index c668cc6c9a..46863b186a 100644
 --- a/python/PyQt6/gui/gui_auto.sip
 +++ b/python/PyQt6/gui/gui_auto.sip
 @@ -325,7 +325,9 @@
@@ -171,7 +171,7 @@ index c668cc6c9a9..46863b186a8 100644
  %Include auto_generated/editorwidgets/qgsrelationaggregatesearchwidgetwrapper.sip
  %Include auto_generated/editorwidgets/qgsrelationreferencesearchwidgetwrapper.sip
 diff --git a/python/gui/gui_auto.sip b/python/gui/gui_auto.sip
-index c668cc6c9a9..46863b186a8 100644
+index c668cc6c9a..46863b186a 100644
 --- a/python/gui/gui_auto.sip
 +++ b/python/gui/gui_auto.sip
 @@ -325,7 +325,9 @@
@@ -185,7 +185,7 @@ index c668cc6c9a9..46863b186a8 100644
  %Include auto_generated/editorwidgets/qgsrelationaggregatesearchwidgetwrapper.sip
  %Include auto_generated/editorwidgets/qgsrelationreferencesearchwidgetwrapper.sip
 diff --git a/src/app/CMakeLists.txt b/src/app/CMakeLists.txt
-index 928d9871870..7e866fd2048 100644
+index 928d987187..7e866fd204 100644
 --- a/src/app/CMakeLists.txt
 +++ b/src/app/CMakeLists.txt
 @@ -514,6 +514,10 @@ if (ANDROID)
@@ -200,7 +200,7 @@ index 928d9871870..7e866fd2048 100644
    target_compile_features(${QGIS_APP_NAME} PRIVATE cxx_std_17)
    target_compile_definitions(${QGIS_APP_NAME} PRIVATE "QT_PLUGINS_DIR=\"${QT_PLUGINS_DIR}\"")
 diff --git a/src/app/main.cpp b/src/app/main.cpp
-index 92d7c591946..5d1746945c7 100644
+index 92d7c59194..5d1746945c 100644
 --- a/src/app/main.cpp
 +++ b/src/app/main.cpp
 @@ -177,10 +177,10 @@ void usage( const QString &appName )
@@ -228,7 +228,7 @@ index 92d7c591946..5d1746945c7 100644
    vfprintf( stderr, fmt, ap );
  #endif
 diff --git a/src/app/qgisapp.cpp b/src/app/qgisapp.cpp
-index 3b36ea2c3a4..86c93abe97f 100644
+index 525ef31389..685782023c 100644
 --- a/src/app/qgisapp.cpp
 +++ b/src/app/qgisapp.cpp
 @@ -13038,7 +13038,11 @@ void QgisApp::openURL( QString url, bool useQgisDocDirectory )
@@ -244,7 +244,7 @@ index 3b36ea2c3a4..86c93abe97f 100644
      QDesktopServices::openUrl( url );
  #else
 diff --git a/src/core/layout/qgslayoutitemlegend.cpp b/src/core/layout/qgslayoutitemlegend.cpp
-index 6d1a02d3cfd..1ccef7dc7c8 100644
+index 6d1a02d3cf..1ccef7dc7c 100644
 --- a/src/core/layout/qgslayoutitemlegend.cpp
 +++ b/src/core/layout/qgslayoutitemlegend.cpp
 @@ -1198,7 +1198,7 @@ void QgsLayoutItemLegend::doUpdateFilterByMap()
@@ -257,7 +257,7 @@ index 6d1a02d3cfd..1ccef7dc7c8 100644
            continue;
          }
 diff --git a/src/core/mesh/qgstopologicalmesh.cpp b/src/core/mesh/qgstopologicalmesh.cpp
-index b789f224f99..e6b040f7e06 100644
+index b789f224f9..e6b040f7e0 100644
 --- a/src/core/mesh/qgstopologicalmesh.cpp
 +++ b/src/core/mesh/qgstopologicalmesh.cpp
 @@ -703,7 +703,7 @@ QgsMeshEditingError QgsTopologicalMesh::counterClockwiseFaces( QgsMeshFace &face
@@ -270,7 +270,7 @@ index b789f224f99..e6b040f7e06 100644
      for ( int i = 0; i < faceSize / 2; ++i )
      {
 diff --git a/src/core/pal/labelposition.cpp b/src/core/pal/labelposition.cpp
-index 724eaaafaba..323c7c0ffc3 100644
+index 724eaaafab..323c7c0ffc 100644
 --- a/src/core/pal/labelposition.cpp
 +++ b/src/core/pal/labelposition.cpp
 @@ -574,7 +574,7 @@ double LabelPosition::getDistanceToPoint( double xp, double yp, bool useOuterBou
@@ -283,7 +283,7 @@ index 724eaaafaba..323c7c0ffc3 100644
          contains = false;
        }
 diff --git a/src/core/pointcloud/qgslazdecoder.cpp b/src/core/pointcloud/qgslazdecoder.cpp
-index 67a4e3b7d46..efde5717dba 100644
+index 67a4e3b7d4..efde5717db 100644
 --- a/src/core/pointcloud/qgslazdecoder.cpp
 +++ b/src/core/pointcloud/qgslazdecoder.cpp
 @@ -38,7 +38,9 @@
@@ -297,7 +297,7 @@ index 67a4e3b7d46..efde5717dba 100644
  #include <codecvt>
  #endif
 diff --git a/src/core/pointcloud/qgspointcloudlayerrenderer.cpp b/src/core/pointcloud/qgspointcloudlayerrenderer.cpp
-index b4868da229b..276167147f5 100644
+index b4868da229..276167147f 100644
 --- a/src/core/pointcloud/qgspointcloudlayerrenderer.cpp
 +++ b/src/core/pointcloud/qgspointcloudlayerrenderer.cpp
 @@ -688,7 +688,7 @@ void QgsPointCloudLayerRenderer::renderTriangulatedSurface( QgsPointCloudRenderC
@@ -310,7 +310,7 @@ index b4868da229b..276167147f5 100644
      // something went wrong, better to retrieve initial state
      QgsDebugMsgLevel( QStringLiteral( "Error with triangulation" ), 4 );
 diff --git a/src/core/qgsattributetableconfig.h b/src/core/qgsattributetableconfig.h
-index ba50862a331..9daf64a74a2 100644
+index ba50862a33..9daf64a74a 100644
 --- a/src/core/qgsattributetableconfig.h
 +++ b/src/core/qgsattributetableconfig.h
 @@ -48,7 +48,7 @@ class CORE_EXPORT QgsAttributeTableConfig
@@ -323,7 +323,7 @@ index ba50862a331..9daf64a74a2 100644
        //! Constructor for ColumnConfig
        ColumnConfig() = default;
 diff --git a/src/core/qgsexpressioncontext.cpp b/src/core/qgsexpressioncontext.cpp
-index b05f99490a5..8e0b9c2bced 100644
+index b05f99490a..8e0b9c2bce 100644
 --- a/src/core/qgsexpressioncontext.cpp
 +++ b/src/core/qgsexpressioncontext.cpp
 @@ -106,7 +106,11 @@ void QgsExpressionContextScope::addVariable( const QgsExpressionContextScope::St
@@ -339,7 +339,7 @@ index b05f99490a5..8e0b9c2bced 100644
  
  bool QgsExpressionContextScope::hasVariable( const QString &name ) const
 diff --git a/src/core/qgsopenclutils.cpp b/src/core/qgsopenclutils.cpp
-index 39fab282a0d..8b193d05049 100644
+index 39fab282a0..beb1cf53e1 100644
 --- a/src/core/qgsopenclutils.cpp
 +++ b/src/core/qgsopenclutils.cpp
 @@ -25,6 +25,9 @@
@@ -408,7 +408,7 @@ index 39fab282a0d..8b193d05049 100644
                    }
                  }
 diff --git a/src/gui/CMakeLists.txt b/src/gui/CMakeLists.txt
-index 09b32770027..129136e34f9 100644
+index 09b3277002..129136e34f 100644
 --- a/src/gui/CMakeLists.txt
 +++ b/src/gui/CMakeLists.txt
 @@ -1612,6 +1612,13 @@ else()
@@ -435,7 +435,7 @@ index 09b32770027..129136e34f9 100644
    elseif (APPLE)
      include_directories(${CMAKE_SOURCE_DIR}/src/native/mac)
 diff --git a/src/native/CMakeLists.txt b/src/native/CMakeLists.txt
-index cedc517814a..73edb952b1a 100644
+index cedc517814..73edb952b1 100644
 --- a/src/native/CMakeLists.txt
 +++ b/src/native/CMakeLists.txt
 @@ -144,7 +144,7 @@ if (UNIX AND NOT APPLE AND NOT ANDROID)
@@ -448,7 +448,7 @@ index cedc517814a..73edb952b1a 100644
  
    target_link_libraries(qgis_native shell32)
 diff --git a/src/native/win/qgswinnative.cpp b/src/native/win/qgswinnative.cpp
-index 008c207a35a..dbc83f6819b 100644
+index 008c207a35..dbc83f6819 100644
 --- a/src/native/win/qgswinnative.cpp
 +++ b/src/native/win/qgswinnative.cpp
 @@ -23,16 +23,24 @@
@@ -554,7 +554,7 @@ index 008c207a35a..dbc83f6819b 100644
    static const QByteArray sWindowsGenericMSG{ "windows_generic_MSG" };
    if ( !message || eventType != sWindowsGenericMSG )
 diff --git a/src/native/win/qgswinnative.h b/src/native/win/qgswinnative.h
-index 9f0e7479d14..c6790299812 100644
+index 9f0e7479d1..c679029981 100644
 --- a/src/native/win/qgswinnative.h
 +++ b/src/native/win/qgswinnative.h
 @@ -15,8 +15,8 @@
@@ -606,7 +606,7 @@ index 9f0e7479d14..c6790299812 100644
 -#endif // QGSMACNATIVE_H
 +#endif // QGSWINNATIVE_H
 diff --git a/src/providers/grass/qgsgrass.cpp b/src/providers/grass/qgsgrass.cpp
-index eb8585c112e..946af31a1de 100644
+index eb8585c112..946af31a1d 100644
 --- a/src/providers/grass/qgsgrass.cpp
 +++ b/src/providers/grass/qgsgrass.cpp
 @@ -270,8 +270,8 @@ QString QgsGrass::pathSeparator()
@@ -621,7 +621,7 @@ index eb8585c112e..946af31a1de 100644
    if ( len == 0 || len > MAX_PATH )
    {
 diff --git a/src/server/qgis_mapserver.cpp b/src/server/qgis_mapserver.cpp
-index 38d9fe5dcb7..1ed9042085e 100644
+index 38d9fe5dcb..1ed9042085 100644
 --- a/src/server/qgis_mapserver.cpp
 +++ b/src/server/qgis_mapserver.cpp
 @@ -177,7 +177,7 @@ class TcpServerWorker: public QObject

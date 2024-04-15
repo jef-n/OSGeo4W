@@ -37,6 +37,7 @@ startlog
 		-D CMAKE_BUILD_TYPE=RelWithDebInfo \
 		-D CMAKE_FIND_DEBUG_MODE=ON \
 		-D CMAKE_INSTALL_PREFIX=$(cygpath -am ../install-$V/apps/$P) \
+		-D WITH_CCACHE=ON \
 		-D Qca_DIR=$(cygpath -am ../osgeo4w/apps/Qt6) \
 		../../QField-$V
 
