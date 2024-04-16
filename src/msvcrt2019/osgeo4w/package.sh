@@ -1,6 +1,6 @@
 export P=msvcrt2019
 export V=14.2
-export B=1
+export B=2
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
 export PACKAGES="msvcrt2019"
