@@ -5,21 +5,30 @@ set -e
 cert=$PWD/src/setup/osgeo4w/OSGeo_DigiCert_Signing_Cert
 : ${mirror:=https://download.osgeo.org/osgeo4w/v2}
 
-[ -r "$cert.p12" ]
-[ -r "$cert.pass" ]
+sign=
+if [ -r "$cert.p12" -a -r "$cert.pass" ]; then
+	[ -z "$CI" ] || echo "::add-mask::$(<$cert.pass)"
+	sign="-signwith=$cert.p12 -signpass=$(<$cert.pass)"
+fi
 
 for i in ${PKGS:-qgis qgis-ltr}; do
-	releasename=$(sed -ne 's/^set(RELEASE_NAME "\(.*\)").*$/\1/ip' src/$i/qgis/CMakeLists.txt)
+	o=
+	if [ -f "src/$i/qgis/CMakeLists.txt" -a src/$i/osgeo4w/qgis_msibanner.bmp -a src/$i/osgeo4w/qgis_msiinstaller.bmp -a src/$i/osgeo4w/qgis.ico ]; then
+		o="-releasename=\"$(sed -ne 's/^set(RELEASE_NAME "\(.*\)").*$/\1/ip' src/$i/qgis/CMakeLists.txt)\""
+		o="$o -banner=$PWD/src/$i/osgeo4w/qgis_msibanner.bmp"
+		o="$o -background=$PWD/src/$i/osgeo4w/qgis_msiinstaller.bmp"
+		o="$o -arpicon=$PWD/src/$i/osgeo4w/qgis.ico"
+	fi
+
+	[ -z "$CI" ] || echo "::group::Creating MSI for $i"
 
 	perl scripts/createmsi.pl \
-		-signwith=$cert.p12 \
-		-signpass=$(<$cert.pass) \
+		$sign \
+		$o \
 		-verbose \
-		-releasename="$releasename" \
 		-shortname="$i" \
-		-banner=$PWD/src/$i/osgeo4w/qgis_msibanner.bmp \
-		-background=$PWD/src/$i/osgeo4w/qgis_msiinstaller.bmp \
-		-arpicon=$PWD/src/$i/osgeo4w/qgis.ico \
 		-mirror=$mirror \
 		$i-full
+
+	[ -z "$CI" ] || echo "::endgroup::"
 done

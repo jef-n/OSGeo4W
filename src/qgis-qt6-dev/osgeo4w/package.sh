@@ -5,6 +5,7 @@ export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-dev-devel qt6-qml qt6-oci sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt6 python3-sip python3-pyqt-builder python3-devel python3-pyqt6-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-qt6-devel qscintilla-qt6-devel qt6-devel qwt-qt6-devel libspatialite-devel oci-devel qtkeychain-qt6-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel pdal pdal-devel grass draco-devel libtiff-devel transifex-cli"
 export PACKAGES="qgis-qt6-dev qgis-qt6-dev-deps qgis-qt6-dev-full qgis-qt6-dev-full-free qgis-qt6-dev-pdb"
 
+: ${REPO:=https://github.com/qgis/QGIS.git}
 : ${SITE:=qgis.org}
 : ${TARGET:=Nightly}
 : ${CC:=cl.exe}
@@ -20,7 +21,18 @@ source ../../../scripts/build-helpers
 
 startlog
 
-LABEL="development branch with Qt6"
+BRANCH=
+if [ -z "$REF" ]; then
+	BRANCH=master
+	APPNAME="Nightly"
+	PKGDESC="QGIS Nightly build of development branch"
+else
+	: ${PKGDESC:="QGIS build of development branch ($REF)"}
+	: ${APPNAME:=$P/$REF}
+fi
+
+PKGDESC="$PKGDESC with Qt6"
+APPNAME="$APPNAME with Qt6"
 
 cd ..
 
@@ -39,11 +51,24 @@ if [ -d qgis ]; then
 			(( ++i ))
 		done
 	fi
-else
-	git clone $REPO --branch master --single-branch qgis
+elif [ -n "$BRANCH" ]; then
+	git clone $REPO --branch $REF --single-branch --depth 1 qgis
 	cd qgis
 	git config core.filemode false
 	unset OSGEO4W_SKIP_CLEAN
+elif [ -n "$REF" ]; then
+	set -x
+	mkdir qgis
+	cd qgis
+	git init .
+	git remote add origin $REPO
+	git fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +$REF:refs/remotes/${REF#refs/}
+	git checkout --force refs/remotes/${REF#refs/}
+	git log -1 --format='%H'
+	unset OSGEO4W_SKIP_CLEAN
+else
+	echo REF expected
+	exit 1
 fi
 
 if [ -z "$OSGEO4W_SKIP_CLEAN" ]; then
@@ -113,7 +138,7 @@ nextbinary
 
 	cd ../osgeo4w
 
-	export BUILDNAME=$P-$V-$TARGET-VC17-x86_64
+	export BUILDNAME=$P-$V-$TARGET-VC17
 	export QGIS_CONTINUOUS_INTEGRATION_RUN=true
 	export BUILDDIR=$PWD/build
 	export INSTDIR=$PWD/install
@@ -147,7 +172,7 @@ nextbinary
 		-D CMAKE_SHARED_LINKER_FLAGS_${BUILDCONF^^}="/INCREMENTAL:NO /DEBUG /OPT:REF /OPT:ICF" \
 		-D CMAKE_MODULE_LINKER_FLAGS_${BUILDCONF^^}="/INCREMENTAL:NO /DEBUG /OPT:REF /OPT:ICF" \
 		-D CMAKE_PDB_OUTPUT_DIRECTORY_${BUILDCONF^^}=$(cygpath -am $BUILDDIR/apps/$P/pdb) \
-		-D BUILDNAME="$BUILDNAME" \
+		-D BUILDNAME="$BUILDNAMEPREFIX$BUILDNAME" \
 		-D SITE="$SITE" \
 		-D PEDANTIC=TRUE \
 		-D WITH_QSPATIALITE=TRUE \
@@ -255,11 +280,11 @@ nextbinary
 
 		v=$MAJOR.$MINOR.$PATCH
 
-		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                                                                 qgis.reg.tmpl    >install/apps/$P/bin/qgis.reg.tmpl
-		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                                                          postinstall.bat  >install/etc/postinstall/$P.bat
-		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                                                          preremove.bat    >install/etc/preremove/$P.bat
-		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                                                                 designer.bat     >install/bin/$P-designer.bat
-		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                                                                 python.bat       >install/bin/python-$P.bat
+		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       						qgis.reg.tmpl    >install/apps/$P/bin/qgis.reg.tmpl
+		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@appname@/${APPNAME//\//\\\/}/g" -e "s/@grassversion@/$GRASS_VERSION/g"         						postinstall.bat  >install/etc/postinstall/$P.bat
+		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@appname@/${APPNAME//\//\\\/}/g" -e "s/@grassversion@/$GRASS_VERSION/g"         						preremove.bat    >install/etc/preremove/$P.bat
+		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       						designer.bat     >install/bin/$P-designer.bat
+		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       						python.bat       >install/bin/python-$P.bat
 
 		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g" -e "s/@grasspath@/$(basename $GRASS_PREFIX)/g" -e "s/@grassmajor@/${GRASS_VERSION%%.*}/" qgis.bat         >install/bin/$P.bat
 		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g" -e "s/@grasspath@/$(basename $GRASS_PREFIX)/g" -e "s/@grassmajor@/${GRASS_VERSION%%.*}/" process.bat      >install/bin/qgis_process-$P.bat
@@ -302,8 +327,8 @@ nextbinary
 		rmdir $d
 
 		cat <<EOF >$R/setup.hint
-sdesc: "QGIS nightly build of the $LABEL"
-ldesc: "QGIS nightly build of the $LABEL"
+sdesc: "$PKGDESC"
+ldesc: "$PKGDESC"
 maintainer: $MAINTAINER
 category: Desktop
 requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl gdal-dev libspatialite zlib libiconv fcgi libspatialindex oci qt6-libs qt6-qml qt6-tools qca-qt6 qwt-qt6-libs python3-sip python3-core python3-pyqt6 python3-psycopg2 python3-pyqt6-qscintilla python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-gdal-dev python3-requests python3-plotly python3-pyproj python3-owslib qtkeychain-qt6-libs libzip opencl exiv2 hdf5 pdal pdal-libs
@@ -312,8 +337,8 @@ EOF
 		appendversions $R/setup.hint
 
 		cat <<EOF >$R/$P-pdb/setup.hint
-sdesc: "Debugging symbols for QGIS nightly build of the $LABEL"
-ldesc: "Debugging symbols for QGIS nightly build of the $LABEL"
+sdesc: "$PKGDESC (debugging symbols)"
+ldesc: "$PKGDESC (debugging symbols)"
 maintainer: $MAINTAINER
 category: Desktop
 requires: $P
@@ -323,8 +348,8 @@ EOF
 		appendversions $R/$P-pdb/setup.hint
 
 		cat <<EOF >$R/$P-full-free/setup.hint
-sdesc: "QGIS nightly build of the $LABEL (metapackage with additional free dependencies)"
-ldesc: "QGIS nightly build of the $LABEL (metapackage with additional free dependencies)"
+sdesc: "$PKGDESC (metapackage with additional free dependencies)"
+ldesc: "$PKGDESC (metapackage with additional free dependencies)"
 maintainer: $MAINTAINER
 category: Desktop
 requires: $P proj python3-pyparsing python3-simplejson python3-shapely python3-matplotlib python3-pygments qt6-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-pillow python3-geopandas python3-geographiclib grass python3-pyserial gdal-dev-sosi python3-autopep8 python3-openpyxl python3-remotior-sensus saga
@@ -334,8 +359,8 @@ EOF
 		appendversions $R/$P-full-free/setup.hint
 
 		cat <<EOF >$R/$P-full/setup.hint
-sdesc: "QGIS nightly build of the $LABEL (metapackage with additional dependencies including proprietary)"
-ldesc: "QGIS nightly build of the $LABEL (metapackage with additional dependencies including proprietary)"
+sdesc: "$PKGDESC (metapackage with additional dependencies including proprietary)"
+ldesc: "$PKGDESC (metapackage with additional dependencies including proprietary)"
 maintainer: $MAINTAINER
 category: Desktop
 requires: $P-full-free gdal-dev-hdf5 gdal-dev-ecw gdal-dev-mrsid gdal-dev-oracle
@@ -345,8 +370,8 @@ EOF
 		appendversions $R/$P-full/setup.hint
 
 		cat <<EOF >$R/$P-deps/setup.hint
-sdesc: "QGIS build dependencies of nightly build of $LABEL (meta package)"
-ldesc: "QGIS build dependencies of nightly build of $LABEL (meta package)"
+sdesc: "$PKGDESC (meta package of build dependencies)"
+ldesc: "$PKGDESC (meta package of build dependencies)"
 maintainer: $MAINTAINER
 category: Libs
 requires: $BUILDDEPENDS

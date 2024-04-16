@@ -1,0 +1,82 @@
+name: Build OSGeo4W packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      packages:
+        description: 'packages to build'
+        required: true
+        default: 'qgis-dev'
+      buildmsi:
+        description: 'build msi'
+        required: false
+        default: '0'
+      forcebuild:
+        description: 'force rebuild even if *-dev package of same commit is already available'
+        required: false
+        default: '0'
+      skiptests:
+        description: 'skip tests if any'
+        required: false
+        default: '0'
+      buildrdeps:
+        description: 'build reverse dependencies'
+        required: false
+        default: '0'
+      skipmasterrepo:
+        description: "don't fetch dependencies from master OSGeo4W repo"
+        required: false
+        default: '0'
+      continuebuild:
+        description: "continue build even if a package build fails"
+        required: false
+        default: '0'
+      buildmode:
+        description: "build mode (empty / test)"
+        required: false
+        default: ''
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: 'Build packages'
+      shell: cmd
+      env:
+        OSGEO4W_FORCE_BUILD: ${{ github.event.inputs.forcebuild }}
+        OSGEO4W_SKIP_TESTS: ${{ github.event.inputs.skiptests }}
+        OSGEO4W_BUILD_RDEPS: ${{ github.event.inputs.buildreps }}
+        OSGEO4W_SKIP_MASTER_REPO: ${{ github.event.inputs.skipmasterrepo }}
+        OSGEO4W_CONTINUE_BUILD: ${{ github.event.inputs.continuebuild }}
+        OSGEO4W_BUILD_MODE: ${{ github.event.inputs.buildmode }}
+        OSGEO4W_SKIP_UPLOAD: 1
+        O4W_REPO: jef-n/osgeo4w
+      run: |
+        curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/%O4W_REPO%/master/bootstrap.cmd>bootstrap.cmd
+        curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/%O4W_REPO%/master/bootstrap.sh>bootstrap.sh
+        call bootstrap.cmd ${{ github.event.inputs.packages }}
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: osgeo4w-repo
+        path: x86_64/
+        retention-days: 1
+
+    - name: 'Create MSI'
+      shell: cmd
+      if: ${{ github.event.inputs.buildmsi == '1' }}
+      run: |
+        path %CD%\cygwin\bin;%CD%\cygwin\usr\bin;%WINDIR%\system32
+        bash scripts/msis.sh %BUILT_PKGS%
+
+    - uses: actions/upload-artifact@v4
+      if: ${{ github.event.inputs.buildmsi == '1' }}
+      with:
+        name: msi
+        path: |
+          tmp/packages/*.msi
+          tmp/packages/*.sha256sum
+        retention-days: 1
+
+# vim: set nowrap :

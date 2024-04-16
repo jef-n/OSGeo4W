@@ -41,17 +41,19 @@ if [ "$OSGEO4W_BUILD_RDEPS" = "0" ]; then OSGEO4W_BUILD_RDEPS=; fi
 if [ "$OSGEO4W_CONTINUE_BUILD" = "0" ]; then OSGEO4W_CONTINUE_BUILD=; fi
 
 PKGS="$@"
-[ -z "$OSGEO4W_REBUILD_RDEPS" ] || PKGS=$(perl scripts/build-inorder.pl $PKGS | paste -d" " -s)
+
+[ -z "$OSGEO4W_BUILD_RDEPS" ] || PKGS=$(perl scripts/build-inorder.pl $PKGS | paste -d" " -s)
 
 echo $(date): REPOSITORY: $OSGEO4W_REP
 echo $(date): BUILDING: $PKGS
 [ -z "$OSGEO4W_SKIP_UPLOAD" ] || echo $(date): NOT UPLOADING
-[ -z "$OSGEO4W_BUILD_RDEPS" ] || echo $(date): NOT BUILDING REVERSE DEPENDENCIES
+[ -n "$OSGEO4W_BUILD_RDEPS" ] || echo $(date): NOT BUILDING REVERSE DEPENDENCIES
 [ -z "$OSGEO4W_SKIP_CLEAN" ] || echo $(date): SKIPPING CLEANS
 [ -z "$OSGEO4W_CONTINUE_BUILD" ] || echo $(date): CONTINUING ON BUILD FAILURES
 
 ok=1
 P=$PWD
+built=
 for i in $PKGS; do
 	d=${i#-}
 
@@ -61,11 +63,13 @@ for i in $PKGS; do
 	fi
 
 	cd src/$d/osgeo4w
+
 	echo $(date): $d BUILDING
 
 	mkdir -p $P/tmp
 	if build; then
 		echo $(date): $d SUCCEEDED
+		built="${built} $d"
 		touch $P/tmp/$i.done
 	else
 		r=$?
@@ -73,7 +77,10 @@ for i in $PKGS; do
 		[ "$OSGEO4W_CONTINUE_BUILD" ] || exit 1
 		ok=0
 	fi
+
 	cd ../../..
 done
+
+[ -z "$GITHUB_ENV" ] || echo "BUILT_PKGS=${built# }" >>$GITHUB_ENV
 
 [ "$ok" ] || exit 1

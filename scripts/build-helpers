@@ -220,6 +220,14 @@ vs2019env() {
 }
 declare -x vs2019env
 
+fileversion() {
+	local ps="$(cygpath -a --sysdir)/WindowsPowerShell/v1.0/powershell.exe"
+	local v=$($ps -Command "(Get-Item \"$(cygpath -aw "$1")\").VersionInfo.ProductVersion")
+	v=${v%}
+	echo $v
+}
+declare -x fileversion
+
 vs2022env() {
 	local e vcdir
 
@@ -258,38 +266,32 @@ vs2022env() {
 	fi
 
 	local dhd="/cygdrive/c/Program Files (x86)/Windows Kits/10/Debuggers/x64/dbghelp.dll"
-	local ps="$(cygpath -a --sysdir)/WindowsPowerShell/v1.0/powershell.exe"
-	[ -x $ps ]
 
-	while :; do
-		# make sure we have a dbghelp version, that works on Windows 8
-		if [ -f "$dhd" ]; then
-			local v=$($ps -Command "(Get-Item \"$(cygpath -aw "$dhd")\").VersionInfo.ProductVersion")
-			v=${v%}
-			case $v in
-			10.0.19041.*)
-				break
-				;;
-			esac
-
-			log Deinstalling wrong version $v of dbghelp.dll
-
-			wss=$(ls -1t "$ProgramData/Package Cache/"*/winsdksetup.exe | head -1)
-			[ -x "$wss" ]
-			"$wss" /features OptionId.WindowsDesktopDebuggers /uninstall /q /norestart
-			! [ -f "$dhd" ] || { log $dhd still exists; false; }
+	# make sure we have a dbghelp version, that works on Windows 8 using brute force
+	if ! [ -f "$dhd" ]; then
+		linkid=2120843
+		if ! [ -x $OSGEO4W_SCRIPTS/winsdksetup-$linkid.exe ]; then
+			curl -L -o $OSGEO4W_SCRIPTS/winsdksetup-$linkid.exe "https://go.microsoft.com/fwlink/?linkid=$linkid"
+			chmod a+rx $OSGEO4W_SCRIPTS/winsdksetup-$linkid.exe
 		fi
 
-		if ! [ -x $OSGEO4W_SCRIPTS/winsdksetup-19041.exe ]; then
-			curl -L -o $OSGEO4W_SCRIPTS/winsdksetup-19041.exe "https://go.microsoft.com/fwlink/?linkid=2120843"
-			chmod a+rx $OSGEO4W_SCRIPTS/winsdksetup-19041.exe
-		fi
+		$OSGEO4W_SCRIPTS/winsdksetup-$linkid.exe /features OptionId.WindowsDesktopDebuggers /q /norestart
+	else
+		v=$(fileversion "$dhd")
 
-		$OSGEO4W_SCRIPTS/winsdksetup-19041.exe /features OptionId.WindowsDesktopDebuggers /q /norestart
-		[ -f "$dhd" ]
-	done
+		case $v in
+		10.0.19041.*)
+			;;
+		*)
+			log Replacing $dhd $v
+			curl -o /tmp/qgis.tar.bz2 http://download.osgeo.org/osgeo4w/v2/x86_64/release/qgis/qgis-ltr/qgis-ltr-3.34.5-1.tar.bz2
+			tar -C "${dhd%/*}" -xjvf /tmp/qgis.tar.bz2 --xform "s,.*/,," apps/qgis-ltr/dbghelp.dll apps/qgis-ltr/symsrv.dll
+			rm /tmp/qgis.tar.bz2
+			;;
+		esac
+	fi
 
-	log "$dhd: $v"
+	log "$dhd: $(fileversion "$dhd")"
 
 	export VSLANG=1033
 	export VS170COMNTOOLS=$(cygpath -aw "$vcdir")/Common7/Tools
