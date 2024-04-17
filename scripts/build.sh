@@ -23,19 +23,32 @@ fi
 
 : ${OSGEO4W_SKIP_UPLOAD:=1}
 : ${OSGEO4W_SKIP_CLEAN:=1}
+: ${OSGEO4W_BUILD_RDEPS:=1}
+: ${OSGEO4W_CONTINUE_BUILD:=0}
 
 export OSGEO4W_REP OSGEO4W_SKIP_UPLOAD
+
+build() {
+	bash package.sh
+}
 
 [ -f .buildenv ] && source .buildenv
 
 if [ "$TX_TOKEN" = "none" ]; then TX_TOKEN=; fi
 if [ "$OSGEO4W_SKIP_UPLOAD" = "0" ]; then OSGEO4W_SKIP_UPLOAD=; fi
 if [ "$OSGEO4W_SKIP_CLEAN" = "0" ]; then OSGEO4W_SKIP_CLEAN=; fi
+if [ "$OSGEO4W_BUILD_RDEPS" = "0" ]; then OSGEO4W_BUILD_RDEPS=; fi
+if [ "$OSGEO4W_CONTINUE_BUILD" = "0" ]; then OSGEO4W_CONTINUE_BUILD=; fi
 
-PKGS=$(perl scripts/build-inorder.pl $* | paste -d" " -s)
+PKGS="$@"
+[ -z "$OSGEO4W_REBUILD_RDEPS" ] || PKGS=$(perl scripts/build-inorder.pl $PKGS | paste -d" " -s)
 
 echo $(date): REPOSITORY: $OSGEO4W_REP
 echo $(date): BUILDING: $PKGS
+[ -z "$OSGEO4W_SKIP_UPLOAD" ] || echo $(date): NOT UPLOADING
+[ -z "$OSGEO4W_BUILD_RDEPS" ] || echo $(date): NOT BUILDING REVERSE DEPENDENCIES
+[ -z "$OSGEO4W_SKIP_CLEAN" ] || echo $(date): SKIPPING CLEANS
+[ -z "$OSGEO4W_CONTINUE_BUILD" ] || echo $(date): CONTINUING ON BUILD FAILURES
 
 ok=1
 P=$PWD
@@ -49,14 +62,14 @@ for i in $PKGS; do
 
 	cd src/$d/osgeo4w
 	echo $(date): $d BUILDING
-	log=$P/tmp/$d.log
+
 	mkdir -p $P/tmp
-	if bash -x package.sh 2>&1 | sed -e 's#\\#/#g' -e 's#\([A-Z]\)://#//\L\1/#g' -e  's#\([A-Z]\):/#/\L\1/#g' >$log; then
-		echo $(date): $d SUCCEEDED | tee -a $log
+	if build; then
+		echo $(date): $d SUCCEEDED
 		touch $P/tmp/$i.done
 	else
 		r=$?
-		echo $(date): $d FAILED WITH $r | tee -a $log
+		echo $(date): $d FAILED WITH $r
 		[ "$OSGEO4W_CONTINUE_BUILD" ] || exit 1
 		ok=0
 	fi

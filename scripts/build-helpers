@@ -62,10 +62,10 @@ runtimedepends() {
 	local depends
 
 	for p in "$@"; do
-                if [ -f "$OSGEO4W_PWD/osgeo4w/etc/abi/$p" ]; then
+		if [ -f "$OSGEO4W_PWD/osgeo4w/etc/abi/$p" ]; then
 			depends="$depends $(<$OSGEO4W_PWD/osgeo4w/etc/abi/$p)"
-                fi
-        done
+		fi
+	done
 
 	echo ${depends# }
 }
@@ -134,7 +134,7 @@ fetchenv() {
 	shift
 
 	if ! [ -f "$batch" ]; then
-		echo "$batch not found"
+		log "$batch not found"
 		return 1
 	fi
 
@@ -234,7 +234,7 @@ vs2022env() {
 
 		if ! [ -f "$vcdir/VC/Auxiliary/Build/vcvarsall.bat" ]; then
 			[ -x $OSGEO4W_SCRIPTS/vs_BuildTools.exe ] || (
-				pushd $OSGEO4W_SCRIPTS
+				cd $OSGEO4W_SCRIPTS
 				curl -JLO https://download.visualstudio.microsoft.com/download/pr/63b5064f-af60-4cbe-96cd-a9dd9d41ee3d/92559de62c05423d5cafd06fd34c35e51199b1a90f34284abbe5b1d6fb75342d/vs_BuildTools.exe
 				chmod a+x vs_BuildTools.exe
 			)
@@ -254,13 +254,39 @@ vs2022env() {
 		VCSDK=10.0.22621.0
 	fi
 
-	dhd="/cygdrive/c/Program Files (x86)/Windows Kits/10/Debuggers/x64/dbghelp.dll"
-	[ -f "$dhd" ] || {
-		wss=$(ls -1t "$ProgramData/Package Cache/"*/winsdksetup.exe | head -1)
-		[ -x "$wss" ]
-		"$wss" /features OptionId.WindowsDesktopDebuggers /q /norestart
+	local dhd="/cygdrive/c/Program Files (x86)/Windows Kits/10/Debuggers/x64/dbghelp.dll"
+	local ps="$(cygpath -a --sysdir)/WindowsPowerShell/v1.0/powershell.exe"
+	[ -x $ps ]
+
+	while :; do
+		# make sure we have a dbghelp version, that works on Windows 8
+		if [ -f "$dhd" ]; then
+			local v=$($ps -Command "(Get-Item \"$(cygpath -aw "$dhd")\").VersionInfo.ProductVersion")
+			v=${v%}
+			case $v in
+			10.0.19041.*)
+				break
+				;;
+			esac
+
+			log Deinstalling wrong version $v of dbghelp.dll
+
+			wss=$(ls -1t "$ProgramData/Package Cache/"*/winsdksetup.exe | head -1)
+			[ -x "$wss" ]
+			"$wss" /features OptionId.WindowsDesktopDebuggers /uninstall /q /norestart
+			! [ -f "$dhd" ] || { log $dhd still exists; false; }
+		fi
+
+		if ! [ -x $OSGEO4W_SCRIPTS/winsdksetup-19041.exe ]; then
+			curl -L -o $OSGEO4W_SCRIPTS/winsdksetup-19041.exe "https://go.microsoft.com/fwlink/?linkid=2120843"
+			chmod a+rx $OSGEO4W_SCRIPTS/winsdksetup-19041.exe
+		fi
+
+		$OSGEO4W_SCRIPTS/winsdksetup-19041.exe /features OptionId.WindowsDesktopDebuggers /q /norestart
 		[ -f "$dhd" ]
-	}
+	done
+
+	log "$dhd: $v"
 
 	export VSLANG=1033
 	export VS170COMNTOOLS=$(cygpath -aw "$vcdir")/Common7/Tools
@@ -308,12 +334,12 @@ cmakeenv() {
 		"$OSGEO4W_PWD/osgeo4w/apps/Qt6/lib/cmake"
 	do
 		[ -d "$p" ] || continue
-		echo "ADD CMAKE_PREFIX_PATH:$p"
+		log "ADD CMAKE_PREFIX_PATH:$p"
 		CMAKE_PREFIX_PATH="$(cygpath -aw "$p");$CMAKE_PREFIX_PATH"
 	done
 	CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH%;}
 
-	echo CMAKE_PREFIX_PATH:$CMAKE_PREFIX_PATH
+	log CMAKE_PREFIX_PATH:$CMAKE_PREFIX_PATH
 	export CMAKE_PREFIX_PATH
 }
 declare -x cmakeenv
@@ -341,7 +367,7 @@ ninjaenv() {
 	fi
 
 	if ! [ -x "$OSGEO4W_SCRIPTS/ninja.exe" ]; then
-		echo "Ninja not found"
+		log "Ninja not found"
 		exit 1
 	fi
 
@@ -366,7 +392,7 @@ ccacheenv() {
 	fi
 
 	if ! [ -x "$OSGEO4W_SCRIPTS/ccache.exe" ]; then
-		echo "ccache not found"
+		log "ccache not found"
 		exit 1
 	fi
 
@@ -620,8 +646,8 @@ packagewheel() {
 		for tempdrive in {A..Z}; do
 			if subst $tempdrive: $(cygpath -aw $OSGEO4W_PWD/tmp); then
 				export TEMP=$(cygpath -aw $tempdrive:\\)
-				echo "Temporary directory: $TEMP"
-				trap "subst $tempdrive: /d || { echo subst failed; subst; }" EXIT
+				log "Temporary directory: $TEMP"
+				trap "subst $tempdrive: /d || { log subst failed; subst; }" EXIT
 				break
 			fi
 			t=
