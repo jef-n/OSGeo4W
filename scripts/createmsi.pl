@@ -842,7 +842,7 @@ sub sign {
 	# using ossslsigncode fails eventhough the msi is apparently
 	# fine (no complaints when installing)
 	my $cmd = "osslsigncode sign";
-	$cmd .= " -nolegacy";
+#	$cmd .= " -nolegacy";
 	$cmd .= " -pkcs12 \"\$(cygpath -aw '$signwith')\"";
 	$cmd .= " -pass \"$signpass\"" if defined $signpass;
 	$cmd .= " -n \"$name\"";
