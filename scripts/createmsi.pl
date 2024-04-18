@@ -18,7 +18,6 @@ use warnings;
 use Getopt::Long;
 use Pod::Usage;
 use Data::UUID;
-use RTF::Writer;
 use File::Copy;
 use File::Basename;
 use Cwd qw/abs_path/;
@@ -500,18 +499,16 @@ for my $l ( ( "unpacked/apps/$shortname/doc/LICENSE", "../COPYING", "./Installer
 
 warn "no QGIS license found" unless defined $lic;
 
-my $rtf = RTF::Writer->new_to_file("packages/license.temp");
+open RTF, "| enscript -w rtf -o - | sed -e 's/^License overview:/\\\\fs18&/' >packages/license.temp";
 
 my $license = "packages/license.txt";
 open O, ">$license";
 
 sub out {
 	my $m = shift;
-	$rtf->print($m);
+	print RTF $m;
 	print O $m;
 }
-
-$rtf->prolog;
 
 my $i = 0;
 if( @lic ) {
@@ -548,8 +545,7 @@ for my $l (@lic) {
 	close I;
 }
 
-$rtf->close();
-undef $rtf;
+close RTF;
 close O;
 
 system "cp $license unpacked/apps/$shortname/doc/LICENSE" if -f "unpacked/apps/$shortname/doc/LICENSE";
