@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e69f555832..f2a80042cb 100644
+index e69f555832..8cd75b38fd 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -85,17 +85,15 @@ if (USE_OPENCL)
@@ -29,6 +29,17 @@ index e69f555832..f2a80042cb 100644
  
  if (IOS)
      set (DEFAULT_FORCE_STATIC_LIBS TRUE)
+@@ -638,8 +636,8 @@ if (ENABLE_TESTS)
+   add_custom_target(check COMMAND xvfb-run --server-args=-screen\ 0\ 1024x768x24 ctest --output-on-failure)
+ 
+   # Define SOURCETREE fixture
+-  add_test(NAME   logGitStatus COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/scripts/chkgitstatus.sh log)
+-  add_test(NAME checkGitStatus COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/scripts/chkgitstatus.sh check)
++  add_test(NAME   logGitStatus COMMAND sh ${CMAKE_CURRENT_SOURCE_DIR}/scripts/chkgitstatus.sh log)
++  add_test(NAME checkGitStatus COMMAND sh ${CMAKE_CURRENT_SOURCE_DIR}/scripts/chkgitstatus.sh check)
+   set_tests_properties(logGitStatus   PROPERTIES FIXTURES_SETUP   SOURCETREE)
+   set_property(TEST logGitStatus PROPERTY SKIP_RETURN_CODE 2)
+   set_tests_properties(checkGitStatus PROPERTIES FIXTURES_CLEANUP SOURCETREE)
 diff --git a/external/mdal/frmts/mdal_h2i.cpp b/external/mdal/frmts/mdal_h2i.cpp
 index 0b2ca0f33d..be5b2b6834 100644
 --- a/external/mdal/frmts/mdal_h2i.cpp
@@ -185,10 +196,10 @@ index c668cc6c9a..46863b186a 100644
  %Include auto_generated/editorwidgets/qgsrelationaggregatesearchwidgetwrapper.sip
  %Include auto_generated/editorwidgets/qgsrelationreferencesearchwidgetwrapper.sip
 diff --git a/src/app/CMakeLists.txt b/src/app/CMakeLists.txt
-index 928d987187..7e866fd204 100644
+index e9847f5041..3bd86feef7 100644
 --- a/src/app/CMakeLists.txt
 +++ b/src/app/CMakeLists.txt
-@@ -514,6 +514,10 @@ if (ANDROID)
+@@ -515,6 +515,10 @@ if (ANDROID)
  else()
    add_executable(${QGIS_APP_NAME} MACOSX_BUNDLE WIN32 ${QGIS_APPMAIN_SRCS})
  
@@ -200,7 +211,7 @@ index 928d987187..7e866fd204 100644
    target_compile_features(${QGIS_APP_NAME} PRIVATE cxx_std_17)
    target_compile_definitions(${QGIS_APP_NAME} PRIVATE "QT_PLUGINS_DIR=\"${QT_PLUGINS_DIR}\"")
 diff --git a/src/app/main.cpp b/src/app/main.cpp
-index 92d7c59194..5d1746945c 100644
+index 5cb8ee81e5..bce6f9f1ae 100644
 --- a/src/app/main.cpp
 +++ b/src/app/main.cpp
 @@ -177,10 +177,10 @@ void usage( const QString &appName )
@@ -228,10 +239,10 @@ index 92d7c59194..5d1746945c 100644
    vfprintf( stderr, fmt, ap );
  #endif
 diff --git a/src/app/qgisapp.cpp b/src/app/qgisapp.cpp
-index 525ef31389..685782023c 100644
+index 84f643c23b..014b0577f6 100644
 --- a/src/app/qgisapp.cpp
 +++ b/src/app/qgisapp.cpp
-@@ -13038,7 +13038,11 @@ void QgisApp::openURL( QString url, bool useQgisDocDirectory )
+@@ -13048,7 +13048,11 @@ void QgisApp::openURL( QString url, bool useQgisDocDirectory )
    CFRelease( urlRef );
  #elif defined(Q_OS_WIN)
    if ( url.startsWith( "file://", Qt::CaseInsensitive ) )
@@ -270,7 +281,7 @@ index b789f224f9..e6b040f7e0 100644
      for ( int i = 0; i < faceSize / 2; ++i )
      {
 diff --git a/src/core/pal/labelposition.cpp b/src/core/pal/labelposition.cpp
-index 724eaaafab..323c7c0ffc 100644
+index ba1a576c58..caf010ed7a 100644
 --- a/src/core/pal/labelposition.cpp
 +++ b/src/core/pal/labelposition.cpp
 @@ -574,7 +574,7 @@ double LabelPosition::getDistanceToPoint( double xp, double yp, bool useOuterBou
@@ -408,10 +419,10 @@ index 39fab282a0..beb1cf53e1 100644
                    }
                  }
 diff --git a/src/gui/CMakeLists.txt b/src/gui/CMakeLists.txt
-index 09b3277002..129136e34f 100644
+index 89df2a440e..7c39caf1e9 100644
 --- a/src/gui/CMakeLists.txt
 +++ b/src/gui/CMakeLists.txt
-@@ -1612,6 +1612,13 @@ else()
+@@ -1614,6 +1614,13 @@ else()
      PROPERTIES COMPILE_FLAGS "-w -Wno-deprecated-declarations")
  endif()
  
@@ -425,7 +436,7 @@ index 09b3277002..129136e34f 100644
  #############################################################
  # qgis_gui library
  
-@@ -1707,7 +1714,7 @@ GENERATE_EXPORT_HEADER(
+@@ -1709,7 +1716,7 @@ GENERATE_EXPORT_HEADER(
  set(QGIS_GUI_HDRS ${QGIS_GUI_HDRS} ${CMAKE_CURRENT_BINARY_DIR}/qgis_gui.h)
  
  if(NOT APPLE OR NOT QGIS_MACAPP_FRAMEWORK)

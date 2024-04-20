@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c44705325ad..cfef96f14a1 100644
+index 4ea650f1353..254c44b8f4a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -85,17 +85,15 @@ if (USE_OPENCL)
@@ -29,6 +29,17 @@ index c44705325ad..cfef96f14a1 100644
  
  if (IOS)
      set (DEFAULT_FORCE_STATIC_LIBS TRUE)
+@@ -641,8 +639,8 @@ if (ENABLE_TESTS)
+   add_custom_target(check COMMAND xvfb-run --server-args=-screen\ 0\ 1024x768x24 ctest --output-on-failure)
+ 
+   # Define SOURCETREE fixture
+-  add_test(NAME   logGitStatus COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/scripts/chkgitstatus.sh log)
+-  add_test(NAME checkGitStatus COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/scripts/chkgitstatus.sh check)
++  add_test(NAME   logGitStatus COMMAND sh ${CMAKE_CURRENT_SOURCE_DIR}/scripts/chkgitstatus.sh log)
++  add_test(NAME checkGitStatus COMMAND sh ${CMAKE_CURRENT_SOURCE_DIR}/scripts/chkgitstatus.sh check)
+   set_tests_properties(logGitStatus   PROPERTIES FIXTURES_SETUP   SOURCETREE)
+   set_property(TEST logGitStatus PROPERTY SKIP_RETURN_CODE 2)
+   set_tests_properties(checkGitStatus PROPERTIES FIXTURES_CLEANUP SOURCETREE)
 diff --git a/src/server/qgis_mapserver.cpp b/src/server/qgis_mapserver.cpp
 index 38d9fe5dcb7..1ed9042085e 100644
 --- a/src/server/qgis_mapserver.cpp
