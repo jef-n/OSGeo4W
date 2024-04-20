@@ -113,6 +113,7 @@ nextbinary
 	cd ../osgeo4w
 
 	export BUILDNAME=$P-$V-$TARGET-VC17-x86_64
+	export QGIS_CONTINUOUS_INTEGRATION_RUN=true
 	export BUILDDIR=$PWD/build
 	export INSTDIR=$PWD/install
 	export SRCDIR=$(cygpath -am ../qgis)
