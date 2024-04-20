@@ -491,7 +491,7 @@ close F;
 print "Creating license file\n" if $verbose;
 
 my $lic;
-for my $l ( ( "unpacked/apps/$shortname/doc/LICENSE", "../COPYING", "./Installer-Files/LICENSE.txt" ) ) {
+for my $l ( ( "unpacked/apps/$shortname/doc/LICENSE", "../COPYING" ) ) {
 	next unless -f $l;
 	$lic = $l;
 	last;

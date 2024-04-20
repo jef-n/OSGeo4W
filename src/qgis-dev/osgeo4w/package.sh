@@ -47,8 +47,8 @@ else
 fi
 
 if [ -z "$OSGEO4W_SKIP_CLEAN" ]; then
-	patch -p1 --dry-run <../osgeo4w/patch
-	patch -p1 <../osgeo4w/patch
+	git apply --check ../osgeo4w/patch
+	git apply ../osgeo4w/patch
 fi
 
 SHA=$(git log -n1 --pretty=%h)
@@ -221,8 +221,8 @@ nextbinary
 		export PATH="$PATH:$(cygpath -au $GRASS_PREFIX/lib)"
 		export GISBASE=$(cygpath -aw $GRASS_PREFIX)
 
-		export PATH=$PATH:$(cygpath -au $BUILDDIR/output/plugins)
-		export QT_PLUGIN_PATH="$(cygpath -au $BUILDDIR/output/plugins);$(cygpath -au $O4W_ROOT/apps/qt5/plugins)"
+		export PATH=$(cygpath -au $BUILDDIR/output/bin):$(cygpath -au $BUILDDIR/output/plugins):$PATH
+		export QT_PLUGIN_PATH="$(cygpath -aw $BUILDDIR/output/plugins);$(cygpath -aw $O4W_ROOT/apps/qt5/plugins)"
 
 		rm -f ../testfailure
 		if ! cmake --build $(cygpath -am $BUILDDIR) --target ${TARGET}Test --config $BUILDCONF; then

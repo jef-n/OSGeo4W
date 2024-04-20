@@ -10,6 +10,7 @@ export PACKAGES="qgis-rel-dev qgis-rel-dev-deps qgis-rel-dev-full qgis-rel-dev-f
 : ${CC:=cl.exe}
 : ${CXX:=cl.exe}
 : ${BUILDCONF:=RelWithDebInfo}
+: ${PUSH_TO_DASH:=TRUE}
 
 REPO=https://github.com/qgis/QGIS.git
 
@@ -67,8 +68,8 @@ else
 fi
 
 if [ -z "$OSGEO4W_SKIP_CLEAN" ]; then
-	patch -p1 --dry-run <../osgeo4w/patch
-	patch -p1 <../osgeo4w/patch
+	git apply --check ../osgeo4w/patch
+	git apply ../osgeo4w/patch
 fi
 
 SHA=$(git log -n1 --pretty=%h)
@@ -204,7 +205,7 @@ nextbinary
 		-D QWT_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt5/lib/qwt.lib) \
 		-D QSCINTILLA_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt5/lib/qscintilla2.lib) \
 		-D DART_TESTING_TIMEOUT=60 \
-		-D PUSH_TO_CDASH=TRUE \
+		-D PUSH_TO_CDASH=$PUSH_TO_DASH \
 		$(cygpath -m $SRCDIR)
 
 	if [ -z "$OSGEO4W_SKIP_CLEAN" ]; then
@@ -240,8 +241,8 @@ nextbinary
 		export PATH="$PATH:$(cygpath -au $GRASS_PREFIX/lib)"
 		export GISBASE=$(cygpath -aw $GRASS_PREFIX)
 
-		export PATH=$PATH:$(cygpath -au $BUILDDIR/output/plugins)
-		export QT_PLUGIN_PATH="$(cygpath -au $BUILDDIR/output/plugins);$(cygpath -au $O4W_ROOT/apps/qt5/plugins)"
+		export PATH=$(cygpath -au $BUILDDIR/output/bin):$(cygpath -au $BUILDDIR/output/plugins):$PATH
+		export QT_PLUGIN_PATH="$(cygpath -aw $BUILDDIR/output/plugins);$(cygpath -aw $O4W_ROOT/apps/qt5/plugins)"
 
 		rm -f ../testfailure
 		if ! cmake --build $(cygpath -am $BUILDDIR) --target ${TARGET}Test --config $BUILDCONF; then
