@@ -45,7 +45,7 @@ startlog() {
 	fi
 
 	if [ -f "$OSGEO4W_SCRIPTS/start" ]; then
-		bash $OSGEO4W_SCRIPTS/start
+		bash "$OSGEO4W_SCRIPTS/start"
 	fi
 
 	[ "$BUILDDEPENDS" == "none" ] || {
@@ -112,7 +112,7 @@ declare -x errlog
 faillog() {
 	log "FAILED: $?"
 	if [ -f "$OSGEO4W_SCRIPTS/fail" ]; then
-		bash $OSGEO4W_SCRIPTS/fail
+		bash "$OSGEO4W_SCRIPTS/fail"
 	fi
 	finishlog
 	return 1
@@ -120,6 +120,9 @@ faillog() {
 declare -x faillog
 
 finishlog() {
+	if [ -f "$OSGEO4W_SCRIPTS/finish" ]; then
+		bash "$OSGEO4W_SCRIPTS/finish"
+	fi
 	log "END"
 }
 declare -x finishlog
