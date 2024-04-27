@@ -2,8 +2,8 @@ export P=gdal-dev
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel hdf5-tools ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-turbo-devel python3-setuptools opencl-devel libtiff-devel arrow-cpp-devel lz4-devel openssl-devel tiledb-devel lerc-devel kealib-devel odbc-cpp-wrapper-devel libjxl-devel libxml2-devel"
-export PACKAGES="gdal-dev gdal-dev-devel gdal-dev-ecw gdal-dev-filegdb gdal-dev-hana gdal-dev-hdf5 gdal-dev-kea gdal-dev-mrsid gdal-dev-mss gdal-dev-oracle gdal-dev-sosi gdal-dev-tiledb gdal-dev305-runtime gdal-dev306-runtime gdal-dev307-runtime gdal-dev308-runtime gdal-dev309-runtime python3-gdal-dev"
+export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel hdf5-tools ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-turbo-devel python3-setuptools opencl-devel libtiff-devel arrow-cpp-devel lz4-devel openssl-devel lerc-devel kealib-devel odbc-cpp-wrapper-devel libjxl-devel libxml2-devel"
+export PACKAGES="gdal-dev gdal-dev-devel gdal-dev-ecw gdal-dev-filegdb gdal-dev-hana gdal-dev-hdf5 gdal-dev-kea gdal-dev-mrsid gdal-dev-mss gdal-dev-oracle gdal-dev-sosi gdal-dev305-runtime gdal-dev306-runtime gdal-dev307-runtime gdal-dev308-runtime gdal-dev309-runtime python3-gdal-dev"
 
 REPO=https://github.com/OSGeo/gdal.git
 
@@ -139,7 +139,7 @@ nextbinary
 export abi=$(printf "%d%02d" $major $minor)
 
 R=$OSGEO4W_REP/x86_64/release/gdal/$P
-mkdir -p $R/$P-{devel,oracle,filegdb,ecw,mrsid,sosi,mss,hdf5,kea,tiledb,hana} $R/$P$abi-runtime $R/python3-$P
+mkdir -p $R/$P-{devel,oracle,filegdb,ecw,mrsid,sosi,mss,hdf5,kea,hana} $R/$P$abi-runtime $R/python3-$P
 
 if [ -f $R/$P-$V-$B-src.tar.bz2 ]; then
 	echo "$R/$P-$V-$B-src.tar.bz2 already exists - skipping"
@@ -226,7 +226,6 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 		-D GDAL_ENABLE_DRIVER_MRSID_PLUGIN=ON -D GDAL_DRIVER_MRSID_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the $P-mrsid package." \
 		-D GDAL_ENABLE_DRIVER_HDF5_PLUGIN=ON -D GDAL_DRIVER_HDF5_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the $P-hdf5 package." \
 		-D GDAL_ENABLE_DRIVER_KEA_PLUGIN=ON -D GDAL_DRIVER_KEA_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the $P-kea package." \
-		-D GDAL_ENABLE_DRIVER_TILEDB_PLUGIN=ON -D GDAL_DRIVER_TILEDB_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the $P-tiledb package." \
 		../../gdal
 
 	cmake --build . || cmake --build .
@@ -389,15 +388,6 @@ requires: $P$abi-runtime kealib
 external-source: $P
 EOF
 
-cat <<EOF >$R/$P-tiledb/setup.hint
-sdesc: "TILEDB plugin for GDAL$extradesc"
-ldesc: "TILEDB plugin for GDAL$extradesc"
-category: Libs
-requires: $P$abi-runtime tiledb
-maintainer: $MAINTAINER
-external-source: $P
-EOF
-
 cat <<EOF >$R/$P-hana/setup.hint
 sdesc: "HANA plugin for GDAL$extradesc"
 ldesc: "HANA plugin for GDAL$extradesc"
@@ -419,7 +409,6 @@ appendversions $R/$P-sosi/setup.hint
 appendversions $R/$P-mss/setup.hint
 appendversions $R/$P-hdf5/setup.hint
 appendversions $R/$P-kea/setup.hint
-appendversions $R/$P-tiledb/setup.hint
 appendversions $R/$P-hana/setup.hint
 
 cp ../gdal/LICENSE.TXT $R/$P-$V-$B.txt
@@ -430,7 +419,6 @@ cp ../gdal/LICENSE.TXT $R/$P-mss/$P-mss-$V-$B.txt
 cp ../gdal/LICENSE.TXT $R/$P-sosi/$P-sosi-$V-$B.txt
 cp ../gdal/LICENSE.TXT $R/$P-hdf5/$P-hdf5-$V-$B.txt
 cp ../gdal/LICENSE.TXT $R/$P-kea/$P-kea-$V-$B.txt
-cp ../gdal/LICENSE.TXT $R/$P-tiledb/$P-tiledb-$V-$B.txt
 cp ../gdal/LICENSE.TXT $R/$P-hana/$P-hana-$V-$B.txt
 cp ../gdal/LICENSE.TXT $R/python3-$P/python3-$P-$V-$B.txt
 cp $FGDB_SDK/license/userestrictions.txt $R/$P-filegdb/$P-filegdb-$V-$B.txt
@@ -478,9 +466,6 @@ tar -C install -cjvf $R/$P-hdf5/$P-hdf5-$V-$B.tar.bz2 \
 
 tar -C install -cjvf $R/$P-kea/$P-kea-$V-$B.tar.bz2 \
 	apps/$P/lib/gdalplugins/gdal_KEA.dll
-
-tar -C install -cjvf $R/$P-tiledb/$P-tiledb-$V-$B.tar.bz2 \
-	apps/$P/lib/gdalplugins/gdal_TileDB.dll
 
 tar -C install -cjvf $R/$P-hana/$P-hana-$V-$B.tar.bz2 \
 	apps/$P/lib/gdalplugins/ogr_HANA.dll
@@ -531,7 +516,7 @@ s#^install/##;
 
 (
 	tar tjf $R/$P-$V-$B.tar.bz2 | tee /tmp/$P.files
-	for i in -filegdb -sosi -oracle -mss -ecw -mrsid -hdf5 -kea -tiledb -hana -devel $abi-runtime; do
+	for i in -filegdb -sosi -oracle -mss -ecw -mrsid -hdf5 -kea -hana -devel $abi-runtime; do
 		tar tjf $R/$P$i/$P$i-$V-$B.tar.bz2 | tee /tmp/$P-$i.files
 	done
 	tar tjf $R/python3-$P/python3-$P-$V-$B.tar.bz2 | tee /tmp/python3-$P.files
