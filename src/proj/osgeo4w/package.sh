@@ -104,7 +104,7 @@ cp ../$P-${V%RC*}/COPYING $R/$P-devel/$P-devel-$V-$B.txt
 
 mkdir -p install/etc/ini
 cat <<EOF >install/etc/ini/$P-runtime-data.bat
-SET PROJ_LIB=%OSGEO4W_ROOT%\\share\\proj
+SET PROJ_DATA=%OSGEO4W_ROOT%\\share\\proj
 EOF
 
 tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
