@@ -3,7 +3,7 @@ export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel hdf5-tools ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-turbo-devel python3-setuptools opencl-devel libtiff-devel arrow-cpp-devel lz4-devel openssl-devel lerc-devel kealib-devel odbc-cpp-wrapper-devel libjxl-devel libxml2-devel"
-export PACKAGES="gdal-dev gdal-dev-devel gdal-dev-ecw gdal-dev-filegdb gdal-dev-hana gdal-dev-hdf5 gdal-dev-kea gdal-dev-mrsid gdal-dev-mss gdal-dev-oracle gdal-dev-sosi gdal-dev-tiledb gdal-dev305-runtime gdal-dev306-runtime gdal-dev307-runtime gdal-dev308-runtime gdal-dev309-runtime python3-gdal-dev"
+export PACKAGES="gdal-dev gdal-dev-devel gdal-dev-ecw gdal-dev-filegdb gdal-dev-hana gdal-dev-hdf5 gdal-dev-kea gdal-dev-mrsid gdal-dev-mss gdal-dev-oracle gdal-dev-sosi gdal-dev-tiledb gdal-dev305-runtime gdal-dev306-runtime gdal-dev307-runtime gdal-dev308-runtime gdal-dev309-runtime gdal-dev310-runtime python3-gdal-dev"
 
 REPO=https://github.com/OSGeo/gdal.git
 

@@ -1,9 +1,9 @@
 export P=gdal
-export V=3.8.5
+export V=3.9.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel hdf5-tools ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-turbo-devel python3-setuptools opencl-devel libtiff-devel arrow-cpp-devel lz4-devel openssl-devel tiledb-devel lerc-devel kealib-devel odbc-cpp-wrapper-devel libjxl-devel libxml2-devel"
-export PACKAGES="gdal gdal-devel gdal-ecw gdal-filegdb gdal-hana gdal-hdf5 gdal-kea gdal-mrsid gdal-mss gdal-oracle gdal-sosi gdal-tiledb gdal301-runtime gdal302-runtime gdal303-runtime gdal304-runtime gdal305-runtime gdal306-runtime gdal307-runtime gdal308-runtime python3-gdal"
+export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel hdf5-tools ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-turbo-devel python3-setuptools opencl-devel libtiff-devel arrow-cpp-devel lz4-devel openssl-devel lerc-devel kealib-devel odbc-cpp-wrapper-devel libjxl-devel libxml2-devel"
+export PACKAGES="gdal gdal-devel gdal-ecw gdal-filegdb gdal-hana gdal-hdf5 gdal-kea gdal-mrsid gdal-mss gdal-oracle gdal-sosi gdal301-runtime gdal302-runtime gdal303-runtime gdal304-runtime gdal305-runtime gdal306-runtime gdal307-runtime gdal308-runtime gdal309-runtime python3-gdal"
 
 source ../../../scripts/build-helpers
 
@@ -180,7 +180,6 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 		-D GDAL_ENABLE_DRIVER_MRSID_PLUGIN=ON -D GDAL_DRIVER_MRSID_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the $P-mrsid package." \
 		-D GDAL_ENABLE_DRIVER_HDF5_PLUGIN=ON -D GDAL_DRIVER_HDF5_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the $P-hdf5 package." \
 		-D GDAL_ENABLE_DRIVER_KEA_PLUGIN=ON -D GDAL_DRIVER_KEA_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the $P-kea package." \
-		-D GDAL_ENABLE_DRIVER_TILEDB_PLUGIN=ON -D GDAL_DRIVER_TILEDB_PLUGIN_INSTALLATION_MESSAGE="You may enable it by installing the $P-tiledb package." \
 		../../$P-${V%rc*}
 
 	cmake --build .
@@ -340,10 +339,10 @@ external-source: $P
 EOF
 
 cat <<EOF >$R/$P-tiledb/setup.hint
-sdesc: "TILEDB plugin for GDAL$extradesc"
-ldesc: "TILEDB plugin for GDAL$extradesc"
-category: Libs
-requires: $P$abi-runtime tiledb
+sdesc: "TILEDB plugin for GDAL$extradesc (obsolete)"
+ldesc: "TILEDB plugin for GDAL$extradesc (obsolete)"
+category: _obsolete
+requires:
 maintainer: $MAINTAINER
 external-source: $P
 EOF
@@ -427,8 +426,9 @@ tar -C install -cjvf $R/$P-hdf5/$P-hdf5-$V-$B.tar.bz2 \
 tar -C install -cjvf $R/$P-kea/$P-kea-$V-$B.tar.bz2 \
 	apps/$P/lib/gdalplugins/gdal_KEA.dll
 
-tar -C install -cjvf $R/$P-tiledb/$P-tiledb-$V-$B.tar.bz2 \
-	apps/$P/lib/gdalplugins/gdal_TileDB.dll
+d=$(mktemp -d)
+tar -C $d -cjvf $R/$P-tiledb/$P-tiledb-$V-$B.tar.bz2 .
+rmdir $d
 
 tar -C install -cjvf $R/$P-hana/$P-hana-$V-$B.tar.bz2 \
 	apps/$P/lib/gdalplugins/ogr_HANA.dll
