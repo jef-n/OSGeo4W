@@ -13,8 +13,6 @@ export PACKAGES="qgis-ltr-dev qgis-ltr-dev-deps qgis-ltr-dev-full qgis-ltr-dev-f
 : ${BUILDCONF:=RelWithDebInfo}
 : ${PUSH_TO_DASH:=TRUE}
 
-REPO=https://github.com/qgis/QGIS.git
-
 export SITE TARGET CC CXX BUILDCONF
 
 source ../../../scripts/build-helpers

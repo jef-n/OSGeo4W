@@ -5,13 +5,12 @@ export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-devel qt5-oci sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt5 python3-sip python3-pyqt-builder python3-devel python3-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-devel qscintilla-devel qt5-devel qwt-devel libspatialite-devel oci-devel qtkeychain-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel qtwebkit-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel pdal pdal-devel grass draco-devel"
 export PACKAGES="qgis-ltr qgis-ltr-common qgis-ltr-deps qgis-ltr-devel qgis-ltr-full qgis-ltr-full-free qgis-ltr-grass-plugin qgis-ltr-oracle-provider qgis-ltr-pdb qgis-ltr-server"
 
+: ${REPO:=https://github.com/qgis/QGIS.git}
 : ${SITE:=qgis.org}
 : ${TARGET:=Release}
 : ${CC:=cl.exe}
 : ${CXX:=cl.exe}
 : ${BUILDCONF:=Release}
-
-REPO=https://github.com/qgis/QGIS.git
 
 export SITE TARGET CC CXX BUILDCONF
 
