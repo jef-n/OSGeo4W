@@ -230,6 +230,8 @@ nextbinary
 
 	if [ -z "$OSGEO4W_SKIP_TESTS" ]; then
 	(
+		cd $SRCDIR
+
 		echo RUN_TESTS: $(date)
 		reg add "HKCU\\Software\\Microsoft\\Windows\\Windows Error Reporting" /v DontShow /t REG_DWORD /d 1 /f
 
