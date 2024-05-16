@@ -90,6 +90,7 @@ tar -C install -cjf $R/$P-tools/$P-tools-$V-$B.tar.bz2 \
 	bin/ncgen.exe
 
 tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
+	--exclude include/netcdf.h \
 	cmake include lib
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
