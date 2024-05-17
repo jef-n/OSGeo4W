@@ -24,7 +24,7 @@ if [ -z "$REF" ]; then
 	# Get latest release branch
 	BRANCH=$(git ls-remote --heads $REPO "refs/heads/release-*_*" | sed -e '/\^{}$/d' -ne 's#^.*refs/heads/release-#release-#p' | sort -V | tail -1)
 	APPNAME="Nightly"
-	PKGDESC="latest release branch"
+	PKGDESC="QGIS Nightly build of latest release branch"
 else
 	: ${PKGDESC:="QGIS build of release branch ($REF)"}
 	: ${APPNAME:=$P/$REF}
