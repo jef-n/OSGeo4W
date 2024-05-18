@@ -58,7 +58,7 @@ if [ -d qgis ]; then
 		done
 	fi
 elif [ -n "$BRANCH" ]; then
-	git clone $REPO --branch $REF --single-branch --depth 1 qgis
+	git clone $REPO --branch $BRANCH --single-branch --depth 1 qgis
 	cd qgis
 	git config core.filemode false
 	unset OSGEO4W_SKIP_CLEAN
