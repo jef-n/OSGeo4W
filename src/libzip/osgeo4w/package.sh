@@ -1,5 +1,5 @@
 export P=libzip
-export V=1.10.1
+export V=1.10.2really1.7.3
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="openssl-devel zlib-devel xz-devel bzip2-devel zstd-devel"
@@ -9,8 +9,9 @@ source ../../../scripts/build-helpers
 
 startlog
 
-[ -f $P-$V.tar.gz ] || wget https://libzip.org/download/$P-$V.tar.gz
-[ -f ../CMakeLists.txt ] || tar -C .. -xzf  $P-$V.tar.gz
+VV=1.7.3
+[ -f $P-$VV.tar.gz ] || wget https://libzip.org/download/$P-$VV.tar.gz
+[ -f ../$P-$VV/CMakeLists.txt ] || tar -C .. -xzf $P-$VV.tar.gz
 
 vsenv
 cmakeenv
@@ -36,7 +37,7 @@ cmake -G Ninja \
 	-D BZIP2_LIBRARIES=$(cygpath -am ../osgeo4w/lib/libbz2.lib) \
 	-D BZIP2_LIBRARY=$(cygpath -am ../osgeo4w/lib/libbz2.lib) \
 	-D BZIP2_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
-	../../$P-$V
+	../../$P-$VV
 ninja
 ninja install
 cmakefix ../install
@@ -86,8 +87,8 @@ tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 
-cp ../$P-$V/LICENSE $R/$P-$V-$B.txt
-cp ../$P-$V/LICENSE $R/$P-tools/$P-tools-$P-$V-$B.txt
-cp ../$P-$V/LICENSE $R/$P-devel/$P-devel-$P-$V-$B.txt
+cp ../$P-$VV/LICENSE $R/$P-$V-$B.txt
+cp ../$P-$VV/LICENSE $R/$P-tools/$P-tools-$P-$V-$B.txt
+cp ../$P-$VV/LICENSE $R/$P-devel/$P-devel-$P-$V-$B.txt
 
 endlog
