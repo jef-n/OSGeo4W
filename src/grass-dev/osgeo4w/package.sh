@@ -141,6 +141,7 @@ pacman --noconfirm -Syu --needed \
 	make \
 	dos2unix \
 	tar \
+	git \
 	mingw-w64-x86_64-pkg-config \
 	mingw-w64-x86_64-gcc \
 	mingw-w64-x86_64-ccache \
@@ -159,6 +160,9 @@ pacman --noconfirm -Syu --needed \
 	mingw-w64-x86_64-readline
 
 cd ../grass
+
+# reconfigure on each build
+rm -f mswindows/osgeo4w/configure-stamp
 
 PACKAGE_POSTFIX=-dev bash.exe $xtrace mswindows/osgeo4w/package.sh
 EOF
