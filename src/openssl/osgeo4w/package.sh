@@ -1,5 +1,5 @@
 export P=openssl
-export V=3.0.13
+export V=3.0.14
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
@@ -13,7 +13,7 @@ source ../../../scripts/build-helpers
 
 startlog
 
-[ -f $P-$V.tar.gz ] || wget https://www.openssl.org/source/$P-$V.tar.gz
+[ -f $P-$V.tar.gz ] || wget https://github.com/openssl/openssl/releases/download/$P-$V/$P-$V.tar.gz
 [ -d ../$P-$V ] || {
 	tar -C .. -xzf $P-$V.tar.gz
 	rm -f built tested installed
