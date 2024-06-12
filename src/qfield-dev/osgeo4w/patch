@@ -1,7 +1,21 @@
-diff -ur QField-3.2.2/cmake/qgis-cmake-wrapper.cmake ../QField-3.2.2/cmake/qgis-cmake-wrapper.cmake
---- QField-3.2.2/cmake/qgis-cmake-wrapper.cmake	2024-03-25 03:54:46.000000000 +0100
-+++ ../QField-3.2.2/cmake/qgis-cmake-wrapper.cmake	2024-04-09 13:40:05.601125200 +0200
-@@ -66,22 +66,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5b9cb1b..5db8b68 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -23,7 +23,7 @@ include(Platform)
+ # Obtain git revision
+ include(GetGitRevisionDescription)
+ # The vcpkg toolchain to compile dependencies
+-include(VcpkgToolchain)
++# include(VcpkgToolchain)
+ # The default installation paths
+ include(GNUInstallDirs)
+ 
+diff --git a/cmake/qgis-cmake-wrapper.cmake b/cmake/qgis-cmake-wrapper.cmake
+index 8526cfe..bb7a41b 100644
+--- a/cmake/qgis-cmake-wrapper.cmake
++++ b/cmake/qgis-cmake-wrapper.cmake
+@@ -66,22 +66,22 @@ endfunction()
  if(TRUE) # Should possibly have a "static only" check
    find_package(PkgConfig QUIET)
  
@@ -40,15 +54,152 @@ diff -ur QField-3.2.2/cmake/qgis-cmake-wrapper.cmake ../QField-3.2.2/cmake/qgis-
  
    _qgis_core_add_dependency(PostgreSQL::PostgreSQL PostgreSQL)
  
-diff -ur QField-3.2.2/CMakeLists.txt ../QField-3.2.2/CMakeLists.txt
---- QField-3.2.2/CMakeLists.txt	2024-03-25 03:54:46.000000000 +0100
-+++ ../QField-3.2.2/CMakeLists.txt	2024-04-09 12:26:26.087378500 +0200
-@@ -25,7 +25,7 @@
- # Obtain git revision
- include(GetGitRevisionDescription)
- # The vcpkg toolchain to compile dependencies
--include(VcpkgToolchain)
-+# include(VcpkgToolchain)
- # The default installation paths
- include(GNUInstallDirs)
+diff --git a/src/core/attributeformmodelbase.cpp b/src/core/attributeformmodelbase.cpp
+index 9569839..5991412 100644
+--- a/src/core/attributeformmodelbase.cpp
++++ b/src/core/attributeformmodelbase.cpp
+@@ -977,7 +977,7 @@ QgsEditorWidgetSetup AttributeFormModelBase::findBest( const int fieldIndex )
+       return setup;
  
+     //when it's a provider field with default value clause, take Textedit
+-    if ( fields.fieldOrigin( fieldIndex ) == QgsFields::OriginProvider )
++    if ( fields.fieldOrigin( fieldIndex ) == Qgis::FieldOrigin::Provider )
+     {
+       int providerOrigin = fields.fieldOriginIndex( fieldIndex );
+       if ( !mLayer->dataProvider()->defaultValueClause( providerOrigin ).isEmpty() )
+diff --git a/src/core/deltafilewrapper.cpp b/src/core/deltafilewrapper.cpp
+index efba26c..02b1a44 100644
+--- a/src/core/deltafilewrapper.cpp
++++ b/src/core/deltafilewrapper.cpp
+@@ -531,14 +531,14 @@ void DeltaFileWrapper::addPatch( const QString &localLayerId, const QString &sou
+ 
+     switch ( newFields.fieldOrigin( idx ) )
+     {
+-      case QgsFields::OriginExpression:
+-      case QgsFields::OriginEdit:
++      case Qgis::FieldOrigin::Expression:
++      case Qgis::FieldOrigin::Edit:
+       // TODO probably one day when QField supports editable joins we need to change that, if the other feature change is not a separate delta.
+-      case QgsFields::OriginJoin:
++      case Qgis::FieldOrigin::Join:
+         ignoredFields++;
+         continue;
+-      case QgsFields::OriginProvider:
+-      case QgsFields::OriginUnknown:
++      case Qgis::FieldOrigin::Provider:
++      case Qgis::FieldOrigin::Unknown:
+         break;
+     }
+ 
+@@ -739,13 +739,13 @@ void DeltaFileWrapper::addCreate( const QString &localLayerId, const QString &so
+ 
+     switch ( newFields.fieldOrigin( idx ) )
+     {
+-      case QgsFields::OriginExpression:
+-      case QgsFields::OriginEdit:
++      case Qgis::FieldOrigin::Expression:
++      case Qgis::FieldOrigin::Edit:
+       // TODO probably one day when QField supports editable joins we need to change that, if the other feature change is not a separate delta.
+-      case QgsFields::OriginJoin:
++      case Qgis::FieldOrigin::Join:
+         continue;
+-      case QgsFields::OriginProvider:
+-      case QgsFields::OriginUnknown:
++      case Qgis::FieldOrigin::Provider:
++      case Qgis::FieldOrigin::Unknown:
+         break;
+     }
+ 
+diff --git a/src/core/featurechecklistmodel.cpp b/src/core/featurechecklistmodel.cpp
+index 10aa276..9b8bc3c 100644
+--- a/src/core/featurechecklistmodel.cpp
++++ b/src/core/featurechecklistmodel.cpp
+@@ -69,13 +69,13 @@ QVariant FeatureCheckListModel::attributeValue() const
+   for ( const QString &s : std::as_const( mCheckedEntries ) )
+   {
+     // Convert to proper type
+-    const QVariant::Type type { fkType() };
++    const QMetaType::Type type { fkType() };
+     switch ( type )
+     {
+-      case QVariant::Type::Int:
++      case QMetaType::Int:
+         vl.push_back( s.toInt() );
+         break;
+-      case QVariant::Type::LongLong:
++      case QMetaType::LongLong:
+         vl.push_back( s.toLongLong() );
+         break;
+       default:
+@@ -86,7 +86,7 @@ QVariant FeatureCheckListModel::attributeValue() const
+ 
+   if ( mAllowMulti )
+   {
+-    if ( mAttributeField.type() == QVariant::Map || mAttributeField.type() == QVariant::List )
++    if ( mAttributeField.type() == QMetaType::QVariantMap || mAttributeField.type() == QMetaType::QVariantList )
+     {
+       value = vl;
+     }
+@@ -110,9 +110,9 @@ void FeatureCheckListModel::setAttributeValue( const QVariant &attributeValue )
+ 
+   if ( mAllowMulti )
+   {
+-    if ( mAttributeField.type() == QVariant::Map || mAttributeField.type() == QVariant::List )
++    if ( mAttributeField.type() == QMetaType::QVariantMap || mAttributeField.type() == QMetaType::QVariantList )
+     {
+-      if ( attributeValue.canConvert( QVariant::String ) )
++      if ( attributeValue.canConvert( QMetaType::QString ) )
+       {
+         QString value = attributeValue.value<QString>();
+         if ( !value.isEmpty() )
+@@ -133,7 +133,7 @@ void FeatureCheckListModel::setAttributeValue( const QVariant &attributeValue )
+   }
+   else
+   {
+-    if ( attributeValue.canConvert( QVariant::String ) )
++    if ( attributeValue.canConvert( QMetaType::QString ) )
+     {
+       QString value = attributeValue.value<QString>();
+ 
+@@ -229,7 +229,7 @@ void FeatureCheckListModel::setUnchecked( const QModelIndex &index )
+   emit listUpdated();
+ }
+ 
+-QVariant::Type FeatureCheckListModel::fkType() const
++QMetaType::Type FeatureCheckListModel::fkType() const
+ {
+   if ( currentLayer() )
+   {
+@@ -240,5 +240,5 @@ QVariant::Type FeatureCheckListModel::fkType() const
+       return fields.at( idx ).type();
+     }
+   }
+-  return QVariant::Type::Invalid;
++  return QMetaType::UnknownType;
+ }
+diff --git a/src/core/featurechecklistmodel.h b/src/core/featurechecklistmodel.h
+index ccf6108..a6d9feb 100644
+--- a/src/core/featurechecklistmodel.h
++++ b/src/core/featurechecklistmodel.h
+@@ -97,7 +97,7 @@ class FeatureCheckListModel : public FeatureListModel
+   private:
+     void setChecked( const QModelIndex &index );
+     void setUnchecked( const QModelIndex &index );
+-    QVariant::Type fkType() const;
++    QMetaType::Type fkType() const;
+ 
+     QgsField mAttributeField;
+     QStringList mCheckedEntries;
+diff --git a/src/core/utils/layerutils.cpp b/src/core/utils/layerutils.cpp
+index b1a86bf..442148f 100644
+--- a/src/core/utils/layerutils.cpp
++++ b/src/core/utils/layerutils.cpp
+@@ -196,7 +196,7 @@ void LayerUtils::selectFeaturesInLayer( QgsVectorLayer *layer, const QList<int>
+ 
+ QString LayerUtils::fieldType( const QgsField &field )
+ {
+-  return QVariant( field.type() ).typeName();
++  return QMetaType( field.type() ).name();
+ }
+ 
+ bool LayerUtils::addFeature( QgsVectorLayer *layer, QgsFeature feature )
