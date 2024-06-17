@@ -22,7 +22,7 @@ for i in ${PKGS:-qgis qgis-ltr}; do
 
 	[ -z "$CI" ] || echo "::group::Creating MSI for $i"
 
-	perl scripts/createmsi.pl \
+	eval perl scripts/createmsi.pl \
 		$sign \
 		$o \
 		-verbose \
