@@ -262,7 +262,6 @@ mkdir -p $R/$P-{devel,qml,tools,docs,libs,libs-symbols,oci}
 #
 
 cat <<EOF >../qt5.bat
-@echo off
 path %OSGEO4W_ROOT%\\apps\\qt5\\bin;%PATH%
 
 set QT_PLUGIN_PATH=%OSGEO4W_ROOT%\\apps\\Qt5\\plugins
