@@ -354,6 +354,8 @@ cmakefix() {
 	for i in "$@"; do
 		a="$a -e 's#$(cygpath -am "$i")#\$ENV{OSGEO4W_ROOT}#gi'"
 		a="$a -e 's#$(cygpath -aw "$i" | sed -e "s/\\\\/&&/g")#\$ENV{OSGEO4W_ROOT}#gi'"
+		a="$a -e 's#$(cygpath -am "$OSGEO4W_PWD/osgeo4w")#\$ENV{OSGEO4W_ROOT}#gi'"
+		a="$a -e 's#$(cygpath -aw "$OSGEO4W_PWD/osgeo4w")#\$ENV{OSGEO4W_ROOT}#gi'"
 	done
 	find "$@" -type f -path "*/cmake/*" -print0 | eval xargs -0r sed -i$a
 }
