@@ -46,6 +46,7 @@
 #include "mount.h"
 #include "filemanip.h"
 #include "io_stream.h"
+#include "io_stream_file.h"
 #include "compress.h"
 #include "compress_gz.h"
 #include "archive.h"
@@ -310,6 +311,46 @@ Installer::installOne (packagemeta &pkgm, const packageversion &ver,
           switch (extres)
             {
 	    case archive::extract_inuse: // in use
+	      // Try renaming in-use file by appending .old, removing a
+	      // potentially existing one first and retry to extract
+	      {
+	        std::string s = cygpath ("/" + fn),
+			    d = cygpath ("/" + fn + ".old");
+		if ( io_stream_file::exists(d) )
+		  {
+		    if( io_stream_file::remove (d) == 0 )
+                      log (LOG_BABBLE) << "Old copy " << d << " of in-use file removed." << endLog;
+		    else
+                      log (LOG_BABBLE) << "Old copy " << d << " of in-use file could not be removed." << endLog;
+		  }
+
+	        if( io_stream_file::move (s, d) != 0 )
+                  log (LOG_BABBLE) << "In-use file " << s << " could not be renamed to " << d << endLog;
+		else
+		  {
+                    log (LOG_BABBLE) << "In-use file " << s << " renamed to " << d << endLog;
+
+		    if (archive::extract_file (tarstream, prefixURL, prefixPath) == archive::extract_ok)
+		      {
+			if ( is_elevated() && !NoReplaceOnReboot)
+			  {
+			    // cleanup .old on next reboot
+			    if (!MoveFileEx (d.c_str (), NULL, MOVEFILE_DELAY_UNTIL_REBOOT ))
+			      {
+				log (LOG_TIMESTAMP) << "Unable to schedule reboot removal of file "
+                                  << d
+                                  << " (Win32 Error " << GetLastError() << ")" << endLog;
+			      }
+			    else
+                              {
+                                log (LOG_BABBLE) << "In-use file " << d << " will be removed on next reboot." << endLog;
+			      }
+			  }
+			iteration++;
+			break;
+		     }
+		  }
+	      }
               if (!ignoreExtractErrors)
                 {
                   std::string msg = Window::sprintf( "%snable to extract /%s -- the file is in use.\r\n"
@@ -334,7 +375,7 @@ Installer::installOne (packagemeta &pkgm, const packageversion &ver,
 
                   // fall through to previous functionality
                 }
-              if (NoReplaceOnReboot)
+              if ( !is_elevated() || NoReplaceOnReboot )
                 {
                   ++errors;
                   error_in_this_package = true;
@@ -368,7 +409,7 @@ Installer::installOne (packagemeta &pkgm, const packageversion &ver,
                                        MOVEFILE_REPLACE_EXISTING))
                         replaceOnRebootFailed (fn);
                       else
-                         replaceOnRebootSucceeded (fn, rebootneeded);
+                        replaceOnRebootSucceeded (fn, rebootneeded);
                     }
                 }
               break;
