@@ -1,5 +1,5 @@
 export P=apache
-export V=2.4.58
+export V=2.4.62
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
@@ -13,7 +13,7 @@ startlog
 
 v=${V%.*}
 v=${v/./}
-z=httpd-$V-240131-win64-VS17.zip
+z=httpd-$V-240718-win64-VS17.zip
 
 [ -f $z ] || curl -L -A Mozilla/5.0 -O https://www.apachelounge.com/download/VS17/binaries/$z
 [ -d Apache$v ] || unzip $z "Apache$v/*"

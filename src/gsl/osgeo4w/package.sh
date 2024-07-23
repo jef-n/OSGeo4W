@@ -9,14 +9,20 @@ source ../../../scripts/build-helpers
 
 startlog
 
-[ -f master.tar.gz ] || wget https://github.com/BrianGladman/gsl/archive/master.tar.gz
-[ -f ../$P/build.vc ] || tar -C .. -xzf master.tar.gz --xform "s,^gsl-master,$P,"
+v=vs_build
+[ -f $v.tar.gz ] || wget https://github.com/BrianGladman/gsl/archive/$v.tar.gz
+[ -f ../$P/build.vc ] || tar -C .. -xzf $v.tar.gz --xform "s,^gsl-$v,$P,"
 
 V=$(sed -ne "s/^AC_INIT(\\[$P\\],\\[\\(.*\\)\\])/\1/p" ../$P/configure.ac)
 
 vsenv
 
+cp config.h ../$P
+
 cd ../$P/build.vc
+
+v=${V%.*}
+sed -e "s/@VERSION@/$V/; s/@GSL_MAJOR_VERSION@/${v%.*}/; s/@GSL_MINOR_VERSION@/${v#*.}/" ../gsl_version.h.in >../build.vc/gsl_version.h
 
 msbuild.exe gsl.dll.sln -t:"gslhdrs;cblasdll;gsldll" -p:Configuration=Release
 
@@ -50,6 +56,6 @@ EOF
 
 tar -C install -cjf $R/$P-$V-$B.tar.bz2 bin
 tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 include lib
-tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
+tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/config.h
 
 endlog
