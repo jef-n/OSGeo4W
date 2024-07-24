@@ -11,7 +11,7 @@ startlog
 
 v=vs_build
 [ -f $v.tar.gz ] || wget https://github.com/BrianGladman/gsl/archive/$v.tar.gz
-[ -f ../$P/build.vc ] || tar -C .. -xzf $v.tar.gz --xform "s,^gsl-$v,$P,"
+[ -d ../$P/build.vc ] || tar -C .. -xzf $v.tar.gz --xform "s,^gsl-$v,$P,"
 
 V=$(sed -ne "s/^AC_INIT(\\[$P\\],\\[\\(.*\\)\\])/\1/p" ../$P/configure.ac)
 
