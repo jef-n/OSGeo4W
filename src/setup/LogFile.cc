@@ -94,7 +94,7 @@ LogFile::setFile (int minlevel, const std::string& path, bool append)
   FileSet::iterator f = files.find (filedef(path));
   if (f != files.end ())
     files.erase (f);
- 
+
   filedef t (path);
   t.level = minlevel;
   t.append = append;

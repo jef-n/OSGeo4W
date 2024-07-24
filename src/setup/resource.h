@@ -69,6 +69,26 @@
 #define IDS_NOTHING_TO_INSTALL_OR_UPGRADE 165
 #define IDS_NOTHING_TO_DOWNLOAD           166
 #define IDS_SPLASH_TEXT                   167
+#define IDS_DEPENDENCY_WARNING            168
+#define IDS_DEPENDENCY_CAPTION            169
+#define IDS_ABORT_WARNING                 170
+#define IDS_ABORT_CAPTION                 171
+#define IDS_RUNNING                       172
+#define IDS_RUNNING_PREREMOVE             173
+#define IDS_UNINSTALLING                  174
+#define IDS_INSTALLING                    175
+#define IDS_CALCULATING                   176
+#define IDS_MD5CHECK                      177
+#define IDS_PROGRESS                      178
+#define IDS_DOWNLOADING                   179
+#define IDS_CONNECTING                    180
+#define IDS_DOWNLOADING_FROM              181
+#define IDS_PREREQ_CHECK                  182
+#define IDS_UNABLE_TO_EXTRACT_CAPTION     183
+#define IDS_UNABLE_TO_EXTRACT             184
+#define IDS_STILL_UNABLE_TO_EXTRACT       185
+#define IDS_FILE_EXTRACTION_CAPTION       186
+#define IDS_FILE_EXTRACTION_ERROR         187
 
 // Dialogs
 

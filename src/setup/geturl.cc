@@ -63,14 +63,13 @@ init_dialog (const string &url, size_t length)
 
   string::size_type divide = url.find_last_of('/');
   max_bytes = length;
-  Progress.SetText1("Downloading...");
-  Progress.SetText2((url.substr(divide + 1) + " from "
-                     + url.substr(0, divide)).c_str());
-  Progress.SetText3("Connecting...");
+
+  Progress.SetText1(Window::loadRString(IDS_DOWNLOADING).c_str());
+  Progress.SetText2(Window::sprintf(Window::loadRString(IDS_DOWNLOADING_FROM).c_str(), url.substr(divide + 1).c_str(), url.substr(0, divide).c_str()).c_str());
+  Progress.SetText3(Window::loadRString(IDS_CONNECTING).c_str());
   Progress.SetBar1(0);
   start_tics = GetTickCount ();
 }
-
 
 static void
 progress (size_t bytes)

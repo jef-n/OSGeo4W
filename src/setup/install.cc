@@ -120,7 +120,7 @@ static void md5_one (const packagesource& source);
 void
 Installer::preremoveOne (packagemeta & pkg)
 {
-  Progress.SetText1 ("Running preremove script...");
+  Progress.SetText1 (Window::loadRString(IDS_RUNNING_PREREMOVE).c_str());
   Progress.SetText2 (pkg.name.c_str());
   log (LOG_PLAIN) << "Running preremove script for  " << pkg.name << endLog;
   try_run_script ("/etc/preremove/", pkg.name, ".sh");
@@ -130,7 +130,7 @@ Installer::preremoveOne (packagemeta & pkg)
 void
 Installer::uninstallOne (packagemeta & pkg)
 {
-  Progress.SetText1 ("Uninstalling...");
+  Progress.SetText1 (Window::loadRString(IDS_UNINSTALLING).c_str());
   Progress.SetText2 (pkg.name.c_str());
   log (LOG_PLAIN) << "Uninstalling " << pkg.name << endLog;
   pkg.uninstall ();
@@ -206,7 +206,8 @@ Installer::installOne (packagemeta &pkgm, const packageversion &ver,
 {
   if (!source.Canonical())
     return;
-  Progress.SetText1 ("Installing");
+
+  Progress.SetText1 (Window::loadRString(IDS_INSTALLING).c_str());
   Progress.SetText2 (source.Base () ? source.Base () : "(unknown)");
 
   io_stream *pkgfile = NULL;
@@ -324,7 +325,7 @@ Installer::installOne (packagemeta &pkgm, const packageversion &ver,
                       log (LOG_BABBLE) << "Old copy " << d << " of in-use file could not be removed." << endLog;
 		  }
 
-	        if( io_stream_file::move (s, d) != 0 )
+		if( io_stream_file::move (s, d) != 0 )
                   log (LOG_BABBLE) << "In-use file " << s << " could not be renamed to " << d << endLog;
 		else
 		  {
@@ -337,7 +338,7 @@ Installer::installOne (packagemeta &pkgm, const packageversion &ver,
 			    // cleanup .old on next reboot
 			    if (!MoveFileEx (d.c_str (), NULL, MOVEFILE_DELAY_UNTIL_REBOOT ))
 			      {
-				log (LOG_TIMESTAMP) << "Unable to schedule reboot removal of file "
+			        log (LOG_TIMESTAMP) << "Unable to schedule reboot removal of file "
                                   << d
                                   << " (Win32 Error " << GetLastError() << ")" << endLog;
 			      }
@@ -346,21 +347,13 @@ Installer::installOne (packagemeta &pkgm, const packageversion &ver,
                                 log (LOG_BABBLE) << "In-use file " << d << " will be removed on next reboot." << endLog;
 			      }
 			  }
-			iteration++;
 			break;
 		     }
 		  }
 	      }
               if (!ignoreExtractErrors)
                 {
-                  std::string msg = Window::sprintf( "%snable to extract /%s -- the file is in use.\r\n"
-                         "Please stop %s OSGeo4W processes and select \"Retry\", or\r\n"
-                         "select \"Continue\" to go on anyway (you will need to reboot).\r\n",
-                         iteration == 0 ? "U" : "Still u",
-			 fn.c_str(),
-			 iteration == 0 ? "all" : "ALL" );
-		  switch (MessageBox (NULL, msg.c_str(), "In-use files detected",
-                         MB_RETRYCONTINUE | MB_ICONWARNING | MB_TASKMODAL))
+		  switch (MessageBox (NULL, Window::sprintf( Window::loadRString(iteration == 0 ? IDS_UNABLE_TO_EXTRACT : IDS_STILL_UNABLE_TO_EXTRACT).c_str(), fn.c_str() ).c_str(), Window::loadRString(IDS_UNABLE_TO_EXTRACT_CAPTION).c_str(), MB_RETRYCONTINUE | MB_ICONWARNING | MB_TASKMODAL))
                     {
                       case IDRETRY:
                         // retry
@@ -417,9 +410,6 @@ Installer::installOne (packagemeta &pkgm, const packageversion &ver,
               {
                 if (!ignoreExtractErrors)
                   {
-                    std::string msg =
-                      Window::sprintf( "Unable to extract /%s -- corrupt package?\r\n", fn.c_str());
-
                     // XXX: We should offer the option to retry,
                     // continue without extracting this particular archive,
                     // or ignore all extraction errors.
@@ -428,8 +418,7 @@ Installer::installOne (packagemeta &pkgm, const packageversion &ver,
                     // and ignore all errors is mis-implemented at present
                     // to only apply to errors arising from a single archive,
                     // so we degenerate to the continue option.
-                    MessageBox (owner, msg.data(), "File extraction error",
-                                MB_OK | MB_ICONWARNING | MB_TASKMODAL);
+                    MessageBox (owner, Window::sprintf( Window::loadRString(IDS_FILE_EXTRACTION_ERROR).c_str(), fn.c_str()).c_str(), Window::loadRString(IDS_FILE_EXTRACTION_CAPTION).c_str(), MB_OK | MB_ICONWARNING | MB_TASKMODAL);
                   }
 
                 // don't mark this package as successfully installed
@@ -486,7 +475,7 @@ do_install_thread (HINSTANCE h, HWND owner)
   packagedb db;
 
   /* Calculate the amount of data to md5sum */
-  Progress.SetText1("Calculating...");
+  Progress.SetText1 (Window::loadRString(IDS_CALCULATING).c_str());
   size_t md5sum_total_bytes = 0;
   for (packagedb::packagecollection::iterator i = db.packages.begin ();
        i != db.packages.end (); ++i)
@@ -680,9 +669,9 @@ void md5_one (const packagesource& pkgsource)
 
     log (LOG_BABBLE) << "Checking MD5 for " << fullname << endLog;
 
-    Progress.SetText1 ((std::string ("Checking MD5 for ")
-                        + pkgsource.Base ()).c_str ());
-    Progress.SetText4 ("Progress:");
+    std::string msg = Window::sprintf(Window::loadRString(IDS_MD5CHECK).c_str(), pkgsource.Base());
+    Progress.SetText1 (msg.c_str());
+    Progress.SetText4 (Window::loadRString(IDS_PROGRESS).c_str());
     Progress.SetBar1 (0);
 
     unsigned char buffer[16384];

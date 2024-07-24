@@ -176,8 +176,8 @@ void LicensePage::setPackageName(const TCHAR * t)
 void LicensePage::setLicenseText(const std::string &t )
 {
   ::SetWindowText( ins_licensetxt, t.c_str() );
-  ::PostMessage( ins_licensetxt, EM_SETSEL, -1, 0 );
-  ::PostMessage( ins_licensetxt, WM_VSCROLL, SB_TOP, (WPARAM) ins_licensetxt );
+  ::SendMessage( ins_licensetxt, EM_SETSEL, -1, 0 );
+  ::SendMessage( ins_licensetxt, WM_VSCROLL, SB_TOP, 0 );
 }
 
 void LicensePage::updateButtonNext()

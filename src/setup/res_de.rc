@@ -18,7 +18,7 @@ FONT 8, "MS Shell Dlg"
 BEGIN
     CONTROL         "Aus dem &Internet installieren  (die heruntergeladenen\nDateien bleiben für zukünftigen Gebrauch erhalten)",
                     IDC_SOURCE_NETINST, "Button",
-		    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP | BS_MULTILINE | BS_TOP, 71, 60, 200, 20
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP | BS_MULTILINE | BS_TOP, 71, 60, 200, 20
 
     CONTROL         "&Ohne Installation herunterladen",
                     IDC_SOURCE_DOWNLOAD, "Button", BS_AUTORADIOBUTTON | WS_TABSTOP, 71, 90, 200, 10
@@ -30,7 +30,7 @@ BEGIN
     CONTROL         "", IDC_HEADSEPARATOR, "Static", SS_BLACKFRAME | SS_SUNKEN, 0, 28, 339, 1
     LTEXT           "Download-Quelle wählen",
 		    IDC_STATIC_HEADER_TITLE, 7, 0, 258, 8, NOT WS_GROUP
-    LTEXT           "Wählen Sie, ob Sie aus dem Internet herunterladen oder installieren oder aus einem lokalen Verzeichnis installieren wollen.",
+    LTEXT           "Bitte wählen, ob nur dem Internet heruntergeladen oder auch daraus bzw. aus einem lokalen Verzeichnis installiert werden soll.",
                     IDC_STATIC, 21, 9, 239, 16, NOT WS_GROUP
 END
 
@@ -45,7 +45,7 @@ BEGIN
 		    IDC_LEAVE_AV,"Button", BS_AUTORADIOBUTTON | WS_TABSTOP,101,84,115,10
     ICON            IDI_OSGEO4W,IDC_HEADICON,312,0,21,20
     CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,339,1
-    LTEXT           "Wählen Sie, ob Ihr Virenscanner während der Installation abgeschaltet werden soll.",
+    LTEXT           "Bitte wählen, ob der Virenscanner während der Installation abgeschaltet werden soll.",
 		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
     LTEXT           "Einige Antivirenprogramme, insbesondere McAfee, verursachen einen Bluescreen unter Windows NT/2000/XP-Rechnern während der Installation von OSGeo4W.",
 		    IDC_STATIC,21,9,239,16,NOT WS_GROUP
@@ -55,12 +55,12 @@ END
 
 IDD_LOCAL_DIR DIALOG  0, 0, 339, 179
 STYLE DS_MODALFRAME | DS_CENTER | WS_CHILD | WS_CAPTION | WS_SYSMENU
-CAPTION "OSGeo4W Setup - Wählen Sie ein lokales Paketverzeichnis"
+CAPTION "OSGeo4W Setup - Bitte ein lokales Paketverzeichnis wählen"
 FONT 8, "MS Shell Dlg"
 BEGIN
     LTEXT           "Lokales Paketverzeichnis wählen",
 		    IDC_STATIC_HEADER_TITLE, 7,0,258,8,NOT WS_GROUP
-    LTEXT           "Wählen Sie ein Verzeichnis in der Setup die heruntergeladenen Dateien speichern soll.  Falls es noch nicht existiert, wird es erzeugt.",
+    LTEXT           "Bitte ein Verzeichnis wählen in dem Setup die heruntergeladenen Dateien speichern soll.  Falls es noch nicht existiert, wird es angelegt.",
 		    IDC_STATIC,21,9,248,16,NOT WS_GROUP
     ICON            IDI_OSGEO4W,IDC_HEADICON,312,0,21,20
     CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,312,1
@@ -81,7 +81,7 @@ FONT 8, "MS Shell Dlg"
 BEGIN
     LTEXT           "Installationsverzeichnis wählen",
 		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
-    LTEXT           "Wählen Sie das Verzeichnis in dem OSGeo4W installiert werden soll. Legen Sie außerdem einige Installationsparameter fest.",
+    LTEXT           "Bitte das Verzeichnis in dem OSGeo4W installiert werden soll und einige weitere Parameter festlegen.",
                     IDC_STATIC,21,9,239,16,NOT WS_GROUP
     ICON            IDI_OSGEO4W,IDC_HEADICON,312,0,21,20
     CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,317,1
@@ -100,7 +100,7 @@ BEGIN
 		    IDC_ROOT_USER,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,13,130,130,8
     LTEXT           "OSGeo4W wird für alle Benutzer des Systems verfügbar sein.",
                     IDC_ALLUSERS_TEXT,25,101,125,28
-    LTEXT           "OSGeo4W wird nur für den aktuellen Benutzer verfügbar sein. Falls Sie keine Administratorrechte haben oder anderen Sonderfällen.",
+    LTEXT           "OSGeo4W wird nur für den aktuellen Benutzer verfügbar sein (falls keine Administratorrechte vorliegen oder in anderen Sonderfällen).",
 		    IDC_JUSTME_TEXT,25,140,125,32
     CONTROL         "Icons auf dem &Desktop anlegen",
 		    IDC_ROOT_DESKTOP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,170,110,150,8
@@ -121,7 +121,7 @@ BEGIN
     LTEXT           "Verfügbare Downloadsites:",
 		    IDC_STATIC,66,34,183,8,NOT WS_GROUP
     CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,339,1
-    LTEXT           "Wählen Sie eine Site aus der Liste oder ergänzen Sie eine eigene",
+    LTEXT           "Bitte Sites aus der Liste wählen oder eigene ergänzen",
                     IDC_STATIC,21,9,239,16,NOT WS_GROUP
     LTEXT           "Downloadsite wählen",
 		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
@@ -152,9 +152,9 @@ BEGIN
 		    IDC_STATIC,85,125,30,12,SS_CENTERIMAGE | NOT WS_GROUP
     ICON            IDI_OSGEO4W,IDC_HEADICON,312,0,21,20
     CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,339,1
-    LTEXT           "Setup muß wissen wie es sich mit dem Internet verbinden soll.  Wählen Sie unten eine entsprechende Option:",
+    LTEXT           "Setup muß wissen wie es sich mit dem Internet verbinden soll.  Bitte unten eine entsprechende Option wählen:",
                     IDC_STATIC,21,9,239,16,NOT WS_GROUP
-    LTEXT           "Wählen Sie Ihre Internetverbindung",
+    LTEXT           "Bitte die Internetverbindung wählen",
                     IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
 END
 
@@ -308,7 +308,7 @@ BEGIN
     CONTROL         "&Veraltete Pakete ausblenden",
 		    IDC_CHOOSE_HIDE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,167,160,14
     ICON            IDI_OSGEO4W,IDC_HEADICON,312,0,21,20
-    LTEXT           "Wählen Sie die Pakete, die installiert werden sollen.",
+    LTEXT           "Bitte die Pakete wählen, die installiert werden sollen.",
                     IDC_CHOOSE_INST_TEXT,21,9,239,16,NOT WS_GROUP
     LTEXT           "Pakete wählen",
 		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
@@ -324,10 +324,10 @@ BEGIN
     ICON            IDI_OSGEO4W,IDC_HEADICON,312,0,21,20
     LTEXT           "Warnung!  Nicht erfüllte Abhängigkeiten gefunden",
 		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
-    LTEXT           "Die folgenden Pakete sind erforderlich, wurde aber nicht gewählt.",
+    LTEXT           "Die folgenden Pakete sind erforderlich, wurden aber nicht gewählt.",
 		    IDC_STATIC,21,9,239,16,NOT WS_GROUP
     CONTROL         "&Diese Pakete installieren, um die Abhängigkeiten zu erfüllen (EMPFOHLEN)",
-		    IDC_PREREQ_CHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,167,225,14
+		    IDC_PREREQ_CHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,167,250,14
     EDITTEXT        IDC_PREREQ_EDIT,7,41,303,124,WS_VSCROLL | WS_HSCROLL |
                     ES_LEFT | ES_MULTILINE | ES_READONLY | ES_AUTOHSCROLL |
                     ES_AUTOVSCROLL
@@ -345,7 +345,7 @@ BEGIN
     EDITTEXT        IDC_DROP_MIRRORS,7,40,303,40,WS_VSCROLL | WS_HSCROLL |
                     ES_LEFT | ES_MULTILINE | ES_READONLY | ES_AUTOHSCROLL |
                     ES_AUTOVSCROLL
-    LTEXT           "Wenn Sie Installationsprobleme feststellen, sollten in Betracht ziehen nur offizielle Spiegel zu nutzen.\n\nWollen Sie mit diesen Spiegeln fortfahren?",
+    LTEXT           "Bei Installationsprobleme sollten in Betracht gezogen werden nur offizielle Spiegel zu nutzen.\n\nSoll mit diesen Spiegeln fortgefahren werden?",
                     IDC_STATIC,7,88,303,24
     CONTROL         "Vor diesen Spiegel &nicht wieder warnen",
                     IDC_DROP_NOWARN,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,120,213,15
@@ -366,7 +366,7 @@ BEGIN
     ICON            IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
     LTEXT           "Nachinstallationsskriptfehler",
 		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
-    LTEXT           "Diese bedeuten nicht zwangslaeufig, dass die betroffenen Pakete nicht richtig funktionen, pruefen Sie aber bitte /var/log/setup.log.full und berichten Sie Probleme.",
+    LTEXT           "Dies bedeuten nicht zwangsläufig, dass die betroffenen Pakete nicht richtig funktionen. Bitte /var/log/setup.log.full prüfen und ggf. Probleme berichten.",
                     IDC_POSTINSTALL_HEADER,21,9,239,16,NOT WS_GROUP
     EDITTEXT        IDC_POSTINSTALL_EDIT,7,41,303,112,WS_VSCROLL | WS_HSCROLL |
                     ES_LEFT | ES_MULTILINE | ES_READONLY | ES_AUTOHSCROLL |
@@ -401,12 +401,12 @@ FONT 8, "MS Shell Dlg"
 BEGIN
     LTEXT           "Nicht-Open-Source Lizenzbedingungen",
                     IDC_STATIC_LICENSE_TITLE,35,1,195,24
-    LTEXT           "Bitte lesen Sie vor der OSGeo4W-Installation die Lizenzbedingungen.",
+    LTEXT           "Bitte vor der OSGeo4W-Installation die Lizenzbedingungen lesen.",
                     IDC_STATIC_LICENSE_TEXT,35,25,265,40
+    CONTROL         "Ich stimme obigen Lizenzbedingungen zu",IDC_CHK_AGREED,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,35,160,200,8
     CONTROL         "Lizenz", IDC_LICENSE_FILE, RICHEDIT_CLASS, ES_MULTILINE | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | WS_HSCROLL | WS_VSCROLL | ES_LEFT | ES_READONLY,
 		    35,80,260,75
-    CONTROL         "Ich stimme obigen Lizenzbedingungen zu",IDC_CHK_AGREED,"Button",
-                    BS_AUTOCHECKBOX,35,160,200,8
     PUSHBUTTON      "Drucken", IDC_PRINT_BUTTON,261,161,35,14
     ICON            IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
 END
@@ -418,15 +418,15 @@ END
 
 STRINGTABLE
 BEGIN
-    IDS_SPLASH_TEXT         "Diese Setupprogramm wird zur initialen Installation der OSGeo4W-Umgebung sowie nachfolgenden Updates gebraucht.  Merken Sie sich, wo Sie es gespeichert haben.\r\n\r\nDie folgenden Seiten werden Sie durch die Installation führen.  Bitte beachten Sie, dass OSGeo4W aus einer großen Zahl von Paketen besteht, die zu vielen Zwecken eingesetzt werden können.  Anfänglich werden davon nur wenige Pakete installiert.  Sie können diese Programm jederzeit wieder starten, um bei Bedarf Pakete zur löschen, hinzufügen oder zu aktualisieren."
+    IDS_SPLASH_TEXT         "Dieses Setupprogramm wird zur initialen Installation der OSGeo4W-Umgebung sowie nachfolgenden Updates gebraucht.  Bitte den Speicherort merken.\r\n\r\nDie folgenden Seiten führen durch die Installation.  OSGeo4W besteht aus einer großen Zahl von Paketen, die zu vielen Zwecken eingesetzt werden können.  Anfänglich werden davon nur wenige Pakete installiert.  Dieses Programm kann jederzeit wieder gestarten werden, um bei Bedarf Pakete zur löschen, hinzufügen oder zu aktualisieren."
     IDS_ROOT_SLASH          "Warnung: wir empfehlen NICHT das Hauptverzeichnis Ihrer Festplatte als OSGeo4W-Wurzelverzeichnis zu wählen.  Trotzdem fortfahren?"
-    IDS_ROOT_SPACE          "Sie sollten keine Wurzelverzeichnis mit Leerzeichen wählen.  Trotzdem fortfahren?"
+    IDS_ROOT_SPACE          "ES sollte ein Wurzelverzeichnis ohne Leerzeichen gewählt werden.  Trotzdem fortfahren?"
     IDS_ERR_OPEN_WRITE      "Kann %s nicht zum Schreiben öffnen: %s"
     IDS_SETUPINI_MISSING    "Kann %s nicht von <%s> laden"
-    IDS_OLD_SETUPINI        "Diese setup.ini ist älter als die, die Sie bei der letzen OSGeo4W-Installation verwendet haben.  Trotzdem fortfahren?"
+    IDS_OLD_SETUPINI        "Diese setup.ini ist älter als die, die bei der letzen OSGeo4W-Installation verwendet wurde.  Trotzdem fortfahren?"
     IDS_NOTHING_INSTALLED   "Es muß nichts installiert werden"
     IDS_INSTALL_COMPLETE    "Installation abgeschlossen"
-    IDS_REBOOT_REQUIRED     "In Benutzung befindliche Dateien wurden ausgetauscht. Sie müssen zeitnah neustarten, um die neuen Versionen zu aktivieren. OSGeo4W könnte bis zum Neustart nicht richtig funktionieren."
+    IDS_REBOOT_REQUIRED     "In Benutzung befindliche Dateien wurden ausgetauscht. Es muß zeitnah neugestarten werden, um die neuen Versionen zu aktivieren. OSGeo4W könnte bis zum Neustart nicht richtig funktionieren."
     IDS_ERR_OPEN_READ       "Kann %s nicht zu Lesen öffnen: %s"
     IDS_ROOT_ABSOLUTE       "Das Installationsverzeichnis muß absolut mit Laufwerkbuchstabe und führendem Rückstrich angegeben werden, wie z.B. C:\\OSGeo4W"
     IDS_DOWNLOAD_COMPLETE   "Download abgeschlossen."
@@ -434,34 +434,27 @@ BEGIN
     IDS_UNINSTALL_COMPLETE  "Deinstallationen abgeschlossen."
     IDS_WININET             "Kann die Internet-Explorer 5 DLLs nicht finden"
     IDS_ERR_CHDIR           "Konnte nicht in Verzeichnis %s wechseln: %s [%.8x]"
-    IDS_OLD_SETUP_VERSION   "Diese Setupversion ist%s, aber setup.ini behauptet %s sei verfügbar.\nSie sollten upgraden um die letzten Leistungsmerkmale und Fehlerbereinigungen zu erhalten."
+    IDS_OLD_SETUP_VERSION   "Diese Setupversion ist%s, aber setup.ini behauptet %s sei verfügbar.\nEs sollte upgegradet werden, um die letzten Leistungsmerkmale und Fehlerbereinigungen zu erhalten."
     IDS_DOWNLOAD_INCOMPLETE "Download unvollständig.  Wiederholen?"
-    IDS_INSTALL_ERROR	    "Installationsfehler (%s), mit anderen Paketen fortfahren?"
-    IDS_INSTALL_INCOMPLETE  "Installation unvollständig.  Details finden Sie in %s"
-    IDS_CORRUPT_PACKAGE     "Die lokale Kopie der Paketdatei %s ist kaputt.  Bitte entfernen Sie sie und versuchen Sie es erneut."
-    IDS_SKIP_PACKAGE	    "%s\nWollen Sie das diese Paket überspringen?"
+    IDS_INSTALL_ERROR       "Installationsfehler (%s), mit anderen Paketen fortfahren?"
+    IDS_INSTALL_INCOMPLETE  "Installation unvollständig.  Details sind in %s zu finden."
+    IDS_CORRUPT_PACKAGE     "Die lokale Kopie der Paketdatei %s ist defekt.  Bitte entfernen und erneut versuchen."
+    IDS_SKIP_PACKAGE        "%s\nSoll dieses Paket wirklich übersprungen werden?"
     IDS_WINDOW_INIT_BADMSG  "Fataler Fehler: Unerwartete Windows-Nachricht %u zu früh während der Fensterinitialierung erhalten."
     IDS_UNCAUGHT_EXCEPTION  "Fataler Fehler: Nicht abgefangene Ausnahme\nThread: %s\nTyp: %s\nNachricht: %s"
     IDS_UNCAUGHT_EXCEPTION_WITH_ERRNO  "Fataler Fehler: Nicht abgefangene Ausnahme\nThread: %s\nTyp: %s\nNachricht: %s\nAppErrNo: %d"
     IDS_TRUSTKEEP_TOOLTIP   "Setze alle Pakete auf ihre gegenwärtig installierte Version. Dadurch wird Setup mitgeteilt, keine Änderungen an Paketen vorzunehmen."
-
     IDS_TRUSTPREV_TOOLTIP   "Die als 'Vorh.' markierte Version global markieren,  dies ist die letzte als stabile betrachtete Version vor der aktuellen stabilen Version."
-
     IDS_TRUSTCURR_TOOLTIP   "Global die Version wählen, die gegenwärtig am stabilsten angesehen wird. (EMPFOHLEN)"
-
     IDS_TRUSTEXP_TOOLTIP    "Global die neueste Version wählen, selbst wenn die Version experimentell ist oder nur zum Test durch Paketbetreuer hochgeladen wurde."
-    IDS_VIEWBUTTON_TOOLTIP  "Schaltet die Paketansichten durch.  Dies legt fest welche Pakete in der Auswahl angezeigt werden.\r\n\r\nKategorie: Pakete nach Kategorien gruppieren.  '+' zum Aufklappen klicken.\r\n\r\nVoll: Alle Pakete anzeigen.\r\n\r\nFällig: Nur Pakete anzeigen, die installiert, entfernt oder aktualisiert werden sollen. Dies zeigt alle Änderungen an, die Setup vornehmen wird, wenn Sie 'Weiter' klicken.\r\n\r\nAktuell: Alle Pakete anzeigen, die unverändert bleiben, weil sie bereits in der gewünschten Version vorliegen.\r\n\r\nNicht installiert: Alle Pakete, die noch nicht installiert sind und auch nicht zur Installation gewählt wurden."
-
-    IDS_HIDEOBS_TOOLTIP         "Wenn gewählt wird Setup alle Pakete in Kategorien, die mit '_' beginnen ausblenden Solche Pakete sind normalerweise leer und Platzhalter für Pakete, die entfernt oder umbenannt oder Infrastrukturpakete sind, die automatisch behandelt werden."
-
-    IDS_SEARCH_TOOLTIP		"Diese Zeichenkette in Paketnamen suchen"
-    IDS_LOCAL_DIR_DOWNLOAD	"Wählen Sie ein Verzeichnis in dem die heruntergeladenen Installationsdateien abgelegt werden sollen. Das Verzeichnis wird ggf. erzeugt."
-
-    IDS_LOCAL_DIR_INSTALL	"Wählen Sie das Verzeichnis in dem sich die Installationsdateien befinden."
-
+    IDS_VIEWBUTTON_TOOLTIP  "Schaltet die Paketansichten durch.  Dies legt fest welche Pakete in der Auswahl angezeigt werden.\r\n\r\nKategorie: Pakete nach Kategorien gruppieren.  '+' zum Aufklappen klicken.\r\n\r\nVoll: Alle Pakete anzeigen.\r\n\r\nFällig: Nur Pakete anzeigen, die installiert, entfernt oder aktualisiert werden sollen. Dies zeigt alle Änderungen an, die Setup vornehmen wird, wenn 'Weiter' geklickt wird.\r\n\r\nAktuell: Alle Pakete anzeigen, die unverändert bleiben, weil sie bereits in der gewünschten Version vorliegen.\r\n\r\nNicht installiert: Alle Pakete, die noch nicht installiert sind und auch nicht zur Installation gewählt wurden."
+    IDS_HIDEOBS_TOOLTIP     "Wenn gewählt wird Setup alle Pakete in Kategorien, die mit '_' beginnen ausblenden Solche Pakete sind normalerweise leer und Platzhalter für Pakete, die entfernt oder umbenannt oder Infrastrukturpakete sind, die automatisch behandelt werden."
+    IDS_SEARCH_TOOLTIP          "Diese Zeichenkette in Paketnamen suchen"
+    IDS_LOCAL_DIR_DOWNLOAD	"Bitte ein Verzeichnis wählen in dem die heruntergeladenen Installationsdateien abgelegt werden sollen. Das Verzeichnis wird ggf. erzeugt."
+    IDS_LOCAL_DIR_INSTALL	"Bitte das Verzeichnis wählen in dem sich die Installationsdateien befinden."
     IDS_MAYBE_MKDIR		"Verzeichnis %s existiert nicht. Soll es erstellt werden?"
     IDS_CANT_MKDIR		"Konnte das Verzeichnis %s nicht angelegen (Kein freier Platz oder schreibgeschützt.?"
-    IDS_NO_CWD			"Lokales Paketverzeichnis %s nicht gefunden.\nSie können setup-%s.exe immer noch verwenden um installierte Pakete zu entfernen\naber es wird nichts zu Installieren sein.\n\nKlicken Sie 'OK', wenn Sie das wünschen oder 'Abbruch', um ein anderes Verzeichnis zu wählen."
+    IDS_NO_CWD			"Lokales Paketverzeichnis %s nicht gefunden.\nsetup-%s.exe kann immer noch verwenden werden, um installierte Pakete zu entfernen\naber es wird nichts zu Installieren sein.\n\nBitte 'OK' klicken, wenn dies gewünscht ist oder 'Abbruch', um ein anderes Verzeichnis zu wählen."
     IDS_SELPKG_DOWNLOAD		"Pakete zum Download wählen "
     IDS_SELPKG_INSTALL		"Pakete zur Installation wählen "
     IDS_UNINSTALL		"Deinstallieren"
@@ -486,10 +479,30 @@ BEGIN
     IDS_CAPTION_UPTODATE	"Aktuell"
     IDS_CAPTION_NOTINSTALLED	"Nicht Inst."
     IDS_CAPTION_CATEGORY	"Kategorie"
-    IDS_CAPTION_LIC_PACKAGE	"Bitte lesen Sie die Lizenzbedingungen der folgenden Pakete und stimmen Sie ihnen zu:\r\n%s"
-    IDS_LICENSE_NOLOAD		"Installation fand die Lizenzdatei von %s nicht. Bitte überprüfen Sie, ob sie heruntergeladen wurden."
+    IDS_CAPTION_LIC_PACKAGE	"Bitte die Lizenzbedingungen der folgenden Pakete lesen und zustimmen:\r\n%s"
+    IDS_LICENSE_NOLOAD		"Installation fand die Lizenzdatei von %s nicht. Bitte überprüfen, ob sie heruntergeladen wurden."
     IDS_LICENSE_EMPTYPATH	"Es gibt keine Lizenzdatei zu %s auf dem Server"
     IDS_NOTHING_TO_INSTALL_OR_UPGRADE "Nichts zu installieren oder zu aktualisieren"
     IDS_NOTHING_TO_DOWNLOAD	"Nichts herunterzuladen"
     IDS_INTERNET_ERR		"Internet-Fehler: %s"
+    IDS_DEPENDENCY_WARNING      "Die aufgeführten Pakete werden benötigt damit davon abhängige Pakete funktionieren.  Es wird dringend angeraten Setup zu erlauben sie auszuwählen.\r\n\r\nSoll wirklich ohne diese Pakete fortgefahren werden?"
+    IDS_DEPENDENCY_CAPTION      "WARNUNG - Erforderliche Pakete nicht ausgewählt"
+    IDS_ABORT_WARNING           "Soll Setup wirklich verlassen werden? Alle aktiven Downloads und Installationen werden abgebrochen."
+    IDS_ABORT_CAPTION           "OSGeo4W-Setup verlassen?"
+    IDS_RUNNING                 "Läuft..."
+    IDS_RUNNING_PREREMOVE       "Deinstallationsskript läuft..."
+    IDS_UNINSTALLING            "Deinstalliere..."
+    IDS_INSTALLING              "Installiere..."
+    IDS_CALCULATING             "Berechne..."
+    IDS_MD5CHECK                "Prüfe MD5 für %s"
+    IDS_PROGRESS                "Fortschritt:"
+    IDS_DOWNLOADING             "Lade herunter..."
+    IDS_CONNECTING              "Verbinde..."
+    IDS_DOWNLOADING_FROM        "%s von %s"
+    IDS_PREREQ_CHECK            "Checking prerequisites..."
+    IDS_UNABLE_TO_EXTRACT_CAPTION "Dateien in Verwendung festgestellt"
+    IDS_UNABLE_TO_EXTRACT         "Konnte /%s nicht extrahieren -- die Datei ist in Verwendung.\r\nBitte alle OSGeo4W-Prozesse beenden und ""Wiederholen"", oder\r\n\""Weiter"" klicken, um trotzdem fortzufahren (danach ist ein Reboot nötig).\r\n"
+    IDS_STILL_UNABLE_TO_EXTRACT   "Konnte /%s weiterhin nicht extrahieren -- die Datei ist in Verwendung.\r\nBitte ALLE OSGeo4W-Prozesse beenden und ""Wiederholen"", oder\r\n""Weiter"" klicken, um trotzdem fortzufahren (danach ist ein Reboot nötig).\r\n"
+    IDS_FILE_EXTRACTION_CAPTION   "Dateiextraktionsfehler"
+    IDS_FILE_EXTRACTION_ERROR     "Konnte /%s nicht extrahieren -- defektes Paket?\r\n"
 END

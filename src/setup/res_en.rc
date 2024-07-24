@@ -18,7 +18,7 @@ FONT 8, "MS Shell Dlg"
 BEGIN
     CONTROL         "&Install from Internet\n(downloaded files will be kept for future re-use)",
                     IDC_SOURCE_NETINST, "Button",
-		    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP | BS_MULTILINE | BS_TOP, 71, 60, 200, 20
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP | BS_MULTILINE | BS_TOP, 71, 60, 200, 20
 
     CONTROL         "&Download Without Installing",
                     IDC_SOURCE_DOWNLOAD, "Button", BS_AUTORADIOBUTTON | WS_TABSTOP, 71, 90, 200, 10
@@ -121,7 +121,7 @@ BEGIN
     LTEXT           "Available Download Sites:",
 		    IDC_STATIC,66,34,183,8,NOT WS_GROUP
     CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,339,1
-    LTEXT           "Choose a site from this list, or add your own sites to the list",
+    LTEXT           "Choose sites from this list, or add your own sites to the list",
                     IDC_STATIC,21,9,239,16,NOT WS_GROUP
     LTEXT           "Choose A Download Site",
 		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
@@ -403,10 +403,10 @@ BEGIN
                     IDC_STATIC_LICENSE_TITLE,35,1,195,24
     LTEXT           "Please review the license terms of package before installing OSGeo4W",
                     IDC_STATIC_LICENSE_TEXT,35,22,265,25
+    CONTROL         "I agree with above license terms",IDC_CHK_AGREED,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,35,160,200,8
     CONTROL         "License", IDC_LICENSE_FILE, RICHEDIT_CLASS, ES_MULTILINE | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | WS_HSCROLL | WS_VSCROLL | ES_LEFT | ES_READONLY,
 		   35,51,260,99
-    CONTROL         "I agree with above license terms",IDC_CHK_AGREED,"Button",
-                    BS_AUTOCHECKBOX,35,160,200,8
     PUSHBUTTON      "Print", IDC_PRINT_BUTTON,261,161,35,14
     ICON            IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
 END
@@ -436,10 +436,10 @@ BEGIN
     IDS_ERR_CHDIR           "Could not change dir to %s: %s [%.8x]"
     IDS_OLD_SETUP_VERSION   "This setup is version %s, but setup.ini claims version %s is available.\nYou might want to upgrade to get the latest features and bug fixes."
     IDS_DOWNLOAD_INCOMPLETE "Download Incomplete.  Try again?"
-    IDS_INSTALL_ERROR	    "Installation error (%s), Continue with other packages?"
+    IDS_INSTALL_ERROR       "Installation error (%s), Continue with other packages?"
     IDS_INSTALL_INCOMPLETE  "Installation incomplete.  Check %s for details"
     IDS_CORRUPT_PACKAGE     "Package file %s has a corrupt local copy, please remove and retry."
-    IDS_SKIP_PACKAGE	    "%s\nDo you want to skip this package ?"
+    IDS_SKIP_PACKAGE        "%s\nDo you want to skip this package ?"
     IDS_WINDOW_INIT_BADMSG  "Fatal Error: Unexpected windows message %u received too early in window initialization."
     IDS_UNCAUGHT_EXCEPTION  "Fatal Error: Uncaught Exception\nThread: %s\nType: %s\nMessage: %s"
     IDS_UNCAUGHT_EXCEPTION_WITH_ERRNO  "Fatal Error: Uncaught Exception\nThread: %s\nType: %s\nMessage: %s\nAppErrNo: %d"
@@ -448,8 +448,8 @@ BEGIN
     IDS_TRUSTCURR_TOOLTIP   "Globally select the version that is currently considered the most stable. (RECOMMENDED)"
     IDS_TRUSTEXP_TOOLTIP    "Globally select the most recent version, even if that version is considered Experimental or for test use by the maintainer."
     IDS_VIEWBUTTON_TOOLTIP  "Cycles the package view.  This determines which packages are shown in the chooser below.\r\n\r\nCategory: Group by package category.  Click on '+' to expand.\r\n\r\nFull: Show all packages.\r\n\r\nPending: Show only packages that are about to be installed, removed, or upgraded.  This tells you what is going to change when you press 'Next'.\r\n\r\nUp To Date: Show installed packages that need no action because they are at the desired version already.\r\n\r\nNot installed: Show packages that are are not currently installed and haven't been selected for installation."
-    IDS_HIDEOBS_TOOLTIP         "If selected, setup will hide packages in categories with names that begin with '_'.  Such packages are usually empty placeholders for packages that have been removed or renamed, or are infrastructure packages that are handled automatically."
-    IDS_SEARCH_TOOLTIP		"Search for this string in package names."
+    IDS_HIDEOBS_TOOLTIP     "If selected, setup will hide packages in categories with names that begin with '_'.  Such packages are usually empty placeholders for packages that have been removed or renamed, or are infrastructure packages that are handled automatically."
+    IDS_SEARCH_TOOLTIP          "Search for this string in package names."
     IDS_LOCAL_DIR_DOWNLOAD	"Select a directory where you want Setup to store the installation files it downloads.  The directory will be created if it does not already exist."
     IDS_LOCAL_DIR_INSTALL	"Select a directory where Setup should look for downloaded installation files."
     IDS_MAYBE_MKDIR		"Directory %s does not exist, would you like me to create it?"
@@ -485,4 +485,24 @@ BEGIN
     IDS_NOTHING_TO_INSTALL_OR_UPGRADE "Nothing to install/upgrade"
     IDS_NOTHING_TO_DOWNLOAD	"Nothing to Download"
     IDS_INTERNET_ERR		"Internet error: %s"
+    IDS_DEPENDENCY_WARNING      "The listed packages are required for packages depending on them to work.  We strongly recommend that you allow Setup to select them.\r\n\r\nAre you sure you want to proceed without these packages?"
+    IDS_DEPENDENCY_CAPTION      "WARNING - Required Packages Not Selected"
+    IDS_ABORT_WARNING           "Are you sure you want to exit setup? Any current download or installation will be aborted."
+    IDS_ABORT_CAPTION           "Exit OSGeo4W Setup?"
+    IDS_RUNNING                 "Running..."
+    IDS_RUNNING_PREREMOVE       "Running preremove script..."
+    IDS_UNINSTALLING            "Uninstalling..."
+    IDS_INSTALLING              "Installing..."
+    IDS_CALCULATING             "Calculating..."
+    IDS_MD5CHECK                "Checking MD5 for %s"
+    IDS_PROGRESS                "Progress:"
+    IDS_DOWNLOADING             "Downloading..."
+    IDS_CONNECTING              "Connecting..."
+    IDS_DOWNLOADING_FROM        "%s from %s"
+    IDS_PREREQ_CHECK            "Checking prerequisites..."
+    IDS_UNABLE_TO_EXTRACT_CAPTION "In-use files detected"
+    IDS_UNABLE_TO_EXTRACT         "Unable to extract /%s -- the file is in use.\r\nPlease stop all OSGeo4W processes and select ""Retry"", or\r\nselect ""Continue"" to go on anyway (you will need to reboot).\r\n"
+    IDS_STILL_UNABLE_TO_EXTRACT   "Still unable to extract /%s -- the file is in use.\r\nPlease stop ALL OSGeo4W processes and select ""Retry"", or\r\nselect ""Continue"" to go on anyway (you will need to reboot).\r\n"
+    IDS_FILE_EXTRACTION_CAPTION   "File extraction error"
+    IDS_FILE_EXTRACTION_ERROR     "Unable to extract /%s -- corrupt package?\r\n"
 END

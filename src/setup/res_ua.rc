@@ -404,10 +404,10 @@ BEGIN
                     IDC_STATIC_LICENSE_TITLE,35,1,195,24
     LTEXT           "Будь ласка ознайомтесь з ліцензіями пакетів перед встановленням OSGeo4W",
                     IDC_STATIC_LICENSE_TEXT,35,25,265,40
+    CONTROL         "Я згоден з умовами ліцензійної угоди",IDC_CHK_AGREED,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,35,160,200,8
     CONTROL         "Ліцензія", IDC_LICENSE_FILE, RICHEDIT_CLASS, ES_MULTILINE | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | WS_HSCROLL | WS_VSCROLL | ES_LEFT | ES_READONLY,
 		    35,80,260,75
-    CONTROL         "Я згоден з умовами ліцензійної угоди",IDC_CHK_AGREED,"Button",
-                    BS_AUTOCHECKBOX,35,160,200,8
     PUSHBUTTON      "Роздрукувати", IDC_PRINT_BUTTON,261,161,35,14
     ICON            IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
 END
@@ -437,10 +437,10 @@ BEGIN
     IDS_ERR_CHDIR           "Неможливо змінити папку на %s: %s [%.8x]"
     IDS_OLD_SETUP_VERSION   "Встановлено версію %s, але setup.ini повідомляє, що доступна версія %s.\nМожна оновити дистрибутив до нової версії."
     IDS_DOWNLOAD_INCOMPLETE "Завантаження не завершено. Спробувати ще раз?"
-    IDS_INSTALL_ERROR	    "Помилка встановлення (%s), перейти до наступного пакета?"
+    IDS_INSTALL_ERROR       "Помилка встановлення (%s), перейти до наступного пакета?"
     IDS_INSTALL_INCOMPLETE  "Встановлення не завершено. Дивіться %s щоб отримати більше інформації."
     IDS_CORRUPT_PACKAGE     "Файл пакета %s пошкоджений. Будь ласка, видаліть файл та повторіть завантаження."
-    IDS_SKIP_PACKAGE	    "%s\nВидалити цей пакет?"
+    IDS_SKIP_PACKAGE        "%s\nВидалити цей пакет?"
     IDS_WINDOW_INIT_BADMSG  "Фатальна помилка: Повідомлення Windows %u було отримано до ініціалізації діалогового вікна."
     IDS_UNCAUGHT_EXCEPTION  "Фатальна помилка: Виключення\nПроцес: %s\nТип: %s\nПовідомлення: %s"
     IDS_UNCAUGHT_EXCEPTION_WITH_ERRNO  "Фатальна помилка: Виключення\nПроцес: %s\nТип: %s\nПовідомлення: %s\nНомер: %d"
@@ -466,9 +466,9 @@ BEGIN
     IDS_KEEP			"IDS_KEEP"
     IDS_SEL_DOWNLOAD_DIR	"IDS_SEL_DOWNLOAD_DIR"
     IDS_SEL_LOCAL_DIR		"IDS_SEL_LOCAL_DIR"
+    IDS_UNKNOWN_ERR		"Unknown error"
     IDS_LIST_CURRENT		"Поточний"
     IDS_LIST_NEW		"Новий"
-    IDS_UNKNOWN_ERR		"Unknown error"
     IDS_LIST_BIN		"Bin?"
     IDS_LIST_SRC		"Src?"
     IDS_LIST_CATEGORIES		"Категорії"
@@ -486,4 +486,24 @@ BEGIN
     IDS_NOTHING_TO_INSTALL_OR_UPGRADE "Нічого не вибрано для встановлення/оновлення"
     IDS_NOTHING_TO_DOWNLOAD	"Nothing to Download"
     IDS_INTERNET_ERR		"Internet error: %s"
+    IDS_DEPENDENCY_WARNING      "The listed packages are required for packages depending on them to work.  We strongly recommend that you allow Setup to select them.\r\n\r\nAre you sure you want to proceed without these packages?"
+    IDS_DEPENDENCY_CAPTION      "WARNING - Required Packages Not Selected"
+    IDS_ABORT_WARNING           "Are you sure you want to exit setup? Any current download or installation will be aborted."
+    IDS_ABORT_CAPTION           "Exit OSGeo4W Setup?"
+    IDS_RUNNING                 "Running..."
+    IDS_RUNNING_PREREMOVE       "Running preremove script..."
+    IDS_UNINSTALLING            "Uninstalling..."
+    IDS_INSTALLING              "Installing..."
+    IDS_CALCULATING             "Calculating..."
+    IDS_MD5CHECK                "Checking MD5 for %s"
+    IDS_PROGRESS                "Progress:"
+    IDS_DOWNLOADING             "Downloading..."
+    IDS_CONNECTING              "Connecting..."
+    IDS_DOWNLOADING_FROM        "%s from %s"
+    IDS_PREREQ_CHECK            "Checking prerequisites..."
+    IDS_UNABLE_TO_EXTRACT_CAPTION "In-use files detected"
+    IDS_UNABLE_TO_EXTRACT         "Unable to extract /%s -- the file is in use.\r\nPlease stop all OSGeo4W processes and select ""Retry"", or\r\nselect ""Continue"" to go on anyway (you will need to reboot).\r\n"
+    IDS_STILL_UNABLE_TO_EXTRACT   "Still unable to extract /%s -- the file is in use.\r\nPlease stop ALL OSGeo4W processes and select ""Retry"", or\r\nselect ""Continue"" to go on anyway (you will need to reboot).\r\n"
+    IDS_FILE_EXTRACTION_CAPTION   "File extraction error"
+    IDS_FILE_EXTRACTION_ERROR     "Unable to extract /%s -- corrupt package?\r\n"
 END

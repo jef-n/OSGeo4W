@@ -71,8 +71,7 @@ del "%OSGEO4W_DESKTOP%\\Setup.lnk"
 EOF
 
 cat <<EOF >install/bin/setup.bat.tmpl
-@copy "@osgeo4w@\\bin\\osgeo4w-setup.exe" "@osgeo4w@\\bin\\osgeo4w-setup-work.exe"
-@start /B "Running Setup" "@osgeo4w@\\bin\\osgeo4w-setup-work.exe" -R "@osgeo4w@" %*
+@start /B "Running Setup" "@osgeo4w@\\bin\\osgeo4w-setup.exe" -R "@osgeo4w@" %*
 EOF
 
 rm -f install/bin/osgeo4w-setup.exe
@@ -90,7 +89,6 @@ if [ -f OSGeo_DigiCert_Signing_Cert.p12 -a -f OSGeo_DigiCert_Signing_Cert.pass ]
 
 	[ -n "$OSGEO4W_SKIP_UPLOAD" ] || rsync -v install/bin/osgeo4w-setup.exe $MASTER_SCP
 else
-	rm install/bin/osgeo4w-setup.exe
 	cp build/osgeo4w-setup.exe install/bin/osgeo4w-setup.exe
 fi
 

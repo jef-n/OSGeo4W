@@ -93,11 +93,8 @@ PrereqPage::OnNext ()
     {
       // breakage imminent!  danger, danger
       int res = MessageBox (h,
-          "The listed packages are required for packages depending on them to "
-          "work.  We strongly recommend that you allow Setup to select them."
-          "\r\n\r\n"
-          "Are you sure you want to proceed without these packages?",
-          "WARNING - Required Packages Not Selected",
+               loadRString(IDS_DEPENDENCY_WARNING).c_str(),
+               loadRString(IDS_DEPENDENCY_CAPTION).c_str(),
           MB_YESNO | MB_ICONEXCLAMATION | MB_DEFBUTTON2);
       if (res == IDNO)
         return -1;
@@ -150,7 +147,7 @@ PrereqChecker::isMet ()
 {
   packagedb db;
 
-  Progress.SetText1 ("Checking prerequisites...");
+  Progress.SetText1 (Window::loadRString(IDS_PREREQ_CHECK).c_str());
   Progress.SetText2 ("");
   Progress.SetText3 ("");
 

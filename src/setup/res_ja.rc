@@ -19,7 +19,7 @@ FONT 8, "MS Shell Dlg"
 BEGIN
     CONTROL         "インターネットからインストール(&I)\n（ダウンロードされたファイルは再利用のために保存されます）",
                     IDC_SOURCE_NETINST, "Button",
-		    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP | BS_MULTILINE | BS_TOP, 71, 60, 200, 20
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP | BS_MULTILINE | BS_TOP, 71, 60, 200, 20
 
     CONTROL         "インストールせずにダウンロード(&D)",
                     IDC_SOURCE_DOWNLOAD, "Button", BS_AUTORADIOBUTTON | WS_TABSTOP, 71, 90, 200, 10
@@ -404,10 +404,10 @@ BEGIN
                     IDC_STATIC_LICENSE_TITLE,35,1,195,24
     LTEXT           "OSGeo4Wをインストールする前にパッケージのライセンス条項をよく読んでください",
                     IDC_STATIC_LICENSE_TEXT,35,25,265,40
+    CONTROL         "上記のライセンス条項に同意しました",IDC_CHK_AGREED,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,35,160,200,12
     CONTROL         "ライセンス", IDC_LICENSE_FILE, RICHEDIT_CLASS, ES_MULTILINE | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | WS_HSCROLL | WS_VSCROLL | ES_LEFT | ES_READONLY,
 		    35,80,260,75
-    CONTROL         "上記のライセンス条項に同意しました",IDC_CHK_AGREED,"Button",
-                    BS_AUTOCHECKBOX,35,160,200,12
     PUSHBUTTON      "印刷", IDC_PRINT_BUTTON,261,161,35,14
     ICON            IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
 END
@@ -437,28 +437,20 @@ BEGIN
     IDS_ERR_CHDIR           "ディレクトリを %s に変更できません。 : %s [%.8x]"
     IDS_OLD_SETUP_VERSION   "このセットアップはバージョン %sですが、setup.iniはバージョン %sを要求しています。\n最新の機能やバグの修正を得るためにアップグレードすることをお勧めします。"
     IDS_DOWNLOAD_INCOMPLETE "ダウンロードに失敗しました。再試行しますか？"
-    IDS_INSTALL_ERROR	    "インストールエラー (%s)、他のパッケージで続行しますか？"
+    IDS_INSTALL_ERROR       "インストールエラー (%s)、他のパッケージで続行しますか？"
     IDS_INSTALL_INCOMPLETE  "インストールに失敗しました。詳細は %s を見てください。"
     IDS_CORRUPT_PACKAGE     "パッケージファイル %s は破損したローカルコピーです。削除してリトライしてください。"
-    IDS_SKIP_PACKAGE	    "%s\nこのパッケージをスキップしますか？"
+    IDS_SKIP_PACKAGE        "%s\nこのパッケージをスキップしますか？"
     IDS_WINDOW_INIT_BADMSG  "重大なエラー：ウィンドウ初期化時に次の予想外のメッセージ ％u を受け取りました。"
     IDS_UNCAUGHT_EXCEPTION  "重大なエラー：捕捉されなかった例外\nスレッド： %s\nタイプ： %s\nメッセージ： %s"
     IDS_UNCAUGHT_EXCEPTION_WITH_ERRNO  "重大なエラー：捕捉されなかった例外\nスレッド： %s\nタイプ： %s\nメッセージ： %s\nアプリケーションエラー番号： %d"
     IDS_TRUSTKEEP_TOOLTIP   "全てのパッケージを現在インストールされているバージョンに設定します。 これはどのパッケージにも変更を行わないようセットアップに指示しているのと同じです。"
-
     IDS_TRUSTPREV_TOOLTIP   "現在の安定しているバージョン以前に安定しているとされていたバージョンを意味する '以前の' と記されているバージョンを選択してください。."
-
-
     IDS_TRUSTCURR_TOOLTIP   "現在最も安定しているとされるバージョンを選択してください。（推奨）"
-
     IDS_TRUSTEXP_TOOLTIP    "バージョンが維持者によって開発版または試用版とされている場合であっても最新のバージョンを選択してください。"
-
     IDS_VIEWBUTTON_TOOLTIP  "パッケージビューをサイクルします。これは以下のチューザーにおいて表示されるパッケージを決定します。\r\n\r\nカテゴリー：パッケージカテゴリーによって分類します。'＋'　をクリックして拡張してください。\r\n\r\n全て：　全てのパッケージを表示します。\r\n\r\n一部：　インストール、削除、またはアップグレードされるパッケージのみ表示します。\r\nこれは“次へ”をクリックしたときにセットアップが行う全ての変更を示します。\r\n\r\n最新版：　既に設定するバージョンであるため操作を必要としないインストールされているパッケージを表示します。\r\n\r\nインストールされていない：　現在インストールされておらずインストールに選択されていないパッケージを表示します。"
-
     IDS_HIDEOBS_TOOLTIP     " 選択されると、セットアップは '_' で始まる名前のカテゴリーにあるパッケージに隠れます。通常このようなパッケージは削除もしくは名前が変更されたパッケージであり、または自動的に処理されたインフラストラクチャーパッケージの空のプレースホルダです。"
-
-
-    IDS_SEARCH_TOOLTIP		"この文字列でパッケージ名を検索する。"
+    IDS_SEARCH_TOOLTIP          "この文字列でパッケージ名を検索する。"
     IDS_LOCAL_DIR_DOWNLOAD	"ダウンロードするインストールファイルを保存するディレクトリを選んでください。ディレクトリがない場合は作成されます。"
     IDS_LOCAL_DIR_INSTALL	"セットアップがダウンロードされたインストールファイルを検索するディレクトリを選んでください。"
     IDS_MAYBE_MKDIR		"ディレクトリ %s は存在しません。作成しますか?"
@@ -494,4 +486,24 @@ BEGIN
     IDS_NOTHING_TO_INSTALL_OR_UPGRADE "インストール/アップグレードするものはありません"
     IDS_NOTHING_TO_DOWNLOAD	"ダウンロードするものはありません"
     IDS_INTERNET_ERR		"Internet error: %s"
+    IDS_DEPENDENCY_WARNING      "The listed packages are required for packages depending on them to work.  We strongly recommend that you allow Setup to select them.\r\n\r\nAre you sure you want to proceed without these packages?"
+    IDS_DEPENDENCY_CAPTION      "WARNING - Required Packages Not Selected"
+    IDS_ABORT_WARNING           "Are you sure you want to exit setup? Any current download or installation will be aborted."
+    IDS_ABORT_CAPTION           "Exit OSGeo4W Setup?"
+    IDS_RUNNING                 "Running..."
+    IDS_RUNNING_PREREMOVE       "Running preremove script..."
+    IDS_UNINSTALLING            "Uninstalling..."
+    IDS_INSTALLING              "Installing..."
+    IDS_CALCULATING             "Calculating..."
+    IDS_MD5CHECK                "Checking MD5 for %s"
+    IDS_PROGRESS                "Progress:"
+    IDS_DOWNLOADING             "Downloading..."
+    IDS_CONNECTING              "Connecting..."
+    IDS_DOWNLOADING_FROM        "%s from %s"
+    IDS_PREREQ_CHECK            "Checking prerequisites..."
+    IDS_UNABLE_TO_EXTRACT_CAPTION "In-use files detected"
+    IDS_UNABLE_TO_EXTRACT         "Unable to extract /%s -- the file is in use.\r\nPlease stop all OSGeo4W processes and select ""Retry"", or\r\nselect ""Continue"" to go on anyway (you will need to reboot).\r\n"
+    IDS_STILL_UNABLE_TO_EXTRACT   "Still unable to extract /%s -- the file is in use.\r\nPlease stop ALL OSGeo4W processes and select ""Retry"", or\r\nselect ""Continue"" to go on anyway (you will need to reboot).\r\n"
+    IDS_FILE_EXTRACTION_CAPTION   "File extraction error"
+    IDS_FILE_EXTRACTION_ERROR     "Unable to extract /%s -- corrupt package?\r\n"
 END

@@ -25,6 +25,7 @@
 #include "ControlAdjuster.h"
 #include "choose.h"
 #include "Exception.h"
+#include "resource.h"
 
 #include <windows.h>
 #include <shlwapi.h>
@@ -227,8 +228,9 @@ static LRESULT CALLBACK PropSheetWndProc (HWND hwnd, UINT uMsg,
 	      break;
 
       if (MessageBox(hwnd,
-		     "Are you sure you want to exit setup? Any current download or installation will be aborted.",
-		     "Exit OSGeo4W Setup?", MB_YESNO) == IDNO)
+		     Window::loadRString(IDS_ABORT_WARNING).c_str(),
+		     Window::loadRString(IDS_ABORT_CAPTION).c_str(),
+                     MB_YESNO) == IDNO)
 	      return 0;
       break;
     case WM_SIZE:

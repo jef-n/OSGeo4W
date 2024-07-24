@@ -75,7 +75,7 @@ public:
     {
       Progress.SetText2 ("");
       Progress.SetText3 ("");
-      Progress.SetText4 ("Progress:");
+      Progress.SetText4 (Window::loadRString(IDS_PROGRESS).c_str());
     }
   virtual void progress(unsigned long const pos, unsigned long const max)
     {
