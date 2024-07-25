@@ -8802,8 +8802,8 @@ index ba50862a33..9daf64a74a 100644
 -    struct ColumnConfig
 +    struct CORE_EXPORT ColumnConfig
      {
-       //! Constructor for ColumnConfig
        ColumnConfig() = default;
+
 diff --git a/src/core/qgsexpressioncontext.cpp b/src/core/qgsexpressioncontext.cpp
 index b05f99490a..8e0b9c2bce 100644
 --- a/src/core/qgsexpressioncontext.cpp
