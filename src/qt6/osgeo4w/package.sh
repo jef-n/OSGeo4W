@@ -36,7 +36,7 @@ mkdir -p build/s
 
 		# TODO: why don't cygwin's and msys' gperfs work
 		[ -x osgeo4w/bin/gperf.exe ] || {
-			[ -f gperf-3.0.1.zip ] || curl -O https://altushost-swe.dl.sourceforge.net/project/gnuwin32/gperf/3.0.1/gperf-3.0.1-bin.zip
+			[ -f gperf-3.0.1.zip ] || curl -LO https://altushost-swe.dl.sourceforge.net/project/gnuwin32/gperf/3.0.1/gperf-3.0.1-bin.zip
 			unzip -p gperf-3.0.1-bin.zip bin/gperf.exe >osgeo4w/bin/gperf.exe
 			chmod a+rx osgeo4w/bin/gperf.exe
 			type -a gperf
