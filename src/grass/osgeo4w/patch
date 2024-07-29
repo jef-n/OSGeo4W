@@ -1,27 +1,31 @@
-diff -Nur grass-8.3.2/include/Make/Compile.make ../grass-8.3.2/include/Make/Compile.make
---- grass-8.3.2/include/Make/Compile.make	2024-03-06 22:24:05.000000000 +0100
-+++ ../grass-8.3.2/include/Make/Compile.make	2024-03-08 13:40:10.196998500 +0100
-@@ -47,14 +47,14 @@
- %.manifest.res: %.manifest.rc %.exe.manifest
- 	$(WINDRES) --input=$< --input-format=rc --output=$@ --output-format=coff -I$(MODULE_TOPDIR)/mswindows
+diff --git a/.github/workflows/osgeo4w.yml b/.github/workflows/osgeo4w.yml
+index fbbd06caf..215ecd042 100644
+--- a/.github/workflows/osgeo4w.yml
++++ b/.github/workflows/osgeo4w.yml
+@@ -42,9 +42,10 @@ jobs:
+             mingw-w64-x86_64-fftw mingw-w64-x86_64-lapack mingw-w64-x86_64-pkgconf
+             mingw-w64-x86_64-gcc mingw-w64-x86_64-ccache mingw-w64-x86_64-zlib mingw-w64-x86_64-libiconv
+             mingw-w64-x86_64-bzip2 mingw-w64-x86_64-gettext mingw-w64-x86_64-libsystre
+-            mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libwinpthread-git mingw-w64-x86_64-libpng
++            mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libwinpthread-git
+             mingw-w64-x86_64-pcre
  
--%.manifest.rc: $(MODULE_TOPDIR)/mswindows/generic.manifest.rc
-+%.manifest.rc: $(MODULE_TOPDIR)/mswindows/generic.manifest.rc.in
- 	sed	-e 's/@CMD@/$(notdir $*)/' \
- 		-e 's/@VER_MAJOR@/$(GRASS_VERSION_MAJOR)/' \
- 		-e 's/@VER_MINOR@/$(GRASS_VERSION_MINOR)/' \
- 		-e 's/@VER_RELEASE@/$(GRASS_VERSION_RELEASE)/' \
--		$(MODULE_TOPDIR)/mswindows/generic.manifest.rc > $@
-+		$^ > $@
++
+       - name: Install OSGeo4W
+         run: |
+           $exe = 'osgeo4w-setup.exe'
+@@ -57,7 +58,7 @@ jobs:
+             pdal-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,\
+             gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,\
+             python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,\
+-            python3-wxpython,regex-devel,zstd-devel"
++            python3-wxpython,zstd-devel"
  
- %.exe.manifest: $(MODULE_TOPDIR)/mswindows/generic.manifest
--	sed 's/@CMD@/$(notdir $*)/' $(MODULE_TOPDIR)/mswindows/generic.manifest > $@
-+	sed 's/@CMD@/$(notdir $*)/' $^ > $@
- 
- -include $(DEPFILE)
-diff -Nur grass-8.3.2/include/Make/Grass.make ../grass-8.3.2/include/Make/Grass.make
---- grass-8.3.2/include/Make/Grass.make	2024-03-06 22:24:05.000000000 +0100
-+++ ../grass-8.3.2/include/Make/Grass.make	2024-03-08 13:40:10.206025700 +0100
+       - name: Compile GRASS GIS
+         run: D:\msys64\usr\bin\bash.exe -l (''+(Get-Location)+'\.github\workflows\build_osgeo4w.sh') (Get-Location)
+diff -Nur grass-8.4.0/include/Make/Grass.make ../grass-8.4.0/include/Make/Grass.make
+--- grass-8.4.0/include/Make/Grass.make	2024-03-06 22:24:05.000000000 +0100
++++ ../grass-8.4.0/include/Make/Grass.make	2024-03-08 13:40:10.206025700 +0100
 @@ -196,7 +196,7 @@
  FORMDEPS         = $(DBMILIB) $(GISLIB)
  RASTER3DDEPS     = $(RASTERLIB) $(GISLIB)
@@ -31,10 +35,11 @@ diff -Nur grass-8.3.2/include/Make/Grass.make ../grass-8.3.2/include/Make/Grass.
  GPDEDEPS         = $(RASTER3DLIB) $(RASTERLIB) $(GISLIB) $(GMATHLIB) $(OPENMP_LIBPATH) $(OPENMP_LIB) $(MATHLIB)
  GPROJDEPS        = $(GISLIB) $(GDALLIBS) $(PROJLIB) $(MATHLIB)
  HTMLDRIVERDEPS   = $(DRIVERLIB) $(GISLIB) $(MATHLIB)
-diff -Nur grass-8.3.2/include/Make/Platform.make.in ../grass-8.3.2/include/Make/Platform.make.in
---- grass-8.3.2/include/Make/Platform.make.in	2024-03-06 22:24:05.000000000 +0100
-+++ ../grass-8.3.2/include/Make/Platform.make.in	2024-03-08 13:40:10.214828200 +0100
-@@ -229,7 +229,7 @@
+diff --git a/include/Make/Platform.make.in b/include/Make/Platform.make.in
+index 93a6f0792..8613ce839 100644
+--- a/include/Make/Platform.make.in
++++ b/include/Make/Platform.make.in
+@@ -229,7 +229,7 @@ USE_PTHREAD         = @USE_PTHREAD@
  #OpenMP
  OPENMP_INCPATH      = @OPENMP_INCPATH@
  OPENMP_LIBPATH      = @OPENMP_LIBPATH@
@@ -43,159 +48,53 @@ diff -Nur grass-8.3.2/include/Make/Platform.make.in ../grass-8.3.2/include/Make/
  OPENMP_CFLAGS       = @OPENMP_CFLAGS@
  USE_OPENMP          = @USE_OPENMP@
  
-diff -Nur grass-8.3.2/lib/gis/gisinit.c ../grass-8.3.2/lib/gis/gisinit.c
---- grass-8.3.2/lib/gis/gisinit.c	2024-03-06 22:24:05.000000000 +0100
-+++ ../grass-8.3.2/lib/gis/gisinit.c	2024-03-08 13:40:10.223353400 +0100
-@@ -49,6 +49,7 @@
- 
-     G_set_program_name(pgm);
- 
-+#ifndef _WIN32
-     /* verify version of GRASS headers (and anything else in include) */
-     if (strcmp(version, GIS_H_VERSION) != 0)
-         G_fatal_error(_("Module built against version %s but "
-@@ -56,6 +57,7 @@
-                         "You need to rebuild GRASS GIS or untangle multiple "
-                         "installations."),
-                       version, GIS_H_VERSION);
-+#endif
- 
-     /* Make sure location and mapset are set */
-     G_location_path();
-@@ -85,6 +87,7 @@
-     if (initialized)
-         return;
- 
-+#ifndef _WIN32
-     /* verify version of GRASS headers (and anything else in include) */
-     if (strcmp(version, GIS_H_VERSION) != 0)
-         G_fatal_error(_("Module built against version %s but "
-@@ -92,6 +95,8 @@
-                         "You need to rebuild GRASS GIS or untangle multiple "
-                         "installations."),
-                       version, GIS_H_VERSION);
-+#endif
-+
-     gisinit();
- }
- 
-diff -Nur grass-8.3.2/mswindows/generic.manifest.rc ../grass-8.3.2/mswindows/generic.manifest.rc
---- grass-8.3.2/mswindows/generic.manifest.rc	2024-03-06 22:24:05.000000000 +0100
-+++ ../grass-8.3.2/mswindows/generic.manifest.rc	1970-01-01 01:00:00.000000000 +0100
-@@ -1,45 +0,0 @@
--#include "winver.h"
--#include "winuser.h"
--
--1 RT_MANIFEST "@CMD@.exe.manifest"
--
--1 ICON "grass.ico"
--
--#define VER_FILEVERSION             @VER_MAJOR@,@VER_MINOR@,0,0
--#define VER_FILEVERSION_STR         "@VER_MAJOR@.@VER_MINOR@.@VER_RELEASE@\0"
--
--#define VER_PRODUCTVERSION          @VER_MAJOR@,@VER_MINOR@,0,0
--#define VER_PRODUCTVERSION_STR      "@VER_MAJOR@.@VER_MINOR@.@VER_RELEASE@\0"
--
--#define VER_PRIVATEBUILD	VS_FF_PRIVATEBUILD
--#define VER_PRERELEASE		VS_FF_PRERELEASE
--#define VER_DEBUG		VS_FF_DEBUG
--
--VS_VERSION_INFO VERSIONINFO
--FILEVERSION    	VER_FILEVERSION
--PRODUCTVERSION 	VER_PRODUCTVERSION
--FILEFLAGSMASK  	VS_FFI_FILEFLAGSMASK
--FILEFLAGS      	(VER_PRIVATEBUILD|VER_PRERELEASE|VER_DEBUG)
--FILEOS         	VOS__WINDOWS32
--FILETYPE       	VFT_APP
--FILESUBTYPE    	VFT2_UNKNOWN
--BEGIN
--    BLOCK "StringFileInfo"
--    BEGIN
--        BLOCK "040904E4"
--        BEGIN
--            VALUE "CompanyName",      "GRASS Development Team"
--            VALUE "FileDescription",  "GRASS @VER_MAJOR@"
--            VALUE "FileVersion",      VER_FILEVERSION_STR
--            VALUE "LegalCopyright",   "Copyright GRASS Development Team"
--            VALUE "OriginalFilename", "@CMD@.exe"
--            VALUE "ProductName",      "GRASS @VER_MAJOR@"
--            VALUE "ProductVersion",   VER_PRODUCTVERSION_STR
--        END
--    END
--
--    BLOCK "VarFileInfo"
--    BEGIN
--        VALUE "Translation", 0x409, 1252
--    END
--END
-diff -Nur grass-8.3.2/mswindows/generic.manifest.rc.in ../grass-8.3.2/mswindows/generic.manifest.rc.in
---- grass-8.3.2/mswindows/generic.manifest.rc.in	1970-01-01 01:00:00.000000000 +0100
-+++ ../grass-8.3.2/mswindows/generic.manifest.rc.in	2024-03-08 13:40:04.813279500 +0100
-@@ -0,0 +1,45 @@
-+#include "winver.h"
-+#include "winuser.h"
-+
-+1 RT_MANIFEST "@CMD@.exe.manifest"
-+
-+1 ICON "grass.ico"
-+
-+#define VER_FILEVERSION             @VER_MAJOR@,@VER_MINOR@,0,0
-+#define VER_FILEVERSION_STR         "@VER_MAJOR@.@VER_MINOR@.@VER_RELEASE@\0"
-+
-+#define VER_PRODUCTVERSION          @VER_MAJOR@,@VER_MINOR@,0,0
-+#define VER_PRODUCTVERSION_STR      "@VER_MAJOR@.@VER_MINOR@.@VER_RELEASE@\0"
-+
-+#define VER_PRIVATEBUILD	VS_FF_PRIVATEBUILD
-+#define VER_PRERELEASE		VS_FF_PRERELEASE
-+#define VER_DEBUG		VS_FF_DEBUG
-+
-+VS_VERSION_INFO VERSIONINFO
-+FILEVERSION    	VER_FILEVERSION
-+PRODUCTVERSION 	VER_PRODUCTVERSION
-+FILEFLAGSMASK  	VS_FFI_FILEFLAGSMASK
-+FILEFLAGS      	(VER_PRIVATEBUILD|VER_PRERELEASE|VER_DEBUG)
-+FILEOS         	VOS__WINDOWS32
-+FILETYPE       	VFT_APP
-+FILESUBTYPE    	VFT2_UNKNOWN
-+BEGIN
-+    BLOCK "StringFileInfo"
-+    BEGIN
-+        BLOCK "040904E4"
-+        BEGIN
-+            VALUE "CompanyName",      "GRASS Development Team"
-+            VALUE "FileDescription",  "GRASS @VER_MAJOR@"
-+            VALUE "FileVersion",      VER_FILEVERSION_STR
-+            VALUE "LegalCopyright",   "Copyright GRASS Development Team"
-+            VALUE "OriginalFilename", "@CMD@.exe"
-+            VALUE "ProductName",      "GRASS @VER_MAJOR@"
-+            VALUE "ProductVersion",   VER_PRODUCTVERSION_STR
-+        END
-+    END
-+
-+    BLOCK "VarFileInfo"
-+    BEGIN
-+        VALUE "Translation", 0x409, 1252
-+    END
-+END
-diff -Nur grass-8.3.2/mswindows/osgeo4w/env.bat.tmpl ../grass-8.3.2/mswindows/osgeo4w/env.bat.tmpl
---- grass-8.3.2/mswindows/osgeo4w/env.bat.tmpl	2024-03-06 22:24:05.000000000 +0100
-+++ ../grass-8.3.2/mswindows/osgeo4w/env.bat.tmpl	2024-03-08 13:40:10.231835800 +0100
-@@ -8,6 +8,7 @@
+diff -ur osgeo4w/grass-8.4.0/mswindows/osgeo4w/env.bat.tmpl grass-8.4.0/mswindows/osgeo4w/env.bat.tmpl
+--- osgeo4w/grass-8.4.0/mswindows/osgeo4w/env.bat.tmpl	2024-07-27 13:27:22.000000000 +0200
++++ grass-8.4.0/mswindows/osgeo4w/env.bat.tmpl	2024-07-29 12:21:13.615693700 +0200
+@@ -8,6 +8,8 @@
  REM Note that msys package must be also installed
  REM set GRASS_SH=%OSGEO4W_ROOT%\apps\msys\bin\sh.exe
  
 +set PYTHONPATH=%OSGEO4W_ROOT%\apps\grass\grass@POSTFIX@\etc\python;%PYTHONPATH%
++set GRASS_COMPATIBILITY_TEST=0
  set GRASS_PYTHON=%OSGEO4W_ROOT%\bin\python3.exe
  set GRASS_PROJSHARE=%OSGEO4W_ROOT%\share\proj
  
-diff -Nur grass-8.3.2/mswindows/osgeo4w/package.sh ../grass-8.3.2/mswindows/osgeo4w/package.sh
---- grass-8.3.2/mswindows/osgeo4w/package.sh	2024-03-06 22:24:05.000000000 +0100
-+++ ../grass-8.3.2/mswindows/osgeo4w/package.sh	2024-03-08 13:40:10.245891600 +0100
-@@ -110,30 +110,21 @@
+diff --git a/mswindows/osgeo4w/build_osgeo4w.sh b/mswindows/osgeo4w/build_osgeo4w.sh
+index ecb6e951f..4d6e04696 100644
+--- a/mswindows/osgeo4w/build_osgeo4w.sh
++++ b/mswindows/osgeo4w/build_osgeo4w.sh
+@@ -38,7 +38,8 @@ export ARCH=x86_64-w64-mingw32
+     --with-nls \
+     --with-readline \
+     --with-blas \
+-    --with-lapack-includes=/mingw64/include/lapack \
++    --with-lapack \
++    --with-lapack-includes=/mingw64/include \
+     --with-freetype \
+     --with-freetype-includes=${OSGEO4W_ROOT_MSYS}/include/freetype2 \
+     --with-proj-share=${OSGEO4W_ROOT_MSYS}/share/proj \
+@@ -53,12 +54,11 @@ export ARCH=x86_64-w64-mingw32
+     --with-sqlite-includes=${OSGEO4W_ROOT_MSYS}/include \
+     --with-sqlite-libs=${OSGEO4W_ROOT_MSYS}/lib \
+     --with-regex \
+-    --with-nls \
+     --with-zstd \
+     --with-odbc \
+     --with-cairo \
+     --with-cairo-includes=${OSGEO4W_ROOT_MSYS}/include \
+-    --with-cairo-libs=$OSGEO4W_ROOT_MSYS/lib \
++    --with-cairo-libs=${OSGEO4W_ROOT_MSYS}/lib \
+     --with-cairo-ldflags="-L${SRC}/mswindows/osgeo4w/lib -lcairo" \
+     --with-opengl=windows \
+     --with-bzlib \
+diff -ur osgeo4w/grass-8.4.0/mswindows/osgeo4w/package.sh grass-8.4.0/mswindows/osgeo4w/package.sh
+--- osgeo4w/grass-8.4.0/mswindows/osgeo4w/package.sh	2024-07-27 13:27:22.000000000 +0200
++++ grass-8.4.0/mswindows/osgeo4w/package.sh	2024-07-29 12:21:13.627700700 +0200
+@@ -110,29 +110,21 @@
  	/mingw64/bin/zlib1.dll
  	/mingw64/bin/libbz2-1.dll
  	/mingw64/bin/libiconv-2.dll
--	/mingw64/bin/libexpat-1.dll
 -	/mingw64/bin/libfontconfig-1.dll
  	/mingw64/bin/libgfortran-5.dll
 -	/mingw64/bin/libbrotlidec.dll
@@ -224,7 +123,7 @@ diff -Nur grass-8.3.2/mswindows/osgeo4w/package.sh ../grass-8.3.2/mswindows/osge
  "
  
  if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
-@@ -149,18 +140,18 @@
+@@ -148,18 +140,18 @@
  	cp -uv $DLLS dist.x86_64-w64-mingw32/bin
  
  	mkdir -p mswindows/osgeo4w/lib
@@ -250,7 +149,7 @@ diff -Nur grass-8.3.2/mswindows/osgeo4w/package.sh ../grass-8.3.2/mswindows/osge
  		--with-opengl=windows \
  		--without-x \
  		--with-cxx \
-@@ -168,13 +159,13 @@
+@@ -167,13 +159,13 @@
  		--enable-largefile \
  		--with-fftw \
  		--with-freetype \
@@ -270,7 +169,7 @@ diff -Nur grass-8.3.2/mswindows/osgeo4w/package.sh ../grass-8.3.2/mswindows/osge
  		--with-gdal=$PWD/mswindows/osgeo4w/gdal-config \
  		--with-geos=$PWD/mswindows/osgeo4w/geos-config \
  		--with-sqlite \
-@@ -190,10 +181,11 @@
+@@ -189,10 +181,11 @@
  		--with-lapack-includes=/mingw64/include \
  		--with-openmp \
  		--with-cairo \
@@ -284,7 +183,7 @@ diff -Nur grass-8.3.2/mswindows/osgeo4w/package.sh ../grass-8.3.2/mswindows/osge
  		--without-pdal
  
  	touch mswindows/osgeo4w/configure-stamp
-@@ -249,7 +241,9 @@
+@@ -248,7 +241,9 @@
  
      # copy dependencies (TODO: to be reduced)
      cp -uv $DLLS apps/grass/grass$POSTFIX/bin

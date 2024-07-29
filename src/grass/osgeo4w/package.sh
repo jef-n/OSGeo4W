@@ -1,5 +1,5 @@
 export P=grass
-export V=8.3.2
+export V=8.4.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="gdal-devel proj-devel geos-devel netcdf-devel libjpeg-turbo-devel libpq-devel libtiff-devel sqlite3-devel zstd-devel python3-ply python3-core python3-six python3-pywin32 python3-wxpython liblas-devel cairo-devel freetype-devel"
