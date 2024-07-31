@@ -1,11 +1,11 @@
-diff -ur a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
---- a/cpp/CMakeLists.txt
-+++ b/cpp/CMakeLists.txt
-@@ -742,6 +742,7 @@
- endif()
+diff -ur apache-arrow-17.0.0/cpp/src/arrow/CMakeLists.txt ../apache-arrow-17.0.0/cpp/src/arrow/CMakeLists.txt
+--- apache-arrow-17.0.0/cpp/src/arrow/CMakeLists.txt	2024-07-11 10:58:17.000000000 +0200
++++ ../apache-arrow-17.0.0/cpp/src/arrow/CMakeLists.txt	2024-07-31 12:22:44.236560900 +0200
+@@ -57,6 +57,7 @@
  
  if(ARROW_WITH_LZ4)
-+  add_library(LZ4::lz4 ALIAS LZ4::lz4_shared)
-   list(APPEND ARROW_STATIC_LINK_LIBS LZ4::lz4)
    if(lz4_SOURCE STREQUAL "SYSTEM")
++    add_library(LZ4::lz4 ALIAS LZ4::lz4_shared)
      list(APPEND ARROW_STATIC_INSTALL_INTERFACE_LIBS LZ4::lz4)
+   endif()
+ endif()
