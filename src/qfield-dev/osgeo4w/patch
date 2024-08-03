@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5b9cb1b..5db8b68 100644
+index 9d5415a9..37fbe608 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -23,7 +23,7 @@ include(Platform)
@@ -12,7 +12,7 @@ index 5b9cb1b..5db8b68 100644
  include(GNUInstallDirs)
  
 diff --git a/cmake/qgis-cmake-wrapper.cmake b/cmake/qgis-cmake-wrapper.cmake
-index 8526cfe..bb7a41b 100644
+index 75f92c31..33d92334 100644
 --- a/cmake/qgis-cmake-wrapper.cmake
 +++ b/cmake/qgis-cmake-wrapper.cmake
 @@ -66,22 +66,22 @@ endfunction()
@@ -54,3 +54,102 @@ index 8526cfe..bb7a41b 100644
  
    _qgis_core_add_dependency(PostgreSQL::PostgreSQL PostgreSQL)
  
+diff --git a/src/core/digitizinglogger.cpp b/src/core/digitizinglogger.cpp
+index b07a25ab..481d65ce 100644
+--- a/src/core/digitizinglogger.cpp
++++ b/src/core/digitizinglogger.cpp
+@@ -129,7 +129,7 @@ void DigitizingLogger::findLogsLayer()
+       if ( item )
+       {
+         QgsVectorLayer *layer = qobject_cast<QgsVectorLayer *>( item->layer() );
+-        if ( layer && layer->geometryType() == Qgis::GeometryType::Point && layer->dataProvider() && layer->dataProvider()->capabilities() & QgsVectorDataProvider::AddFeatures )
++        if ( layer && layer->geometryType() == Qgis::GeometryType::Point && layer->dataProvider() && layer->dataProvider()->capabilities() & Qgis::VectorProviderCapability::AddFeatures )
+         {
+           mLogsLayer = layer;
+         }
+diff --git a/src/core/layertreemodel.cpp b/src/core/layertreemodel.cpp
+index 320817e6..e99a73e3 100644
+--- a/src/core/layertreemodel.cpp
++++ b/src/core/layertreemodel.cpp
+@@ -783,7 +783,7 @@ QVariant FlatLayerTreeModelBase::data( const QModelIndex &index, int role ) cons
+         QgsVectorLayer *layer = qobject_cast<QgsVectorLayer *>( nodeLayer->layer() );
+ 
+         if ( layer && layer->dataProvider() )
+-          return static_cast<bool>( layer->dataProvider()->capabilities() & QgsVectorDataProvider::Capability::ReloadData );
++          return static_cast<bool>( layer->dataProvider()->capabilities() & Qgis::VectorProviderCapability::ReloadData );
+       }
+ 
+       return false;
+diff --git a/src/core/multifeaturelistmodelbase.cpp b/src/core/multifeaturelistmodelbase.cpp
+index fc2a0850..9abc1c6a 100644
+--- a/src/core/multifeaturelistmodelbase.cpp
++++ b/src/core/multifeaturelistmodelbase.cpp
+@@ -268,12 +268,12 @@ QVariant MultiFeatureListModelBase::data( const QModelIndex &index, int role ) c
+ 
+     case MultiFeatureListModel::DeleteFeatureRole:
+       return !feature->first->readOnly()
+-             && ( feature->first->dataProvider()->capabilities() & QgsVectorDataProvider::DeleteFeatures )
++             && ( feature->first->dataProvider()->capabilities() & Qgis::VectorProviderCapability::DeleteFeatures )
+              && !feature->first->customProperty( QStringLiteral( "QFieldSync/is_geometry_locked" ), false ).toBool();
+ 
+     case MultiFeatureListModel::EditGeometryRole:
+       return !feature->first->readOnly()
+-             && ( feature->first->dataProvider()->capabilities() & QgsVectorDataProvider::ChangeGeometries )
++             && ( feature->first->dataProvider()->capabilities() & Qgis::VectorProviderCapability::ChangeGeometries )
+              && !feature->first->customProperty( QStringLiteral( "QFieldSync/is_geometry_locked" ), false ).toBool();
+   }
+ 
+@@ -324,7 +324,7 @@ bool MultiFeatureListModelBase::canEditAttributesSelection() const
+     return false;
+ 
+   QgsVectorLayer *vlayer = mSelectedFeatures[0].first;
+-  return !vlayer->readOnly() && ( vlayer->dataProvider()->capabilities() & QgsVectorDataProvider::ChangeAttributeValues );
++  return !vlayer->readOnly() && ( vlayer->dataProvider()->capabilities() & Qgis::VectorProviderCapability::ChangeAttributeValues );
+ }
+ 
+ bool MultiFeatureListModelBase::canMergeSelection() const
+@@ -333,7 +333,7 @@ bool MultiFeatureListModelBase::canMergeSelection() const
+     return false;
+ 
+   QgsVectorLayer *vlayer = mSelectedFeatures[0].first;
+-  return !vlayer->readOnly() && QgsWkbTypes::isMultiType( vlayer->wkbType() ) && ( vlayer->dataProvider()->capabilities() & QgsVectorDataProvider::DeleteFeatures ) && ( vlayer->dataProvider()->capabilities() & QgsVectorDataProvider::ChangeGeometries ) && !vlayer->customProperty( QStringLiteral( "QFieldSync/is_geometry_locked" ), false ).toBool();
++  return !vlayer->readOnly() && QgsWkbTypes::isMultiType( vlayer->wkbType() ) && ( vlayer->dataProvider()->capabilities() & Qgis::VectorProviderCapability::DeleteFeatures ) && ( vlayer->dataProvider()->capabilities() & Qgis::VectorProviderCapability::ChangeGeometries ) && !vlayer->customProperty( QStringLiteral( "QFieldSync/is_geometry_locked" ), false ).toBool();
+ }
+ 
+ bool MultiFeatureListModelBase::canDeleteSelection() const
+@@ -342,7 +342,7 @@ bool MultiFeatureListModelBase::canDeleteSelection() const
+     return false;
+ 
+   QgsVectorLayer *vlayer = mSelectedFeatures[0].first;
+-  return !vlayer->readOnly() && ( vlayer->dataProvider()->capabilities() & QgsVectorDataProvider::DeleteFeatures ) && !vlayer->customProperty( QStringLiteral( "QFieldSync/is_geometry_locked" ), false ).toBool();
++  return !vlayer->readOnly() && ( vlayer->dataProvider()->capabilities() & Qgis::VectorProviderCapability::DeleteFeatures ) && !vlayer->customProperty( QStringLiteral( "QFieldSync/is_geometry_locked" ), false ).toBool();
+ }
+ 
+ bool MultiFeatureListModelBase::canDuplicateSelection() const
+@@ -351,7 +351,7 @@ bool MultiFeatureListModelBase::canDuplicateSelection() const
+     return false;
+ 
+   QgsVectorLayer *vlayer = mSelectedFeatures[0].first;
+-  return !vlayer->readOnly() && ( vlayer->dataProvider()->capabilities() & QgsVectorDataProvider::AddFeatures ) && !vlayer->customProperty( QStringLiteral( "QFieldSync/is_geometry_locked" ), false ).toBool();
++  return !vlayer->readOnly() && ( vlayer->dataProvider()->capabilities() & Qgis::VectorProviderCapability::AddFeatures ) && !vlayer->customProperty( QStringLiteral( "QFieldSync/is_geometry_locked" ), false ).toBool();
+ }
+ 
+ bool MultiFeatureListModelBase::canMoveSelection() const
+@@ -360,7 +360,7 @@ bool MultiFeatureListModelBase::canMoveSelection() const
+     return false;
+ 
+   QgsVectorLayer *vlayer = mSelectedFeatures[0].first;
+-  if ( !vlayer || vlayer->readOnly() || !( vlayer->dataProvider()->capabilities() & QgsVectorDataProvider::ChangeGeometries ) || vlayer->customProperty( QStringLiteral( "QFieldSync/is_geometry_locked" ), false ).toBool() )
++  if ( !vlayer || vlayer->readOnly() || !( vlayer->dataProvider()->capabilities() & Qgis::VectorProviderCapability::ChangeGeometries ) || vlayer->customProperty( QStringLiteral( "QFieldSync/is_geometry_locked" ), false ).toBool() )
+     return false;
+ 
+   const bool geometryLockedExpressionActive = vlayer->customProperty( QStringLiteral( "QFieldSync/is_geometry_locked_expression_active" ), false ).toBool();
+@@ -392,7 +392,7 @@ bool MultiFeatureListModelBase::canProcessSelection() const
+     return false;
+ 
+   QgsVectorLayer *vlayer = mSelectedFeatures[0].first;
+-  if ( !vlayer || vlayer->readOnly() || !( vlayer->dataProvider()->capabilities() & QgsVectorDataProvider::ChangeGeometries ) || vlayer->customProperty( QStringLiteral( "QFieldSync/is_geometry_locked" ), false ).toBool() )
++  if ( !vlayer || vlayer->readOnly() || !( vlayer->dataProvider()->capabilities() & Qgis::VectorProviderCapability::ChangeGeometries ) || vlayer->customProperty( QStringLiteral( "QFieldSync/is_geometry_locked" ), false ).toBool() )
+     return false;
+ 
+   const bool geometryLockedExpressionActive = vlayer->customProperty( QStringLiteral( "QFieldSync/is_geometry_locked_expression_active" ), false ).toBool();
