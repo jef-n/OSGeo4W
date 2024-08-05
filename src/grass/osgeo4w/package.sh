@@ -2,7 +2,7 @@ export P=grass
 export V=8.4.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="gdal-devel proj-devel geos-devel netcdf-devel libjpeg-turbo-devel libpq-devel libtiff-devel sqlite3-devel zstd-devel python3-ply python3-core python3-six python3-pywin32 python3-wxpython liblas-devel cairo-devel freetype-devel"
+export BUILDDEPENDS="gdal-devel proj-devel geos-devel netcdf-devel libjpeg-turbo-devel libpq-devel libpng-devel libtiff-devel sqlite3-devel zstd-devel python3-ply python3-core python3-six python3-pywin32 python3-wxpython liblas-devel cairo-devel freetype-devel"
 export PACKAGES="grass"
 
 REPO=https://github.com/OSGeo/grass
@@ -98,7 +98,6 @@ pacman --noconfirm -Syu --needed \
 	mingw-w64-x86_64-libsystre \
 	mingw-w64-x86_64-libtre-git \
 	mingw-w64-x86_64-libwinpthread-git \
-	mingw-w64-x86_64-libpng \
 	mingw-w64-x86_64-pcre \
 	mingw-w64-x86_64-fftw \
 	mingw-w64-x86_64-lapack \
@@ -112,6 +111,7 @@ cd ../$p
 bash.exe $xtrace mswindows/osgeo4w/package.sh
 EOF
 
+	taskkill /im gpg-agent.exe /f || true
 	cygstart -w $(cygpath -aw msys64/usr/bin/bash.exe) $(cygpath -am build.sh) || { cat ../$p/mswindows/osgeo4w/package.log; exit 1; }
 )
 
@@ -122,7 +122,7 @@ cat <<EOF >$R/setup.hint
 sdesc: "GRASS GIS ${V%.*}"
 ldesc: "Geographic Resources Analysis Support System (GRASS GIS ${V%.*})"
 category: Desktop
-requires: liblas $RUNTIMEDEPENDS avce00 gpsbabel proj python3-gdal python3-matplotlib libtiff python3-wxpython python3-pillow python3-pip python3-ply python3-pyopengl python3-psycopg2 python3-six zstd python3-pywin32 gs netcdf wxwidgets grass8
+requires: liblas $RUNTIMEDEPENDS avce00 gpsbabel proj python3-gdal python3-matplotlib libpng libtiff python3-wxpython python3-pillow python3-pip python3-ply python3-pyopengl python3-psycopg2 python3-six zstd python3-pywin32 gs netcdf wxwidgets grass8
 maintainer: $MAINTAINER
 EOF
 

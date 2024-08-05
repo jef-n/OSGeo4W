@@ -1,25 +1,3 @@
-diff --git a/.github/workflows/osgeo4w.yml b/.github/workflows/osgeo4w.yml
-index d96cd0c3f..18777669b 100644
---- a/.github/workflows/osgeo4w.yml
-+++ b/.github/workflows/osgeo4w.yml
-@@ -40,7 +40,7 @@ jobs:
-             mingw-w64-x86_64-fftw mingw-w64-x86_64-lapack mingw-w64-x86_64-pkgconf
-             mingw-w64-x86_64-gcc mingw-w64-x86_64-ccache mingw-w64-x86_64-zlib mingw-w64-x86_64-libiconv
-             mingw-w64-x86_64-bzip2 mingw-w64-x86_64-gettext mingw-w64-x86_64-libsystre
--            mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libwinpthread-git mingw-w64-x86_64-libpng
-+            mingw-w64-x86_64-libtre-git mingw-w64-x86_64-libwinpthread-git
-             mingw-w64-x86_64-pcre
- 
-       - name: Install OSGeo4W
-@@ -55,7 +55,7 @@ jobs:
-             pdal-devel,netcdf-devel,cairo-devel,fftw,freetype-devel,gdal-ecw,\
-             gdal-mrsid,liblas-devel,libxdr,libpq-devel,pdcurses,\
-             python3-matplotlib,python3-numpy,python3-ply,python3-pywin32,\
--            python3-wxpython,regex-devel,zstd-devel"
-+            python3-wxpython,zstd-devel"
- 
-       - name: Set number of cores for compilation
-         run: |
 diff --git a/include/Make/Grass.make b/include/Make/Grass.make
 index 137a45d19..4f26feda2 100644
 --- a/include/Make/Grass.make
@@ -46,34 +24,6 @@ index c65ed28c6..10276da6e 100644
  OPENMP_CFLAGS       = @OPENMP_CFLAGS@
  USE_OPENMP          = @USE_OPENMP@
  
-diff --git a/mswindows/osgeo4w/build_osgeo4w.sh b/mswindows/osgeo4w/build_osgeo4w.sh
-index 6885bfe02..24a46d162 100755
---- a/mswindows/osgeo4w/build_osgeo4w.sh
-+++ b/mswindows/osgeo4w/build_osgeo4w.sh
-@@ -38,7 +38,8 @@ export ARCH=x86_64-w64-mingw32
-     --with-nls \
-     --with-readline \
-     --with-blas \
--    --with-lapack-includes=/mingw64/include/lapack \
-+    --with-lapack \
-+    --with-lapack-includes=/mingw64/include \
-     --with-freetype \
-     --with-freetype-includes=${OSGEO4W_ROOT_MSYS}/include/freetype2 \
-     --with-proj-share=${OSGEO4W_ROOT_MSYS}/share/proj \
-@@ -53,12 +54,11 @@ export ARCH=x86_64-w64-mingw32
-     --with-sqlite-includes=${OSGEO4W_ROOT_MSYS}/include \
-     --with-sqlite-libs=${OSGEO4W_ROOT_MSYS}/lib \
-     --with-regex \
--    --with-nls \
-     --with-zstd \
-     --with-odbc \
-     --with-cairo \
-     --with-cairo-includes=${OSGEO4W_ROOT_MSYS}/include \
--    --with-cairo-libs=$OSGEO4W_ROOT_MSYS/lib \
-+    --with-cairo-libs=${OSGEO4W_ROOT_MSYS}/lib \
-     --with-cairo-ldflags="-L${SRC}/mswindows/osgeo4w/lib -lcairo" \
-     --with-opengl=windows \
-     --with-bzlib \
 diff --git a/mswindows/osgeo4w/env.bat.tmpl b/mswindows/osgeo4w/env.bat.tmpl
 index 200c86f26..86bf4a3a0 100644
 --- a/mswindows/osgeo4w/env.bat.tmpl
@@ -88,11 +38,24 @@ index 200c86f26..86bf4a3a0 100644
  
  REM
  REM RStudio-related
+diff --git a/mswindows/osgeo4w/libpng-config b/mswindows/osgeo4w/libpng-config
+index f00a136be..e8d8be2f6 100755
+--- a/mswindows/osgeo4w/libpng-config
++++ b/mswindows/osgeo4w/libpng-config
+@@ -14,7 +14,7 @@
+ 
+ prefix="${OSGEO4W_ROOT_MSYS}"
+ version="$(sed '/^#define PNG_LIBPNG_VER_STRING/!d; s/^[^"]*"\|"//g' ${prefix}/include/libpng*/png.h)"
+-dll_version="$(sed '/^#define PNG_LIBPNG_VER_DLLNUM/!d; s/^[^0-9]*\|[^0-9]*$//g' ${prefix}/include/libpng*/png.h)"
++dll_version="$(sed '/^#define PNG_LIBPNG_VER_SHAREDLIB/!d; s/^[^0-9]*\|[^0-9]*$//g' ${prefix}/include/libpng*/png.h)"
+ exec_prefix="${prefix}"
+ libdir="${prefix}/lib"
+ includedir="${prefix}/include/libpng${dll_version}"
 diff --git a/mswindows/osgeo4w/package.sh b/mswindows/osgeo4w/package.sh
-index b3113292c..713396f3c 100755
+index b3113292c..f55dd46d9 100755
 --- a/mswindows/osgeo4w/package.sh
 +++ b/mswindows/osgeo4w/package.sh
-@@ -110,29 +110,21 @@ DLLS="
+@@ -110,29 +110,20 @@ DLLS="
  	/mingw64/bin/zlib1.dll
  	/mingw64/bin/libbz2-1.dll
  	/mingw64/bin/libiconv-2.dll
@@ -106,7 +69,7 @@ index b3113292c..713396f3c 100755
  	/mingw64/bin/libwinpthread-1.dll
 -	/mingw64/bin/libcairo-2.dll
 -	/mingw64/bin/libpixman-1-0.dll
- 	/mingw64/bin/libpng16-16.dll
+-	/mingw64/bin/libpng16-16.dll
 -	/mingw64/bin/libfreetype-6.dll
 -	/mingw64/bin/libharfbuzz-0.dll
 -	/mingw64/bin/libglib-2.0-0.dll
@@ -124,7 +87,7 @@ index b3113292c..713396f3c 100755
  "
  
  if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
-@@ -148,18 +140,18 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
+@@ -148,18 +139,18 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
  	cp -uv $DLLS dist.x86_64-w64-mingw32/bin
  
  	mkdir -p mswindows/osgeo4w/lib
@@ -150,7 +113,7 @@ index b3113292c..713396f3c 100755
  		--with-opengl=windows \
  		--without-x \
  		--with-cxx \
-@@ -167,13 +159,13 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
+@@ -167,15 +158,16 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
  		--enable-largefile \
  		--with-fftw \
  		--with-freetype \
@@ -169,7 +132,10 @@ index b3113292c..713396f3c 100755
 +		--with-postgres-libs=${OSGEO4W_ROOT_MSYS}/lib \
  		--with-gdal=$PWD/mswindows/osgeo4w/gdal-config \
  		--with-geos=$PWD/mswindows/osgeo4w/geos-config \
++		--with-libpng=$PWD/mswindows/osgeo4w/libpng-config \
  		--with-sqlite \
+ 		--with-sqlite-includes=$OSGEO4W_ROOT_MSYS/include \
+ 		--with-sqlite-libs=$PWD/mswindows/osgeo4w/lib \
 @@ -189,10 +181,11 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
  		--with-lapack-includes=/mingw64/include \
  		--with-openmp \
