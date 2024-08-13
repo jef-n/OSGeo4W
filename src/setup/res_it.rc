@@ -13,22 +13,22 @@ LANGUAGE LANG_ITALIAN, SUBLANG_DEFAULT
 
 IDD_SOURCE DIALOG  0, 0, 339, 179
 STYLE DS_MODALFRAME | DS_CENTER | WS_CHILD | WS_CAPTION | WS_SYSMENU
-CAPTION "OSGeo4W Setup - Scegliere il tipo di installazione"
+CAPTION "Installazione di OSGeo4W - Scegliere il tipo di installazione"
 FONT 8, "MS Shell Dlg"
 BEGIN
-    CONTROL         "&Installare da Internet\n(i file scaricati saranno conservati per un futuro riutilizzo)",
+    CONTROL         "&Installa da Internet\n(i file scaricati saranno conservati per un futuro riutilizzo)",
                     IDC_SOURCE_NETINST, "Button",
                     BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP | BS_MULTILINE | BS_TOP, 71, 60, 200, 20
 
-    CONTROL         "&Scaricare senza installare",
+    CONTROL         "&Scarica senza installare",
                     IDC_SOURCE_DOWNLOAD, "Button", BS_AUTORADIOBUTTON | WS_TABSTOP, 71, 90, 200, 10
 
-    CONTROL         "Installare da una directory &locale",
+    CONTROL         "Installa da una directory locale",
 		    IDC_SOURCE_CWD,"Button", BS_AUTORADIOBUTTON | WS_TABSTOP, 71,120,200,10
 
     ICON            IDI_OSGEO4W, IDC_HEADICON, 312, 0, 21, 20
     CONTROL         "", IDC_HEADSEPARATOR, "Static", SS_BLACKFRAME | SS_SUNKEN, 0, 28, 339, 1
-    LTEXT           "Scegliere la fonte di download",
+    LTEXT           "Scegliere una fonte di download",
 		    IDC_STATIC_HEADER_TITLE, 7, 0, 258, 8, NOT WS_GROUP
     LTEXT           "Scegliere se installare o scaricare da Internet o se installare da file in una directory locale.",
                     IDC_STATIC, 21, 9, 239, 16, NOT WS_GROUP
@@ -36,38 +36,38 @@ END
 
 IDD_VIRUS DIALOG  0, 0, 339, 179
 STYLE DS_MODALFRAME | DS_CENTER | WS_CHILD | WS_CAPTION | WS_SYSMENU
-CAPTION "OSGeo4W Setup - Disattivare Virus Scanner?"
+CAPTION "OSGeo4W Setup - Disabilitare lo scanner antivirus?"
 FONT 8, "MS Shell Dlg"
 BEGIN
-    CONTROL         "&Disattivare lo scanner antivirus",
+    CONTROL         "&Disabilita lo scanner antivirus",
 		    IDC_DISABLE_AV,"Button", BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,101,69,115,10
-    CONTROL         "&Mantenere attivo lo scanner antivirus",
+    CONTROL         "&Lasciare lo scanner antivirus",
 		    IDC_LEAVE_AV,"Button", BS_AUTORADIOBUTTON | WS_TABSTOP,101,84,115,10
     ICON            IDI_OSGEO4W,IDC_HEADICON,312,0,21,20
     CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,339,1
-    LTEXT           "Scegliete se disabilitare il vostro scanner antivirus durante l'installazione.",
+    LTEXT           "Scegliere se disabilitare lo scanner antivirus durante l'installazione",
 		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
-    LTEXT           "Alcuni programmi antivirus, in particolare McAfee, causano una schermata blu sui computer Windows NT/2000/XP durante l'installazione di OSGeo4W.",
+    LTEXT           "Alcuni programmi antivirus, in particolare McAfee, causano una schermata blu sui computer Windows NT/2000/XP durante l'installazione di OSGeo4W",
 		    IDC_STATIC,21,9,239,16,NOT WS_GROUP
-    LTEXT	    "Ne è stato individuato uno che potrebbe costituire un problema. L'installazione di OSGeo4W può disabilitare il programma durante il processo di installazione e riabilitarlo al termine dell'installazione.",
+    LTEXT	    "È stato rilevato un possibile problema. Il setup di OSGeo4W può disabilitarlo durante il processo di installazione e riabilitarlo al termine dell'installazione.",
                     IDC_STATIC,21,32,239,24,NOT WS_GROUP
 END
 
 IDD_LOCAL_DIR DIALOG  0, 0, 339, 179
 STYLE DS_MODALFRAME | DS_CENTER | WS_CHILD | WS_CAPTION | WS_SYSMENU
-CAPTION "OSGeo4W Setup - Selezionate la directory locale dei pacchetti"
+CAPTION "Installazione di OSGeo4W - Selezione della directory locale dei pacchetti"
 FONT 8, "MS Shell Dlg"
 BEGIN
-    LTEXT           "Selezionate la directory locale dei pacchetti",
+    LTEXT           "Selezionare la directory del pacchetto locale",
 		    IDC_STATIC_HEADER_TITLE, 7,0,258,8,NOT WS_GROUP
-    LTEXT           "Selezionare una directory in cui Setup deve memorizzare i file di installazione scaricati.  La directory verrà creata se non esiste già.",
+    LTEXT           "Selezionare una directory in cui si desidera che Setup memorizzi i file di installazione scaricati.  La directory verrà creata se non esiste già.",
 		    IDC_STATIC,21,9,248,16,NOT WS_GROUP
     ICON            IDI_OSGEO4W,IDC_HEADICON,312,0,21,20
     CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,312,1
-    GROUPBOX        "Elenco dei pacchetti locali",
+    GROUPBOX        "Directory locale dei pacchetti",
 		    IDC_LOCALDIR_GRP,5,72,305,35
     EDITTEXT        IDC_LOCAL_DIR,13,85,235,14,ES_AUTOHSCROLL | WS_GROUP
-    PUSHBUTTON      "Sfoglia&re...",
+    PUSHBUTTON      "Sfoglia...",
 		    IDC_LOCAL_DIR_BROWSE,250,85,55,14
     GROUPBOX        "Nome del menu di avvio",
 		    IDC_MENUNAME_GRP,5,112,305,35
@@ -76,20 +76,20 @@ END
 
 IDD_ROOT DIALOG  0, 0, 339, 179
 STYLE DS_MODALFRAME | DS_CENTER | WS_CHILD | WS_CAPTION | WS_SYSMENU
-CAPTION "OSGeo4W Setup - Choose Installation Directory"
+CAPTION "OSGeo4W Setup - Scegliere la directory di installazione"
 FONT 8, "MS Shell Dlg"
 BEGIN
-    LTEXT           "Scegliere la directory di installazione",
+    LTEXT           "Selezionare la directory di installazione principale",
 		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
-    LTEXT           "Selezionare la directory in cui installare OSGeo4W.  Scegliere anche alcuni parametri di installazione.",
+    LTEXT           "Selezionare la directory in cui si desidera installare OSGeo4W.  Scegliere anche alcuni parametri di installazione.",
                     IDC_STATIC,21,9,239,16,NOT WS_GROUP
     ICON            IDI_OSGEO4W,IDC_HEADICON,312,0,21,20
     CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,317,1
 
-    GROUPBOX        "Directory radice",
+    GROUPBOX        "Directory principale",
 		    IDC_ROOTDIR_GRP,5,35,305,35
     EDITTEXT        IDC_ROOT_DIR,13,47,245,14,ES_AUTOHSCROLL | WS_TABSTOP
-    PUSHBUTTON      "Sfoglia&re...",
+    PUSHBUTTON      "S&foglia...",
 		    IDC_ROOT_BROWSE,260,47,44,14,WS_TABSTOP
 
     GROUPBOX        "Installare per",
@@ -102,9 +102,9 @@ BEGIN
                     IDC_ALLUSERS_TEXT,25,101,125,28
     LTEXT           "OSGeo4W sarà disponibile solo per l'utente corrente.  Selezionare questa opzione solo se non si dispone di privilegi di amministratore o se si hanno esigenze specifiche.",
 		    IDC_JUSTME_TEXT,25,140,125,32
-    CONTROL         "Creare un'icona sul &desktop",
+    CONTROL         "Crea icona sul &desktop",
 		    IDC_ROOT_DESKTOP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,170,110,150,8
-    CONTROL         "Aggiungere un'icona al menu di &avvio",
+    CONTROL         "Aggiungi icona al menu di &avvio",
 		    IDC_ROOT_MENU,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,170,130,150,8
 END
 
@@ -112,7 +112,7 @@ IDD_SITE DIALOG  0, 0, 339, 179
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE |
     WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_CONTROLPARENT
-CAPTION "OSGeo4W Setup - Scegliere il sito di download"
+CAPTION "Configurazione di OSGeo4W - Scelta dei siti di download"
 FONT 8, "MS Shell Dlg"
 BEGIN
     ICON            IDI_OSGEO4W,IDC_HEADICON,312,0,21,20
@@ -121,7 +121,7 @@ BEGIN
     LTEXT           "Siti di download disponibili:",
 		    IDC_STATIC,66,34,183,8,NOT WS_GROUP
     CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,339,1
-    LTEXT           "Scegliete un sito da questo elenco o aggiungete i vostri siti all'elenco.",
+    LTEXT           "Scegliere i siti da questo elenco o aggiungere i propri siti all'elenco",
                     IDC_STATIC,21,9,239,16,NOT WS_GROUP
     LTEXT           "Scegliere un sito di download",
 		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
@@ -134,14 +134,14 @@ END
 
 IDD_NET DIALOG  0, 0, 339, 179
 STYLE DS_MODALFRAME | DS_CENTER | WS_CHILD | WS_CAPTION | WS_SYSMENU
-CAPTION "OSGeo4W Setup - Autorizzazione del server richiesta"
+CAPTION "Configurazione di OSGeo4W - Selezionare il tipo di connessione"
 FONT 8, "MS Shell Dlg"
 BEGIN
-    CONTROL         "Utilizzare le impostazioni del proxy di &sistema.",
+    CONTROL         "Usa le impostazioni proxy del &sistema",
 		    IDC_NET_PRECONFIG,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,60,55,185,10
     CONTROL         "Connessione &diretta",
 		    IDC_NET_DIRECT,"Button", BS_AUTORADIOBUTTON | WS_TABSTOP,60,70,73,10
-    CONTROL         "Utilizzare un &proxy HTTP/FTP:",
+    CONTROL         "Usa &proxy HTTP/FTP:",
 		    IDC_NET_PROXY,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,60,85,88,10
     EDITTEXT        IDC_PROXY_HOST,120,105,120,12,ES_AUTOHSCROLL | WS_DISABLED | WS_GROUP
     EDITTEXT        IDC_PROXY_PORT,120,125,30,12,ES_AUTOHSCROLL | WS_DISABLED
@@ -152,7 +152,7 @@ BEGIN
 		    IDC_STATIC,85,125,30,12,SS_CENTERIMAGE | NOT WS_GROUP
     ICON            IDI_OSGEO4W,IDC_HEADICON,312,0,21,20
     CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,339,1
-    LTEXT           "L'installazione deve sapere come si desidera connettersi a Internet.  Scegliere le impostazioni appropriate di seguito. ",
+    LTEXT           "L'installazione deve sapere come si desidera connettersi a Internet.  Scegliete le impostazioni appropriate qui sotto",
                     IDC_STATIC,21,9,239,16,NOT WS_GROUP
     LTEXT           "Selezionare la connessione a Internet",
                     IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
@@ -160,7 +160,7 @@ END
 
 IDD_INSTATUS DIALOG  0, 0, 339, 179
 STYLE DS_MODALFRAME | DS_CENTER | WS_CHILD | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
-CAPTION "OSGeo4W Setup"
+CAPTION "Configurazione OSGeo4W"
 FONT 8, "MS Shell Dlg"
 BEGIN
     LTEXT           "Installazione...",
@@ -179,19 +179,19 @@ BEGIN
 		    IDC_INS_BL_PACKAGE,45,100,47,8,NOT WS_GROUP
     LTEXT           "Totale:",
 		    IDC_INS_BL_TOTAL,45,115,48,8,NOT WS_GROUP
-    LTEXT           "Disk:",
+    LTEXT           "Disco:",
 		    IDC_INS_BL_DISK,45,130,47,8,NOT WS_GROUP
     ICON            IDI_OSGEO4W,IDC_HEADICON,312,0,21,20
     CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,339,1
-    LTEXT           "In questa pagina viene visualizzato l'avanzamento del download o dell'installazione.",
+    LTEXT           "Questa pagina visualizza l'avanzamento del download o dell'installazione.",
                     IDC_STATIC,21,9,239,16,NOT WS_GROUP
-    LTEXT           "Progressi",
+    LTEXT           "Avanzamento",
 		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
 END
 
 IDD_PROXY_AUTH DIALOG  0, 0, 215, 95
 STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Autenticazione proxy richiesta"
+CAPTION "È richiesta l'autenticazione proxy"
 FONT 8, "MS Shell Dlg"
 BEGIN
     ICON            IDI_OSGEO4W,IDC_HEADICON,5,5,21,20
@@ -201,7 +201,7 @@ BEGIN
     LTEXT           "&Password",
 		    IDC_STATIC,10,43,50,15,SS_CENTERIMAGE, WS_EX_RIGHT
     EDITTEXT        IDC_NET_PASSWD,65,43,145,12,ES_PASSWORD | ES_AUTOHSCROLL
-    LTEXT           "Autorizzazione del proxy richiesta",
+    LTEXT           "Autorizzazione proxy richiesta",
 		    IDC_STATIC,65,10,145,10
     DEFPUSHBUTTON   "&OK",
 		    IDOK,100,75,45,15,WS_DISABLED
@@ -232,10 +232,10 @@ END
 IDD_SPLASH DIALOG  0, 0, 339, 179
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE |
     WS_CAPTION | WS_SYSMENU
-CAPTION "OSGeo4W Setup"
+CAPTION "Impostazione OSGeo4W"
 FONT 8, "MS Shell Dlg"
 BEGIN
-    LTEXT           "Programma di installazione del rilascio della rete OSGeo4W",
+    LTEXT           "OSGeo",
                     IDC_STATIC_WELCOME_TITLE,35,1,250,24
     LTEXT           "",IDC_SPLASH_TEXT,35,25,265,90
     CONTROL         "Installazione rapida",
@@ -247,7 +247,7 @@ END
 
 IDD_DESKTOP DIALOG  0, 0, 339, 179
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
-CAPTION "OSGeo4W Setup - Stato dell'installazione e creazione di icone"
+CAPTION "Installazione di OSGeo4W - Stato dell'installazione e creazione di icone"
 FONT 8, "MS Shell Dlg"
 BEGIN
     ICON            IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
@@ -258,13 +258,13 @@ BEGIN
 		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
     CONTROL         "",IDC_DESKTOP_SEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,135,339,1
     LTEXT           "",IDC_STATUS_HEADER,7,140,258,8,NOT WS_GROUP
-    LTEXT           "OSGeo4W-Installazione conclusa con successo.",
+    LTEXT           "Installazione di OSGeo4W completata con successo.",
 		    IDC_STATUS,21,149,279,36,NOT WS_GROUP
 END
 
 IDD_FTP_AUTH DIALOG  0, 0, 215, 95
 STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "È richiesta l'autenticazione FTP"
+CAPTION "Autenticazione FTP richiesta"
 FONT 8, "MS Shell Dlg"
 BEGIN
     ICON            IDI_OSGEO4W,IDC_HEADICON,5,5,21,20
@@ -274,7 +274,7 @@ BEGIN
     LTEXT           "&Password",
 		    IDC_STATIC,10,43,50,15,SS_CENTERIMAGE, WS_EX_RIGHT
     EDITTEXT        IDC_NET_PASSWD,65,43,145,12,ES_PASSWORD | ES_AUTOHSCROLL
-    LTEXT           "È richiesta l'autenticazione FTP",
+    LTEXT           "Autorizzazione FTP richiesta",
 		    IDC_STATIC,65,10,145,10
     DEFPUSHBUTTON   "&OK",
 		    IDOK,100,75,45,15,WS_DISABLED
@@ -285,7 +285,7 @@ END
 IDD_CHOOSE DIALOG  0, 0, 339, 179
 STYLE DS_MODALFRAME | DS_3DLOOK | WS_CHILD | WS_VISIBLE | WS_CAPTION |
     WS_SYSMENU
-CAPTION "OSGeo4W Setup - Seleziona i pacchetti"
+CAPTION "Configurazione OSGeo4W - Selezionare i pacchetti"
 FONT 8, "MS Shell Dlg"
 BEGIN
     RTEXT           "&Ricerca",
@@ -293,40 +293,40 @@ BEGIN
     EDITTEXT        IDC_CHOOSE_SEARCH_EDIT, 34, 30, 90, 12
     PUSHBUTTON      "&Cancella",
 		    IDC_CHOOSE_CLEAR_SEARCH, 126, 30, 32, 12
-    CONTROL         "&Tenere",
+    CONTROL         "Con&serva",
 		    IDC_CHOOSE_KEEP,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,130,30,30,14
-    CONTROL         "&Prec",
+    CONTROL         "&Prev",
 		    IDC_CHOOSE_PREV,"Button",BS_AUTORADIOBUTTON,165,30,30,14
-    CONTROL         "&Attu",
+    CONTROL         "&Corr",
 		    IDC_CHOOSE_CURR,"Button",BS_AUTORADIOBUTTON,190,30,30,14
-    CONTROL         "Sp&er",
+    CONTROL         "&Esp.",
 		    IDC_CHOOSE_EXP,"Button",BS_AUTORADIOBUTTON ,226,30,30,14
-    PUSHBUTTON      "&Vista",
+    PUSHBUTTON      "&Visualizza",
 		    IDC_CHOOSE_VIEW,261,30,26,14,WS_GROUP
     CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,339,1
     CONTROL         "",IDC_LISTVIEW_POS,"Static",SS_BLACKFRAME | NOT WS_VISIBLE,7,45,325,122
-    CONTROL         "&Nascondere i pacchetti obsoleti",
+    CONTROL         "&Nascondi i pacchetti obsoleti",
 		    IDC_CHOOSE_HIDE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,167,160,14
     ICON            IDI_OSGEO4W,IDC_HEADICON,312,0,21,20
-    LTEXT           "Selezionate i pacchetti che volete installare.",
+    LTEXT           "Selezionare i pacchetti che si desidera installare",
                     IDC_CHOOSE_INST_TEXT,21,9,239,16,NOT WS_GROUP
-    LTEXT           "Seleziona i pacchetti",
+    LTEXT           "Seleziona pacchetti",
 		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
     LTEXT           "",IDC_CHOOSE_VIEWCAPTION,292,33,40,10
 END
 
 IDD_PREREQ DIALOG  0, 0, 339, 179
 STYLE DS_MODALFRAME | DS_3DLOOK | WS_CHILD | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
-CAPTION "OSGeo4W Setup - Resolve Dependencies"
+CAPTION "Installazione di OSGeo4W - Risolvere le dipendenze"
 FONT 8, "MS Shell Dlg"
 BEGIN
     CONTROL         "",IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,339,1
     ICON            IDI_OSGEO4W,IDC_HEADICON,312,0,21,20
-    LTEXT           "Warning!  Unmet Dependencies Found",
+    LTEXT           "Attenzione!  Trovate dipendenze non soddisfatte",
 		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
-    LTEXT           "The following packages are required but have not been selected.",
+    LTEXT           "I seguenti pacchetti sono necessari ma non sono stati selezionati.",
 		    IDC_STATIC,21,9,239,16,NOT WS_GROUP
-    CONTROL         "&Install these packages to meet dependencies (RECOMMENDED)",
+    CONTROL         "&Installare questi pacchetti per soddisfare le dipendenze (RACCOMANDATO)",
 		    IDC_PREREQ_CHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,167,225,14
     EDITTEXT        IDC_PREREQ_EDIT,7,41,303,124,WS_VSCROLL | WS_HSCROLL |
                     ES_LEFT | ES_MULTILINE | ES_READONLY | ES_AUTOHSCROLL |
@@ -338,35 +338,35 @@ STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "OSGeo4W Setup - Use dropped mirrors?"
 FONT 8, "MS Shell Dlg"
 BEGIN
-    LTEXT           "Warning:",
+    LTEXT           "Attenzione:",
 		    IDC_STATIC,7,8,40,8
-    LTEXT           "One or more mirrors you have selected is/are not on thelist of official OSGeo4W mirrors any more. It/They may be out of date or missing some packages.\nThis affects the following mirror(s):",
+    LTEXT           "Uno o più mirror selezionati non sono più presenti nell'elenco dei mirror ufficiali di OSGeo4W. Potrebbero essere non aggiornati o mancanti di alcuni pacchetti.\nQuesto riguarda i seguenti mirror:",
                     IDC_STATIC,47,8,263,32
     EDITTEXT        IDC_DROP_MIRRORS,7,40,303,40,WS_VSCROLL | WS_HSCROLL |
                     ES_LEFT | ES_MULTILINE | ES_READONLY | ES_AUTOHSCROLL |
                     ES_AUTOVSCROLL
-    LTEXT           "If you experience installation problems consider trying official mirrors only.\n\nDo you want to continue, using this/these mirror(s)?",
+    LTEXT           "Se si riscontrano problemi di installazione, si consideri di provare solo i mirror ufficiali.\n\nDesideri continuare a usare questo/questi mirror?",
                     IDC_STATIC,7,88,303,24
-    CONTROL         "&Don't warn me about this/these mirror(s) again",
+    CONTROL         "Non avvertirmi più &di questo/questi mirror",
                     IDC_DROP_NOWARN,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,120,213,15
-    PUSHBUTTON      "&Yes",
+    PUSHBUTTON      "&Sì",
 		    IDYES,220,120,45,15
-    DEFPUSHBUTTON   "&No",
+    DEFPUSHBUTTON   "No",
 		    IDNO,265,120,45,15
 END
 
 IDD_POSTINSTALL DIALOG  0, 0, 339, 142
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE |
     WS_CAPTION | WS_SYSMENU
-CAPTION "OSGeo4W Setup - Running postinstall scripts"
+CAPTION "OSGeo4W Setup - Esecuzione degli script post-installazione"
 FONT 8, "MS Shell Dlg"
 BEGIN
     CONTROL         "",
 		    IDC_HEADSEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,0,28,339,1
     ICON            IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
-    LTEXT           "Postinstall script errors",
+    LTEXT           "Errori degli script di postinstallazione",
 		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
-    LTEXT           "These do not necessarily mean that affected packages will fail to function properly, but please check /var/log/setup.log.full and report any problems.",
+    LTEXT           "Questi non significano necessariamente che i pacchetti interessati non funzioneranno correttamente, ma controllate /var/log/setup.log.full e segnalate eventuali problemi.",
                     IDC_POSTINSTALL_HEADER,21,9,239,16,NOT WS_GROUP
     EDITTEXT        IDC_POSTINSTALL_EDIT,7,41,303,112,WS_VSCROLL | WS_HSCROLL |
                     ES_LEFT | ES_MULTILINE | ES_READONLY | ES_AUTOHSCROLL |
@@ -377,7 +377,7 @@ END
 IDD_EXP_PACKAGES DIALOG  0, 0, 339, 179
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE |
     WS_CAPTION | WS_SYSMENU
-CAPTION "OSGeo4W Setup - Express Package Selection"
+CAPTION "Installazione di OSGeo4W - Selezione del pacchetto Express"
 FONT 8, "MS Shell Dlg"
 BEGIN
     CONTROL         "QGIS",IDC_PKG_QGIS,"Button",
@@ -389,25 +389,25 @@ BEGIN
     CONTROL         "GRASS GIS",IDC_PKG_GRASS,"Button",
                     BS_AUTOCHECKBOX,108,93,100,8
     ICON            IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
-    LTEXT           "Select Packages",
+    LTEXT           "Seleziona pacchetti",
 		    IDC_STATIC_HEADER_TITLE,7,0,258,8,NOT WS_GROUP
 END
 
 IDD_LICENSE DIALOG  0, 0, 339, 179
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_CHILD | WS_VISIBLE |
     WS_CAPTION | WS_SYSMENU
-CAPTION "OSGeo4W Setup - Agreement of Restrictive Package"
+CAPTION "Installazione di OSGeo4W - Accordo di pacchetto restrittivo"
 FONT 8, "MS Shell Dlg"
 BEGIN
-    LTEXT           "Non-Open Source License Agreements",
+    LTEXT           "Accordi di licenza non open source",
                     IDC_STATIC_LICENSE_TITLE,35,1,195,24
-    LTEXT           "Please review the license terms of package before installing OSGeo4W",
+    LTEXT           "Leggere i termini di licenza del pacchetto prima di installare OSGeo4W",
                     IDC_STATIC_LICENSE_TEXT,35,22,265,25
-    CONTROL         "I agree with above license terms",IDC_CHK_AGREED,"Button",
+    CONTROL         "Accetto i termini di licenza di cui sopra",IDC_CHK_AGREED,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,35,160,200,8
-    CONTROL         "License", IDC_LICENSE_FILE, RICHEDIT_CLASS, ES_MULTILINE | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | WS_HSCROLL | WS_VSCROLL | ES_LEFT | ES_READONLY,
+    CONTROL         "Licenza", IDC_LICENSE_FILE, RICHEDIT_CLASS, ES_MULTILINE | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | WS_HSCROLL | WS_VSCROLL | ES_LEFT | ES_READONLY,
 		   35,51,260,99
-    PUSHBUTTON      "Print", IDC_PRINT_BUTTON,261,161,35,14
+    PUSHBUTTON      "Stampa", IDC_PRINT_BUTTON,261,161,35,14
     ICON            IDI_OSGEO4W,IDC_HEADICON,290,0,21,20
 END
 
@@ -418,91 +418,92 @@ END
 
 STRINGTABLE
 BEGIN
-    IDS_SPLASH_TEXT         "This setup program is used for the initial installation of the OSGeo4W environment as well as all subsequent updates.  Make sure to remember where you saved it.\r\n\r\nThe pages that follow will guide you through the installation.  Please note that OSGeo4W consists of a large number of packages spanning a wide variety of purposes.  We only install a base set of packages by default.  You can always run this program at any time in the future to add, remove, or upgrade packages as necessary."
-    IDS_ROOT_SLASH          "Warning: we recommend you do NOT use the root of your hard drive as the OSGeo4W root.  Proceed anyway?"
-    IDS_ROOT_SPACE          "You should not choose a root path that include spaces in directory names.  Proceed anyway?"
-    IDS_ERR_OPEN_WRITE      "Can't open %s for writing: %s"
-    IDS_SETUPINI_MISSING    "Unable to get %s from <%s>"
-    IDS_OLD_SETUPINI        "This setup.ini is older than the one you used last time you installed OSGeo4W.  Proceed anyway?"
-    IDS_NOTHING_INSTALLED   "Nothing needed to be installed"
-    IDS_INSTALL_COMPLETE    "Installation Complete"
-    IDS_REBOOT_REQUIRED     "In-use files have been replaced. You need to reboot as soon as possible to activate the new versions. OSGeo4W may operate incorrectly until you reboot."
-    IDS_ERR_OPEN_READ       "Can't open %s for reading: %s"
-    IDS_ROOT_ABSOLUTE       "The install directory must be absolute, with both a drive letter and leading slash, like C:\\OSGeo4W"
-    IDS_DOWNLOAD_COMPLETE   "Download Complete"
-    IDS_NOLOGFILE           "Cannot open log file %s for writing"
-    IDS_UNINSTALL_COMPLETE  "Uninstalls complete."
-    IDS_WININET             "Unable to find or load the Internet Explorer 5 DLLs"
-    IDS_ERR_CHDIR           "Could not change dir to %s: %s [%.8x]"
-    IDS_OLD_SETUP_VERSION   "This setup is version %s, but setup.ini claims version %s is available.\nYou might want to upgrade to get the latest features and bug fixes."
-    IDS_DOWNLOAD_INCOMPLETE "Download Incomplete.  Try again?"
-    IDS_INSTALL_ERROR       "Installation error (%s), Continue with other packages?"
-    IDS_INSTALL_INCOMPLETE  "Installation incomplete.  Check %s for details"
-    IDS_CORRUPT_PACKAGE     "Package file %s has a corrupt local copy, please remove and retry."
-    IDS_SKIP_PACKAGE        "%s\nDo you want to skip this package ?"
-    IDS_WINDOW_INIT_BADMSG  "Fatal Error: Unexpected windows message %u received too early in window initialization."
-    IDS_UNCAUGHT_EXCEPTION  "Fatal Error: Uncaught Exception\nThread: %s\nType: %s\nMessage: %s"
-    IDS_UNCAUGHT_EXCEPTION_WITH_ERRNO  "Fatal Error: Uncaught Exception\nThread: %s\nType: %s\nMessage: %s\nAppErrNo: %d"
-    IDS_TRUSTKEEP_TOOLTIP   "Sets all packages to their currently installed version.  This is equivalent to telling setup not to make any changes to any package."
-    IDS_TRUSTPREV_TOOLTIP   "Globally select the version marked as 'Prev', which generally means the version that was last considered stable prior to the current stable version."
-    IDS_TRUSTCURR_TOOLTIP   "Globally select the version that is currently considered the most stable. (RECOMMENDED)"
-    IDS_TRUSTEXP_TOOLTIP    "Globally select the most recent version, even if that version is considered Experimental or for test use by the maintainer."
-    IDS_VIEWBUTTON_TOOLTIP  "Cycles the package view.  This determines which packages are shown in the chooser below.\r\n\r\nCategory: Group by package category.  Click on '+' to expand.\r\n\r\nFull: Show all packages.\r\n\r\nPending: Show only packages that are about to be installed, removed, or upgraded.  This tells you what is going to change when you press 'Next'.\r\n\r\nUp To Date: Show installed packages that need no action because they are at the desired version already.\r\n\r\nNot installed: Show packages that are are not currently installed and haven't been selected for installation."
-    IDS_HIDEOBS_TOOLTIP     "If selected, setup will hide packages in categories with names that begin with '_'.  Such packages are usually empty placeholders for packages that have been removed or renamed, or are infrastructure packages that are handled automatically."
-    IDS_SEARCH_TOOLTIP          "Search for this string in package names."
-    IDS_LOCAL_DIR_DOWNLOAD	"Select a directory where you want Setup to store the installation files it downloads.  The directory will be created if it does not already exist."
-    IDS_LOCAL_DIR_INSTALL	"Select a directory where Setup should look for downloaded installation files."
-    IDS_MAYBE_MKDIR		"Directory %s does not exist, would you like me to create it?"
-    IDS_CANT_MKDIR		"Couldn't create directory %s, sorry.  (Is drive full or read-only?)"
-    IDS_NO_CWD			"Local package directory %s not found.\nYou can still use setup-%s.exe to remove installed\npackages, but there will be nothing to install.\n\nPress OK if that's what you wanted\nor Cancel to choose a different directory."
-    IDS_SELPKG_DOWNLOAD		"Select packages to download "
-    IDS_SELPKG_INSTALL		"Select packages to install "
-    IDS_UNINSTALL		"Uninstall"
-    IDS_SKIP			"Skip"
-    IDS_REINSTALL		"Reinstall"
-    IDS_RETRIEVE		"Retrieve"
-    IDS_SOURCE			"Source"
-    IDS_KEEP			"Keep"
-    IDS_SEL_DOWNLOAD_DIR	"Select download directory"
-    IDS_SEL_LOCAL_DIR		"Select local directory"
-    IDS_UNKNOWN_ERR		"Unknown error"
-    IDS_LIST_CURRENT		"Current"
-    IDS_LIST_NEW		"New"
+    IDS_SPLASH_TEXT         "Questo programma di installazione viene utilizzato per l'installazione iniziale dell'ambiente OSGeo4W e per tutti gli aggiornamenti successivi.\r\n\r\nLe pagine che seguono vi guideranno attraverso l'installazione.  Si noti che OSGeo4W è composto da un gran numero di pacchetti che coprono un'ampia varietà di scopi.  Per impostazione predefinita, installiamo solo un set di pacchetti di base.  È sempre possibile eseguire questo programma in qualsiasi momento in futuro per aggiungere, rimuovere o aggiornare i pacchetti, se necessario"
+    IDS_ROOT_SLASH          "Attenzione: si consiglia di NON utilizzare la root del disco rigido come root di OSGeo4W.  Procedere comunque?"
+    IDS_ROOT_SPACE          "Non si deve scegliere un percorso di root che includa spazi nei nomi delle directory.  Procedere comunque?"
+    IDS_ERR_OPEN_WRITE      "Impossibile aprire %s per la scrittura: %s"
+    IDS_SETUPINI_MISSING    "Impossibile ottenere %s da <%s>"
+    IDS_OLD_SETUPINI        "Questo file setup.ini è più vecchio di quello usato per l'ultima installazione di OSGeo4W.  Procedere comunque?"
+    IDS_NOTHING_INSTALLED   "Non è necessario installare nulla"
+    IDS_INSTALL_COMPLETE    "Installazione completata"
+    IDS_REBOOT_REQUIRED     "I file in uso sono stati sostituiti. È necessario riavviare il prima possibile per attivare le nuove versioni. OSGeo4W potrebbe funzionare in modo non corretto fino al riavvio"
+    IDS_ERR_OPEN_READ       "Impossibile aprire %s in lettura: %s"
+    IDS_ROOT_ABSOLUTE       "La directory di installazione deve essere assoluta, con una lettera di unità e uno slash iniziale, come C:\\OSGeo4W"
+    IDS_DOWNLOAD_COMPLETE   "Download completato"
+    IDS_NOLOGFILE           "Impossibile aprire il file di registro %s per la scrittura"
+    IDS_UNINSTALL_COMPLETE  "Disinstallazione completata"
+    IDS_WININET             "Impossibile trovare o caricare le DLL di Internet Explorer 5"
+    IDS_ERR_CHDIR           "Impossibile cambiare la directory in %s: %s [%.8x]"
+    IDS_OLD_SETUP_VERSION   "Questa installazione è la versione %s, ma setup.ini afferma che è disponibile la versione %s. È consigliabile eseguire l'aggiornamento per ottenere le funzioni più recenti e le correzioni dei bug"
+    IDS_DOWNLOAD_INCOMPLETE "Download incompleto.  Riprovare?"
+    IDS_INSTALL_ERROR       "Errore di installazione (%s), continuare con altri pacchetti?"
+    IDS_INSTALL_INCOMPLETE  "Installazione incompleta.  Controllare %s per i dettagli"
+    IDS_CORRUPT_PACKAGE     "Il file del pacchetto %s ha una copia locale corrotta, rimuovere e riprovare"
+    IDS_SKIP_PACKAGE        "%sDesideri saltare questo pacchetto?"
+    IDS_WINDOW_INIT_BADMSG  "Errore fatale: Messaggio inatteso di windows %u ricevuto troppo presto nell'inizializzazione della finestra"
+    IDS_UNCAUGHT_EXCEPTION  "Errore irreversibile: Uncaught Exception\nThread: %s\nType: %sMessaggio: %s"
+    IDS_UNCAUGHT_EXCEPTION_WITH_ERRNO  "Errore irreversibile: Uncaught Exception\nThread: %s\nType: %sMessage: %sAppErrNo: %d"
+    IDS_TRUSTKEEP_TOOLTIP   "Imposta tutti i pacchetti alla versione attualmente installata.  Ciò equivale a dire a setup di non apportare modifiche a nessun pacchetto."
+    IDS_TRUSTPREV_TOOLTIP   "Selezionare globalmente la versione contrassegnata come 'Prev', che in genere indica la versione che è stata considerata stabile per l'ultima volta prima della versione stabile attuale"
+    IDS_TRUSTCURR_TOOLTIP   "Selezionare globalmente la versione attualmente considerata più stabile. (RACCOMANDATA)"
+    IDS_TRUSTEXP_TOOLTIP    "Selezionare globalmente la versione più recente, anche se è considerata sperimentale o di prova dal manutentore"
+    IDS_VIEWBUTTON_TOOLTIP  "Consente di visualizzare ciclicamente la vista dei pacchetti.  Determina quali pacchetti vengono visualizzati nel selezionatore sottostante: Raggruppa per categoria di pacchetti.  Fare clic su '+' per espanderlo.\r\n\r\nCompleto: Mostra tutti i pacchetti.\r\n\r\nIn attesa: Mostra solo i pacchetti che stanno per essere installati, rimossi o aggiornati.  Indica cosa cambierà quando si preme 'Avanti'.\r\n\r\nCorrente: Mostra i pacchetti installati che non necessitano di alcuna azione perché sono già alla versione desiderata.\r\n\r\nNon installato: Mostra i pacchetti che non sono attualmente installati e non sono stati selezionati per l'installazione"
+    IDS_HIDEOBS_TOOLTIP     "Se selezionato, l'impostazione nasconde i pacchetti nelle categorie con nomi che iniziano con '_'.  Tali pacchetti sono solitamente segnaposto vuoti per pacchetti che sono stati rimossi o rinominati, oppure sono pacchetti di infrastruttura che vengono gestiti automaticamente."
+    IDS_SEARCH_TOOLTIP          "Cerca questa stringa nei nomi dei pacchetti"
+    IDS_LOCAL_DIR_DOWNLOAD	"Selezionare una directory in cui si desidera che Setup memorizzi i file di installazione scaricati.  La directory verrà creata se non esiste già."
+    IDS_LOCAL_DIR_INSTALL	"Selezionare una directory in cui Setup deve cercare i file di installazione scaricati"
+    IDS_MAYBE_MKDIR		"La directory %s non esiste, volete che la crei?"
+    IDS_CANT_MKDIR		"Impossibile creare la directory %s, mi dispiace.  (L'unità è piena o di sola lettura?)"
+    IDS_NO_CWD			"La directory locale dei pacchetti %s non è stata trovata.È ancora possibile utilizzare setup-%s.exe per rimuovere i pacchetti installati, ma non ci sarà nulla da installare.Premere OK se è quello che si desiderava, oppure Annulla per scegliere un'altra directory"
+    IDS_SELPKG_DOWNLOAD		"Selezionare i pacchetti da scaricare "
+    IDS_SELPKG_INSTALL		"Selezionare i pacchetti da installare "
+    IDS_UNINSTALL		"Disinstalla"
+    IDS_SKIP			"Salta"
+    IDS_REINSTALL		"Reinstallare"
+    IDS_RETRIEVE		"Recupera"
+    IDS_SOURCE			"Origine"
+    IDS_KEEP			"Conserva"
+    IDS_SEL_DOWNLOAD_DIR	"Selezionare la directory di download"
+    IDS_SEL_LOCAL_DIR		"Selezionare la directory locale"
+    IDS_UNKNOWN_ERR		"Errore sconosciuto"
+    IDS_LIST_CURRENT		"Corrente"
+    IDS_LIST_NEW		"Nuovo"
     IDS_LIST_BIN		"Bin?"
     IDS_LIST_SRC		"Src?"
-    IDS_LIST_CATEGORIES		"Categories"
-    IDS_LIST_CATEGORY		"Category"
-    IDS_LIST_SIZE		"Size"
-    IDS_LIST_PACKAGE		"Package"
-    IDS_CAPTION_FULL		"Full"
-    IDS_CAPTION_PENDING		"Pending"
-    IDS_CAPTION_UPTODATE	"Up To Date"
-    IDS_CAPTION_NOTINSTALLED	"Not Installed"
-    IDS_CAPTION_CATEGORY	"Category"
-    IDS_CAPTION_LIC_PACKAGE	"Please review the license terms of the following packages and indicate acceptance of it's terms:\r\n%s"
-    IDS_LICENSE_NOLOAD		"Installer couldn't load the license file of %s please make sure it was downloaded on disk"
-    IDS_LICENSE_EMPTYPATH	"There isn't a license file in remote path for %s"
-    IDS_NOTHING_TO_INSTALL_OR_UPGRADE "Nothing to install/upgrade"
-    IDS_NOTHING_TO_DOWNLOAD	"Nothing to Download"
-    IDS_INTERNET_ERR		"Internet error: %s"
-    IDS_DEPENDENCY_WARNING      "The listed packages are required for packages depending on them to work.  We strongly recommend that you allow Setup to select them.\r\n\r\nAre you sure you want to proceed without these packages?"
-    IDS_DEPENDENCY_CAPTION      "WARNING - Required Packages Not Selected"
-    IDS_ABORT_WARNING           "Are you sure you want to exit setup? Any current download or installation will be aborted."
-    IDS_ABORT_CAPTION           "Exit OSGeo4W Setup?"
-    IDS_RUNNING                 "Running..."
-    IDS_RUNNING_PREREMOVE       "Running preremove script..."
-    IDS_UNINSTALLING            "Uninstalling..."
-    IDS_INSTALLING              "Installing..."
-    IDS_CALCULATING             "Calculating..."
-    IDS_MD5CHECK                "Checking MD5 for %s"
-    IDS_PROGRESS                "Progress:"
-    IDS_DOWNLOADING             "Downloading..."
-    IDS_CONNECTING              "Connecting..."
-    IDS_DOWNLOADING_FROM        "%s from %s"
-    IDS_PREREQ_CHECK            "Checking prerequisites..."
-    IDS_UNABLE_TO_EXTRACT_CAPTION "In-use files detected"
-    IDS_UNABLE_TO_EXTRACT         "Unable to extract /%s -- the file is in use.\r\nPlease stop all OSGeo4W processes and select ""Retry"", or\r\nselect ""Continue"" to go on anyway (you will need to reboot).\r\n"
-    IDS_STILL_UNABLE_TO_EXTRACT   "Still unable to extract /%s -- the file is in use.\r\nPlease stop ALL OSGeo4W processes and select ""Retry"", or\r\nselect ""Continue"" to go on anyway (you will need to reboot).\r\n"
-    IDS_FILE_EXTRACTION_CAPTION   "File extraction error"
-    IDS_FILE_EXTRACTION_ERROR     "Unable to extract /%s -- corrupt package?\r\n"
+    IDS_LIST_CATEGORIES		"Categorie"
+    IDS_LIST_CATEGORY		"Categoria"
+    IDS_LIST_SIZE		"Dimensione"
+    IDS_LIST_PACKAGE		"Pacchetto"
+    IDS_CAPTION_FULL		"Completo"
+    IDS_CAPTION_PENDING		"In attesa"
+    IDS_CAPTION_UPTODATE	"Aggiornato"
+    IDS_CAPTION_NOTINSTALLED	"Non installato"
+    IDS_CAPTION_CATEGORY	"Categoria"
+    IDS_CAPTION_LIC_PACKAGE	"Si prega di leggere i termini di licenza dei seguenti pacchetti e di indicare l'accettazione dei termini:\r\n%s"
+    IDS_LICENSE_NOLOAD		"L'installatore non è riuscito a caricare il file di licenza di %s, accertarsi che sia stato scaricato su disco"
+    IDS_LICENSE_EMPTYPATH	"Non c'è un file di licenza nel percorso remoto per %s"
+    IDS_NOTHING_TO_INSTALL_OR_UPGRADE "Niente da installare/aggiornare"
+    IDS_NOTHING_TO_DOWNLOAD	"Niente da scaricare"
+    IDS_INTERNET_ERR		"Errore Internet: %s"
+    IDS_DEPENDENCY_WARNING      "I pacchetti elencati sono necessari per il funzionamento dei pacchetti che dipendono da essi.  Si consiglia vivamente di consentire a Setup di selezionarli.\r\n\r\nSiete sicuri di voler procedere senza questi pacchetti?"
+    IDS_DEPENDENCY_CAPTION      "AVVISO - Pacchetti richiesti non selezionati"
+    IDS_ABORT_WARNING           "Siete sicuri di voler uscire dal setup? Qualsiasi download o installazione in corso verrà interrotta"
+    IDS_ABORT_CAPTION           "Uscire dall'installazione di OSGeo4W?"
+    IDS_RUNNING                 "In esecuzione..."
+    IDS_RUNNING_PREREMOVE       "Esecuzione dello script di prerequisito..."
+    IDS_UNINSTALLING            "Disinstallazione..."
+    IDS_INSTALLING              "Installazione..."
+    IDS_CALCULATING             "Calcolo..."
+    IDS_MD5CHECK                "Verifica MD5 per %s"
+    IDS_PROGRESS                "Avanzamento:"
+    IDS_DOWNLOADING             "Download..."
+    IDS_CONNECTING              "Connessione..."
+    IDS_DOWNLOADING_FROM        "%s da %s"
+    IDS_PREREQ_CHECK            "Verifica dei prerequisiti..."
+    IDS_UNABLE_TO_EXTRACT_CAPTION "Rilevati file in uso"
+    IDS_UNABLE_TO_EXTRACT         "Impossibile estrarre /%s -- il file è in uso.\r\nSi prega di interrompere tutti i processi di OSGeo4W e di selezionare""Riprova"", oppure selezionare ""Continua""per andare avanti comunque (sarà necessario riavviare).\r\n"
+    IDS_STILL_UNABLE_TO_EXTRACT   "Non è ancora possibile estrarre /%s -- il file è in uso.\r\nSi prega di interrompere TUTTI i processi di OSGeo4W e di selezionare ""Riprova"", oppure selezionare ""Continua""per andare avanti comunque (sarà necessario riavviare).\r\n"
+    IDS_FILE_EXTRACTION_CAPTION   "Errore di estrazione dei file"
+    IDS_FILE_EXTRACTION_ERROR     "Impossibile estrarre /%s -- pacchetto corrotto"
 END
+"

@@ -26,14 +26,14 @@
    those don't count, although they could).  Replace the IDD_S_* with
    IDD_* if you create a real dialog for those steps. */
 
-#undef _WIN32_WINNT
-#define _WIN32_WINNT 0x0501
 #include "win32.h"
 #include <commctrl.h>
 #include "shlobj.h"
+#include <windows.h>
 
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "resource.h"
 #include "dialog.h"
 #include "state.h"
@@ -87,6 +87,7 @@ static BoolOption UnattendedOption (false, 'q', "quiet-mode", "Unattended setup 
 static BoolOption PackageManagerOption (false, 'M', "package-manager", "Semi-attended chooser-only mode");
 static BoolOption HelpOption (false, 'h', "help", "print help");
 static BOOL (WINAPI *dyn_AttachConsole) (DWORD);
+StringOption LangOption ("", 'L', "lang", "language to show ui in", false);
 
 static void inline
 set_dynaddr ()
@@ -257,6 +258,18 @@ WinMain (HINSTANCE h, HINSTANCE hPrevInstance, LPSTR cmdline, int cmd_show)
 
     if (!GetOption::GetInstance().Process (__argc, __argv, NULL))
       exit (1);
+
+    std::string lang = LangOption;
+    if ( !lang.empty() )
+    {
+      std::wstring w( lang.length(), 0 );
+      std::copy(lang.begin(), lang.end(), w.begin());
+      LCID lcid = LocaleNameToLCID(w.c_str(), 0);
+      if( lcid )
+        SetThreadUILanguage( LANGIDFROMLCID(lcid) );
+      else
+        msg("could not get lcid for %s: %d\n", lang.c_str(), GetLastError());
+    }
 
     if (!((string) Arch).size ())
       {
