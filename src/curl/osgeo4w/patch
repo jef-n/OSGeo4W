@@ -1,0 +1,11 @@
+diff -ur curl-8.9.1/lib/sigpipe.h ../curl-8.9.1/lib/sigpipe.h
+--- curl-8.9.1/lib/sigpipe.h	2024-07-31 08:51:53.000000000 +0200
++++ ../curl-8.9.1/lib/sigpipe.h	2024-08-15 15:30:38.956008800 +0200
+@@ -39,6 +39,7 @@
+ static void sigpipe_init(struct sigpipe_ignore *ig)
+ {
+   memset(ig, 0, sizeof(*ig));
++  ig->no_signal = TRUE;
+ }
+ 
+ /*

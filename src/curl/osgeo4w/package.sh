@@ -14,6 +14,10 @@ startlog
 
 [ -f $P-$V.tar.gz ] || wget https://curl.haxx.se/download/$P-$V.tar.gz
 [ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz
+[ -f ../$P-$V/patched ] || {
+	patch -d ../$P-$V -p1 --dry-run <patch
+	patch -d ../$P-$V -p1 <patch >../$P-$V/patched
+}
 
 wget -O curl-ca-bundle.crt https://curl.se/ca/cacert.pem
 
@@ -73,6 +77,6 @@ cp ../$P-$V/COPYING $R/$P-$V-$B.txt
 cp ../$P-$V/COPYING $R/$P-devel/$P-devel-$P-$V-$B.txt
 cp ../$P-$V/COPYING $R/$P-ca-bundle/$P-ca-bundle-$P-$V-$B.txt
 
-tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
+tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/patch
 
 endlog
