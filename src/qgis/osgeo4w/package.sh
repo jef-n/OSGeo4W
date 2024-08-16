@@ -95,8 +95,8 @@ nextbinary
 	export LIB="$(cygpath -aw $OSGEO4W_ROOT/apps/Qt5/lib);$(cygpath -aw $OSGEO4W_ROOT/lib);$LIB"
 
 	export GRASS=$(cygpath -aw $O4W_ROOT/bin/grass*.bat)
-	export GRASS_VERSION=$(cmd /c $GRASS --config version | sed -e "s/\r//")
-	export GRASS_PREFIX=$(cmd /c $GRASS --config path | sed -e "s/\r//")
+	export GRASS_VERSION=$(unset SHELL; cmd /c $GRASS --config version | sed -e "s/\r//")
+	export GRASS_PREFIX=$(unset SHELL; cmd /c $GRASS --config path | sed -e "s/\r//")
 
 	cd $BUILDDIR
 
