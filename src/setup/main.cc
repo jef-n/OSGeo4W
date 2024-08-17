@@ -87,7 +87,7 @@ static BoolOption UnattendedOption (false, 'q', "quiet-mode", "Unattended setup 
 static BoolOption PackageManagerOption (false, 'M', "package-manager", "Semi-attended chooser-only mode");
 static BoolOption HelpOption (false, 'h', "help", "print help");
 static BOOL (WINAPI *dyn_AttachConsole) (DWORD);
-StringOption LangOption ("", 'L', "lang", "language to show ui in", false);
+StringOption LangOption ("", '\0', "lang", "language to show ui in", false);
 
 static void inline
 set_dynaddr ()
