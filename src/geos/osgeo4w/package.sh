@@ -1,5 +1,5 @@
 export P=geos
-export V=3.12.2
+export V=3.13.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
@@ -61,7 +61,7 @@ tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 cd install
 
 tar -cjf $R/$P-$V-$B.tar.bz2 \
-	bin/*.dll
+	bin/
 
 tar -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	lib \

@@ -1,5 +1,5 @@
 export P=podofo
-export V=0.10.3
+export V=0.10.4
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="freetype-devel libjpeg-turbo-devel zlib-devel libpng-devel libtiff-devel openssl-devel libxml2-devel"
@@ -48,8 +48,8 @@ export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R/$P-devel
 
 cat <<EOF >$R/setup.hint
-sdesc: "PoDoFo is a s a free portable C++ library to work with the PDF file format. (Runtime)"
-ldesc: "PoDoFo is a s a free portable C++ library to work with the PDF file format. (Runtime)"
+sdesc: "PoDoFo is a free portable C++ library to work with the PDF file format. (Runtime)"
+ldesc: "PoDoFo is a free portable C++ library to work with the PDF file format. (Runtime)"
 category: Libs
 requires: msvcrt2019 freetype zlib libpng libtiff libjpeg-turbo libxml2 openssl
 maintainer: $MAINTAINER
@@ -59,8 +59,8 @@ tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
 	bin
 
 cat <<EOF >$R/$P-devel/setup.hint
-sdesc: "PoDoFo is a s a free portable C++ library to work with the PDF file format. (Development)"
-ldesc: "PoDoFo is a s a free portable C++ library to work with the PDF file format. (Development)"
+sdesc: "PoDoFo is a free portable C++ library to work with the PDF file format. (Development)"
+ldesc: "PoDoFo is a free portable C++ library to work with the PDF file format. (Development)"
 category: Libs
 requires: $P
 external-source: $P

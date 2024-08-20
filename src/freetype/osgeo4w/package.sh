@@ -1,5 +1,5 @@
 export P=freetype
-export V=2.13.2
+export V=2.13.3
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="libpng-devel zlib-devel"

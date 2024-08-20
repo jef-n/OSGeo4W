@@ -1,5 +1,5 @@
 export P=qwt-qt6
-export V=6.2.0
+export V=6.3.0
 export B="next qwt-libs"
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=qt6-devel

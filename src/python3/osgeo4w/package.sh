@@ -1,5 +1,5 @@
 export P=python3
-export V=3.12.6
+export V=3.12.7
 export B="next $P-core"
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="openssl-devel bzip2-devel xz-devel zlib-devel sqlite3-devel"
@@ -38,7 +38,7 @@ MMM=${V//./}
 	export PATH=$(cygpath -au externals/pythonx86/tools/Scripts):$(cygpath -au externals/pythonx86/tools):$PATH
 
 	[ -f osgeo4w.built ] || {
-		cmd /c Doc\\make.bat htmlhelp
+		DISTVERSION=$V cmd /c Doc\\make.bat htmlhelp
 		[ -f Doc/build/htmlhelp/python$MMM.chm ]
 		cmd /c Tools\\msi\\buildrelease.bat -x64 --skip-msi --skip-nuget --skip-zip
 		touch osgeo4w.built

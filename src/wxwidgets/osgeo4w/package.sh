@@ -1,5 +1,5 @@
 export P=wxwidgets
-export V=3.2.4
+export V=3.2.6
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="zlib-devel expat-devel libjpeg-turbo-devel libpng-devel libtiff-devel xz-devel"
