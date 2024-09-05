@@ -78,8 +78,8 @@ else
 fi
 
 if [ -z "$OSGEO4W_SKIP_CLEAN" ]; then
-	git apply --check ../osgeo4w/patch
-	git apply ../osgeo4w/patch
+	git apply --allow-empty --check ../osgeo4w/patch
+	git apply --allow-empty ../osgeo4w/patch
 fi
 
 SHA=$(git log -n1 --pretty=%h)

@@ -67,9 +67,9 @@ else
 fi
 
 if [ -z "$OSGEO4W_SKIP_CLEAN" ]; then
-	if ! git apply --check --reverse ../osgeo4w/patch; then
-		git apply --check ../osgeo4w/patch
-		git apply ../osgeo4w/patch
+	if ! git apply --allow-empty --check --reverse ../osgeo4w/patch; then
+		git apply --allow-empty --check ../osgeo4w/patch
+		git apply --allow-empty ../osgeo4w/patch
 	fi
 fi
 
