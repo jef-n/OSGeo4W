@@ -1,5 +1,5 @@
 export P=python3
-export V=3.12.5
+export V=3.12.6
 export B="next $P-core"
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="openssl-devel bzip2-devel xz-devel zlib-devel sqlite3-devel"
