@@ -159,7 +159,7 @@ do_remote_ini (HWND owner)
              bz2 streams, so when it comes time to write out a local cached
              copy of the .ini file below, we'd otherwise have to delete this
              stream and uncompress it again from the start, which is wasteful.
-             The current uncompresed size of the .ini file as of 2007 is less
+             The current uncompressed size of the .ini file as of 2007 is less
              than 600 kB, so this is not a great deal of memory.  */
           io_stream *bz2_stream = compress::decompress (ini_file);
           if (!bz2_stream)

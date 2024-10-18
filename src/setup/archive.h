@@ -49,7 +49,7 @@ public:
   };
   /* get an archive child class from an io_stream */
   static archive *extract (io_stream *);
-  /* get an ouput stream for the next files from the archive.
+  /* get an output stream for the next files from the archive.
    * returns NULL on failure.
    * The stream is not taken over - it will not be automatically deleted
    */

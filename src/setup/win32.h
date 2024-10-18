@@ -79,7 +79,7 @@ class SIDWrapper {
     SIDWrapper& operator= (SIDWrapper const &);
     ~SIDWrapper () { if (value) FreeSid (value); }
 
-    /* We could look at doing weird typcast overloads here,
+    /* We could look at doing weird typecast overloads here,
        but manual access is easier for now.  */
     PSID &theSID () { return value; }
     PSID const &theSID () const { return value; }

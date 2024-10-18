@@ -165,7 +165,7 @@ PropertyPage::DialogProc (UINT message, WPARAM wParam, LPARAM lParam)
 
               GetOwner ()->AdjustPageSize (GetHWND ());
 
-              // Set the wizard buttons apropriately
+              // Set the wizard buttons appropriately
               if (IsFirst)
               {
                 // Disable "Back" on first page.
@@ -343,7 +343,7 @@ PropertyPage::DialogProc (UINT message, WPARAM wParam, LPARAM lParam)
       case WM_MOUSEWHEEL:
         // we do this so that derived classes that wish to process this message
         // do not need to reimplement the entire WinProc, they can just
-        // provice an OnMouseWheel.  (Note that mousewheel events are delivered
+        // provide an OnMouseWheel.  (Note that mousewheel events are delivered
         // to the parent of the window that received the scroll, so it would
         // not work to just process this message there.)
         return OnMouseWheel (message, wParam, lParam);

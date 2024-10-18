@@ -16,7 +16,7 @@
 #ifndef SETUP_GENERIC_H
 #define SETUP_GENERIC_H
 
-/* Todo fully paramterise */
+/* Todo fully parameterise */
 template <class _Visitor, class _Predicate>
 struct _visit_if {
   _visit_if(_Visitor v, _Predicate p) : visitor(v), predicate (p) {}

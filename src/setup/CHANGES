@@ -13,7 +13,7 @@ Version HEAD
 
 Version 2.573.2.2
 
- - Fix crash when trying to MD5 a non-existant package file that failed to
+ - Fix crash when trying to MD5 a non-existent package file that failed to
    download.
 
 Version 2.573.2.1

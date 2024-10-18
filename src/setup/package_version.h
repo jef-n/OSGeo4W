@@ -16,8 +16,8 @@
 #ifndef SETUP_PACKAGE_VERSION_H
 #define SETUP_PACKAGE_VERSION_H
 
-/* This is a package version abstrct class, that should be able to
- * arbitrate acceess to cygwin binary packages, cygwin source package,
+/* This is a package version abstract class, that should be able to
+ * arbitrate access to cygwin binary packages, cygwin source package,
  * and the rpm and deb equivalents of the same.
  */
 

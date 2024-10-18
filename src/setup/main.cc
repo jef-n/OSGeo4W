@@ -215,7 +215,7 @@ main_display (void)
   // Create the PropSheet main window
   MainWindow.Create ();
 
-  // Uninitalize COM
+  // Uninitialize COM
   if (sl)
     sl->Release ();
   CoUninitialize ();

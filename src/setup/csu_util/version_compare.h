@@ -17,7 +17,7 @@
 
 #include <string>
 
-/* Sort two version numbers, comparing equivalently seperated strings of
+/* Sort two version numbers, comparing equivalently separated strings of
  * digits numerically.
  *
  * Returns a positive number if (a > b)

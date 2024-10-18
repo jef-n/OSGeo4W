@@ -21,7 +21,7 @@
 typedef SSIZE_T ssize_t;
 #endif
 
-/* this is the parent class for all IO operations. It's flexable enough to be cover for
+/* this is the parent class for all IO operations. It's flexible enough to be cover for
  * HTTP access, local file access, and files being extracted from archives.
  * It also encapsulates the idea of an archive, and all non-archives become the special
  * case.

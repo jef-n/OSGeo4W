@@ -16,7 +16,7 @@ STYLE DS_MODALFRAME | DS_CENTER | WS_CHILD | WS_CAPTION | WS_SYSMENU
 CAPTION "OSGeo4W Setup - Choose Installation Type"
 FONT 8, "MS Shell Dlg"
 BEGIN
-    CONTROL         "&Install from Internet\n(downloaded files will be kept for future re-use)",
+    CONTROL         "&Install from Internet\n(downloaded files will be kept for future reuse)",
                     IDC_SOURCE_NETINST, "Button",
                     BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP | BS_MULTILINE | BS_TOP, 71, 60, 200, 20
 

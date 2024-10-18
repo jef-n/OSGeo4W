@@ -39,7 +39,7 @@ main (int anargc, char **anargv)
 	}
       if (!helpoption)
 	{
-	  std::cout << "Did not recieve expected help option" << std::endl;
+	  std::cout << "Did not receive expected help option" << std::endl;
 	  return 1;
 	}
       free(argv[1]);

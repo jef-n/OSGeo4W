@@ -68,6 +68,6 @@ long
 PostInstallResultsPage::OnUnattended ()
 {
   // in unattended mode, we have logged the errors, so just carry on
-  // XXX: would be nice to set program exit status if errors occured...
+  // XXX: would be nice to set program exit status if errors occurred...
   return 0;
 }

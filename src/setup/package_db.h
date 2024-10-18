@@ -33,7 +33,7 @@ typedef enum {
 class packagedb;
 typedef std::vector <packagemeta *>::iterator PackageDBConnectedIterator;
 
-/*TODO: add mutexs */
+/*TODO: add mutexes */
 
 /*TODO: add sanity.   Beware, Here Be C++ Dragons:
 

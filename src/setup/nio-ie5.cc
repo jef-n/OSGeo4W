@@ -137,7 +137,7 @@ DWORD Proxy::type (void) const
 static HINTERNET internet = 0;
 static Proxy last_proxy = Proxy(-1, "", -1);
 
-NetIO_IE5::NetIO_IE5 (char const *url, bool cachable)
+NetIO_IE5::NetIO_IE5 (char const *url, bool cacheable)
 {
   int resend = 0;
 
@@ -177,7 +177,7 @@ NetIO_IE5::NetIO_IE5 (char const *url, bool cachable)
     INTERNET_FLAG_KEEP_CONNECTION |
     INTERNET_FLAG_EXISTING_CONNECT | INTERNET_FLAG_PASSIVE;
 
-  if (!cachable) {
+  if (!cacheable) {
     flags |= INTERNET_FLAG_NO_CACHE_WRITE;
   } else {
     flags |= INTERNET_FLAG_RESYNCHRONIZE;

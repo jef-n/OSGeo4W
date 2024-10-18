@@ -264,7 +264,7 @@ diff -Nur librttopo/headers/librttopo_geom.h ../librttopo/headers/librttopo_geom
 +
 +/******************************************************************
 +* RTGBOX structure.
-+* We include the flags (information about dimensinality),
++* We include the flags (information about dimensionality),
 +* so we don't have to constantly pass them
 +* into functions that use the RTGBOX.
 +*/
@@ -1002,7 +1002,7 @@ diff -Nur librttopo/headers/librttopo_geom.h ../librttopo/headers/librttopo_geom
 +
 +/**
 +* Add a component, allocating extra space if necessary. The compoundcurve
-+* takes owership of the passed geometry.
++* takes ownership of the passed geometry.
 +*/
 +extern int rtcompound_add_rtgeom(const RTCTX *ctx, RTCOMPOUND *comp, RTGEOM *geom);
 +
@@ -1445,7 +1445,7 @@ diff -Nur librttopo/headers/librttopo_geom.h ../librttopo/headers/librttopo_geom
 + */
 +/** For GML3 only, include srsDimension attribute in output */
 +#define RT_GML_IS_DIMS     (1<<0)
-+/** For GML3 only, declare that datas are lat/lon. Swaps axis order */
++/** For GML3 only, declare that data are lat/lon. Swaps axis order */
 +#define RT_GML_IS_DEGREE   (1<<1)
 +/** For GML3, use <LineString> rather than <Curve> for lines */
 +#define RT_GML_SHORTLINE   (1<<2)
@@ -1962,7 +1962,7 @@ diff -Nur librttopo/headers/librttopo_geom.h ../librttopo/headers/librttopo_geom
 +#define TWKB_BBOX 0x01 /* User wants bboxes */
 +#define TWKB_SIZE 0x02 /* User wants sizes */
 +#define TWKB_ID 0x04 /* User wants id */
-+#define RTTWKB_NO_TYPE 0x10 /* No type because it is a sub geoemtry */
++#define RTTWKB_NO_TYPE 0x10 /* No type because it is a sub geometry */
 +#define TWKB_NO_ID 0x20 /* No ID because it is a subgeoemtry */
 +#define TWKB_DEFAULT_PRECISION 0 /* Aim for 1m (or ft) rounding by default */
 +

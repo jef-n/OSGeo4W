@@ -839,7 +839,7 @@ sub sign {
 
 	# for some unclear reason as of 2024-02-24 this requires
 	# now requires osslsigncode 2.7 and the verification
-	# using ossslsigncode fails eventhough the msi is apparently
+	# using ossslsigncode fails even though the msi is apparently
 	# fine (no complaints when installing)
 	my $cmd = "osslsigncode sign";
 #	$cmd .= " -nolegacy";

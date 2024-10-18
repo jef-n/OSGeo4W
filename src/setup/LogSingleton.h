@@ -52,7 +52,7 @@ public:
   friend std::ostream& endLog(std::ostream& outs);
 
 protected:
-  LogSingleton(std::streambuf* aStream); // Only child classs can be created.
+  LogSingleton(std::streambuf* aStream); // Only child class can be created.
   LogSingleton (LogSingleton const &); // no copy constructor
   LogSingleton &operator = (LogSingleton const&); // no assignment operator
   virtual void endEntry() = 0; // the current in-progress entry is complete.
