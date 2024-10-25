@@ -29,12 +29,11 @@ startlog
 
 	cd build
 
-	cmake -G Ninja \
+	OSGEO4W_ROOT=$(cygpath -aw ../osgeo4w) cmake -G Ninja \
 		-D CMAKE_BUILD_TYPE=Release \
 		-D CMAKE_INSTALL_PREFIX=../install \
-		-D WITH_TESTS=OFF \
-		-D BUILD_OSGEO4W=OFF \
-		-D JPEG_LIBRARY=$(cygpath -am ../osgeo4w/lib/jpeg.lib) \
+		-D WITH_TESTS=FALSE \
+		-D BUILD_OSGEO4W=FALSE \
 		../../libLAS-$V
 	cmake --build .
 	cmake --build . --target install

@@ -1,6 +1,31 @@
+diff -ur libLAS-1.8.1/cmake/modules/FindLASzip.cmake ../libLAS-1.8.1/cmake/modules/FindLASzip.cmake
+--- libLAS-1.8.1/cmake/modules/FindLASzip.cmake	2016-08-22 15:06:34.000000000 +0200
++++ ../libLAS-1.8.1/cmake/modules/FindLASzip.cmake	2024-10-25 21:42:45.971303700 +0200
+@@ -31,8 +31,7 @@
+     SET(OSGEO4W_ROOT_DIR $ENV{OSGEO4W_ROOT})
+     MESSAGE(STATUS "Trying OSGeo4W using environment variable OSGEO4W_ROOT=$ENV{OSGEO4W_ROOT}")
+   ELSE()
+-    SET(OSGEO4W_ROOT_DIR c:/OSGeo4W64)
+-    MESSAGE(STATUS "Trying OSGeo4W using default location OSGEO4W_ROOT=${OSGEO4W_ROOT_DIR}")
++    MESSAGE(FATAL "OSGEO4W_ROOT not set")
+   ENDIF()
+ ENDIF()
+ 
+diff -ur libLAS-1.8.1/CMakeLists.txt ../libLAS-1.8.1/CMakeLists.txt
+--- libLAS-1.8.1/CMakeLists.txt	2016-08-22 15:07:43.000000000 +0200
++++ ../libLAS-1.8.1/CMakeLists.txt	2024-10-25 21:43:27.752012900 +0200
+@@ -138,8 +138,6 @@
+ 
+   endif()
+ 
+-  set(CMAKE_INCLUDE_PATH c:/osgeo4w64/include;$ENV{CMAKE_INCLUDE_PATH})
+-  set(CMAKE_LIBRARY_PATH c:/osgeo4w64/lib;$ENV{CMAKE_LIBRARY_PATH})
+ else()
+ 
+   # Recommended C++ compilation flags
 diff -ur libLAS-1.8.1/include/liblas/detail/binary.hpp ../libLAS-1.8.1/include/liblas/detail/binary.hpp
 --- libLAS-1.8.1/include/liblas/detail/binary.hpp	2016-08-22 15:06:34.000000000 +0200
-+++ ../libLAS-1.8.1/include/liblas/detail/binary.hpp	2024-04-07 15:50:27.853919300 +0200
++++ ../libLAS-1.8.1/include/liblas/detail/binary.hpp	2024-10-25 21:35:29.247463800 +0200
 @@ -25,7 +25,7 @@
  
  #include <boost/config.hpp>
@@ -12,34 +37,23 @@ diff -ur libLAS-1.8.1/include/liblas/detail/binary.hpp ../libLAS-1.8.1/include/l
  #if CHAR_BIT != 8
 diff -ur libLAS-1.8.1/src/c_api.cpp ../libLAS-1.8.1/src/c_api.cpp
 --- libLAS-1.8.1/src/c_api.cpp	2016-08-22 15:06:34.000000000 +0200
-+++ ../libLAS-1.8.1/src/c_api.cpp	2021-11-11 14:27:24.492297600 +0100
-@@ -498,7 +498,7 @@
-         
-         transforms.erase( std::remove_if( transforms.begin(), 
-                                   transforms.end(),
--                                  boost::bind( &IsReprojectionTransform, _1 ) ),
-+                                  boost::bind( &IsReprojectionTransform, boost::placeholders::_1 ) ),
-                   transforms.end());
-         
-         liblas::TransformPtr srs_transform = liblas::TransformPtr(new liblas::ReprojectionTransform(in_ref, *out_ref, &h));
-@@ -1840,7 +1840,7 @@
-         
-         transforms.erase( std::remove_if( transforms.begin(), 
-                                   transforms.end(),
--                                  boost::bind( &IsReprojectionTransform, _1 ) ),
-+                                  boost::bind( &IsReprojectionTransform, boost::placeholders::_1 ) ),
-                   transforms.end());
-         
-         liblas::TransformPtr srs_transform = liblas::TransformPtr(new liblas::ReprojectionTransform(in_ref, *out_ref, &h));
++++ ../libLAS-1.8.1/src/c_api.cpp	2024-10-25 21:35:29.250462200 +0200
+@@ -96,6 +96,7 @@
+ #endif
+ 
+ #include <boost/lambda/lambda.hpp>
++#include <boost/bind.hpp>
+ 
+ bool IsReprojectionTransform(liblas::TransformPtr const& p)
+ {
 diff -ur libLAS-1.8.1/src/header.cpp ../libLAS-1.8.1/src/header.cpp
 --- libLAS-1.8.1/src/header.cpp	2016-08-22 15:06:34.000000000 +0200
-+++ ../libLAS-1.8.1/src/header.cpp	2021-11-11 14:27:11.217059200 +0100
-@@ -610,7 +610,7 @@
++++ ../libLAS-1.8.1/src/header.cpp	2024-10-25 21:35:29.259463600 +0200
+@@ -54,6 +54,7 @@
+ // boost
+ #include <boost/cstdint.hpp>
+ #include <boost/lambda/lambda.hpp>
++#include <boost/bind.hpp>
  
-     m_vlrs.erase( std::remove_if( m_vlrs.begin(),
-                                   m_vlrs.end(),
--                                  boost::bind( &SameVLRs, name, id, _1 ) ),
-+                                  boost::bind( &SameVLRs, name, id, boost::placeholders::_1 ) ),
-                   m_vlrs.end());
- 
-     m_recordsCount = static_cast<uint32_t>(m_vlrs.size());
+ //std
+ #include <algorithm>
