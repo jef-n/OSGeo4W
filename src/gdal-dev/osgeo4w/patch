@@ -1,0 +1,27 @@
+From a97bee835be112039665c898d7f5c9c921e39b05 Mon Sep 17 00:00:00 2001
+From: "Juergen E. Fischer" <jef@norbit.de>
+Date: Fri, 25 Oct 2024 16:20:02 +0200
+Subject: [PATCH] ecw: fix min usage with MSVC (followup osgeo/gdal#10979)
+
+---
+ frmts/ecw/ecwdataset.cpp | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/frmts/ecw/ecwdataset.cpp b/frmts/ecw/ecwdataset.cpp
+index 3fe05508f6..9f7d7d67b7 100644
+--- a/frmts/ecw/ecwdataset.cpp
++++ b/frmts/ecw/ecwdataset.cpp
+@@ -73,6 +73,10 @@ ECWRasterBand::ECWRasterBand(ECWDataset *poDSIn, int nBandIn, int iOverviewIn,
+     nRasterYSize = poDS->GetRasterYSize() / (1 << (iOverview + 1));
+ 
+ #if ECWSDK_VERSION >= 51
++// undefine min macro if any
++#ifdef min
++#undef min
++#endif
+     if (poDSIn->bIsJPEG2000 && poDSIn->poFileView)
+     {
+         UINT32 nTileWidth = 0;
+-- 
+2.43.0
+

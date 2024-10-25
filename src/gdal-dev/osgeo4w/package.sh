@@ -32,9 +32,9 @@ else
 	unset OSGEO4W_SKIP_CLEAN
 fi
 
-if [ -z "$OSGEO4W_SKIP_CLEAN" ]; then
-	patch -p1 -d ../gdal --dry-run <patch
-	patch -p1 -d ../gdal <patch
+if [ -z "$OSGEO4W_SKIP_CLEAN" -a -s patch ]; then
+	git apply --directory=../gdal --check patch
+	git apply --directory=../gdal patch
 fi
 
 SHA=$(cd ../gdal; git log -n1 --pretty=%h)
