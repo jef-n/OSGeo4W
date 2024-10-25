@@ -1,5 +1,5 @@
 export P=entwine
-export V=3.0.0
+export V=3.1.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="curl-devel openssl-devel pdal-devel python3-core"

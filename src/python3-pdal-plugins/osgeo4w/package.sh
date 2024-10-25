@@ -1,5 +1,5 @@
 export P=python3-pdal-plugins
-export V=1.3.0
+export V=1.6.2
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-pip python3-wheel python3-devel python3-numpy pdal-devel"
@@ -55,9 +55,9 @@ maintainer: $MAINTAINER
 EOF
 
 tar -C ../osgeo4w -cjf $R/$P-$V-$B.tar.bz2 \
-	--xform "s,osgeo4w/apps/$PYTHON/bin/,apps/pdal/plugins/," \
-	osgeo4w/apps/$PYTHON/bin/libpdal_plugin_filter_python.dll \
-	osgeo4w/apps/$PYTHON/bin/libpdal_plugin_reader_numpy.dll
+	--xform "s,osgeo4w/apps/$PYTHON/Lib/site-packages/bin/,apps/pdal/plugins/," \
+	osgeo4w/apps/$PYTHON/Lib/site-packages/bin/libpdal_plugin_filter_python.dll \
+	osgeo4w/apps/$PYTHON/Lib/site-packages/bin/libpdal_plugin_reader_numpy.dll
 
 cp ../pdal/LICENSE $R/$P-$V-$B.txt
 

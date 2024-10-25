@@ -1,8 +1,8 @@
 export P=pdal
-export V=2.6.3
+export V=2.8.1
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="gdal-devel libgeotiff-devel libtiff-devel zlib-devel curl-devel libxml2-devel hdf5-devel openssl-devel zstd-devel laszip-devel proj-devel draco-devel python3-core python3-devel"
+export BUILDDEPENDS="gdal-devel libgeotiff-devel libtiff-devel zlib-devel curl-devel libxml2-devel hdf5-devel openssl-devel zstd-devel laszip-devel proj-devel draco-devel python3-core python3-devel sqlite3-devel"
 export PACKAGES="pdal pdal-devel pdal-libs"
 
 source ../../../scripts/build-helpers
@@ -35,6 +35,7 @@ fi
 		-D CMAKE_INSTALL_PREFIX=../install \
 		-D PDAL_PLUGIN_INSTALL_PATH=../install/apps/$P/plugins \
 		-D Python_EXECUTABLE=$(cygpath -am ../osgeo4w/apps/$PYTHON/python3.exe) \
+		-D SQLite3_LIBRARY=$(cygpath -am ../osgeo4w/lib/sqlite3_i.lib) \
 		../../$P-$V
 	cmake --build .
 	cmake --build . --target install || cmake --build . --target install
@@ -68,7 +69,7 @@ cat <<EOF >$R/$P-libs/setup.hint
 sdesc: "PDAL: Point Data Abstraction Library (Runtime)"
 ldesc: "PDAL is a library for manipulating and translating point cloud data"
 category: Libs
-requires: $RUNTIMEDEPENDS libgeotiff zlib curl libxml2 hdf5 openssl zstd laszip
+requires: $RUNTIMEDEPENDS libgeotiff zlib curl libxml2 hdf5 openssl zstd laszip sqlite3
 maintainer: $MAINTAINER
 external-source: $P
 EOF
