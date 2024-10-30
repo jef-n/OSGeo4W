@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2003, Frank Richter <frichter@gmx.li>
- * Copyrught (c) 2003, Robert Collins <rbtcollins@hotmail.com>
+ * Copyright (c) 2003, Robert Collins <rbtcollins@hotmail.com>
  *
  *     This program is free software; you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
