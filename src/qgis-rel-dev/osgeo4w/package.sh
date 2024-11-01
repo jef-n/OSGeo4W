@@ -133,6 +133,7 @@ nextbinary
 	cd ../qgis
 
 	if [ -n "$TX_TOKEN" ]; then
+		perl -MLocales -e 1 2>/dev/null || cpan -T install Locales </dev/null
 		if ! PATH=/bin:$PATH bash -x scripts/pull_ts.sh; then
 			echo "TSPULL FAILED $?"
 			rm -rf i18n doc/TRANSLATORS
