@@ -9,7 +9,7 @@ source ../../../scripts/build-helpers
 
 startlog
 
-[ -f qt-everywhere-src-$V.tar.xz ] || wget https://download.qt.io/official_releases/qt/${V%.*}/$V/single/qt-everywhere-src-$V.tar.xz
+[ -f qt-everywhere-src-$V.tar.xz ] || wget https://download.qt.io/archive/qt/${V%.*}/$V/single/qt-everywhere-src-$V.tar.xz
 mkdir -p build/s
 [ -f build/s/CMakeLists.txt ] || tar --xform "s,^qt-everywhere-src-$V,build/s," -xJf qt-everywhere-src-$V.tar.xz
 [ -f build/s/patched ] || (

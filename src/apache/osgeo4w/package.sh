@@ -13,7 +13,7 @@ startlog
 
 v=${V%.*}
 v=${v/./}
-z=httpd-$V-240718-win64-VS17.zip
+z=httpd-$V-240904-win64-VS17.zip
 
 [ -f $z ] || curl -L -A Mozilla/5.0 -O https://www.apachelounge.com/download/VS17/binaries/$z
 [ -d Apache$v ] || unzip $z "Apache$v/*"

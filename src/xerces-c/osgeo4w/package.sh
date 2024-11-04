@@ -9,7 +9,7 @@ source ../../../scripts/build-helpers
 
 startlog
 
-[ -f $P-$V.tar.gz ] || wget https://downloads.apache.org/xerces/c/${V%%.*}/sources/xerces-c-$V.tar.gz
+[ -f $P-$V.tar.gz ] || wget https://archive.apache.org/dist/xerces/c/${V%%.*}/sources/xerces-c-$V.tar.gz
 [ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz
 
 vsenv
