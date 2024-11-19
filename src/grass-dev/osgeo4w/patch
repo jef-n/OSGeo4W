@@ -26,13 +26,14 @@ index f00a136be..e8d8be2f6 100755
  libdir="${prefix}/lib"
  includedir="${prefix}/include/libpng${dll_version}"
 diff --git a/mswindows/osgeo4w/package.sh b/mswindows/osgeo4w/package.sh
-index c189cf92c9..fcb69a8ae3 100755
+index c189cf92c9..68fab3224c 100755
 --- a/mswindows/osgeo4w/package.sh
 +++ b/mswindows/osgeo4w/package.sh
-@@ -108,26 +108,16 @@ exec 3>&1 > >(tee mswindows/osgeo4w/package.log) 2>&1
+@@ -107,32 +107,21 @@ fi
+ exec 3>&1 > >(tee mswindows/osgeo4w/package.log) 2>&1
  
  DLLS="
- 	/mingw64/bin/libblas.dll
+-	/mingw64/bin/libblas.dll
 -	/mingw64/bin/libbrotlicommon.dll
 -	/mingw64/bin/libbrotlidec.dll
  	/mingw64/bin/libbz2-1.dll
@@ -48,7 +49,7 @@ index c189cf92c9..fcb69a8ae3 100755
 -	/mingw64/bin/libharfbuzz-0.dll
  	/mingw64/bin/libiconv-2.dll
  	/mingw64/bin/libintl-8.dll
- 	/mingw64/bin/liblapack.dll
+-	/mingw64/bin/liblapack.dll
 -	/mingw64/bin/libpcre-1.dll
 -	/mingw64/bin/libpixman-1-0.dll
 -	/mingw64/bin/libpng16-16.dll
@@ -57,7 +58,13 @@ index c189cf92c9..fcb69a8ae3 100755
  	/mingw64/bin/libstdc++-6.dll
  	/mingw64/bin/libsystre-0.dll
  	/mingw64/bin/libtre-5.dll
-@@ -153,40 +143,41 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
+ 	/mingw64/bin/libwinpthread-1.dll
+ 	/mingw64/bin/zlib1.dll
++	/mingw64/bin/libopenblas.dll
+ "
+ 
+ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
+@@ -153,40 +142,40 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
  
  	log configure
  	./configure \
@@ -89,7 +96,7 @@ index c189cf92c9..fcb69a8ae3 100755
 -		--with-includes=$OSGEO4W_ROOT_MSYS/include \
 +		--with-includes=${OSGEO4W_ROOT_MSYS}/include \
  		--with-lapack \
- 		--with-lapack-includes=/mingw64/include \
+-		--with-lapack-includes=/mingw64/include \
  		--with-liblas=$PWD/mswindows/osgeo4w/liblas-config \
 -		--with-libs="$OSGEO4W_ROOT_MSYS/lib" \
 +		--with-libs="${OSGEO4W_ROOT_MSYS}/lib ${OSGEO4W_ROOT_MSYS}/bin" \
@@ -113,7 +120,7 @@ index c189cf92c9..fcb69a8ae3 100755
  		--with-regex \
  		--with-sqlite \
  		--with-sqlite-includes=$OSGEO4W_ROOT_MSYS/include \
-@@ -248,7 +239,9 @@ if [ -n "$PACKAGE_PATCH" ]; then
+@@ -248,7 +237,9 @@ if [ -n "$PACKAGE_PATCH" ]; then
  
      # copy dependencies (TODO: to be reduced)
      cp -uv $DLLS apps/grass/grass$POSTFIX/bin
