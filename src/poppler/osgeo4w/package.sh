@@ -93,7 +93,7 @@ cat <<EOF >$R/setup.hint
 sdesc: "Poppler is a PDF rendering library based on the xpdf-3.0 code base. (Runtime)"
 ldesc: "Poppler is a PDF rendering library based on the xpdf-3.0 code base. (Runtime)"
 category: Libs
-requires: msvcrt2019 freetype zlib libpng libtiff libjpeg-turbo cairo
+requires: msvcrt2019 freetype zlib libpng libtiff libjpeg-turbo cairo curl openjpeg
 maintainer: $MAINTAINER
 EOF
 
