@@ -101,7 +101,6 @@ pacman --noconfirm -Syu --needed \
 	mingw-w64-x86_64-pcre \
 	mingw-w64-x86_64-fftw \
 	mingw-w64-x86_64-lapack \
-	mingw-w64-x86_64-openmp \
 	mingw-w64-x86_64-readline
 
 cd ../$p
