@@ -1,29 +1,3 @@
-diff --git a/include/Make/Grass.make b/include/Make/Grass.make
-index 137a45d19..4f26feda2 100644
---- a/include/Make/Grass.make
-+++ b/include/Make/Grass.make
-@@ -197,7 +197,7 @@ DSPFDEPS         = $(GISLIB)
- FORMDEPS         = $(DBMILIB) $(GISLIB)
- RASTER3DDEPS     = $(RASTERLIB) $(GISLIB)
- GISDEPS          = $(DATETIMELIB) $(ZLIBLIBPATH) $(ZLIB) $(BZIP2LIBPATH) $(BZIP2LIB) $(ZSTDLIBPATH) $(ZSTDLIB) $(INTLLIB) $(REGEXLIBPATH) $(REGEXLIB) $(ICONVLIB) $(PTHREADLIBPATH) $(PTHREADLIB) $(MATHLIB)
--GMATHDEPS        = $(GISLIB) $(FFTWLIB) $(LAPACKLIB) $(BLASLIB) $(CCMATHLIB) $(OPENMP_CFLAGS) $(OPENMP_LIBPATH) $(OPENMP_LIB)
-+GMATHDEPS        = $(GISLIB) $(FFTWLIB) $(LAPACKLIB) $(BLASLIB) $(CCMATHLIB) $(OPENMP_LIBPATH) $(OPENMP_LIB)
- GPDEDEPS         = $(RASTER3DLIB) $(RASTERLIB) $(GISLIB) $(GMATHLIB) $(OPENMP_LIBPATH) $(OPENMP_LIB) $(MATHLIB)
- GPROJDEPS        = $(GISLIB) $(GDALLIBS) $(PROJLIB) $(MATHLIB)
- HTMLDRIVERDEPS   = $(DRIVERLIB) $(GISLIB) $(MATHLIB)
-diff --git a/include/Make/Platform.make.in b/include/Make/Platform.make.in
-index a66ddf801..1f08f7771 100644
---- a/include/Make/Platform.make.in
-+++ b/include/Make/Platform.make.in
-@@ -228,7 +228,7 @@ USE_PTHREAD         = @USE_PTHREAD@
- #OpenMP
- OPENMP_INCPATH      = @OPENMP_INCPATH@
- OPENMP_LIBPATH      = @OPENMP_LIBPATH@
--OPENMP_LIB          = @OPENMP_LIB@
-+OPENMP_LIB          = @OPENMP_CFLAGS@ @OPENMP_LIB@
- OPENMP_CFLAGS       = @OPENMP_CFLAGS@
- USE_OPENMP          = @USE_OPENMP@
- 
 diff --git a/mswindows/osgeo4w/env.bat.tmpl b/mswindows/osgeo4w/env.bat.tmpl
 index 200c86f26..86bf4a3a0 100644
 --- a/mswindows/osgeo4w/env.bat.tmpl
@@ -52,10 +26,10 @@ index f00a136be..e8d8be2f6 100755
  libdir="${prefix}/lib"
  includedir="${prefix}/include/libpng${dll_version}"
 diff --git a/mswindows/osgeo4w/package.sh b/mswindows/osgeo4w/package.sh
-index c189cf92c..fcab3e242 100755
+index c189cf92c9..fcb69a8ae3 100755
 --- a/mswindows/osgeo4w/package.sh
 +++ b/mswindows/osgeo4w/package.sh
-@@ -108,26 +108,17 @@ exec 3>&1 > >(tee mswindows/osgeo4w/package.log) 2>&1
+@@ -108,26 +108,16 @@ exec 3>&1 > >(tee mswindows/osgeo4w/package.log) 2>&1
  
  DLLS="
  	/mingw64/bin/libblas.dll
@@ -78,13 +52,12 @@ index c189cf92c..fcab3e242 100755
 -	/mingw64/bin/libpcre-1.dll
 -	/mingw64/bin/libpixman-1-0.dll
 -	/mingw64/bin/libpng16-16.dll
-+	/mingw64/bin/libomp.dll
  	/mingw64/bin/libquadmath-0.dll
 +	/mingw64/bin/libreadline8.dll
  	/mingw64/bin/libstdc++-6.dll
  	/mingw64/bin/libsystre-0.dll
  	/mingw64/bin/libtre-5.dll
-@@ -153,40 +144,41 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
+@@ -153,40 +143,41 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
  
  	log configure
  	./configure \
@@ -140,7 +113,7 @@ index c189cf92c..fcab3e242 100755
  		--with-regex \
  		--with-sqlite \
  		--with-sqlite-includes=$OSGEO4W_ROOT_MSYS/include \
-@@ -248,7 +240,9 @@ if [ -n "$PACKAGE_PATCH" ]; then
+@@ -248,7 +239,9 @@ if [ -n "$PACKAGE_PATCH" ]; then
  
      # copy dependencies (TODO: to be reduced)
      cp -uv $DLLS apps/grass/grass$POSTFIX/bin
