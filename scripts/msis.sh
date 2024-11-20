@@ -14,7 +14,7 @@ fi
 for i in ${PKGS:-qgis qgis-ltr}; do
 	o=
 	if [ -f "src/$i/qgis/CMakeLists.txt" -a src/$i/osgeo4w/qgis_msibanner.bmp -a src/$i/osgeo4w/qgis_msiinstaller.bmp -a src/$i/osgeo4w/qgis.ico ]; then
-		o="-releasename=\"$(sed -ne 's/^set(RELEASE_NAME "\(.*\)").*$/\1/ip' src/$i/qgis/CMakeLists.txt)\""
+		o="-releasename=$(sed -ne 's/^set(RELEASE_NAME "\(.*\)").*$/\1/ip' src/$i/qgis/CMakeLists.txt)"
 		o="$o -banner=$PWD/src/$i/osgeo4w/qgis_msibanner.bmp"
 		o="$o -background=$PWD/src/$i/osgeo4w/qgis_msiinstaller.bmp"
 		o="$o -arpicon=$PWD/src/$i/osgeo4w/qgis.ico"
