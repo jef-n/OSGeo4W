@@ -81,9 +81,9 @@ if [ -f $R/$P-$V-$B-src.tar.bz2 ]; then
 	exit 1
 fi
 
-msysarch=msys2-base-x86_64-20230526.tar.xz
+msysarch=msys2-base-x86_64-20241116.tar.xz
 
-[ -f $msysarch ] || wget http://repo.msys2.org/distrib/x86_64/$msysarch
+[ -f $msysarch ] || wget https://repo.msys2.org/distrib/x86_64/$msysarch
 if ! [ -d msys64 ]; then
 	tar xJf $msysarch
 
@@ -159,8 +159,7 @@ pacman --noconfirm -Syu --needed \
 
 cd ../grass
 
-# reconfigure on each build
-rm -f mswindows/osgeo4w/configure-stamp
+[ -n "$OSGEO4W_SKIP_CLEAN" ] || rm -f mswindows/osgeo4w/configure-stamp
 
 PACKAGE_POSTFIX=-dev bash.exe $xtrace mswindows/osgeo4w/package.sh
 EOF
