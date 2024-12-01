@@ -1,77 +1,30 @@
 export P=libpq
-export V=16.2
+export V=17.2
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="openssl-devel zlib-devel libiconv-devel"
+export BUILDDEPENDS="openssl-devel zlib-devel lz4-devel zstd-devel libiconv-devel python3-core python3-pip"
 export PACKAGES="libpq libpq-devel"
-
-# perl also used in openssl and qt5
-SBPERL=5.32.1.1
 
 source ../../../scripts/build-helpers
 
 startlog
 
 [ -f postgresql-$V.tar.bz2 ] || wget https://ftp.postgresql.org/pub/source/v$V/postgresql-$V.tar.bz2
-[ -f ../postgresql-$V/Makefile ] || {
-	tar -C .. -xjf postgresql-$V.tar.bz2
-	patch --dry-run -p1 -d ../postgresql-$V <patch
-	patch           -p1 -d ../postgresql-$V <patch
-}
-
-if ! [ -d perl ]; then
-	wget -c http://strawberryperl.com/download/$SBPERL/strawberry-perl-$SBPERL-64bit-portable.zip
-	mkdir perl
-	cd perl
-	unzip ../strawberry-perl-$SBPERL-64bit-portable.zip
-	cd ..
-fi
-
-cat <<EOF >../postgresql-$V/src/tools/msvc/config.pl
-# Configuration arguments for vcbuild.
-use strict;
-use warnings;
-
-our \$config = {
-	openssl   => '$(cygpath -aw osgeo4w)',
-	iconv     => '$(cygpath -aw osgeo4w)',
-	zlib      => '$(cygpath -aw osgeo4w)',
-};
-
-sub confess {
-	warn "CONFESS SKIPPED: @_";
-	return 1;
-}
-
-sub croak {
-	warn "CROAK SKIPPED: @_";
-	return 1;
-}
-
-sub die {
-	warn "DIE SKIPPED: @_";
-	return 1;
-}
-
-1;
-EOF
 
 (
-	# meet postgresql's expectations
-	cp osgeo4w/lib/zlib.lib osgeo4w/lib/zdll.lib
-	cp osgeo4w/lib/iconv.dll.lib osgeo4w/lib/iconv.lib
-
-	fetchenv perl/portableshell.bat /SETENV
+	fetchenv osgeo4w/bin/o4w_env.bat
+	cmakeenv
+	ninjaenv
 	vsenv
 
-	export PATH="$PATH:/c/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/amd64/"
+	pip3 install meson
 
-	cd ../postgresql-$V/src/tools/msvc
-	cmd /c build.bat >libpq.log 2>&1 || { cat libpq.log; false; }
-	cmd /c install.bat $(cygpath -aw $OSGEO4W_PWD/install) client || true
+	mkdir -p build install
+	cd ../postgresql-$V
+	meson setup ../osgeo4w/build --prefix=$(cygpath -am ../osgeo4w/install)
 
-	# clean empty directories
-	find install -depth -type d -exec rmdir {} \; 2>/dev/null || true
+	ninja -C ../osgeo4w/build
+	ninja -C ../osgeo4w/build install
 )
 
 cd $OSGEO4W_PWD/install
@@ -84,7 +37,7 @@ sdesc: "The libpq library for accessing PostgreSQL and command line clients"
 ldesc: "The libpq library for accessing PostgreSQL + psql + pg_dump + pg_restore"
 maintainer: $MAINTAINER
 category: Libs Commandline_Utilities
-requires: msvcrt2019 openssl libiconv zlib
+requires: msvcrt2019 openssl libiconv zlib zstd lz4
 EOF
 
 cat <<EOF >$R/$P-devel/setup.hint
@@ -117,17 +70,17 @@ tar -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	--exclude lib/libpq.dll \
 	--exclude lib/libpgcommon.lib \
 	--exclude lib/libpgport.lib \
-	--exclude share/pg_service.conf.sample \
 	bin/pg_config.exe \
 	include \
 	lib \
-	share/psqlrc.sample
+	share/postgresql/pg_service.conf.sample \
+	share/postgresql/psqlrc.sample
 
 cd ..
 
 cp ../postgresql-$V/COPYRIGHT $R/$P-$V-$B.txt
 cp ../postgresql-$V/COPYRIGHT $R/$P-devel/$P-devel-$V-$B.txt
 
-tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/patch
+tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
 
 endlog
