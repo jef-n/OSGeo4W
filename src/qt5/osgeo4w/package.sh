@@ -8,13 +8,14 @@ export PACKAGES="qt5-devel qt5-docs qt5-libs-symbols qt5-oci qt5-qml qt5-tools"
 # perl also used in openssl and libpq
 SBPERL=5.32.0.1
 PY2=2.7.18
+GITREPO=https://invent.kde.org/qt/qt/qt5.git
 
 source ../../../scripts/build-helpers
 
 startlog
 
 if ! [ -d ../qt5 ]; then
-	git clone https://invent.kde.org/qt/qt/qt5.git ../qt5
+	git clone $GITREPO ../qt5
 	cd ../qt5
 	git checkout kde/5.15
 	perl init-repository
@@ -23,6 +24,8 @@ else
 	git submodule foreach git reset --hard
 	git submodule update --recursive
 fi
+
+SHA=$(git log -n1 --pretty=%h)
 
 # Fix for MSSQL change (https://github.com/qgis/QGIS/issues/50865)
 patch -p1 --dry-run <../osgeo4w/patch
@@ -310,6 +313,12 @@ tar -cjf $R/$P-libs/$P-libs-$V-$B.tar.bz2 \
 # libs-symbols
 #
 
+cat <<EOF >../qt5.sha
+[Git]
+SHA=$SHA
+Url=$GITREPO
+EOF
+
 cat <<EOF >$R/$P-libs-symbols/setup.hint
 sdesc: "Qt5 runtime libraries (release version; symbol files)"
 ldesc: "Qt5 runtime libraries (release version; symbol files)"
@@ -320,6 +329,9 @@ external-source: $P
 EOF
 
 tar -cjf $R/$P-libs-symbols/$P-libs-symbols-$V-$B.tar.bz2 \
+	--absolute-names \
+	--xform s,^../qt5.sha,apps/qt5/qt5.sha, \
+	../qt5.sha \
 	-T /tmp/symbols
 
 #
