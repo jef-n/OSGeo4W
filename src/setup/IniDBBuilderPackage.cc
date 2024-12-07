@@ -274,7 +274,7 @@ void
 IniDBBuilderPackage::buildMaintainer (const std::string& ){}
 
 /* TODO: we can multiple arch's for a given package,
-   and it may befor either source or binary, so we need to either set both
+   and it may before either source or binary, so we need to either set both
    or track a third current package that points to whether we altering source
    or binary at the moment
    */
