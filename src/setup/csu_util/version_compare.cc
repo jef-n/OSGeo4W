@@ -18,7 +18,7 @@ using namespace std;
 
 static inline bool isdigit(char c) { return (c >= '0' && c <= '9'); }
 
-/* Sort two version numbers, comparing equivalently seperated strings of
+/* Sort two version numbers, comparing equivalently separated strings of
  * digits numerically.
  *
  * Returns a positive number if (a > b)
