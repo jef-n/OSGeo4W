@@ -1,5 +1,5 @@
 export P=python3
-export V=3.12.7
+export V=3.12.8
 export B="next $P-core"
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="openssl-devel bzip2-devel xz-devel zlib-devel sqlite3-devel"
@@ -31,7 +31,7 @@ MMM=${V//./}
 	vsenv
 
 	# fetch externals - but skip some
-	mkdir -p externals/{bzip2-1.0.8,sqlite-3.43.1.0,xz-5.2.5,zlib-1.3.1,openssl-3.0.13,openssl-bin-3.0.13}
+	mkdir -p externals/{bzip2-1.0.8,sqlite-3.45.3.0,xz-5.2.5,zlib-1.3.1,openssl-3.0.13,openssl-bin-3.0.15}
 	export LANG=C LC_ALL=C PATH=$(cygpath --sysdir)/WindowsPowerShell/v1.0:$PATH
 	cmd /c Tools\\msi\\get_externals.bat
 
@@ -74,7 +74,7 @@ cp -a $S/Tools/{scripts,i18n}		                install/${PREFIX}Tools/
 cp $S/{PC/icons/py{,c,d}.ico,PCbuild/amd64/*.{dll,pyd}}	install/${PREFIX}DLLs/
 cp -a $S/Lib						install/${PREFIX}Lib
 cp $S/PCbuild/amd64/python{$M,$MM}.dll			install/${PREFIX}
-cp -a $S/externals/tcltk-8.6.13.0/amd64/lib		install/${PREFIX}tcl
+cp -a $S/externals/tcltk-8.6.15.2/amd64/lib		install/${PREFIX}tcl
 cp $S/PCbuild/amd64/python{$M,$MM}.dll			install/bin
 for a in "" "w"; do
 	for b in "" $M; do
@@ -118,7 +118,7 @@ install/${PREFIX}DLLs/_testimportmultiple.pyd
 install/${PREFIX}DLLs/_testmultiphase.pyd
 install/${PREFIX}Lib/idlelib/idle_test
 install/${PREFIX}Lib/test
-install/${PREFIX}tcl/tcl8/8.5/tcltest-2.5.5.tm
+install/${PREFIX}tcl/tcl8/8.5/tcltest-2.5.8.tm
 install/${PREFIX}Tools/scripts/run_tests.py
 EOF
 

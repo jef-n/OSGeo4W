@@ -74,9 +74,9 @@ sha256sum -c apache-arrow-$V.tar.gz.sha256
 
 	cd ../../apache-arrow-$V/python
 
-	pip3 install Cython
+	pip3 install Cython setuptools_scm
 
-	rm -rf build
+	rm -rf build dist
 
 	export INCLUDE="$(cygpath -am ../cpp/src);$INCLUDE"
 
@@ -85,6 +85,7 @@ sha256sum -c apache-arrow-$V.tar.gz.sha256
 		PYARROW_BUILD_TYPE=Release \
 		PYARROW_WITH_DATASET=ON \
 		PYARROW_WITH_PARQUET=ON \
+		SETUPTOOLS_SCM_PRETEND_VERSION_FOR_PYARROW=$V \
 		python3 setup.py build_ext --inplace bdist_wheel
 
         wheel=$(cygpath -aw dist/*.whl) adddepends=$P externalsource=$P P=python3-pyarrow packagewheel --only-binary :all: --force-reinstall
