@@ -2,7 +2,7 @@ export P=qfield-dev
 export V=99
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="qt6-devel qt6-tools qt6-oci qt6-qml qca-qt6-devel gdal-dev-devel proj-devel qgis-qt6-dev qtkeychain-qt6-devel libpq-devel protobuf-devel exiv2-devel draco-devel expat-devel libzip-devel libzip-tools libspatialindex-devel sqlite3-devel poly2tri-devel zxing-cpp-devel"
+export BUILDDEPENDS="qt6-devel qt6-tools qt6-oci qt6-qml qca-qt6-devel gdal-dev-devel proj-devel qgis-qt6 qtkeychain-qt6-devel libpq-devel protobuf-devel exiv2-devel draco-devel expat-devel libzip-devel libzip-tools libspatialindex-devel sqlite3-devel poly2tri-devel zxing-cpp-devel"
 export PACKAGES=qfield-dev
 
 : ${REPO:=https://github.com/opengisch/QField.git}
@@ -95,8 +95,8 @@ nextbinary
 
 	cd build
 
-	export INCLUDE="$(cygpath -aw $OSGEO4W_ROOT/apps/qgis-qt6-dev/include);$(cygpath -aw $OSGEO4W_ROOT/apps/Qt6/include);$(cygpath -aw $OSGEO4W_ROOT/apps/gdal-dev/include);$(cygpath -aw $OSGEO4W_ROOT/include);$INCLUDE"
-	export LIB="$(cygpath -aw $OSGEO4W_ROOT/apps/qgis-qt6-dev/lib);$(cygpath -aw $OSGEO4W_ROOT/apps/Qt6/lib);$(cygpath -aw $OSGEO4W_ROOT/apps/gdal-dev/lib);$(cygpath -aw $OSGEO4W_ROOT/lib);$LIB"
+	export INCLUDE="$(cygpath -aw $OSGEO4W_ROOT/apps/qgis-qt6/include);$(cygpath -aw $OSGEO4W_ROOT/apps/Qt6/include);$(cygpath -aw $OSGEO4W_ROOT/apps/gdal-dev/include);$(cygpath -aw $OSGEO4W_ROOT/include);$INCLUDE"
+	export LIB="$(cygpath -aw $OSGEO4W_ROOT/apps/qgis-qt6/lib);$(cygpath -aw $OSGEO4W_ROOT/apps/Qt6/lib);$(cygpath -aw $OSGEO4W_ROOT/apps/gdal-dev/lib);$(cygpath -aw $OSGEO4W_ROOT/lib);$LIB"
 
 	cmake -G Ninja \
 		-D CMAKE_BUILD_TYPE=$BUILDCONF \
@@ -120,7 +120,7 @@ sdesc: "QField"
 ldesc: "Nightly build of QField development branch"
 maintainer: $MAINTAINER
 category: Desktop
-requires: msvcrt2019 base qt6-libs qca-qt6-libs qtkeychain-qt6 qt6-oci qgis-qt6-dev sqlite3 $RUNTIMEDEPENDS
+requires: msvcrt2019 base qt6-libs qca-qt6-libs qtkeychain-qt6 qt6-oci qgis-qt6 sqlite3 $RUNTIMEDEPENDS
 EOF
 
 mkdir -p install/{bin,etc/{postinstall,preremove}}
@@ -130,8 +130,8 @@ cat <<EOF >install/bin/$P.bat
 call "%~dp0\\o4w_env.bat"
 call qt6_env.bat
 call gdal-dev-env.bat
-path %OSGEO4W_ROOT%\\apps\\$P\\bin;%OSGEO4W_ROOT%\\apps\\qgis-qt6-dev\\bin;%PATH%
-set QGIS_PREFIX_PATH=%OSGEO4W_ROOT%\\apps\\qgis-qt6-dev
+path %OSGEO4W_ROOT%\\apps\\$P\\bin;%OSGEO4W_ROOT%\\apps\\qgis-qt6\\bin;%PATH%
+set QGIS_PREFIX_PATH=%OSGEO4W_ROOT%\\apps\\qgis-qt6
 start "QField" /B "%OSGEO4W_ROOT%\\apps\\$P\\bin\\qfield.exe" %*
 EOF
 

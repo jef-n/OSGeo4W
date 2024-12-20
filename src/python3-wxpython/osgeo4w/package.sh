@@ -30,7 +30,7 @@ startlog
 
 	export INCLUDE="$(cygpath -aw ../osgeo4w/osgeo4w/lib/vc_x64_dll/mswu);$(cygpath -aw ../osgeo4w/osgeo4w/include);$INCLUDE"
 	export LIB="$(cygpath -aw ../osgeo4w/osgeo4w/lib/vc_x64_dll);$LIB"
-	python3 build.py build_py --release --x64 --use_syswx --extra_waf='--msvc_version="msvc 17.8"'
+	python3 build.py build_py --release --x64 --use_syswx --extra_waf='--msvc_version="msvc 17.9"'
 
 	python3 build.py bdist_wheel
 

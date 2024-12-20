@@ -1,5 +1,5 @@
 export P=qt6
-export V=6.6.3
+export V=6.8.1
 export B="next qt6-libs"
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-core python3-pip openssl-devel sqlite3-devel zlib-devel libjpeg-turbo-devel libtiff-devel libpng-devel oci-devel libwebp-devel libmysql-devel zstd-devel libpq-devel icu-devel freetype-devel node"
@@ -220,7 +220,8 @@ while read f; do
 		./resources/qtwebengine*|\
 		./translations/qtwebengine_locales/*|\
 		./translations/catalogs.json|\
-		./resources/v8_context_snapshot.bin)
+		./resources/v8_context_snapshot.bin|\
+		./sbom/*.spdx)
 			p=libs
 			;;
 
@@ -233,6 +234,8 @@ while read f; do
 		./bin/qt-cmake.bat|\
 		./bin/qt-configure-module.bat|\
 		./bin/qt-internal-configure-tests.bat|\
+		./bin/qt-internal-configure-examples.bat|\
+		./bin/qt-android-runner.py|\
 		./bin/qt-testrunner.py|\
 		./bin/sanitizer-testrunner.py|\
 		./metatypes/*_metatypes.json|\
@@ -428,7 +431,7 @@ tar -cjf $R/$P-$V-$B-src.tar.bz2 \
 #
 
 for i in devel qml tools docs libs libs-symbols oci; do
-	cp ../s/LICENSE.GPL3 $R/$P-$i/$P-$i-$V-$B.txt
+	cp ../s/LICENSES/GPL-3.0-only.txt $R/$P-$i/$P-$i-$V-$B.txt
 done
 
 #

@@ -37,7 +37,7 @@ startlog
 
 	export LIB="$(cygpath -aw ../osgeo4w/apps/$PYTHON/Libs);$LIB"
 
-	export INCLUDE="$(cygpath -aw ../osgeo4w/include);$(cygpath -aw ../osgeo4w/include/boost-1_84);$INCLUDE"
+	export INCLUDE="$(cygpath -aw ../osgeo4w/include);$(cygpath -aw ../osgeo4w/include/boost-1_87);$INCLUDE"
 	export LIB="$(cygpath -aw ../osgeo4w/lib);$LIB"
 
 	export PATH="$(cygpath -a ../osgeo4w/bin):$(cygpath -a ../osgeo4w/apps/qt5/bin):$PATH"
@@ -49,7 +49,7 @@ startlog
 		-D Boost_USE_STATIC_LIBS=ON \
 		-D Boost_USE_MULTITHREADED=ON \
 		-D Boost_USE_STATIC_RUNTIME=OFF \
-		-D Boost_INCLUDE_DIR="$(cygpath -am ../osgeo4w/include/boost-1_84)" \
+		-D Boost_INCLUDE_DIR="$(cygpath -am ../osgeo4w/include/boost-1_87)" \
 		-D Boost_LIBRARY_DIR="$(cygpath -am ../osgeo4w/lib)" \
 		-D CMAKE_CXX_STANDARD=17 \
 		-D CMAKE_BUILD_TYPE=Release \

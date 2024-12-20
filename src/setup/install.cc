@@ -309,14 +309,16 @@ Installer::installOne (packagemeta &pkgm, const packageversion &ver,
       archive::extract_results extres;
       while ((extres = archive::extract_file (tarstream, prefixURL, prefixPath)) != archive::extract_ok)
         {
+          time_t t = time(NULL);
+
           switch (extres)
             {
 	    case archive::extract_inuse: // in use
-	      // Try renaming in-use file by appending .old, removing a
+	      // Try renaming in-use file by appending .epoch, removing a
 	      // potentially existing one first and retry to extract
 	      {
 	        std::string s = cygpath ("/" + fn),
-			    d = cygpath ("/" + fn + ".old");
+			    d = cygpath ("/" + fn + "." + std::to_string(t));
 		if ( io_stream_file::exists(d) )
 		  {
 		    if( io_stream_file::remove (d) == 0 )
@@ -335,7 +337,7 @@ Installer::installOne (packagemeta &pkgm, const packageversion &ver,
 		      {
 			if ( is_elevated() && !NoReplaceOnReboot)
 			  {
-			    // cleanup .old on next reboot
+			    // cleanup old on next reboot
 			    if (!MoveFileEx (d.c_str (), NULL, MOVEFILE_DELAY_UNTIL_REBOOT ))
 			      {
 			        log (LOG_TIMESTAMP) << "Unable to schedule reboot removal of file "

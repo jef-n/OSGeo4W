@@ -2,7 +2,7 @@ export P=qgis-qt6-dev
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-dev-devel qt6-qml qt6-oci sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt6 python3-sip python3-pyqt-builder python3-devel python3-pyqt6-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-qt6-devel qscintilla-qt6-devel qt6-devel qwt-qt6-devel libspatialite-devel oci-devel qtkeychain-qt6-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel pdal pdal-devel grass draco-devel libtiff-devel transifex-cli python3-oauthlib"
+export BUILDDEPENDS="expat-devel fcgi-devel proj-devel qt6-qml qt6-oci sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt6 python3-sip python3-pyqt-builder python3-devel python3-pyqt6-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-qt6-devel qscintilla-qt6-devel qt6-devel qwt-qt6-devel libspatialite-devel oci-devel qtkeychain-qt6-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel pdal pdal-devel grass draco-devel libtiff-devel transifex-cli python3-oauthlib gdal-dev-devel"
 export PACKAGES="qgis-qt6-dev qgis-qt6-dev-deps qgis-qt6-dev-full qgis-qt6-dev-full-free qgis-qt6-dev-pdb"
 
 : ${REPO:=https://github.com/qgis/QGIS.git}
@@ -283,11 +283,11 @@ nextbinary
 
 		v=$MAJOR.$MINOR.$PATCH
 
-		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       						qgis.reg.tmpl    >install/apps/$P/bin/qgis.reg.tmpl
-		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@appname@/${APPNAME//\//\\\/}/g" -e "s/@grassversion@/$GRASS_VERSION/g"         						postinstall.bat  >install/etc/postinstall/$P.bat
-		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@appname@/${APPNAME//\//\\\/}/g" -e "s/@grassversion@/$GRASS_VERSION/g"         						preremove.bat    >install/etc/preremove/$P.bat
-		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       						designer.bat     >install/bin/$P-designer.bat
-		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       						python.bat       >install/bin/python-$P.bat
+		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       qgis.reg.tmpl    >install/apps/$P/bin/qgis.reg.tmpl
+		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@appname@/${APPNAME//\//\\\/}/g" -e "s/@grassversion@/$GRASS_VERSION/g"         postinstall.bat  >install/etc/postinstall/$P.bat
+		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@appname@/${APPNAME//\//\\\/}/g" -e "s/@grassversion@/$GRASS_VERSION/g"         preremove.bat    >install/etc/preremove/$P.bat
+		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       designer.bat     >install/bin/$P-designer.bat
+		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g"                                                                                       python.bat       >install/bin/python-$P.bat
 
 		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g" -e "s/@grasspath@/$(basename $GRASS_PREFIX)/g" -e "s/@grassmajor@/${GRASS_VERSION%%.*}/" qgis.bat         >install/bin/$P.bat
 		sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g" -e "s/@grasspath@/$(basename $GRASS_PREFIX)/g" -e "s/@grassmajor@/${GRASS_VERSION%%.*}/" process.bat      >install/bin/qgis_process-$P.bat
@@ -366,7 +366,7 @@ sdesc: "$PKGDESC (metapackage with additional dependencies including proprietary
 ldesc: "$PKGDESC (metapackage with additional dependencies including proprietary)"
 maintainer: $MAINTAINER
 category: Desktop
-requires: $P-full-free gdal-dev-hdf5 gdal-dev-ecw gdal-dev-mrsid gdal-dev-oracle
+requires: $P-full-free gdal-dev-hdf5 gdal-dev-mss gdal-dev-ecw gdal-dev-mrsid gdal-dev-oracle
 external-source: $P
 EOF
 

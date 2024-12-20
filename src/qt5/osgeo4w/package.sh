@@ -448,6 +448,7 @@ sort /tmp/qt.files /tmp/qt.installed | uniq -u | fgrep -v -x -f <(cat <<EOF
 bin/qt.conf
 apps/qt5/bin/qt.conf
 etc/ini/qt5.bat
+apps/qt5/qt5.sha
 EOF
 ) >/tmp/qt.not-installed || true
 

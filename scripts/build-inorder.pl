@@ -87,8 +87,10 @@ foreach (grep /-$/, @ARGV) {
 
 my @todo;
 while(my $p = shift @arg) {
-	die "Source for $p not found" unless exists $src{$p};
-	$p = $src{$p};
+	unless(-f "src/$p/osgeo4w/package.sh") {
+		die "Source for $p not found" unless exists $src{$p};
+		$p = $src{$p};
+	}
 	push @todo, $p;
 }
 

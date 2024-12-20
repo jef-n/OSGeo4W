@@ -10,6 +10,7 @@ source ../../../scripts/build-helpers
 startlog
 
 [ -f postgresql-$V.tar.bz2 ] || wget https://ftp.postgresql.org/pub/source/v$V/postgresql-$V.tar.bz2
+[ -d ../postgresql-$V ] || tar -C .. -xjf postgresql-$V.tar.bz2
 
 (
 	fetchenv osgeo4w/bin/o4w_env.bat
@@ -21,7 +22,18 @@ startlog
 
 	mkdir -p build install
 	cd ../postgresql-$V
-	meson setup ../osgeo4w/build --prefix=$(cygpath -am ../osgeo4w/install)
+
+	export INCLUDE="$(cygpath -am ../osgeo4w/osgeo4w/include);$INCLUDE"
+	export LIB="$(cygpath -am ../osgeo4w/osgeo4w/lib);$LIB"
+
+	meson setup ../osgeo4w/build \
+		-Dssl=openssl \
+		-Dzlib=enabled \
+		-Dlz4=enabled \
+		-Dzstd=enabled \
+		-Dextra_include_dirs=$(cygpath -am ../osgeo4w/osgeo4w/include) \
+		-Dextra_lib_dirs=$(cygpath -am ../osgeo4w/osgeo4w/lib) \
+		--prefix=$(cygpath -am ../osgeo4w/install)
 
 	ninja -C ../osgeo4w/build
 	ninja -C ../osgeo4w/build install

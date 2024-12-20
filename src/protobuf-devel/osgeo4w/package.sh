@@ -1,5 +1,5 @@
 export P=protobuf-devel
-export V=25.3
+export V=29.3
 export B="next"
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=zlib-devel
@@ -51,7 +51,7 @@ EOF
 
 cp ../../$p-$V/LICENSE $R/$P-$V-$B.txt
 
-tar -cjf $R/$P-$V-$B.tar.bz2 bin/*.exe cmake include lib
+tar -cjf $R/$P-$V-$B.tar.bz2 bin/*.exe include lib
 
 cd ..
 

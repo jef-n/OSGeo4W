@@ -157,7 +157,7 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 	cmakeenv
 	ninjaenv
 
-	export INCLUDE="$(cygpath -am osgeo4w/include);$(cygpath -am osgeo4w/apps/$PYTHON/include);$(cygpath -am osgeo4w/include/boost-1_84);$(cygpath -aw "$(find $VCINSTALLDIR -iname atlbase.h -printf '%h')");$INCLUDE"
+	export INCLUDE="$(cygpath -am osgeo4w/include);$(cygpath -am osgeo4w/apps/$PYTHON/include);$(cygpath -am osgeo4w/include/boost-1_87);$(cygpath -aw "$(find $VCINSTALLDIR -iname atlbase.h -printf '%h')");$INCLUDE"
 	export LIB="$(cygpath -am osgeo4w/lib);$(cygpath -aw "$(find $VCINSTALLDIR -path "*/x64/*" -iname atls.lib -printf '%h')");$LIB"
 
 	[ -n "$OSGEO4W_SKIP_CLEAN" ] || rm -rf build

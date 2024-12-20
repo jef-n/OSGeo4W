@@ -1,5 +1,5 @@
 export P=openjpeg
-export V=2.5.2
+export V=2.5.3
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="zlib-devel libtiff-devel libpng-devel"

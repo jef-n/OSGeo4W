@@ -73,7 +73,7 @@ diff -ur grass-8.4.0/mswindows/osgeo4w/package.sh ../grass-8.4.0/mswindows/osgeo
  if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
  	if [ -e include/Make/Platform.make ] ; then
  	    log make distclean
-@@ -144,56 +116,56 @@
+@@ -144,56 +116,57 @@
  	log remove old logs
  	rm -f mswindows/osgeo4w/package.log.*
  
@@ -81,7 +81,9 @@ diff -ur grass-8.4.0/mswindows/osgeo4w/package.sh ../grass-8.4.0/mswindows/osgeo
 -	cp -uv $DLLS dist.x86_64-w64-mingw32/bin
 -
  	mkdir -p mswindows/osgeo4w/lib
- 	cp -uv $OSGEO4W_ROOT_MSYS/lib/libpq.lib mswindows/osgeo4w/lib/pq.lib
+-	cp -uv $OSGEO4W_ROOT_MSYS/lib/libpq.lib mswindows/osgeo4w/lib/pq.lib
++	rm -f $OSGEO4W_ROOT_MSYS/lib/libpq.a
++	cp -uv $OSGEO4W_ROOT_MSYS/lib/libpq.lib mswindows/osgeo4w/lib/libpq.lib
  	cp -uv $OSGEO4W_ROOT_MSYS/lib/sqlite3_i.lib mswindows/osgeo4w/lib/sqlite3.lib
  
  	log configure
@@ -168,7 +170,7 @@ diff -ur grass-8.4.0/mswindows/osgeo4w/package.sh ../grass-8.4.0/mswindows/osgeo
  
  	touch mswindows/osgeo4w/configure-stamp
  fi
-@@ -246,9 +218,11 @@
+@@ -246,9 +219,11 @@
      unix2dos etc/postinstall/grass${PACKAGE_POSTFIX}.bat
      unix2dos etc/preremove/grass${PACKAGE_POSTFIX}.bat
  

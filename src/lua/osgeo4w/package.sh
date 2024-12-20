@@ -1,5 +1,5 @@
 export P=lua
-export V=5.4.6
+export V=5.4.7
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none

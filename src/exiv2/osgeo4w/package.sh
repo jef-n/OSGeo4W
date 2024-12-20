@@ -1,5 +1,5 @@
 export P=exiv2
-export V=0.28.2
+export V=0.28.3
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="expat-devel zlib-devel libiconv-devel brotli-devel"

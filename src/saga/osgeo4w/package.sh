@@ -1,5 +1,5 @@
 export P=saga
-export V=9.5.1
+export V=9.7.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="wxwidgets-devel libharu-devel gdal-devel proj-devel libpq-devel curl-devel libpng-devel libtiff-devel libjpeg-turbo-devel zlib-devel expat-devel pdal-devel"

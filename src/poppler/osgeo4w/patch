@@ -1,0 +1,22 @@
+diff -ur poppler-23.07.0/CMakeLists.txt ../poppler-23.07.0/CMakeLists.txt
+--- poppler-23.07.0/CMakeLists.txt	2023-07-03 23:05:08.000000000 +0200
++++ ../poppler-23.07.0/CMakeLists.txt	2024-12-19 22:01:50.476235000 +0100
+@@ -18,7 +18,7 @@
+ set(CMAKE_TRY_COMPILE_CONFIGURATION "${_CMAKE_BUILD_TYPE_UPPER}")
+ 
+ include(MacroOptionalFindPackage)
+-find_package(PkgConfig)
++#find_package(PkgConfig)
+ include(TestBigEndian)
+ test_big_endian(WORDS_BIGENDIAN)
+ include(CheckFileOffsetBits)
+@@ -379,7 +379,7 @@
+ # Recent versions of poppler-data install a .pc file.
+ # Use it to determine the encoding data path, if available.
+ # Default to the same prefix otherwise.
+-pkg_check_modules(POPPLER_DATA poppler-data)
++#pkg_check_modules(POPPLER_DATA poppler-data)
+ if(POPPLER_DATA_FOUND)
+   execute_process(COMMAND "${PKG_CONFIG_EXECUTABLE}" --variable=poppler_datadir poppler-data
+                   RESULT_VARIABLE _result_var
+Only in ../poppler-23.07.0/: patched

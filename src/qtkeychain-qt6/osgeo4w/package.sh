@@ -53,7 +53,7 @@ mkdir -p $R
 
 for i in devel libs; do
 	mkdir -p $R/$P-$i
-	cp ../$P-$V/COPYING $R/$P-$i/$P-$i-$V-$B.txt
+	cp ../$p-$V/COPYING $R/$P-$i/$P-$i-$V-$B.txt
 done
 
 cat <<EOF >$R/$P-devel/setup.hint

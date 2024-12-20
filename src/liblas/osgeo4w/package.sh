@@ -24,7 +24,7 @@ startlog
 
 	mkdir -p build install
 
-	export INCLUDE="$(cygpath -aw $OSGEO4W_PWD/osgeo4w/include);$(cygpath -aw ../osgeo4w/include/boost-1_84);$INCLUDE"
+	export INCLUDE="$(cygpath -aw $OSGEO4W_PWD/osgeo4w/include);$(cygpath -aw ../osgeo4w/include/boost-1_87);$INCLUDE"
 	export LIB="$(cygpath -aw $OSGEO4W_PWD/osgeo4/lib);$LIB"
 
 	cd build

@@ -2,7 +2,7 @@ export P=freetype
 export V=2.13.3
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="libpng-devel zlib-devel"
+export BUILDDEPENDS="libpng-devel zlib-devel bzip2-devel brotli-devel"
 export PACKAGES="freetype freetype-devel"
 
 source ../../../scripts/build-helpers
@@ -24,13 +24,15 @@ cmake -G Ninja \
 	-D BUILD_SHARED_LIBS=true \
 	-D FT_WITH_ZLIB=ON \
 	-D FT_WITH_PNG=ON \
-	-D FT_WITH_BROTLI=OFF \
-	-D FT_WITH_BZIP2=OFF \
+	-D FT_WITH_BROTLI=ON \
+	-D FT_WITH_BZIP2=ON \
 	-D FT_WITH_HARFBUZZ=OFF \
 	-D ZLIB_LIBRARY=$(cygpath -am ../osgeo4w/lib/zlib.lib) \
 	-D ZLIB_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D PNG_LIBRARY=$(cygpath -am ../osgeo4w/lib/libpng16.lib) \
 	-D PNG_PNG_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
+	-D BZIP2_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
+	-D BROTLIDEC_INCLUDE_DIRS=$(cygpath -am ../osgeo4w/include) \
 	-D CMAKE_INSTALL_PREFIX=../install \
 	../../$P-$V
 ninja
@@ -45,7 +47,7 @@ cat <<EOF >$R/setup.hint
 sdesc: "FreeType library (Runtime)."
 ldesc: "FreeType library (Runtime)."
 category: Libs
-requires: msvcrt2019
+requires: msvcrt2019 brotli
 maintainer: $MAINTAINER
 EOF
 

@@ -1,5 +1,5 @@
 export P=osm2pgsql
-export V=1.11.0
+export V=2.0.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="expat-devel proj-devel bzip2-devel zlib-devel boost-devel libpq-devel wingetopt-devel lua-devel"
@@ -15,7 +15,6 @@ startlog
 	mkdir -p include/nlohmann
 	curl -JL --output include/nlohmann/json.hpp https://github.com/nlohmann/json/releases/download/v3.11.3/json.hpp
 }
-
 
 (
 	vsenv
@@ -44,7 +43,7 @@ startlog
 		-D Boost_USE_STATIC_LIBS=ON \
 		-D Boost_USE_MULTITHREADED=ON \
 		-D Boost_USE_STATIC_RUNTIME=OFF \
-		-D Boost_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/boost-1_84) \
+		-D Boost_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/boost-1_87) \
 		-D Boost_LIBRARY_DIR="$(cygpath -am ../osgeo4w/lib)" \
 		-D PROJ6_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 		-D PROJ6_LIBRARY=$(cygpath -am ../osgeo4w/lib/proj.lib) \

@@ -146,9 +146,9 @@ sub compare_versions {
 				$a =~ s/^\D+//;
 				$b =~ s/^\D+//;
 			} elsif($an || $bn) {
-				return -1 if $an =~ /^-?rc$/i;	# rc* < ""
-				return 1 if $bn =~ /^-?rc$/i;	# "" > rc*
-				return $an ? 1 : -1;		# a > ""  | "" < a
+				return -1 if defined $an && $an =~ /^-?rc$/i;	# rc* < ""
+				return 1 if defined $bn && $bn =~ /^-?rc$/i;	# "" > rc*
+				return $an ? 1 : -1;				# a > ""  | "" < a
 			}
 		}
 
@@ -186,8 +186,12 @@ close H;
 my $tdir = File::Temp->newdir(CLEANUP => 0);
 print STDERR "Temporary directory: $tdir\n";
 
+open D, ">$tdir/diff";
+
 foreach my $p (sort keys %packages) {
 	my @v;
+
+	# print D "# $p\n";
 
 	# skip if there is no newer local version
 	next if
@@ -281,10 +285,36 @@ foreach my $p (sort keys %packages) {
 		push @v, "p:$prev" if defined $prev;
 		push @v, "t:$test" if defined $test;
 		print STDERR "updated hint: $tdir/$d/$p/setup.hint [" . join(" ", @v) . "]\n";
+
+		if( $remote{$p}{curr}->{version} ne $curr ) {
+			my $ov = $remote{$p}{curr}->{version};
+			my $nv = $curr;
+			my ($ouv, $opv) = split /-/, $ov;
+			my ($nuv, $npv) = split /-/, $nv;
+			my @ov = split /\./, $ouv;
+			my @nv = split /\./, $nuv;
+
+			if($ouv eq $nuv) {
+				print D "$p:$ov:$nv:REBUILD\n";
+			} else {
+
+				if(@ov == 3 && @nv == 3) {
+					if($ov[0] == $nv[0] && $ov[1] == $nv[1] && $ov[2] ne $nv[2]) {
+						print D "$p:$ov:$nv:PATCH\n";
+					} else {
+						print D "$p:$ov:$nv:UPDATE\n";
+					}
+				} else {
+					print D "$p:$ov:$nv:UPDATEM\n";
+				}
+			}
+		}
 	} else {
 		unlink "$tdir/$d/$p/setup.hint";
 	}
 }
+
+close D;
 
 unless(keys %files) {
 	print STDERR "No files to update\n";

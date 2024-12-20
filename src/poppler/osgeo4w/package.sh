@@ -1,5 +1,5 @@
 export P=poppler
-export V=24.04.0
+export V=25.01.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="freetype-devel libjpeg-turbo-devel zlib-devel libpng-devel libtiff-devel curl-devel boost-devel cairo-devel libiconv-devel openjpeg-devel openjpeg-tools"
@@ -14,9 +14,8 @@ startlog
 [ -f $P-$V.tar.xz ] || wget https://poppler.freedesktop.org/$P-$V.tar.xz
 [ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xJf $P-$V.tar.xz
 [ -f ../$P-$V/patched ] || {
-	patch -d ../$P-$V -p1 --dry-run <diff
-	patch -d ../$P-$V -p1 <diff
-	touch ../$P-$V/patched
+	patch -d ../$P-$V -p1 --dry-run <patch
+	patch -d ../$P-$V -p1 <patch >../$P-$V/patched
 }
 
 p=$P-data
@@ -64,21 +63,21 @@ cmake -G Ninja \
 	-D OpenJPEG_DIR=$(cygpath -am ../osgeo4w/lib/openjpeg-2.5) \
 	-D FREETYPE_INCLUDE_DIRS=$(cygpath -am ../osgeo4w/include/freetype2) \
 	-D FREETYPE_LIBRARY=$(cygpath -am ../osgeo4w/lib/freetype.lib) \
-        -D ZLIB_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
-        -D ZLIB_LIBRARY=$(cygpath -am ../osgeo4w/lib/zlib.lib) \
-        -D PNG_PNG_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
-        -D PNG_LIBRARY=$(cygpath -am ../osgeo4w/lib/libpng16.lib) \
-        -D TIFF_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
-        -D TIFF_LIBRARY=$(cygpath -am ../osgeo4w/lib/tiff.lib) \
-        -D JPEG_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
-        -D JPEG_LIBRARY=$(cygpath -am ../osgeo4w/lib/jpeg.lib) \
-        -D CURL_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
-        -D CURL_LIBRARY=$(cygpath -am ../osgeo4w/lib/libcurl.lib) \
-	-D Boost_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/boost-1_84) \
-        -D CAIRO_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
-        -D CAIRO_LIBRARY=$(cygpath -am ../osgeo4w/lib/cairo.lib) \
-        -D ICONV_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
-        -D ICONV_LIBRARIES=$(cygpath -am ../osgeo4w/lib/iconv.dll.lib) \
+	-D ZLIB_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
+	-D ZLIB_LIBRARY=$(cygpath -am ../osgeo4w/lib/zlib.lib) \
+	-D PNG_PNG_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
+	-D PNG_LIBRARY=$(cygpath -am ../osgeo4w/lib/libpng16.lib) \
+	-D TIFF_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
+	-D TIFF_LIBRARY=$(cygpath -am ../osgeo4w/lib/tiff.lib) \
+	-D JPEG_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
+	-D JPEG_LIBRARY=$(cygpath -am ../osgeo4w/lib/jpeg.lib) \
+	-D CURL_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
+	-D CURL_LIBRARY=$(cygpath -am ../osgeo4w/lib/libcurl.lib) \
+	-D Boost_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/boost-1_87) \
+	-D CAIRO_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
+	-D CAIRO_LIBRARY=$(cygpath -am ../osgeo4w/lib/cairo.lib) \
+	-D ICONV_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
+	-D ICONV_LIBRARIES=$(cygpath -am ../osgeo4w/lib/iconv.dll.lib) \
 	-D TESTDATADIR=$(cygpath -am ../poppler-test-master) \
 	../../$P-$V
 ninja
@@ -132,6 +131,6 @@ cp ../$P-$V/COPYING $R/$P-$V-$B.txt
 cp ../$P-$V/COPYING $R/$P-tools/$P-tools-$V-$B.txt
 cp ../$P-$V/COPYING $R/$P-devel/$P-devel-$V-$B.txt
 
-tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/diff
+tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/patch
 
 endlog

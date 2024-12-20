@@ -40,7 +40,7 @@ cmake -G Ninja \
 	-D ZLIB_LIBRARY=$(cygpath -am ../osgeo4w/lib/zlib.lib) \
 	-D URIPARSER_LIBRARY=$(cygpath -am ../osgeo4w/lib/uriparser.lib) \
 	-D URIPARSER_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/uriparser) \
-	-D Boost_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/boost-1_84) \
+	-D Boost_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/boost-1_87) \
 	../../$p-$V
 cmake --build .
 cmake --build . --target install

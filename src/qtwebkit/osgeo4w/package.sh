@@ -25,7 +25,7 @@ mkdir -p build install
 	ninjaenv
 
         [ -x osgeo4w/bin/gperf.exe ] || {
-                [ -f gperf-3.0.1.zip ] || curl -O https://altushost-swe.dl.sourceforge.net/project/gnuwin32/gperf/3.0.1/gperf-3.0.1-bin.zip
+                [ -f gperf-3.0.1.zip ] || curl -LO https://altushost-swe.dl.sourceforge.net/project/gnuwin32/gperf/3.0.1/gperf-3.0.1-bin.zip
                 unzip -p gperf-3.0.1-bin.zip bin/gperf.exe >osgeo4w/bin/gperf.exe
                 chmod a+rx osgeo4w/bin/gperf.exe
         }
@@ -66,6 +66,7 @@ mkdir -p build install
 	[ -f ../installed ] || {
 		ninja install
 		cmakefix ../install
+		sed -i -e "s#$(cygpath -am ../install)#\$\$(OSGEO4W_ROOT)#g" ../install/apps/qt5/mkspecs/modules/*.pri
 	}
 	touch ../installed
 )

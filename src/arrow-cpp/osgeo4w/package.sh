@@ -1,5 +1,5 @@
 export P=arrow-cpp
-export V=17.0.0
+export V=18.1.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="boost-devel openssl-devel thrift-devel zstd-devel bzip2-devel zlib-devel lz4-devel brotli-devel snappy-devel protobuf-devel utf8proc python3-devel python3-pip python3-setuptools python3-wheel python3-numpy"
@@ -26,7 +26,7 @@ sha256sum -c apache-arrow-$V.tar.gz.sha256
 
 	export LIB="$(cygpath -am osgeo4w/lib);$LIB"
 	export INCLUDE="$(cygpath -am osgeo4w/include);$INCLUDE"
-	export INCLUDE="$(cygpath -am osgeo4w/include/boost-1_84);$INCLUDE"
+	export INCLUDE="$(cygpath -am osgeo4w/include/boost-1_87);$INCLUDE"
 
 	mkdir -p build install
 	cd build

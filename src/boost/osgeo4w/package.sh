@@ -1,5 +1,5 @@
 export P=boost
-export V=1.84.0
+export V=1.87.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
@@ -10,7 +10,7 @@ source ../../../scripts/build-helpers
 startlog
 
 s=${P}_${V//./_}
-[ -f $s.tar.bz2 ] || wget -c https://boostorg.jfrog.io/artifactory/main/release/$V/source/$s.tar.bz2
+[ -f $s.tar.bz2 ] || wget -c https://archives.boost.io/release/$V/source/$s.tar.bz2
 [ -f ../$s/bootstrap.bat ] || tar -C .. -xjf $s.tar.bz2
 
 mkdir -p build stage install

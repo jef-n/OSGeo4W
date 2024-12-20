@@ -1,8 +1,8 @@
 export P=python3-rasterio
-export V=1.3.10
+export V=1.4.3
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-pip python3-wheel python3-devel python3-setuptools python3-affine python3-attrs python3-click python3-cligj python3-numpy python3-snuggs python3-click-plugins gdal-devel python3-certifi"
+export BUILDDEPENDS="python3-pip python3-wheel python3-devel python3-setuptools python3-affine python3-attrs python3-click python3-cligj python3-numpy python3-snuggs python3-click-plugins gdal-devel python3-certifi python3-pyparsing"
 export PACKAGES="python3-rasterio"
 
 source ../../../scripts/build-helpers
@@ -11,7 +11,7 @@ startlog
 
 p=${P#python3-}
 
-[ -f $p-$V.tar.gz ] || wget https://files.pythonhosted.org/packages/26/05/f7c3ee93f270fbd77f7a2d58f2333a21fdf3ef9526a8f0b2a4d5d3d83184/$p-$V.tar.gz
+[ -f $p-$V.tar.gz ] || wget https://files.pythonhosted.org/packages/de/19/ab4326e419b543da623ce4191f68e3f36a4d9adc64f3df5c78f044d8d9ca/$p-$V.tar.gz
 [ -d ../$p-$V ] || tar -C .. -xzf $p-$V.tar.gz
 
 major=$(sed -ne "s/# *define *GDAL_VERSION_MAJOR *//p" osgeo4w/include/gdal_version.h)

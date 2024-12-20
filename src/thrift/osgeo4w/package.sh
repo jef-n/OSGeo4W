@@ -1,5 +1,5 @@
 export P=thrift
-export V=0.20.0
+export V=0.21.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="boost-devel openssl-devel zlib-devel qt5-devel node"

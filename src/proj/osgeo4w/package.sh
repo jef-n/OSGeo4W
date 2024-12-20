@@ -1,9 +1,9 @@
 export P=proj
-export V=9.5.0
+export V=9.5.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="sqlite3-devel libtiff-devel curl-devel"
-export PACKAGES="proj proj-devel proj-runtime-data proj71-runtime proj72-runtime proj80-runtime proj81-runtime proj82-runtime proj90-runtime proj91-runtime proj92-runtime proj93-runtime"
+export PACKAGES="proj proj-devel proj-runtime-data proj71-runtime proj72-runtime proj80-runtime proj81-runtime proj82-runtime proj90-runtime proj91-runtime proj92-runtime proj93-runtime proj94-runtime proj9-runtime"
 
 source ../../../scripts/build-helpers
 
@@ -47,8 +47,7 @@ cmakefix ../install
 
 cd ..
 
-abi=${V%.*}
-abi=${abi//./}
+abi=${V%%.*}
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 
