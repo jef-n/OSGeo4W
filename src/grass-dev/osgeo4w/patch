@@ -1,34 +1,8 @@
-diff --git a/.github/workflows/osgeo4w.yml b/.github/workflows/osgeo4w.yml
-index 4a860f430..fe033d5d0 100644
---- a/.github/workflows/osgeo4w.yml
-+++ b/.github/workflows/osgeo4w.yml
-@@ -86,8 +86,6 @@ jobs:
-       - name: Compile GRASS GIS
-         shell: msys2 {0}
-         run: |
--          export CFLAGS="${CFLAGS} -pipe"
--          export CXXFLAGS="${CXXFLAGS} -pipe"
-           .github/workflows/build_osgeo4w.sh
- 
-       - name: Print installed versions
-diff --git a/mswindows/osgeo4w/build_osgeo4w.sh b/mswindows/osgeo4w/build_osgeo4w.sh
-index 98ed16aac..4941bee3f 100755
---- a/mswindows/osgeo4w/build_osgeo4w.sh
-+++ b/mswindows/osgeo4w/build_osgeo4w.sh
-@@ -21,6 +21,8 @@ export C_INCLUDE_PATH=".:${OSGEO4W_ROOT_MSYS}/include:${SRC}/dist.${ARCH}/includ
- export PYTHONHOME=${OSGEO4W_ROOT_MSYS}/apps/Python312
- export ARCH=x86_64-w64-mingw32
- 
-+CFLAGS="$CFLAGS -pipe" \
-+CXXFLAGS="$CXXFLAGS -pipe" \
- ./configure \
-     --bindir=${OSGEO4W_ROOT_MSYS}/bin \
-     --enable-largefile \
 diff --git a/mswindows/osgeo4w/env.bat.tmpl b/mswindows/osgeo4w/env.bat.tmpl
-index 200c86f26..86bf4a3a0 100644
+index 04065161a..42a67f8c5 100644
 --- a/mswindows/osgeo4w/env.bat.tmpl
 +++ b/mswindows/osgeo4w/env.bat.tmpl
-@@ -11,7 +11,8 @@ REM set GRASS_SH=%OSGEO4W_ROOT%\apps\msys\bin\sh.exe
+@@ -13,7 +13,8 @@ set GRASS_COMPATIBILITY_TEST=0
  set GRASS_PYTHON=%OSGEO4W_ROOT%\bin\python3.exe
  set GRASS_PROJSHARE=%OSGEO4W_ROOT%\share\proj
  
@@ -38,159 +12,24 @@ index 200c86f26..86bf4a3a0 100644
  
  REM
  REM RStudio-related
-diff --git a/mswindows/osgeo4w/libpng-config b/mswindows/osgeo4w/libpng-config
-index f00a136be..e8d8be2f6 100755
---- a/mswindows/osgeo4w/libpng-config
-+++ b/mswindows/osgeo4w/libpng-config
-@@ -14,7 +14,7 @@
- 
- prefix="${OSGEO4W_ROOT_MSYS}"
- version="$(sed '/^#define PNG_LIBPNG_VER_STRING/!d; s/^[^"]*"\|"//g' ${prefix}/include/libpng*/png.h)"
--dll_version="$(sed '/^#define PNG_LIBPNG_VER_DLLNUM/!d; s/^[^0-9]*\|[^0-9]*$//g' ${prefix}/include/libpng*/png.h)"
-+dll_version="$(sed '/^#define PNG_LIBPNG_VER_SHAREDLIB/!d; s/^[^0-9]*\|[^0-9]*$//g' ${prefix}/include/libpng*/png.h)"
- exec_prefix="${prefix}"
- libdir="${prefix}/lib"
- includedir="${prefix}/include/libpng${dll_version}"
 diff --git a/mswindows/osgeo4w/package.sh b/mswindows/osgeo4w/package.sh
-index 643d67353..9c4faa8ac 100755
+index 50d5b9ddc..9f7e32108 100755
 --- a/mswindows/osgeo4w/package.sh
 +++ b/mswindows/osgeo4w/package.sh
-@@ -1,8 +1,9 @@
--#!/usr/bin/bash
-+#!/bin/bash
- 
- set -e
- 
--PWD="$(pwd)"
-+export ARCH=x86_64-w64-mingw32
-+export SRC=$PWD
- 
- if ! [ -d mswindows ]; then
-     echo Start from GRASS toplevel dir
-@@ -106,34 +107,6 @@ fi
- 
- exec 3>&1 > >(tee mswindows/osgeo4w/package.log) 2>&1
- 
--DLLS="
--	/mingw64/bin/libbrotlicommon.dll
--	/mingw64/bin/libbrotlidec.dll
--	/mingw64/bin/libbz2-1.dll
--	/mingw64/bin/libcairo-2.dll
--	/mingw64/bin/libfftw3-3.dll
--	/mingw64/bin/libfontconfig-1.dll
--	/mingw64/bin/libfreetype-6.dll
--	/mingw64/bin/libgcc_s_seh-1.dll
--	/mingw64/bin/libgfortran-5.dll
--	/mingw64/bin/libglib-2.0-0.dll
--	/mingw64/bin/libgomp-1.dll
--	/mingw64/bin/libgraphite2.dll
--	/mingw64/bin/libharfbuzz-0.dll
--	/mingw64/bin/libiconv-2.dll
--	/mingw64/bin/libintl-8.dll
--	/mingw64/bin/libpcre-1.dll
--	/mingw64/bin/libpixman-1-0.dll
--	/mingw64/bin/libpng16-16.dll
--	/mingw64/bin/libquadmath-0.dll
--	/mingw64/bin/libstdc++-6.dll
--	/mingw64/bin/libsystre-0.dll
--	/mingw64/bin/libtre-5.dll
--	/mingw64/bin/libwinpthread-1.dll
--	/mingw64/bin/zlib1.dll
--  /mingw64/bin/libopenblas.dll
--"
--
- if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
- 	if [ -e include/Make/Platform.make ] ; then
- 	    log make distclean
-@@ -143,52 +116,53 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
- 	log remove old logs
+@@ -117,6 +117,7 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
  	rm -f mswindows/osgeo4w/package.log.*
  
--	mkdir -p dist.x86_64-w64-mingw32/bin
--	cp -uv $DLLS dist.x86_64-w64-mingw32/bin
--
  	mkdir -p mswindows/osgeo4w/lib
- 	cp -uv $OSGEO4W_ROOT_MSYS/lib/libpq.lib mswindows/osgeo4w/lib/pq.lib
++	cp -uv $OSGEO4W_ROOT_MSYS/lib/libpq.lib mswindows/osgeo4w/lib/libpq.lib
  	cp -uv $OSGEO4W_ROOT_MSYS/lib/sqlite3_i.lib mswindows/osgeo4w/lib/sqlite3.lib
  
- 	log configure
-+	CFLAGS="$CFLAGS -pipe" \
-+	CXXFLAGS="$CXXFLAGS -pipe" \
- 	./configure \
--		--bindir=$OSGEO4W_ROOT_MSYS/bin \
-+		--bindir=${OSGEO4W_ROOT_MSYS}/bin \
- 		--enable-largefile \
- 		--enable-shared \
--		--host=x86_64-w64-mingw32 \
--		--includedir=$OSGEO4W_ROOT_MSYS/include \
--		--libexecdir=$OSGEO4W_ROOT_MSYS/bin \
--		--prefix=$OSGEO4W_ROOT_MSYS/apps/grass \
-+		--host=${ARCH} \
-+		--includedir=${OSGEO4W_ROOT_MSYS}/include \
-+		--libexecdir=${OSGEO4W_ROOT_MSYS}/bin \
-+		--prefix=${OSGEO4W_ROOT_MSYS}/apps/grass \
- 		--with-blas \
- 		--with-bzlib \
- 		--with-cairo \
--		--with-cairo-includes=$OSGEO4W_ROOT_MSYS/include \
--		--with-cairo-ldflags="-L$PWD/mswindows/osgeo4w/lib -lcairo -lfontconfig" \
-+		--with-cairo-includes=${OSGEO4W_ROOT_MSYS}/include \
-+		--with-cairo-ldflags="-L${SRC}/mswindows/osgeo4w/lib -lcairo" \
-+		--with-cairo-libs=$OSGEO4W_ROOT_MSYS/lib \
- 		--with-cxx \
- 		--with-fftw \
- 		--with-freetype \
--		--with-freetype-includes=/mingw64/include/freetype2 \
--		--with-gdal=$PWD/mswindows/osgeo4w/gdal-config \
--		--with-geos=$PWD/mswindows/osgeo4w/geos-config \
--		--with-includes=$OSGEO4W_ROOT_MSYS/include \
-+		--with-freetype-includes=${OSGEO4W_ROOT_MSYS}/include/freetype2 \
-+		--with-gdal=${SRC}/mswindows/osgeo4w/gdal-config \
-+		--with-geos=${SRC}/mswindows/osgeo4w/geos-config \
-+		--with-includes=${OSGEO4W_ROOT_MSYS}/include \
- 		--with-lapack \
--		--with-liblas=$PWD/mswindows/osgeo4w/liblas-config \
--		--with-libs="$OSGEO4W_ROOT_MSYS/lib" \
-+		--with-liblas=${SRC}/mswindows/osgeo4w/liblas-config \
-+		--with-libs="${OSGEO4W_ROOT_MSYS}/lib ${OSGEO4W_ROOT_MSYS}/bin" \
- 		--with-netcdf=${OSGEO4W_ROOT_MSYS}/bin/nc-config \
- 		--with-nls \
- 		--with-odbc \
- 		--with-opengl=windows \
+ 
+@@ -155,7 +156,7 @@ if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
  		--with-openmp \
  		--with-postgres \
--		--with-postgres-includes=$OSGEO4W_ROOT_MSYS/include \
--		--with-postgres-libs=$PWD/mswindows/osgeo4w/lib \
--		--with-proj-includes=$OSGEO4W_ROOT_MSYS/include \
--		--with-proj-libs=$OSGEO4W_ROOT_MSYS/lib \
--		--with-proj-share=$OSGEO4W_ROOT_MSYS/share/proj \
-+		--with-postgres-includes=${OSGEO4W_ROOT_MSYS}/include \
-+		--with-postgres-libs=${OSGEO4W_ROOT_MSYS}/lib \
-+		--with-proj-includes=${OSGEO4W_ROOT_MSYS}/include \
-+		--with-proj-libs=${OSGEO4W_ROOT_MSYS}/lib \
-+		--with-proj-share=${OSGEO4W_ROOT_MSYS}/share/proj \
-+		--with-readline \
- 		--with-regex \
- 		--with-sqlite \
--		--with-sqlite-includes=$OSGEO4W_ROOT_MSYS/include \
--		--with-sqlite-libs=$PWD/mswindows/osgeo4w/lib \
-+		--with-sqlite-includes=${OSGEO4W_ROOT_MSYS}/include \
-+		--with-sqlite-libs=${OSGEO4W_ROOT_MSYS}/lib \
- 		--with-zstd \
- 		--without-pdal \
- 		--without-x
-@@ -244,9 +218,11 @@ if [ -n "$PACKAGE_PATCH" ]; then
-     unix2dos etc/postinstall/grass${PACKAGE_POSTFIX}.bat
-     unix2dos etc/preremove/grass${PACKAGE_POSTFIX}.bat
- 
--    # copy dependencies (TODO: to be reduced)
--    cp -uv $DLLS apps/grass/grass$POSTFIX/bin
--    cp -uv /mingw64/etc/fonts/fonts.conf apps/grass/grass$POSTFIX/etc
-+    # copy dependencies
-+    cp -uv $(/usr/bin/find apps/grass/grass$POSTFIX -iname "*.dll" -o -iname "*.exe" | PATH=$PWD/apps/grass/grass$POSTFIX/lib:$PWD/bin:/mingw64/bin:/usr/bin /usr/bin/xargs /usr/bin/ldd | /usr/bin/sed -ne 's#^.* => \(/mingw64/bin/.*\) (.*)$#\1#p' | /usr/bin/sort -u) apps/grass/grass$POSTFIX/bin
-+
-+    # copy R batch files
-+    cp -uv $SRC/mswindows/external/rbatch/* apps/grass/grass$POSTFIX/bin
- 
-     # creating grass package
-     /bin/tar -cjf $PDIR/grass$PACKAGE_POSTFIX-$VERSION-$PACKAGE_PATCH.tar.bz2 \
+ 		--with-postgres-includes=${OSGEO4W_ROOT_MSYS}/include \
+-		--with-postgres-libs=${OSGEO4W_ROOT_MSYS}/lib \
++		--with-postgres-libs=${SRC}/mswindows/osgeo4w/lib \
+ 		--with-proj-includes=${OSGEO4W_ROOT_MSYS}/include \
+ 		--with-proj-libs=${OSGEO4W_ROOT_MSYS}/lib \
+ 		--with-proj-share=${OSGEO4W_ROOT_MSYS}/share/proj \
