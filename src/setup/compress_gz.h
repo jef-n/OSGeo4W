@@ -51,7 +51,7 @@ public:
   };
   virtual int set_mtime (time_t);
   virtual time_t get_mtime ();
-  /* Use seek EOF, then tell (). get_size won't do this incase you are sucking down
+  /* Use seek EOF, then tell (). get_size won't do this in case you are sucking down
    * over a WAN :} */
   virtual size_t get_size () {return 0;};
   virtual void release_original (); /* give up ownership of original io_stream */

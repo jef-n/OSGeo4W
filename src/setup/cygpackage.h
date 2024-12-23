@@ -17,7 +17,7 @@
 #define SETUP_CYGPACKAGE_H
 
 /* This is a cygwin specific package class, that should be able to
- * arbitrate acceess to cygwin binary packages amd cygwin source packages
+ * arbitrate access to cygwin binary packages amd cygwin source packages
  */
 
 /* for MAX_PATH */
