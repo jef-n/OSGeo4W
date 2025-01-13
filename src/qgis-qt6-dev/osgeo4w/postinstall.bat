@@ -5,7 +5,7 @@ call "%OSGEO4W_ROOT%\bin\gdal-dev-py-env.bat"
 if not defined OSGEO4W_DESKTOP for /F "tokens=* USEBACKQ" %%F IN (`getspecialfolder Desktop`) do set OSGEO4W_DESKTOP=%%F
 for /F "tokens=* USEBACKQ" %%F IN (`getspecialfolder Documents`) do set DOCUMENTS=%%F
 
-set APPNAME=QGIS Desktop @version@ (@appname)
+set APPNAME=QGIS Desktop @version@ (@appname@)
 for %%i in ("%OSGEO4W_STARTMENU%") do set QGIS_WIN_APP_NAME=%%~ni\%APPNAME%
 call "%OSGEO4W_ROOT%\bin\@package@.bat" --postinstall
 echo on
