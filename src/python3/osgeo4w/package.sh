@@ -1,5 +1,5 @@
 export P=python3
-export V=3.12.8
+export V=3.12.9
 export B="next $P-core"
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="openssl-devel bzip2-devel xz-devel zlib-devel sqlite3-devel"
@@ -238,7 +238,8 @@ EOF
 
 tar -cjf $R/$P-help/$P-help-$V-$B.tar.bz2 \
 	--xform "s,^Python-$V/Doc/build/htmlhelp/,${PREFIX}Doc/," \
-	$S/Doc/build/htmlhelp/NEWS \
+	--xform "s,^Python-$V/Misc/,${PREFIX}Doc/," \
+	$S/Misc/NEWS \
 	$S/Doc/build/htmlhelp/python$MMM.chm
 
 #

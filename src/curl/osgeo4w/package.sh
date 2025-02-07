@@ -3,7 +3,7 @@ export V=8.12.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="openssl-devel zlib-devel"
-export PACKAGES="curl curl-ca-bundle curl-devel"
+export PACKAGES="curl curl-ca-bundle curl-devel brotli-devel zstd-devel"
 
 export VC=15
 export VCARCH=x64
@@ -21,14 +21,41 @@ startlog
 
 wget -O curl-ca-bundle.crt https://curl.se/ca/cacert.pem
 
+cmakeenv
+ninjaenv
 vsenv
 
-cd ../$P-$V/winbuild
-export INCLUDE="$INCLUDE;$(cygpath -aw ../../osgeo4w/osgeo4w/include)"
-export LIB="$LIB;$(cygpath -aw ../../osgeo4w/osgeo4w/lib)"
-nmake /f Makefile.vc mode=dll VC=$VC WITH_SSL=dll WITH_ZLIB=dll GEN_PDB=yes DEBUG=no MACHINE=$VCARCH WITH_DEVEL="$(cygpath -aw ../../osgeo4w/osgeo4w)"
+export INCLUDE="$INCLUDE;$(cygpath -aw osgeo4w/include)"
+export LIB="$LIB;$(cygpath -aw osgeo4w/lib)"
 
-cd ../../osgeo4w
+rm -rf build install
+mkdir -p build install
+cd build
+
+cmake -G Ninja \
+	-D CMAKE_BUILD_TYPE=Release \
+	-D CMAKE_SHARED_LINKER_FLAGS=/Fd \
+	-D CMAKE_INSTALL_PREFIX=$(cygpath -am ../install) \
+	-D CURL_USE_OPENSSL=ON \
+	-D CURL_USE_LIBPSL=OFF \
+	-D CURL_USE_LIBSSH2=OFF \
+	-D CURL_USE_SCHANNEL=ON \
+	-D USE_WIN32_IDN=ON \
+	-D ENABLE_CURL_MANUAL=OFF \
+	../../$P-$V
+
+ninja
+ninja install
+
+cd ..
+
+cmakefix install
+
+sed -i \
+	-e 's#$(cygpath -am install)#${OSGEO4W_ROOT_MSYS}#g' \
+	-e 's#$(cygpath -am ../osgeo4w)#${OSGEO4W_ROOT_MSYS}#g;' \
+	install/lib/pkgconfig/libcurl.pc \
+	install/bin/curl-config
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R/$P-{devel,ca-bundle}
@@ -37,7 +64,7 @@ cat <<EOF >$R/setup.hint
 sdesc: "The CURL HTTP/FTP library and commandline utility (Runtime)"
 ldesc: "The CURL HTTP/FTP library and commandline utility (Runtime)"
 category: Libs Commandline_Utilities
-requires: msvcrt2019 openssl $P-ca-bundle zlib
+requires: msvcrt2019 openssl $P-ca-bundle zlib brotli zstd
 maintainer: $MAINTAINER
 EOF
 
@@ -59,15 +86,17 @@ maintainer: $MAINTAINER
 external-source: $P
 EOF
 
-tar -C ../$P-$V/builds/libcurl-vc$VC-$VCARCH-release-dll-ssl-dll-zlib-dll-ipv6-sspi \
-	-cjf $R/$P-$V-$B.tar.bz2 \
-	--exclude bin/curl.pdb \
-	bin
+tar -cjf $R/$P-$V-$B.tar.bz2 \
+	-C install \
+	bin/curl.exe \
+	bin/libcurl.dll
 
-tar -C ../$P-$V/builds/libcurl-vc$VC-$VCARCH-release-dll-ssl-dll-zlib-dll-ipv6-sspi \
-	-cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
-	bin/curl.pdb \
-	include lib
+tar -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
+	-C install \
+	bin/curl-config \
+	bin/mk-ca-bundle.pl \
+	include \
+	lib
 
 tar -cjf $R/$P-ca-bundle/$P-ca-bundle-$V-$B.tar.bz2 \
 	--xform "s,curl-ca-bundle.crt,bin/curl-ca-bundle.crt," \
