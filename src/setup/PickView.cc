@@ -445,14 +445,14 @@ PickView::init_headers (HDC dc)
       headers[i].x = 0;
     }
 
-  // accomodate widths of the 'bin' and 'src' checkbox columns
+  // accommodate widths of the 'bin' and 'src' checkbox columns
   // FIXME: What's up with the "0"? It's probably a mistake, and should be
   // "". It used to be written as 0, and was subject to a bizarre implicit
   // conversion by the unwise String(int) constructor.
   note_width (headers, dc, "0", HMARGIN + 11, bintick_col);
   note_width (headers, dc, "0", HMARGIN + 11, srctick_col);
 
-  // accomodate the width of each category name
+  // accommodate the width of each category name
   packagedb db;
   for (packagedb::categoriesType::iterator n = packagedb::categories.begin();
        n != packagedb::categories.end(); ++n)
@@ -462,7 +462,7 @@ PickView::init_headers (HDC dc)
       note_width (headers, dc, n->first, HMARGIN, cat_col);
     }
 
-  /* For each package, accomodate the width of the installed version in the
+  /* For each package, accommodate the width of the installed version in the
      current_col, the widths of all other versions in the new_col, and the
      width of the sdesc for the pkg_col.  Also, if this is not a Category
      view, adjust the 'category' column so that the first NUM_CATEGORY_COL_WIDTH
@@ -796,7 +796,7 @@ PickView::WindowProc (UINT message, WPARAM wParam, LPARAM lParam)
       // this is how many 'notches' the wheel scrolled, forward/up = positive
       wheel_notches = GET_WHEEL_DELTA_WPARAM(wParam) / 120;
 
-      // determine how many lines the user has configred for a mouse scroll
+      // determine how many lines the user has configured for a mouse scroll
       SystemParametersInfo(SPI_GETWHEELSCROLLLINES, 0, &wheel_lines, 0);
 
       if (wheel_lines == 0)   // do no scrolling

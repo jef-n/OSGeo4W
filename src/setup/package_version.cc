@@ -57,7 +57,7 @@ public:
   void set_autodep (const std::string& ) {}
   void set_license (const std::string& ) {}
   void uninstall (){}
-  void pick(bool const &newValue){/* Ignore attempts to pick this!. Throw an exception here if you want to detect such attemtps instead */}
+  void pick(bool const &newValue){/* Ignore attempts to pick this!. Throw an exception here if you want to detect such attempts instead */}
   virtual void addScript(Script const &) {}
   virtual std::vector <Script> &scripts() { scripts_.clear();  return scripts_;}
   virtual bool accessible () const {return false;}
