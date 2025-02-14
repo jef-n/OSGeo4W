@@ -1,5 +1,5 @@
 export P=gdal
-export V=3.10.1
+export V=3.10.2
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel hdf5-tools ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-turbo-devel python3-setuptools opencl-devel libtiff-devel arrow-cpp-devel lz4-devel openssl-devel lerc-devel kealib-devel odbc-cpp-wrapper-devel libjxl-devel libxml2-devel c-blosc-devel"
@@ -112,7 +112,7 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 	ninjaenv
 
 	export INCLUDE="$(cygpath -am osgeo4w/include);$(cygpath -am osgeo4w/apps/$PYTHON/include);$(cygpath -am osgeo4w/include/boost-1_87);$(cygpath -aw "$(find $VCINSTALLDIR -iname atlbase.h -printf '%h')");$INCLUDE"
-	export LIB="$(cygpath -am osgeo4w/lib);$(cygpath -aw "$(find $VCINSTALLDIR -path "*/x64/*" -iname atls.lib -printf '%h')");$LIB"
+	export LIB="$(cygpath -am osgeo4w/lib);$(cygpath -aw "$(find "$VCINSTALLDIR" -path "*/x64/*" -iname atls.lib -printf '%h')");$LIB"
 
 	[ -n "$OSGEO4W_SKIP_CLEAN" ] || rm -rf build-$V
 

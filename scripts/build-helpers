@@ -790,6 +790,11 @@ init() {
 		echo "No packages" >&2
 		exit 1
 	fi
+
+	if type -p pkgconf >/dev/null; then
+		echo "pkgconf should not exist" >&2
+		exit 1
+	fi
 }
 
 [ "${0##*/}" != "package.sh" ] || init
