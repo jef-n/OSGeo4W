@@ -41,7 +41,7 @@ p=${P%$M}
 
 	cmake -G Ninja \
 		-D CMAKE_BUILD_TYPE=Release \
-		-D CURL_LIBRARIES=$(cygpath -am ../osgeo4w/lib/libcurl.lib) \
+		-D CURL_LIBRARIES=$(cygpath -am ../osgeo4w/lib/libcurl_imp.lib) \
 		-D PDAL_UTIL_LIBRARY=$(cygpath -am ../osgeo4w/lib/pdalcpp.lib) \
 		-D wxWidgets_CONFIGURATION=mswu \
 		-D wxWidgets_ROOT_DIR=$(cygpath -am ../osgeo4w) \

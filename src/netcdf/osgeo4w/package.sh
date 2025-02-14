@@ -54,7 +54,7 @@ cmake -G Ninja \
 	-D HDF5_DIR=$(cygpath -am ../osgeo4w/share/cmake) \
 	-D HDF5_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D CURL_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
-	-D CURL_LIBRARY=$(cygpath -am ../osgeo4w/lib/libcurl.lib) \
+	-D CURL_LIBRARY=$(cygpath -am ../osgeo4w/lib/libcurl_imp.lib) \
 	-D ZLIB_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D ZLIB_LIBRARY=$(cygpath -am ../osgeo4w/lib/zlib.lib) \
 	-D Zstd_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \

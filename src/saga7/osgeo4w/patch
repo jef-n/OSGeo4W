@@ -1434,42 +1434,6 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/garden/garden_webservices/garden_webs
    </PropertyGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
    <ImportGroup Label="ExtensionSettings">
-@@ -126,7 +126,7 @@
-       <Culture>0x0407</Culture>
-     </ResourceCompile>
-     <Link>
--      <AdditionalDependencies>libcurl_imp.lib;saga_api.lib;wxbase31ud.lib;wxbase31ud_net.lib;wxbase31ud_xml.lib;wxmsw31ud_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>libcurl.lib;saga_api.lib;wxbase32ud.lib;wxbase32ud_net.lib;wxbase32ud_xml.lib;wxmsw32ud_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
-       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
-       <SuppressStartupBanner>true</SuppressStartupBanner>
-       <AdditionalLibraryDirectories>$(GDAL_32)\lib;$(WXWIN_32)\lib\vc_dll;..\..\..\..\bin\saga_vc_$(Platform)_d\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-@@ -178,7 +178,7 @@
-       <Culture>0x0407</Culture>
-     </ResourceCompile>
-     <Link>
--      <AdditionalDependencies>libcurl_imp.lib;saga_api.lib;wxbase31ud.lib;wxbase31ud_net.lib;wxbase31ud_xml.lib;wxmsw31ud_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>libcurl.lib;saga_api.lib;wxbase32ud.lib;wxbase32ud_net.lib;wxbase32ud_xml.lib;wxmsw32ud_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
-       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
-       <SuppressStartupBanner>true</SuppressStartupBanner>
-       <AdditionalLibraryDirectories>$(GDAL)\lib;$(WXWIN)\lib\vc_x64_dll;..\..\..\..\bin\saga_vc_$(Platform)_d\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-@@ -229,7 +229,7 @@
-       <Culture>0x0407</Culture>
-     </ResourceCompile>
-     <Link>
--      <AdditionalDependencies>libcurl_imp.lib;saga_api.lib;wxbase31u.lib;wxbase31u_net.lib;wxbase31u_xml.lib;wxmsw31u_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>libcurl.lib;saga_api.lib;wxbase32u.lib;wxbase32u_net.lib;wxbase32u_xml.lib;wxmsw32u_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
-       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
-       <SuppressStartupBanner>true</SuppressStartupBanner>
-       <AdditionalLibraryDirectories>$(GDAL_32)\lib;$(WXWIN_32)\lib\vc_dll;..\..\..\..\bin\saga_vc_$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-@@ -281,7 +281,7 @@
-       <Culture>0x0407</Culture>
-     </ResourceCompile>
-     <Link>
--      <AdditionalDependencies>libcurl_imp.lib;saga_api.lib;wxbase31u.lib;wxbase31u_net.lib;wxbase31u_xml.lib;wxmsw31u_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>libcurl.lib;saga_api.lib;wxbase32u.lib;wxbase32u_net.lib;wxbase32u_xml.lib;wxmsw32u_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
-       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
-       <SuppressStartupBanner>true</SuppressStartupBanner>
-       <AdditionalLibraryDirectories>$(GDAL)\lib;$(WXWIN)\lib\vc_x64_dll;..\..\..\..\bin\saga_vc_$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 @@ -337,7 +337,13 @@
      <ClInclude Include="sg_curl.h" />
      <ClInclude Include="wms_import.h" />
@@ -2922,42 +2886,6 @@ diff -ur saga-7.8.2_src/saga-gis/src/tools/io/io_webservices/io_webservices.vcxp
    </PropertyGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
    <ImportGroup Label="ExtensionSettings">
-@@ -126,7 +126,7 @@
-       <Culture>0x0407</Culture>
-     </ResourceCompile>
-     <Link>
--      <AdditionalDependencies>libcurl_imp.lib;saga_api.lib;wxbase31ud.lib;wxbase31ud_net.lib;wxbase31ud_xml.lib;wxmsw31ud_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>libcurl.lib;saga_api.lib;wxbase32ud.lib;wxbase32ud_net.lib;wxbase32ud_xml.lib;wxmsw32ud_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
-       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
-       <SuppressStartupBanner>true</SuppressStartupBanner>
-       <AdditionalLibraryDirectories>$(GDAL_32)\lib;$(WXWIN_32)\lib\vc_dll;..\..\..\..\bin\saga_vc_$(Platform)_d\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-@@ -178,7 +178,7 @@
-       <Culture>0x0407</Culture>
-     </ResourceCompile>
-     <Link>
--      <AdditionalDependencies>libcurl_imp.lib;saga_api.lib;wxbase31ud.lib;wxbase31ud_net.lib;wxbase31ud_xml.lib;wxmsw31ud_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>libcurl.lib;saga_api.lib;wxbase32ud.lib;wxbase32ud_net.lib;wxbase32ud_xml.lib;wxmsw32ud_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
-       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
-       <SuppressStartupBanner>true</SuppressStartupBanner>
-       <AdditionalLibraryDirectories>$(GDAL)\lib;$(WXWIN)\lib\vc_x64_dll;..\..\..\..\bin\saga_vc_$(Platform)_d\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-@@ -229,7 +229,7 @@
-       <Culture>0x0407</Culture>
-     </ResourceCompile>
-     <Link>
--      <AdditionalDependencies>libcurl_imp.lib;saga_api.lib;wxbase31u.lib;wxbase31u_net.lib;wxbase31u_xml.lib;wxmsw31u_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>libcurl.lib;saga_api.lib;wxbase32u.lib;wxbase32u_net.lib;wxbase32u_xml.lib;wxmsw32u_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
-       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
-       <SuppressStartupBanner>true</SuppressStartupBanner>
-       <AdditionalLibraryDirectories>$(GDAL_32)\lib;$(WXWIN_32)\lib\vc_dll;..\..\..\..\bin\saga_vc_$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-@@ -281,7 +281,7 @@
-       <Culture>0x0407</Culture>
-     </ResourceCompile>
-     <Link>
--      <AdditionalDependencies>libcurl_imp.lib;saga_api.lib;wxbase31u.lib;wxbase31u_net.lib;wxbase31u_xml.lib;wxmsw31u_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
-+      <AdditionalDependencies>libcurl.lib;saga_api.lib;wxbase32u.lib;wxbase32u_net.lib;wxbase32u_xml.lib;wxmsw32u_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
-       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
-       <SuppressStartupBanner>true</SuppressStartupBanner>
-       <AdditionalLibraryDirectories>$(GDAL)\lib;$(WXWIN)\lib\vc_x64_dll;..\..\..\..\bin\saga_vc_$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 @@ -329,4 +329,4 @@
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
    <ImportGroup Label="ExtensionTargets">

@@ -36,7 +36,7 @@ cmake -G Ninja \
 	-D SQLITE3_INCLUDE_DIR=$(cygpath -aw ../osgeo4w/include) \
 	-D TIFF_LIBRARY=$(cygpath -aw ../osgeo4w/lib/tiff.lib) \
 	-D TIFF_INCLUDE_DIR=$(cygpath -aw ../osgeo4w/include) \
-	-D CURL_LIBRARY=$(cygpath -aw ../osgeo4w/lib/libcurl.lib) \
+	-D CURL_LIBRARY=$(cygpath -aw ../osgeo4w/lib/libcurl_imp.lib) \
 	-D CURL_INCLUDE_DIR=$(cygpath -aw ../osgeo4w/include) \
 	-D BUILD_TESTING=OFF \
 	-D BUILD_SHARED_LIBS=ON \

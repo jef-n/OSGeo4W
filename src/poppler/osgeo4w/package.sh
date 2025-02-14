@@ -72,7 +72,7 @@ cmake -G Ninja \
 	-D JPEG_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D JPEG_LIBRARY=$(cygpath -am ../osgeo4w/lib/jpeg.lib) \
 	-D CURL_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
-	-D CURL_LIBRARY=$(cygpath -am ../osgeo4w/lib/libcurl.lib) \
+	-D CURL_LIBRARY=$(cygpath -am ../osgeo4w/lib/libcurl_imp.lib) \
 	-D Boost_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/boost-1_87) \
 	-D CAIRO_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D CAIRO_LIBRARY=$(cygpath -am ../osgeo4w/lib/cairo.lib) \
