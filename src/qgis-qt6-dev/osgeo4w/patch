@@ -1,0 +1,139 @@
+diff --git a/cmake/FindPostgres.cmake b/cmake/FindPostgres.cmake
+index 29ddf2602ce..78c2f124db4 100644
+--- a/cmake/FindPostgres.cmake
++++ b/cmake/FindPostgres.cmake
+@@ -23,9 +23,6 @@ if(${PostgreSQL_FOUND})
+   set(POSTGRES_INCLUDE_DIR ${PostgreSQL_INCLUDE_DIRS})
+   set(POSTGRES_LIBRARY ${PostgreSQL_LIBRARIES})
+   set(POSTGRES_FOUND TRUE)
+-  if(EXISTS "${POSTGRES_INCLUDE_DIR}/pg_config.h")
+-    set(HAVE_PGCONFIG TRUE)
+-  endif()
+   return()
+ endif()
+ 
+@@ -118,11 +115,6 @@ ENDIF(WIN32 AND NOT ANDROID)
+ 
+ IF (POSTGRES_INCLUDE_DIR AND POSTGRES_LIBRARY)
+    SET(POSTGRES_FOUND TRUE)
+-   IF(EXISTS "${POSTGRES_INCLUDE_DIR}/pg_config.h")
+-     SET(HAVE_PGCONFIG TRUE)
+-   ELSE(EXISTS "${POSTGRES_INCLUDE_DIR}/pg_config.h")
+-     SET(HAVE_PGCONFIG FALSE)
+-   ENDIF(EXISTS "${POSTGRES_INCLUDE_DIR}/pg_config.h")
+ ENDIF (POSTGRES_INCLUDE_DIR AND POSTGRES_LIBRARY)
+ 
+ 
+diff --git a/external/untwine/untwine/windows/mapfile.hpp b/external/untwine/untwine/windows/mapfile.hpp
+index abd7dcfbc08..8cbc4b93b20 100644
+--- a/external/untwine/untwine/windows/mapfile.hpp
++++ b/external/untwine/untwine/windows/mapfile.hpp
+@@ -1,6 +1,6 @@
+ #pragma once
+ 
+-#include <Windows.h>
++#include <windows.h>
+ #include <io.h>
+ #include <fcntl.h>
+ 
+diff --git a/src/analysis/CMakeLists.txt b/src/analysis/CMakeLists.txt
+index c633fcd974a..751f0ee52cd 100644
+--- a/src/analysis/CMakeLists.txt
++++ b/src/analysis/CMakeLists.txt
+@@ -483,6 +483,13 @@ if (WITH_PDAL AND PDAL_2_5_OR_HIGHER)
+   include_directories(
+     ${CMAKE_SOURCE_DIR}/external/untwine/api
+   )
++
++  IF(MSVC)
++    set_source_files_properties(
++      ${CMAKE_SOURCE_DIR}/external/untwine/api/QgisUntwine.cpp
++      PROPERTIES COMPILE_FLAGS "/DUNICODE"
++    )
++  endif()
+ endif()
+ 
+ include_directories(SYSTEM ${SPATIALINDEX_INCLUDE_DIR})
+diff --git a/src/app/CMakeLists.txt b/src/app/CMakeLists.txt
+index b042c860811..d3a4910a039 100644
+--- a/src/app/CMakeLists.txt
++++ b/src/app/CMakeLists.txt
+@@ -541,7 +541,7 @@ target_compile_features(qgis_app PRIVATE cxx_std_17)
+ 
+ target_compile_definitions(qgis_app PRIVATE "QT_PLUGINS_DIR=\"${QT_PLUGINS_DIR}\"")
+ if (POSTGRES_FOUND)
+-  target_compile_definitions(qgis_app PRIVATE -DPOSTGRESQL_VERSION=${PostgreSQL_VERSION_STRING})
++  target_compile_definitions(qgis_app PRIVATE -DPOSTGRESQL_VERSION=\"${PostgreSQL_VERSION_STRING}\")
+ endif()
+ 
+ target_include_directories(qgis_app PUBLIC
+diff --git a/src/app/qgisapp.cpp b/src/app/qgisapp.cpp
+index c50a1c681e3..2e58fb609f5 100644
+--- a/src/app/qgisapp.cpp
++++ b/src/app/qgisapp.cpp
+@@ -538,20 +538,10 @@
+ 
+ // Editor widgets
+ #include "qgseditorwidgetregistry.h"
++
+ //
+ // Conditional Includes
+ //
+-#ifdef HAVE_PGCONFIG
+-#undef PACKAGE_BUGREPORT
+-#undef PACKAGE_NAME
+-#undef PACKAGE_STRING
+-#undef PACKAGE_TARNAME
+-#undef PACKAGE_VERSION
+-#include <pg_config.h>
+-#else
+-#define PG_VERSION "unknown"
+-#endif
+-
+ #include <sqlite3.h>
+ 
+ #ifdef HAVE_SPATIALITE
+@@ -5503,8 +5493,14 @@ QString QgisApp::getVersionString()
+   versionString += QLatin1String( "</td></tr><tr>" );
+ 
+   // GDAL version
+-  const QString gdalVersionCompiled { GDAL_RELEASE_NAME };
+-  const QString gdalVersionRunning { GDALVersionInfo( "RELEASE_NAME" ) };
++  QString gdalVersionCompiled { GDAL_RELEASE_NAME };
++#if defined(GDAL_RELEASE_NICKNAME)
++  gdalVersionCompiled += QStringLiteral( " \"%1\"" ).arg( QStringLiteral( GDAL_RELEASE_NICKNAME ) );
++#endif
++  QString gdalVersionRunning { GDALVersionInfo( "RELEASE_NAME" ) };
++  if ( atoi( GDALVersionInfo("VERSION_NUM") ) >= GDAL_COMPUTE_VERSION( 3, 11, 0 ) )
++    gdalVersionRunning += QStringLiteral( " \"%1\"" ).arg( GDALVersionInfo("RELEASE_NICKNAME") );
++
+   versionString += QStringLiteral( "<td>%1</td><td>%2" ).arg( tr( "GDAL/OGR version" ), gdalVersionCompiled );
+   if ( gdalVersionCompiled != gdalVersionRunning )
+   {
+@@ -5569,7 +5565,7 @@ QString QgisApp::getVersionString()
+   // postgres
+   versionString += QStringLiteral( "<td>%1</td><td>" ).arg( tr( "PostgreSQL client version" ) );
+ #ifdef HAVE_POSTGRESQL
+-  versionString += QStringLiteral( PG_VERSION );
++  versionString += QStringLiteral( POSTGRESQL_VERSION );
+ #else
+   versionString += tr( "No support" );
+ #endif
+diff --git a/src/providers/pdal/CMakeLists.txt b/src/providers/pdal/CMakeLists.txt
+index ff970745fd2..05c49ec6cfa 100644
+--- a/src/providers/pdal/CMakeLists.txt
++++ b/src/providers/pdal/CMakeLists.txt
+@@ -14,6 +14,13 @@ set(PDAL_SRCS
+   ${CMAKE_SOURCE_DIR}/external/untwine/api/QgisUntwine.cpp
+ )
+ 
++IF(MSVC)
++  set_source_files_properties(
++    ${CMAKE_SOURCE_DIR}/external/untwine/api/QgisUntwine.cpp
++    PROPERTIES COMPILE_FLAGS "/DUNICODE"
++  )
++endif()
++
+ set(PDAL_HDRS
+   qgspdalprovider.h
+   qgspdalindexingtask.h

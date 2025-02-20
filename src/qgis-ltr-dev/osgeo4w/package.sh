@@ -203,6 +203,7 @@ nextbinary
 		-D CMAKE_CONFIGURATION_TYPES="$BUILDCONF" \
 		-D SETUPAPI_LIBRARY="$(cygpath -am "/cygdrive/c/Program Files (x86)/Windows Kits/10/Lib/$UCRTVersion/um/x64/SetupAPI.Lib")" \
 		-D PROJ_INCLUDE_DIR=$(cygpath -am $O4W_ROOT/include) \
+		-D POSTGRES_INCLUDE_DIR=$(cygpath -am $O4W_ROOT/include) \
 		-D GEOS_LIBRARY=$(cygpath -am "$O4W_ROOT/lib/geos_c.lib") \
 		-D SQLITE3_LIBRARY=$(cygpath -am "$O4W_ROOT/lib/sqlite3_i.lib") \
 		-D SPATIALITE_LIBRARY=$(cygpath -am "$O4W_ROOT/lib/spatialite_i.lib") \
