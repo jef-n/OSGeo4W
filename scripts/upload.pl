@@ -327,6 +327,7 @@ my $opt = $ENV{OSGEO4W_RSYNC_OPT} || "";
 my($host,$path) = $ENV{MASTER_SCP} =~ /^(.*):(.*)$/;
 
 open F, "| /usr/bin/rsync $opt -vtuO --chmod=D775,F664 --files-from=- '$ENV{OSGEO4W_REP}' '$ENV{MASTER_SCP}'";
+print F "acceptable.lst\n";
 for my $file (sort keys %files) {
 	print F "$file\n";
 }
