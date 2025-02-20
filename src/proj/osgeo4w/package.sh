@@ -86,7 +86,7 @@ cat <<EOF >$R/$P-devel/setup.hint
 sdesc: "The PROJ library and commands for coordinate system transformations (Development)."
 ldesc: "The PROJ library and commands for coordinate system transformations (Development)."
 category: Libs
-requires: $P
+requires: $P curl-devel
 maintainer: $MAINTAINER
 external-source: $P
 EOF
