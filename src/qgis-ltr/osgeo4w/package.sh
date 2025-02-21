@@ -40,8 +40,8 @@ else
 fi
 
 if [ -s ../osgeo4w/patch ]; then
-	git apply --check ../osgeo4w/patch
-	git apply ../osgeo4w/patch
+	git apply --allow-empty --check ../osgeo4w/patch
+	git apply --allow-empty ../osgeo4w/patch
 fi
 
 SHA=$(git log -n1 --pretty=%h)
@@ -157,7 +157,6 @@ nextbinary
 		-D QSCINTILLA_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt5/lib/qscintilla2.lib) \
 		-D DART_TESTING_TIMEOUT=60 \
 		-D PUSH_TO_CDASH=TRUE \
-		-D PDAL_UTIL_LIBRARY=$(cygpath -am $O4W_ROOT/lib/pdalcpp.lib) \
 		$(cygpath -m $SRCDIR)
 
 	if [ -z "$OSGEO4W_SKIP_CLEAN" ]; then
@@ -333,8 +332,6 @@ EOF
 		--exclude "*.pyc" \
 	        apps/$P/bin/qgis_mapserv.fcgi.exe \
 	        apps/$P/bin/qgis_server.dll \
-	        apps/$P/bin/admin.sld \
-	        apps/$P/bin/wms_metadata.xml \
 	        apps/$P/resources/server/ \
 	        apps/$P/server/ \
 	        apps/$P/python/qgis/_server.pyd \
