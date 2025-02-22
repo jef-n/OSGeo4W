@@ -125,13 +125,13 @@ nextbinary
 		-D SERVER_SKIP_ECW=TRUE \
 		-D BUILD_WITH_QT5=FALSE \
 		-D BUILD_WITH_QT6=TRUE \
+		-D WITH_QTWEBKIT=FALSE \
+		-D USE_OPENCL=TRUE \
 		-D WITH_3D=TRUE \
 		-D WITH_PDAL=TRUE \
 		-D WITH_HANA=TRUE \
 		-D WITH_GRASS=TRUE \
 		-D WITH_GRASS8=TRUE \
-		-D WITH_QTWEBKIT=FALSE \
-		-D USE_OPENCL=TRUE \
 		-D GRASS_PREFIX8="$(cygpath -m $GRASS_PREFIX)" \
 		-D WITH_ORACLE=TRUE \
 		-D WITH_CUSTOM_WIDGETS=TRUE \
@@ -263,7 +263,7 @@ sdesc: "QGIS (common; Qt6)"
 ldesc: "QGIS (common; Qt6)"
 maintainer: $MAINTAINER
 category: Libs
-requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl gdal libspatialite zlib libiconv libspatialindex qt6-libs qt6-qml qt6-tools qtwebkit-libs qca-qt6 qwt-qt6-libs python3-sip python3-core python3-pyqt6 python3-psycopg2 python3-pyqt6-qscintilla python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-gdal python3-requests python3-plotly python3-pyproj python3-owslib qtkeychain-qt6-libs libzip opencl exiv2 hdf5 pdal pdal-libs python3-pyarrow
+requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl gdal libspatialite zlib libiconv libspatialindex qt6-libs qt6-qml qt6-tools qca-qt6 qwt-qt6-libs python3-sip python3-core python3-pyqt6 python3-psycopg2 python3-pyqt6-qscintilla python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-gdal python3-requests python3-plotly python3-pyproj python3-owslib qtkeychain-qt6-libs libzip opencl exiv2 hdf5 pdal pdal-libs python3-pyarrow
 external-source: $P
 EOF
 

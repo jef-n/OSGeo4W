@@ -1,9 +1,9 @@
-export P=qgis-qt6-dev
+export P=qgis-qt6-ltr-dev
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="expat-devel fcgi-devel proj-devel qt6-qml qt6-oci sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt6 python3-sip python3-pyqt-builder python3-devel python3-pyqt6-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-qt6-devel qscintilla-qt6-devel qt6-devel qwt-qt6-devel libspatialite-devel oci-devel qtkeychain-qt6-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel pdal pdal-devel grass draco-devel libtiff-devel transifex-cli python3-oauthlib gdal-dev-devel"
-export PACKAGES="qgis-qt6-dev qgis-qt6-dev-deps qgis-qt6-dev-full qgis-qt6-dev-full-free qgis-qt6-dev-pdb"
+export BUILDDEPENDS="expat-devel fcgi-devel proj-devel qt6-qml qt6-oci sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt6 python3-sip python3-pyqt-builder python3-devel python3-pyqt6-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-qt6-devel qscintilla-qt6-devel qt6-devel qwt-qt6-devel libspatialite-devel oci-devel qtkeychain-qt6-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel pdal pdal-devel grass draco-devel libtiff-devel transifex-cli python3-oauthlib gdal-devel"
+export PACKAGES="qgis-qt6-ltr-dev qgis-qt6-ltr-dev-deps qgis-qt6-ltr-dev-full qgis-qt6-ltr-dev-full-free qgis-qt6-ltr-dev-pdb"
 
 : ${REPO:=https://github.com/qgis/QGIS.git}
 : ${SITE:=qgis.org}
@@ -21,11 +21,20 @@ startlog
 
 BRANCH=
 if [ -z "$REF" ]; then
-	BRANCH=master
+	# Get latest release branch
+	RELBRANCH=$(git ls-remote --heads $REPO "refs/heads/release-*_*" | sed -e '/\^{}$/d' -ne 's#^.*refs/heads/release-#release-#p' | sort -V | tail -1)
+	LTRBRANCH=$(git ls-remote --tags $REPO | sed -e '/\^{}$/d' -ne 's#^.*refs/tags/ltr-#release-#p' | fgrep -vx $RELBRANCH | sort -V | tail -1)
+
 	APPNAME="Nightly"
-	PKGDESC="QGIS Nightly build of development branch"
+	if [ "$RELBRANCH" = "$LTRBRANCH" ]; then
+		BRANCH=$PLTRBRANCH
+		PKGDESC="QGIS Nightly build of previous long term release branch"
+	else
+		BRANCH=$LTRBRANCH
+		PKGDESC="QGIS Nightly build of current long term release branch"
+	fi
 else
-	: ${PKGDESC:="QGIS build of development branch ($REF)"}
+	: ${PKGDESC:="QGIS build of long term release branch ($REF)"}
 	: ${APPNAME:=$P/$REF}
 fi
 
@@ -39,10 +48,20 @@ if [ -d qgis ]; then
 	git config core.filemode false
 
 	if [ -z "$OSGEO4W_SKIP_CLEAN" ]; then
+		git fetch origin $BRANCH
 		git clean -f
 		git reset --hard
 
 		git config pull.rebase false
+
+		if [ "$(git branch --show-current)" != $BRANCH ]; then
+			if ! git checkout $BRANCH; then
+				git remote set-branches --add origin $BRANCH
+				git fetch origin $BRANCH:$BRANCH
+				git checkout $BRANCH
+				git branch --set-upstream-to=origin/$BRANCH $BRANCH
+			fi
+		fi
 
 		i=0
 		until (( i > 10 )) || git pull; do
@@ -60,8 +79,8 @@ elif [ -n "$REF" ]; then
 	cd qgis
 	git init .
 	git remote add origin $REPO
-	git fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +$REF:refs/remotes/${REF#refs/}
-	git checkout --force refs/remotes/${REF#refs/}
+	git fetch --no-tags --prune --no-recurse-submodules --depth=1 origin $REF:refs/remotes/${REF#refs/}
+	git checkout --force $REF
 	git log -1 --format='%H'
 	unset OSGEO4W_SKIP_CLEAN
 else
@@ -70,10 +89,8 @@ else
 fi
 
 if [ -z "$OSGEO4W_SKIP_CLEAN" ]; then
-	if ! git apply --allow-empty --check --reverse ../osgeo4w/patch; then
-		git apply --allow-empty --check ../osgeo4w/patch
-		git apply --allow-empty ../osgeo4w/patch
-	fi
+	git apply --allow-empty --check ../osgeo4w/patch
+	git apply --allow-empty ../osgeo4w/patch
 fi
 
 SHA=$(git log -n1 --pretty=%h)
@@ -119,7 +136,6 @@ nextbinary
 
 	fetchenv osgeo4w/bin/o4w_env.bat
 	fetchenv osgeo4w/bin/qt6_env.bat
-	fetchenv osgeo4w/bin/gdal-dev-env.bat
 
 	vsenv
 	cmakeenv
@@ -150,8 +166,8 @@ nextbinary
 	mkdir -p $BUILDDIR
 
 	unset PYTHONPATH
-	export INCLUDE="$(cygpath -aw $OSGEO4W_ROOT/apps/Qt6/include);$(cygpath -aw $OSGEO4W_ROOT/apps/gdal-dev/include);$(cygpath -aw $OSGEO4W_ROOT/include);$INCLUDE"
-	export LIB="$(cygpath -aw $OSGEO4W_ROOT/apps/Qt6/lib);$(cygpath -aw $OSGEO4W_ROOT/apps/gdal-dev/lib);$(cygpath -aw $OSGEO4W_ROOT/lib);$LIB"
+	export INCLUDE="$(cygpath -aw $OSGEO4W_ROOT/apps/Qt6/include);$(cygpath -aw $OSGEO4W_ROOT/include);$INCLUDE"
+	export LIB="$(cygpath -aw $OSGEO4W_ROOT/apps/Qt6/lib);$(cygpath -aw $OSGEO4W_ROOT/lib);$LIB"
 
 	export GRASS=$(cygpath -aw $O4W_ROOT/bin/grass*.bat)
 	export GRASS_VERSION=$(unset SHELL; cmd /c $GRASS --config version | sed -e "s/\r//")
@@ -335,7 +351,7 @@ sdesc: "$PKGDESC"
 ldesc: "$PKGDESC"
 maintainer: $MAINTAINER
 category: Desktop
-requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl gdal-dev libspatialite zlib libiconv fcgi libspatialindex oci qt6-libs qt6-qml qt6-tools qca-qt6 qwt-qt6-libs python3-sip python3-core python3-pyqt6 python3-psycopg2 python3-pyqt6-qscintilla python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-gdal-dev python3-requests python3-plotly python3-pyproj python3-owslib qtkeychain-qt6-libs libzip opencl exiv2 hdf5 pdal pdal-libs
+requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl gdal libspatialite zlib libiconv fcgi libspatialindex oci qt6-libs qt6-qml qt6-tools qca-qt6 qwt-qt6-libs python3-sip python3-core python3-pyqt6 python3-psycopg2 python3-pyqt6-qscintilla python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-gdal python3-requests python3-plotly python3-pyproj python3-owslib qtkeychain-qt6-libs libzip opencl exiv2 hdf5 pdal pdal-libs
 EOF
 
 		appendversions $R/setup.hint
@@ -356,7 +372,7 @@ sdesc: "$PKGDESC (metapackage with additional free dependencies)"
 ldesc: "$PKGDESC (metapackage with additional free dependencies)"
 maintainer: $MAINTAINER
 category: Desktop
-requires: $P proj python3-pyparsing python3-simplejson python3-shapely python3-matplotlib python3-pygments qt6-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-pillow python3-geopandas python3-geographiclib grass python3-pyserial gdal-dev-sosi python3-autopep8 python3-openpyxl python3-remotior-sensus saga python3-pyarrow
+requires: $P proj python3-pyparsing python3-simplejson python3-shapely python3-matplotlib python3-pygments qt6-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-pillow python3-geopandas python3-geographiclib grass python3-pyserial gdal-sosi python3-autopep8 python3-openpyxl python3-remotior-sensus saga python3-pyarrow
 external-source: $P
 EOF
 
@@ -367,7 +383,7 @@ sdesc: "$PKGDESC (metapackage with additional dependencies including proprietary
 ldesc: "$PKGDESC (metapackage with additional dependencies including proprietary)"
 maintainer: $MAINTAINER
 category: Desktop
-requires: $P-full-free gdal-dev-hdf5 gdal-dev-mss gdal-dev-ecw gdal-dev-mrsid gdal-dev-oracle
+requires: $P-full-free gdal-hdf5 gdal-mss gdal-ecw gdal-mrsid gdal-oracle
 external-source: $P
 EOF
 

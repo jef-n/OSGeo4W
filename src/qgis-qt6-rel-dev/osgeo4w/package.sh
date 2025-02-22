@@ -2,7 +2,7 @@ export P=qgis-qt6-rel-dev
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="expat-devel fcgi-devel proj-devel qt6-qml qt6-oci sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt6 python3-sip python3-pyqt-builder python3-devel python3-pyqt6-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-qt6-devel qscintilla-qt6-devel qt6-devel qwt-qt6-devel libspatialite-devel oci-devel qtkeychain-qt6-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel pdal pdal-devel grass draco-devel libtiff-devel transifex-cli python3-oauthlib gdal-dev-devel"
+export BUILDDEPENDS="expat-devel fcgi-devel proj-devel qt6-qml qt6-oci sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt6 python3-sip python3-pyqt-builder python3-devel python3-pyqt6-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-qt6-devel qscintilla-qt6-devel qt6-devel qwt-qt6-devel libspatialite-devel oci-devel qtkeychain-qt6-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel pdal pdal-devel grass draco-devel libtiff-devel transifex-cli python3-oauthlib gdal-devel"
 export PACKAGES="qgis-qt6-rel-dev qgis-qt6-rel-dev-deps qgis-qt6-rel-dev-full qgis-qt6-rel-dev-full-free qgis-qt6-rel-dev-pdb"
 
 : ${REPO:=https://github.com/qgis/QGIS.git}
@@ -128,7 +128,6 @@ nextbinary
 
 	fetchenv osgeo4w/bin/o4w_env.bat
 	fetchenv osgeo4w/bin/qt6_env.bat
-	fetchenv osgeo4w/bin/gdal-dev-env.bat
 
 	vsenv
 	cmakeenv
@@ -159,8 +158,8 @@ nextbinary
 	mkdir -p $BUILDDIR
 
 	unset PYTHONPATH
-	export INCLUDE="$(cygpath -aw $OSGEO4W_ROOT/apps/Qt6/include);$(cygpath -aw $OSGEO4W_ROOT/apps/gdal-dev/include);$(cygpath -aw $OSGEO4W_ROOT/include);$INCLUDE"
-	export LIB="$(cygpath -aw $OSGEO4W_ROOT/apps/Qt6/lib);$(cygpath -aw $OSGEO4W_ROOT/apps/gdal-dev/lib);$(cygpath -aw $OSGEO4W_ROOT/lib);$LIB"
+	export INCLUDE="$(cygpath -aw $OSGEO4W_ROOT/apps/Qt6/include);$(cygpath -aw $OSGEO4W_ROOT/include);$INCLUDE"
+	export LIB="$(cygpath -aw $OSGEO4W_ROOT/apps/Qt6/lib);$(cygpath -aw $OSGEO4W_ROOT/lib);$LIB"
 
 	export GRASS=$(cygpath -aw $O4W_ROOT/bin/grass*.bat)
 	export GRASS_VERSION=$(unset SHELL; cmd /c $GRASS --config version | sed -e "s/\r//")
@@ -179,9 +178,9 @@ nextbinary
 		-D CMAKE_LINKER=link.exe \
 		-D SUBMIT_URL="https://cdash.orfeo-toolbox.org/submit.php?project=QGIS" \
 		-D CMAKE_CXX_FLAGS_${BUILDCONF^^}="/MD /Z7 /MP /Od /D NDEBUG /std:c++17 /permissive-" \
+		-D CMAKE_PDB_OUTPUT_DIRECTORY_${BUILDCONF^^}=$(cygpath -am $BUILDDIR/apps/$P/pdb) \
 		-D CMAKE_SHARED_LINKER_FLAGS_${BUILDCONF^^}="/INCREMENTAL:NO /DEBUG /OPT:REF /OPT:ICF" \
 		-D CMAKE_MODULE_LINKER_FLAGS_${BUILDCONF^^}="/INCREMENTAL:NO /DEBUG /OPT:REF /OPT:ICF" \
-		-D CMAKE_PDB_OUTPUT_DIRECTORY_${BUILDCONF^^}=$(cygpath -am $BUILDDIR/apps/$P/pdb) \
 		-D BUILDNAME="$BUILDNAMEPREFIX$BUILDNAME" \
 		-D SITE="$SITE" \
 		-D PEDANTIC=TRUE \
@@ -190,13 +189,13 @@ nextbinary
 		-D SERVER_SKIP_ECW=TRUE \
 		-D BUILD_WITH_QT5=FALSE \
 		-D BUILD_WITH_QT6=TRUE \
+		-D WITH_QTWEBKIT=FALSE \
+		-D USE_OPENCL=TRUE \
 		-D WITH_3D=TRUE \
 		-D WITH_PDAL=TRUE \
 		-D WITH_HANA=TRUE \
 		-D WITH_GRASS=TRUE \
 		-D WITH_GRASS8=TRUE \
-		-D WITH_QTWEBKIT=FALSE \
-		-D USE_OPENCL=TRUE \
 		-D GRASS_PREFIX8="$(cygpath -m $GRASS_PREFIX)" \
 		-D WITH_ORACLE=TRUE \
 		-D WITH_CUSTOM_WIDGETS=TRUE \
@@ -344,7 +343,7 @@ sdesc: "$PKGDESC"
 ldesc: "$PKGDESC"
 maintainer: $MAINTAINER
 category: Desktop
-requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl gdal-dev libspatialite zlib libiconv fcgi libspatialindex oci qt6-libs qt6-qml qt6-tools qca-qt6 qwt-qt6-libs python3-sip python3-core python3-pyqt6 python3-psycopg2 python3-pyqt6-qscintilla python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-gdal-dev python3-requests python3-plotly python3-pyproj python3-owslib qtkeychain-qt6-libs libzip opencl exiv2 hdf5 pdal pdal-libs
+requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl gdal libspatialite zlib libiconv fcgi libspatialindex oci qt6-libs qt6-qml qt6-tools qca-qt6 qwt-qt6-libs python3-sip python3-core python3-pyqt6 python3-psycopg2 python3-pyqt6-qscintilla python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-gdal python3-requests python3-plotly python3-pyproj python3-owslib qtkeychain-qt6-libs libzip opencl exiv2 hdf5 pdal pdal-libs
 EOF
 
 		appendversions $R/setup.hint
@@ -365,7 +364,7 @@ sdesc: "$PKGDESC (metapackage with additional free dependencies)"
 ldesc: "$PKGDESC (metapackage with additional free dependencies)"
 maintainer: $MAINTAINER
 category: Desktop
-requires: $P proj python3-pyparsing python3-simplejson python3-shapely python3-matplotlib python3-pygments qt6-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-pillow python3-geopandas python3-geographiclib grass python3-pyserial gdal-dev-sosi python3-autopep8 python3-openpyxl python3-remotior-sensus saga python3-pyarrow
+requires: $P proj python3-pyparsing python3-simplejson python3-shapely python3-matplotlib python3-pygments qt6-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-pillow python3-geopandas python3-geographiclib grass python3-pyserial gdal-sosi python3-autopep8 python3-openpyxl python3-remotior-sensus saga python3-pyarrow
 external-source: $P
 EOF
 
@@ -376,7 +375,7 @@ sdesc: "$PKGDESC (metapackage with additional dependencies including proprietary
 ldesc: "$PKGDESC (metapackage with additional dependencies including proprietary)"
 maintainer: $MAINTAINER
 category: Desktop
-requires: $P-full-free gdal-dev-hdf5 gdal-dev-mss gdal-dev-ecw gdal-dev-mrsid gdal-dev-oracle
+requires: $P-full-free gdal-hdf5 gdal-mss gdal-ecw gdal-mrsid gdal-oracle
 external-source: $P
 EOF
 

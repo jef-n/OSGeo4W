@@ -1,9 +1,9 @@
-export P=qgis
+export P=qgis-ltr-qt6
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-devel qt5-oci sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt5 python3-sip python3-pyqt-builder python3-devel python3-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-devel qscintilla-devel qt5-devel qwt-devel libspatialite-devel oci-devel qtkeychain-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel qtwebkit-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel pdal pdal-devel grass draco-devel libtiff-devel python3-oauthlib"
-export PACKAGES="qgis qgis-common qgis-deps qgis-devel qgis-full qgis-full-free qgis-grass-plugin qgis-oracle-provider qgis-pdb qgis-server"
+export BUILDDEPENDS="expat-devel fcgi-devel proj-devel qt6-qml qt6-oci sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt6 python3-sip python3-pyqt-builder python3-devel python3-pyqt6-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-qt6-devel qscintilla-qt6-devel qt6-devel qwt-qt6-devel libspatialite-devel oci-devel qtkeychain-qt6-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel                libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel pdal pdal-devel grass draco-devel libtiff-devel python3-oauthlib gdal-devel"
+export PACKAGES="qgis-ltr-qt6 qgis-ltr-qt6-common qgis-ltr-qt6-deps qgis-ltr-qt6-devel qgis-ltr-qt6-full qgis-ltr-qt6-full-free qgis-ltr-qt6-grass-plugin qgis-ltr-qt6-oracle-provider qgis-ltr-qt6-pdb qgis-ltr-qt6-server"
 
 : ${REPO:=https://github.com/qgis/QGIS.git}
 : ${SITE:=qgis.org}
@@ -20,9 +20,8 @@ startlog
 
 # Get latest release branch
 RELBRANCH=$(git ls-remote --heads $REPO "refs/heads/release-*_*" | sed -e '/\^{}$/d' -ne 's#^.*refs/heads/release-#release-#p' | sort -V | tail -1)
-RELBRANCH=${RELBRANCH#*/}
-
-RELTAG=$(git ls-remote --tags $REPO "refs/tags/final-${RELBRANCH#release-}_*" | sed -e '/\^{}$/d' -ne 's#^.*refs/tags/final-#final-#p' | sort -V | tail -1)
+LTRBRANCH=$(git ls-remote --tags $REPO | sed -e '/\^{}$/d' -ne 's#^.*refs/tags/ltr-#release-#p' | fgrep -vx $RELBRANCH | sort -V | tail -1)
+RELTAG=$(git ls-remote --tags $REPO "refs/tags/final-${LTRBRANCH#release-}_*" | sed -e '/\^{}$/d' -ne 's#^.*refs/tags/final-#final-#p' | sort -V | tail -1)
 
 cd ..
 
@@ -75,6 +74,7 @@ nextbinary
 	cd $OSGEO4W_PWD
 
 	fetchenv osgeo4w/bin/o4w_env.bat
+	fetchenv osgeo4w/bin/qt6_env.bat
 
 	vsenv
 	cmakeenv
@@ -91,8 +91,8 @@ nextbinary
 	mkdir -p $BUILDDIR
 
 	unset PYTHONPATH
-	export INCLUDE="$(cygpath -aw $OSGEO4W_ROOT/apps/Qt5/include);$(cygpath -aw $OSGEO4W_ROOT/include);$INCLUDE"
-	export LIB="$(cygpath -aw $OSGEO4W_ROOT/apps/Qt5/lib);$(cygpath -aw $OSGEO4W_ROOT/lib);$LIB"
+	export INCLUDE="$(cygpath -aw $OSGEO4W_ROOT/apps/Qt6/include);$(cygpath -aw $OSGEO4W_ROOT/include);$INCLUDE"
+	export LIB="$(cygpath -aw $OSGEO4W_ROOT/apps/Qt6/lib);$(cygpath -aw $OSGEO4W_ROOT/lib);$LIB"
 
 	export GRASS=$(cygpath -aw $O4W_ROOT/bin/grass*.bat)
 	export GRASS_VERSION=$(unset SHELL; cmd /c $GRASS --config version | sed -e "s/\r//")
@@ -122,7 +122,10 @@ nextbinary
 		-D WITH_QSPATIALITE=TRUE \
 		-D WITH_SERVER=TRUE \
 		-D SERVER_SKIP_ECW=TRUE \
-		-D ENABLE_TESTS=FALSE \
+		-D BUILD_WITH_QT5=FALSE \
+		-D BUILD_WITH_QT6=TRUE \
+		-D WITH_QTWEBKIT=FALSE \
+		-D USE_OPENCL=TRUE \
 		-D WITH_3D=TRUE \
 		-D WITH_PDAL=TRUE \
 		-D WITH_HANA=TRUE \
@@ -142,20 +145,20 @@ nextbinary
 		-D SPATIALINDEX_LIBRARY=$(cygpath -am $O4W_ROOT/lib/spatialindex-64.lib) \
 		-D Python_EXECUTABLE=$(cygpath -am $O4W_ROOT/bin/python3.exe) \
 		-D SIP_MODULE_EXECUTABLE=$(cygpath -am $PYTHONHOME/Scripts/sip-module.exe) \
-		-D PYUIC_PROGRAM=$(cygpath -am $PYTHONHOME/Scripts/pyuic5.exe) \
-		-D PYRCC_PROGRAM=$(cygpath -am $PYTHONHOME/Scripts/pyrcc5.exe) \
+		-D PYUIC_PROGRAM=$(cygpath -am $PYTHONHOME/Scripts/pyuic6.exe) \
+		-D PYRCC_PROGRAM=$(cygpath -am $PYTHONHOME/Scripts/pyrcc6.exe) \
 		-D PYTHON_INCLUDE_PATH=$(cygpath -am $PYTHONHOME/include) \
 		-D PYTHON_LIBRARY=$(cygpath -am $PYTHONHOME/libs/$(basename $PYTHONHOME).lib) \
 		-D QT_LIBRARY_DIR=$(cygpath -am $O4W_ROOT/lib) \
-		-D QT_HEADERS_DIR=$(cygpath -am $O4W_ROOT/apps/qt5/include) \
+		-D QT_HEADERS_DIR=$(cygpath -am $O4W_ROOT/apps/qt6/include) \
 		-D CMAKE_INSTALL_PREFIX=$(cygpath -am $INSTDIR/apps/$P) \
 		-D CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS=TRUE \
 		-D FCGI_INCLUDE_DIR=$(cygpath -am $O4W_ROOT/include) \
 		-D FCGI_LIBRARY=$(cygpath -am $O4W_ROOT/lib/libfcgi.lib) \
-		-D QCA_INCLUDE_DIR=$(cygpath -am $O4W_ROOT/apps/Qt5/include/QtCrypto) \
-		-D QCA_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt5/lib/qca-qt5.lib) \
-		-D QWT_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt5/lib/qwt.lib) \
-		-D QSCINTILLA_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt5/lib/qscintilla2.lib) \
+		-D QCA_INCLUDE_DIR=$(cygpath -am $O4W_ROOT/apps/Qt6/include/QtCrypto) \
+		-D QCA_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt6/lib/qca-qt6.lib) \
+		-D QWT_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt6/lib/qwt.lib) \
+		-D QSCINTILLA_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt6/lib/qscintilla2.lib) \
 		-D DART_TESTING_TIMEOUT=60 \
 		-D PUSH_TO_CDASH=TRUE \
 		$(cygpath -m $SRCDIR)
@@ -196,7 +199,7 @@ nextbinary
 		export GISBASE=$(cygpath -aw $GRASS_PREFIX)
 
 		export PATH=$(cygpath -au $BUILDDIR/output/bin):$(cygpath -au $BUILDDIR/output/plugins):$PATH
-		export QT_PLUGIN_PATH="$(cygpath -aw $BUILDDIR/output/plugins);$(cygpath -aw $O4W_ROOT/apps/qt5/plugins)"
+		export QT_PLUGIN_PATH="$(cygpath -aw $BUILDDIR/output/plugins);$(cygpath -aw $O4W_ROOT/apps/qt6/plugins)"
 
 		rm -f ../testfailure
 		if ! cmake --build $(cygpath -am $BUILDDIR) --target Experimental --config $BUILDCONF; then
@@ -243,11 +246,11 @@ nextbinary
 	cp qgis.vars                    install/bin/$P-bin.vars
 
 	mkdir -p                                                                   install/apps/$P/qtplugins/{sqldrivers,designer}
-	mv osgeo4w/apps/qt5/plugins/sqldrivers/{qsqlocispatial,qsqlspatialite}.dll install/apps/$P/qtplugins/sqldrivers
-	mv osgeo4w/apps/qt5/plugins/designer/qgis_customwidgets.dll                install/apps/$P/qtplugins/designer
+	mv osgeo4w/apps/qt6/plugins/sqldrivers/{qsqlocispatial,qsqlspatialite}.dll install/apps/$P/qtplugins/sqldrivers
+	mv osgeo4w/apps/qt6/plugins/designer/qgis_customwidgets.dll                install/apps/$P/qtplugins/designer
 
-	mkdir -p                                                                                 install/apps/$P/python/PyQt5/uic/widget-plugins
-	mv osgeo4w/apps/Python*/Lib/site-packages/PyQt5/uic/widget-plugins/qgis_customwidgets.py install/apps/$P/python/PyQt5/uic/widget-plugins
+	mkdir -p                                                                                 install/apps/$P/python/PyQt6/uic/widget-plugins
+	mv osgeo4w/apps/Python*/Lib/site-packages/PyQt6/uic/widget-plugins/qgis_customwidgets.py install/apps/$P/python/PyQt6/uic/widget-plugins
 
 	export R=$OSGEO4W_REP/x86_64/release/qgis/$P
 	mkdir -p $R/$P-{pdb,full-free,full,deps,common,server,grass-plugin,oracle-provider,devel}
@@ -255,11 +258,11 @@ nextbinary
 	touch exclude
 
 	cat <<EOF >$R/$P-common/setup.hint
-sdesc: "QGIS (common)"
-ldesc: "QGIS (common)"
+sdesc: "QGIS (common; long term release; Qt6)"
+ldesc: "QGIS (common; long term release; Qt6)"
 maintainer: $MAINTAINER
 category: Libs
-requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl gdal libspatialite zlib libiconv libspatialindex qt5-libs qt5-qml qt5-tools qtwebkit-libs qca qwt-libs python3-sip python3-core python3-pyqt5 python3-psycopg2 python3-qscintilla python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-gdal python3-requests python3-plotly python3-pyproj python3-owslib qtkeychain-libs libzip opencl exiv2 hdf5 pdal pdal-libs
+requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl gdal libspatialite zlib libiconv libspatialindex qt6-libs qt6-qml qt6-tools qca-qt6 qwt-qt6-libs python3-sip python3-core python3-pyqt6 python3-psycopg2 python3-pyqt6-qscintilla python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-gdal python3-requests python3-plotly python3-pyproj python3-owslib qtkeychain-qt6-libs libzip opencl exiv2 hdf5 pdal pdal-libs python3-pyarrow
 external-source: $P
 EOF
 
@@ -319,8 +322,8 @@ EOF
 		etc/postinstall/$P-common.bat
 
 	cat <<EOF >$R/$P-server/setup.hint
-sdesc: "QGIS Server"
-ldesc: "QGIS Server"
+sdesc: "QGIS Server (long term release; Qt6)"
+ldesc: "QGIS Server (long term release; Qt6)"
 maintainer: $MAINTAINER
 category: Web
 requires: $P-common fcgi
@@ -343,8 +346,8 @@ EOF
 		etc/preremove/$P-server.bat
 
 	cat <<EOF >$R/setup.hint
-sdesc: "QGIS Desktop"
-ldesc: "QGIS Desktop"
+sdesc: "QGIS Desktop (long term release; Qt6)"
+ldesc: "QGIS Desktop (long term release; Qt6)"
 maintainer: $MAINTAINER
 category: Desktop
 requires: $P-common
@@ -383,8 +386,8 @@ EOF
 		etc/preremove/$P.bat
 
 	cat <<EOF >$R/$P-pdb/setup.hint
-sdesc: "Debugging symbols for QGIS"
-ldesc: "Debugging symbols for QGIS"
+sdesc: "Debugging symbols for QGIS (long term release; Qt6)"
+ldesc: "Debugging symbols for QGIS (long term release; Qt6)"
 maintainer: $MAINTAINER
 category: Desktop
 requires: $P
@@ -396,8 +399,8 @@ EOF
 		apps/$P/pdb
 
 	cat <<EOF >$R/$P-grass-plugin/setup.hint
-sdesc: "GRASS plugin for QGIS"
-ldesc: "GRASS plugin for QGIS"
+sdesc: "GRASS plugin for QGIS (long term release; Qt6)"
+ldesc: "GRASS plugin for QGIS (long term release; Qt6)"
 maintainer: $MAINTAINER
 category: Libs
 requires: $P grass
@@ -417,8 +420,8 @@ EOF
 		etc/preremove/$P-grass-plugin.bat
 
 	cat <<EOF >$R/$P-oracle-provider/setup.hint
-sdesc: "Oracle provider plugin for QGIS"
-ldesc: "Oracle provider plugin for QGIS"
+sdesc: "Oracle provider plugin for QGIS (long term release; Qt6)"
+ldesc: "Oracle provider plugin for QGIS (long term release; Qt6)"
 maintainer: $MAINTAINER
 category: Libs
 requires: $P oci
@@ -431,8 +434,8 @@ EOF
 		apps/$P/qtplugins/sqldrivers/qsqlocispatial.dll
 
 	cat <<EOF >$R/$P-devel/setup.hint
-sdesc: "QGIS development files"
-ldesc: "QGIS development files"
+sdesc: "QGIS development files (long term release; Qt6)"
+ldesc: "QGIS development files (long term release; Qt6)"
 maintainer: $MAINTAINER
 category: Libs
 requires: $P-common oci
@@ -448,18 +451,18 @@ EOF
 		apps/$P/lib/
 
 	cat <<EOF >$R/$P-full-free/setup.hint
-sdesc: "QGIS Desktop Full Free (meta package)"
-ldesc: "QGIS Desktop Full Free (meta package)
+sdesc: "QGIS Desktop Full Free (meta package; long term release; Qt6)"
+ldesc: "QGIS Desktop Full Free (meta package; long term release; Qt6)
 without proprietary extensions"
 maintainer: $MAINTAINER
 category: Desktop
-requires: $P proj $P-grass-plugin python3-pyparsing python3-simplejson python3-shapely python3-matplotlib gdal-sosi python3-pygments qt5-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-setuptools python3-pillow python3-geopandas python3-geographiclib python3-pyserial python3-pypdf2 python3-reportlab python3-openpyxl python3-remotior-sensus saga python3-pyarrow
+requires: $P proj $P-grass-plugin python3-pyparsing python3-simplejson python3-shapely python3-matplotlib gdal-sosi python3-pygments qt6-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-setuptools python3-pillow python3-geopandas python3-geographiclib python3-pyserial python3-pypdf2 python3-reportlab python3-openpyxl python3-remotior-sensus saga
 external-source: $P
 EOF
 
 	cat <<EOF >$R/$P-full/setup.hint
-sdesc: "QGIS Desktop Full (meta package)"
-ldesc: "QGIS Desktop Full (meta package)
+sdesc: "QGIS Desktop Full (meta package; long term release; Qt6)"
+ldesc: "QGIS Desktop Full (meta package; long term release; Qt6)
 including proprietary extensions"
 maintainer: $MAINTAINER
 category: Desktop
@@ -468,8 +471,8 @@ external-source: $P
 EOF
 
 	cat <<EOF >$R/$P-deps/setup.hint
-sdesc: "QGIS build dependencies (meta package)"
-ldesc: "QGIS build dependencies (meta package)"
+sdesc: "QGIS build dependencies (meta package; long term release; Qt6)"
+ldesc: "QGIS build dependencies (meta package; long term release; Qt6)"
 maintainer: $MAINTAINER
 category: Libs
 requires: $BUILDDEPENDS
