@@ -147,8 +147,10 @@ with gzip.open("{}/etc/setup/{}.lst.gz".format(os.environ['OSGEO4W_ROOT'], sys.a
 
 for cachedir in sorted(cachedirs.keys(), reverse=True):
     try:
-        os.rmdir(cachedir)
-        print("Removed directory {}".format(cachedir))
+        while True:
+            os.rmdir(cachedir)
+            print("Removed directory {}".format(cachedir))
+            cachedir = os.normpath(os.path.join(cachedir, '..'))
     except:
         pass
 EOF
