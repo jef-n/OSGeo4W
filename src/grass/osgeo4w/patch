@@ -1,6 +1,6 @@
-diff -ur grass-8.4.0/mswindows/osgeo4w/env.bat.tmpl ../grass-8.4.0/mswindows/osgeo4w/env.bat.tmpl
---- grass-8.4.0/mswindows/osgeo4w/env.bat.tmpl	2024-07-27 13:27:22.000000000 +0200
-+++ ../grass-8.4.0/mswindows/osgeo4w/env.bat.tmpl	2024-08-05 11:27:31.656582900 +0200
+diff -ur grass-8.4.1/mswindows/osgeo4w/env.bat.tmpl ../grass-8.4.1/mswindows/osgeo4w/env.bat.tmpl
+--- grass-8.4.1/mswindows/osgeo4w/env.bat.tmpl	2025-02-24 11:57:24.000000000 +0100
++++ ../grass-8.4.1/mswindows/osgeo4w/env.bat.tmpl	2025-02-28 11:21:16.640203100 +0100
 @@ -8,6 +8,8 @@
  REM Note that msys package must be also installed
  REM set GRASS_SH=%OSGEO4W_ROOT%\apps\msys\bin\sh.exe
@@ -10,9 +10,9 @@ diff -ur grass-8.4.0/mswindows/osgeo4w/env.bat.tmpl ../grass-8.4.0/mswindows/osg
  set GRASS_PYTHON=%OSGEO4W_ROOT%\bin\python3.exe
  set GRASS_PROJSHARE=%OSGEO4W_ROOT%\share\proj
  
-diff -ur grass-8.4.0/mswindows/osgeo4w/libpng-config ../grass-8.4.0/mswindows/osgeo4w/libpng-config
---- grass-8.4.0/mswindows/osgeo4w/libpng-config	2024-07-27 13:27:22.000000000 +0200
-+++ ../grass-8.4.0/mswindows/osgeo4w/libpng-config	2024-08-05 12:04:29.037124000 +0200
+diff -ur grass-8.4.1/mswindows/osgeo4w/libpng-config ../grass-8.4.1/mswindows/osgeo4w/libpng-config
+--- grass-8.4.1/mswindows/osgeo4w/libpng-config	2025-02-24 11:57:24.000000000 +0100
++++ ../grass-8.4.1/mswindows/osgeo4w/libpng-config	2025-02-28 11:21:16.644203000 +0100
 @@ -14,7 +14,7 @@
  
  prefix="${OSGEO4W_ROOT_MSYS}"
@@ -22,22 +22,21 @@ diff -ur grass-8.4.0/mswindows/osgeo4w/libpng-config ../grass-8.4.0/mswindows/os
  exec_prefix="${prefix}"
  libdir="${prefix}/lib"
  includedir="${prefix}/include/libpng${dll_version}"
-diff -ur grass-8.4.0/mswindows/osgeo4w/package.sh ../grass-8.4.0/mswindows/osgeo4w/package.sh
---- grass-8.4.0/mswindows/osgeo4w/package.sh	2024-07-27 13:27:22.000000000 +0200
-+++ ../grass-8.4.0/mswindows/osgeo4w/package.sh	2024-11-22 22:23:24.715572700 +0100
-@@ -1,8 +1,9 @@
+diff -ur grass-8.4.1/mswindows/osgeo4w/package.sh ../grass-8.4.1/mswindows/osgeo4w/package.sh
+--- osgeo4w/grass-8.4.1/mswindows/osgeo4w/package.sh	2025-02-24 11:57:24.000000000 +0100
++++ grass-8.4.1/mswindows/osgeo4w/package.sh	2025-02-28 13:39:09.366442500 +0100
+@@ -1,8 +1,8 @@
 -#!/usr/bin/bash
 +#!/bin/bash
  
  set -e
  
 -PWD="$(pwd)"
-+export ARCH=x86_64-w64-mingw32
 +export SRC=$PWD
  
  if ! [ -d mswindows ]; then
      echo Start from GRASS toplevel dir
-@@ -106,35 +107,6 @@
+@@ -106,35 +106,6 @@
  
  exec 3>&1 > >(tee mswindows/osgeo4w/package.log) 2>&1
  
@@ -73,7 +72,7 @@ diff -ur grass-8.4.0/mswindows/osgeo4w/package.sh ../grass-8.4.0/mswindows/osgeo
  if ! [ -f mswindows/osgeo4w/configure-stamp ]; then
  	if [ -e include/Make/Platform.make ] ; then
  	    log make distclean
-@@ -144,56 +116,57 @@
+@@ -144,23 +115,22 @@
  	log remove old logs
  	rm -f mswindows/osgeo4w/package.log.*
  
@@ -81,96 +80,79 @@ diff -ur grass-8.4.0/mswindows/osgeo4w/package.sh ../grass-8.4.0/mswindows/osgeo
 -	cp -uv $DLLS dist.x86_64-w64-mingw32/bin
 -
  	mkdir -p mswindows/osgeo4w/lib
--	cp -uv $OSGEO4W_ROOT_MSYS/lib/libpq.lib mswindows/osgeo4w/lib/pq.lib
-+	rm -f $OSGEO4W_ROOT_MSYS/lib/libpq.a
-+	cp -uv $OSGEO4W_ROOT_MSYS/lib/libpq.lib mswindows/osgeo4w/lib/libpq.lib
+ 	rm -f $OSGEO4W_ROOT_MSYS/lib/libpq.a
+ 	cp -uv $OSGEO4W_ROOT_MSYS/lib/libpq.lib mswindows/osgeo4w/lib/libpq.lib
  	cp -uv $OSGEO4W_ROOT_MSYS/lib/sqlite3_i.lib mswindows/osgeo4w/lib/sqlite3.lib
  
  	log configure
 +	CFLAGS="$CFLAGS -pipe" \
 +	CXXFLAGS="$CXXFLAGS -pipe" \
  	./configure \
--		--host=x86_64-w64-mingw32 \
+ 		--host=x86_64-w64-mingw32 \
 -		--with-libs="$OSGEO4W_ROOT_MSYS/lib" \
 -		--with-includes=$OSGEO4W_ROOT_MSYS/include \
 -		--libexecdir=$OSGEO4W_ROOT_MSYS/bin \
 -		--prefix=$OSGEO4W_ROOT_MSYS/apps/grass \
 -		--bindir=$OSGEO4W_ROOT_MSYS/bin \
 -		--includedir=$OSGEO4W_ROOT_MSYS/include \
--		--with-opengl=windows \
--		--without-x \
--		--with-cxx \
--		--enable-shared \
-+		--bindir=${OSGEO4W_ROOT_MSYS}/bin \
- 		--enable-largefile \
-+		--enable-shared \
-+		--host=${ARCH} \
-+		--includedir=${OSGEO4W_ROOT_MSYS}/include \
++		--with-libs="${OSGEO4W_ROOT_MSYS}/lib ${OSGEO4W_ROOT_MSYS}/bin" \
++		--with-includes=${OSGEO4W_ROOT_MSYS}/include \
 +		--libexecdir=${OSGEO4W_ROOT_MSYS}/bin \
 +		--prefix=${OSGEO4W_ROOT_MSYS}/apps/grass \
-+		--with-blas \
-+		--with-bzlib \
-+		--with-cairo \
-+		--with-cairo-includes=${OSGEO4W_ROOT_MSYS}/include \
-+		--with-cairo-ldflags="-L${SRC}/mswindows/osgeo4w/lib -lcairo" \
-+		--with-cairo-libs=$OSGEO4W_ROOT_MSYS/lib \
-+		--with-cxx \
++		--bindir=${OSGEO4W_ROOT_MSYS}/bin \
++		--includedir=${OSGEO4W_ROOT_MSYS}/include \
+ 		--with-opengl=windows \
+ 		--without-x \
+ 		--with-cxx \
+@@ -168,18 +138,18 @@
+ 		--enable-largefile \
  		--with-fftw \
  		--with-freetype \
 -		--with-freetype-includes=/mingw64/include/freetype2 \
 -		--with-proj-share=$OSGEO4W_ROOT_MSYS/share/proj \
 -		--with-proj-includes=$OSGEO4W_ROOT_MSYS/include \
 -		--with-proj-libs=$OSGEO4W_ROOT_MSYS/lib \
--		--with-postgres \
--		--with-postgres-includes=$OSGEO4W_ROOT_MSYS/include \
--		--with-postgres-libs=$PWD/mswindows/osgeo4w/lib \
--		--with-gdal=$PWD/mswindows/osgeo4w/gdal-config \
--		--with-geos=$PWD/mswindows/osgeo4w/geos-config \
--		--with-sqlite \
--		--with-sqlite-includes=$OSGEO4W_ROOT_MSYS/include \
--		--with-sqlite-libs=$PWD/mswindows/osgeo4w/lib \
--		--with-regex \
 +		--with-freetype-includes=${OSGEO4W_ROOT_MSYS}/include/freetype2 \
-+		--with-gdal=${SRC}/mswindows/osgeo4w/gdal-config \
-+		--with-geos=${SRC}/mswindows/osgeo4w/geos-config \
-+		--with-includes=${OSGEO4W_ROOT_MSYS}/include \
-+		--with-lapack \
-+		--with-liblas=${SRC}/mswindows/osgeo4w/liblas-config \
-+		--with-libs="${OSGEO4W_ROOT_MSYS}/lib ${OSGEO4W_ROOT_MSYS}/bin" \
-+		--with-netcdf=${OSGEO4W_ROOT_MSYS}/bin/nc-config \
- 		--with-nls \
--		--with-zstd \
- 		--with-odbc \
--		--with-netcdf=${OSGEO4W_ROOT_MSYS}/bin/nc-config \
--		--with-blas \
--		--with-lapack \
--		--with-lapack-includes=/mingw64/include \
-+		--with-opengl=windows \
- 		--with-openmp \
--		--with-cairo \
--		--with-cairo-includes=$OSGEO4W_ROOT_MSYS/include \
--		--with-cairo-ldflags="-L$PWD/mswindows/osgeo4w/lib -lcairo -lfontconfig" \
--		--with-bzlib \
--		--with-liblas=$PWD/mswindows/osgeo4w/liblas-config \
--		--without-pdal
-+		--with-postgres \
-+		--with-postgres-includes=${OSGEO4W_ROOT_MSYS}/include \
-+		--with-postgres-libs=${SRC}/mswindows/osgeo4w/lib \
++		--with-proj-share=${OSGEO4W_ROOT_MSYS}/share/proj \
 +		--with-proj-includes=${OSGEO4W_ROOT_MSYS}/include \
 +		--with-proj-libs=${OSGEO4W_ROOT_MSYS}/lib \
-+		--with-proj-share=${OSGEO4W_ROOT_MSYS}/share/proj \
-+		--with-readline \
-+		--with-regex \
-+		--with-sqlite \
+ 		--with-postgres \
+-		--with-postgres-includes=$OSGEO4W_ROOT_MSYS/include \
+-		--with-postgres-libs=${PWD}/mswindows/osgeo4w/lib \
+-		--with-gdal=$PWD/mswindows/osgeo4w/gdal-config \
+-		--with-geos=$PWD/mswindows/osgeo4w/geos-config \
++		--with-postgres-includes=${OSGEO4W_ROOT_MSYS}/include \
++		--with-postgres-libs=${SRC}/mswindows/osgeo4w/lib \
++		--with-gdal=${SRC}/mswindows/osgeo4w/gdal-config \
++		--with-geos=${SRC}/mswindows/osgeo4w/geos-config \
+ 		--with-sqlite \
+-		--with-sqlite-includes=$OSGEO4W_ROOT_MSYS/include \
+-		--with-sqlite-libs=$PWD/mswindows/osgeo4w/lib \
 +		--with-sqlite-includes=${OSGEO4W_ROOT_MSYS}/include \
 +		--with-sqlite-libs=${OSGEO4W_ROOT_MSYS}/lib \
-+		--with-zstd \
-+		--without-pdal \
-+		--without-x
+ 		--with-regex \
+ 		--with-nls \
+ 		--with-zstd \
+@@ -187,13 +157,14 @@
+ 		--with-netcdf=${OSGEO4W_ROOT_MSYS}/bin/nc-config \
+ 		--with-blas \
+ 		--with-lapack \
+-		--with-lapack-includes=/mingw64/include \
+ 		--with-openmp \
+ 		--with-cairo \
+-		--with-cairo-includes=$OSGEO4W_ROOT_MSYS/include \
+-		--with-cairo-ldflags="-L$PWD/mswindows/osgeo4w/lib -lcairo -lfontconfig" \
++		--with-cairo-includes=${OSGEO4W_ROOT_MSYS}/include \
++		--with-cairo-ldflags="-L${SRC}/mswindows/osgeo4w/lib -lcairo" \
++		--with-cairo-libs=$OSGEO4W_ROOT_MSYS/lib \
+ 		--with-bzlib \
+-		--with-liblas=$PWD/mswindows/osgeo4w/liblas-config \
++		--with-liblas=${SRC}/mswindows/osgeo4w/liblas-config \
++		--with-readline \
+ 		--without-pdal
  
  	touch mswindows/osgeo4w/configure-stamp
- fi
-@@ -246,9 +219,11 @@
+@@ -247,9 +218,11 @@
      unix2dos etc/postinstall/grass${PACKAGE_POSTFIX}.bat
      unix2dos etc/preremove/grass${PACKAGE_POSTFIX}.bat
  
