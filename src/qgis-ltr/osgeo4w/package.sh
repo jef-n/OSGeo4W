@@ -132,7 +132,7 @@ nextbinary
 		-D WITH_CUSTOM_WIDGETS=TRUE \
 		-D CMAKE_BUILD_TYPE=$BUILDCONF \
 		-D CMAKE_CONFIGURATION_TYPES="$BUILDCONF" \
-		-D SETUPAPI_LIBRARY="$(cygpath -am "/cygdrive/c/Program Files (x86)/Windows Kits/10/Lib/$UCRTVersion/um/x64/SetupAPI.Lib")" \
+		-D SETUPAPI_LIBRARY="$(cygpath -am "/cygdrive/$WINDOWS_KITS_ROOT/10/Lib/$UCRTVersion/um/x64/SetupAPI.Lib")" \
 		-D PROJ_INCLUDE_DIR=$(cygpath -am $O4W_ROOT/include) \
 		-D POSTGRES_INCLUDE_DIR=$(cygpath -am $O4W_ROOT/include) \
 		-D GEOS_LIBRARY=$(cygpath -am "$O4W_ROOT/lib/geos_c.lib") \
@@ -236,7 +236,7 @@ nextbinary
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                postinstall-grass.bat >install/etc/postinstall/$P-grass-plugin.bat
 	sed -e "s/@package@/$P/g" -e "s/@version@/$v/g" -e "s/@grassversion@/$GRASS_VERSION/g"                                                preremove-grass.bat   >install/etc/preremove/$P-grass-plugin.bat
 
-	cp "/cygdrive/c/Program Files (x86)/Windows Kits/10/Debuggers/x64/"{dbghelp.dll,symsrv.dll} install/apps/$P
+	cp "/cygdrive/$WINDOWS_KITS_ROOT/10/Debuggers/x64/"{dbghelp.dll,symsrv.dll} install/apps/$P
 
 	mv install/apps/$P/bin/qgis.exe install/bin/$P-bin.exe
 	cp qgis.vars                    install/bin/$P-bin.vars

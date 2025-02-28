@@ -11,6 +11,13 @@ export MASTER_SCP=upload.osgeo.org:/osgeo/download/$MASTER_BASE
 export OSGEO4W_SCRIPTS=$(cygpath -a "$( dirname "${BASH_SOURCE[0]}" )")
 export OSGEO4W_PWD=$PWD
 
+: ${WINDOWS_KITS_ROOT:=c/Program Files (x86)/Windows Kits}
+: ${MSVS2022_ROOT:=$PROGRAMFILES}
+: ${MSVS2019_ROOT:=$PROGRAMFILES (x86)}
+export WINDOWS_KITS_ROOT
+export MSVS2022_ROOT
+export MSVS2019_ROOT
+
 export CCACHE_CACHE_SIZE=50G
 
 : ${PYTHON:=Python312}
@@ -179,7 +186,7 @@ vs2019env() {
 
 	vcdir=
 	for e in Community Professional Enterprise; do
-		d=$(cygpath "$PROGRAMFILES (x86)\\Microsoft Visual Studio\\2019\\$e")
+		d=$(cygpath "$MSVS2019_ROOT\\Microsoft Visual Studio\\2019\\$e")
 		if [ -d "$d" ]; then
 			vcdir=$d
 			break
@@ -233,7 +240,7 @@ vs2022env() {
 
 	vcdir=
 	for e in Community Professional Enterprise; do
-		d=$(cygpath "$PROGRAMFILES\\Microsoft Visual Studio\\2022\\$e")
+		d=$(cygpath "$MSVS2022_ROOT\\Microsoft Visual Studio\\2022\\$e")
 		if [ -d "$d" ]; then
 			vcdir=$d
 			break
@@ -265,7 +272,7 @@ vs2022env() {
 		VCSDK=10.0.22621.0
 	fi
 
-	local dhd="/cygdrive/c/Program Files (x86)/Windows Kits/10/Debuggers/x64/dbghelp.dll"
+	local dhd="/cygdrive/$WINDOWS_KITS_ROOT/10/Debuggers/x64/dbghelp.dll"
 
 	# make sure we have a dbghelp version, that works on Windows 8 using brute force
 	if ! [ -f "$dhd" ]; then
@@ -280,7 +287,7 @@ vs2022env() {
 		v=$(fileversion "$dhd")
 
 		case $v in
-		10.0.19041.*)
+		10.0.19041.*|10.0.22621.*)
 			;;
 		*)
 			log Replacing $dhd $v
@@ -365,7 +372,7 @@ ninjaenv() {
 	if ! [ -x "$OSGEO4W_SCRIPTS/ninja.exe" ]; then
 		(
 			cd /tmp
-			curl --remote-name -L https://github.com/ninja-build/ninja/releases/download/v1.10.2/ninja-win.zip
+			curl --remote-name -L https://github.com/ninja-build/ninja/releases/download/v1.12.1/ninja-win.zip
 			cd $OSGEO4W_SCRIPTS
 			unzip /tmp/ninja-win.zip
 
