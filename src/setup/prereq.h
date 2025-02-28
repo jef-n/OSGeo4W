@@ -32,7 +32,7 @@ public:
 class PrereqChecker
 {
 public:
-  // checks all dependecies, populates 'unmet'
+  // checks all dependencies, populates 'unmet'
   // returns true if unsatisfied dependencies exist
   bool isMet ();
 
