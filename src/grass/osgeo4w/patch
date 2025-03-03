@@ -1,3 +1,37 @@
+diff -ur osgeo4w/grass-8.4.1/lib/gis/gisinit.c grass-8.4.1/lib/gis/gisinit.c
+--- osgeo4w/grass-8.4.1/lib/gis/gisinit.c	2025-02-24 11:57:24.000000000 +0100
++++ grass-8.4.1/lib/gis/gisinit.c	2025-03-03 08:43:42.142173200 +0100
+@@ -49,6 +49,7 @@
+ 
+     G_set_program_name(pgm);
+ 
++#if 0
+     /* verify version of GRASS headers (and anything else in include) */
+     if (strcmp(version, GIS_H_VERSION) != 0) {
+         char *envstr;
+@@ -71,6 +72,7 @@
+                 version, GIS_H_VERSION);
+         }
+     }
++#endif
+ 
+     /* Make sure location and mapset are set */
+     G_location_path();
+@@ -100,6 +102,7 @@
+     if (initialized)
+         return;
+ 
++#if 0
+     /* verify version of GRASS headers (and anything else in include) */
+     if (strcmp(version, GIS_H_VERSION) != 0) {
+         char *envstr;
+@@ -122,6 +125,7 @@
+                 version, GIS_H_VERSION);
+         }
+     }
++#endif
+     gisinit();
+ }
 diff -ur grass-8.4.1/mswindows/osgeo4w/env.bat.tmpl ../grass-8.4.1/mswindows/osgeo4w/env.bat.tmpl
 --- grass-8.4.1/mswindows/osgeo4w/env.bat.tmpl	2025-02-24 11:57:24.000000000 +0100
 +++ ../grass-8.4.1/mswindows/osgeo4w/env.bat.tmpl	2025-02-28 11:21:16.640203100 +0100
