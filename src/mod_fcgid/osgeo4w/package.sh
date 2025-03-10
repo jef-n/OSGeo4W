@@ -9,8 +9,8 @@ source ../../../scripts/build-helpers
 
 startlog
 
-[ -f "$P-$V-win64-VC16.zip" ] || curl -L -A Mozilla/5.0 -O https://www.apachelounge.com/download/VS16/modules/$P-$V-win64-VS16.zip
-[ -d $P-$V ] || unzip -o $P-$V-win64-VS16.zip $P-$V/LICENSE-FCGID $P-$V/$P.so
+[ -f "$P-$V-win64-VC17.zip" ] || curl -LO https://www.apachelounge.com/download/VS17/modules/$P-$V-win64-VS17.zip
+unzip -o $P-$V-win64-VS17.zip $P-$V/LICENSE-FCGID $P.so
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R
@@ -26,11 +26,13 @@ EOF
 cp $P-$V/LICENSE-FCGID $R/$P-$V-$B.txt
 
 tar -cjf $R/$P-$V-$B.tar.bz2 \
-	--xform s,^$P-$V/,apps/apache/modules/, \
-	$P-$V/$P.so
+	--xform s,^,apps/apache/modules/, \
+	$P.so
 
 tar -cjf $R/$P-$V-$B-src.tar.bz2 \
 	-C .. \
 	osgeo4w/package.sh
+
+rm -r $P-$V $P.so
 
 endlog
