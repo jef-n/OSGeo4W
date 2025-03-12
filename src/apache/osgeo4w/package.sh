@@ -1,5 +1,5 @@
 export P=apache
-export V=2.4.62
+export V=2.4.63
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
@@ -13,10 +13,10 @@ startlog
 
 v=${V%.*}
 v=${v/./}
-z=httpd-$V-240904-win64-VS17.zip
+z=httpd-$V-250207-win64-VS17.zip
 
 [ -f $z ] || curl -L -A Mozilla/5.0 -O https://www.apachelounge.com/download/VS17/binaries/$z
-[ -d Apache$v ] || unzip $z "Apache$v/*"
+unzip -o $z "Apache$v/*"
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R
@@ -146,5 +146,7 @@ tar -cjf $R/$P-$V-$B.tar.bz2 \
 tar -cjf $R/$P-$V-$B-src.tar.bz2 \
 	-C .. \
 	osgeo4w/package.sh
+
+rm -r Apache$v
 
 endlog

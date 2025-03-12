@@ -1,5 +1,5 @@
 export P=grass
-export V=8.4.0
+export V=8.4.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="gdal-devel proj-devel geos-devel netcdf-devel libjpeg-turbo-devel libpq-devel libpng-devel libtiff-devel sqlite3-devel zstd-devel python3-ply python3-core python3-six python3-pywin32 python3-wxpython liblas-devel cairo-devel freetype-devel"
@@ -111,7 +111,13 @@ bash.exe $xtrace mswindows/osgeo4w/package.sh
 EOF
 
 	taskkill /im gpg-agent.exe /f || true
-	cygstart -w $(cygpath -aw msys64/usr/bin/bash.exe) $(cygpath -am build.sh) || { cat ../$p/mswindows/osgeo4w/package.log; exit 1; }
+	if ! cygstart -w $(cygpath -aw msys64/usr/bin/bash.exe) $(cygpath -am build.sh); then
+		# re-run if msys terminated before the build even started
+		if [ -f ../$p/mswindows/osgeo4w/package.log ] || ! cygstart -w $(cygpath -aw msys64/usr/bin/bash.exe) $(cygpath -am build.sh); then
+			cat ../$p/mswindows/osgeo4w/package.log
+			exit 1
+		fi
+	fi
 )
 
 cp ../$p/mswindows/osgeo4w/package/$P-$V-1.tar.bz2 $R/$P-$V-$B.tar.bz2
