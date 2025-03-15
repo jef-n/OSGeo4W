@@ -94,6 +94,7 @@ endlog() {
 	fi
 
 	trap "" EXIT
+	trap "" ERR
 	finishlog
 	return $r
 }

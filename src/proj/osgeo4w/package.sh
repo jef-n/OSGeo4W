@@ -1,8 +1,8 @@
 export P=proj
-export V=9.5.1
+export V=9.6.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="sqlite3-devel libtiff-devel curl-devel"
+export BUILDDEPENDS="sqlite3-devel libtiff-devel curl-devel openssl-devel zlib-devel"
 export PACKAGES="proj proj-devel proj-runtime-data proj71-runtime proj72-runtime proj80-runtime proj81-runtime proj82-runtime proj90-runtime proj91-runtime proj92-runtime proj93-runtime proj94-runtime proj9-runtime"
 
 source ../../../scripts/build-helpers
@@ -32,8 +32,13 @@ cmake -G Ninja \
 	-D PROJ_CMAKE_SUBDIR=share/cmake/proj4 \
 	-D PROJ_DATA_SUBDIR=share/proj \
 	-D PROJ_INCLUDE_SUBDIR=include \
-	-D SQLITE3_LIBRARY=$(cygpath -aw ../osgeo4w/lib/sqlite3_i.lib) \
-	-D SQLITE3_INCLUDE_DIR=$(cygpath -aw ../osgeo4w/include) \
+	-D SQLite3_LIBRARY=$(cygpath -aw ../osgeo4w/lib/sqlite3_i.lib) \
+	-D SQLite3_INCLUDE_DIR=$(cygpath -aw ../osgeo4w/include) \
+	-D OPENSSL_ROOT_DIR=$(cygpath -am ../osgeo4w) \
+	-D OPENSSL_CRYPTO_LIBRARY=$(cygpath -am ../osgeo4w/lib/libcrypto.lib) \
+	-D OPENSSL_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/openssl) \
+	-D ZLIB_LIBRARY=$(cygpath -aw ../osgeo4w/lib/zlib.lib) \
+	-D ZLIB_INCLUDE_DIR=$(cygpath -aw ../osgeo4w/include) \
 	-D TIFF_LIBRARY=$(cygpath -aw ../osgeo4w/lib/tiff.lib) \
 	-D TIFF_INCLUDE_DIR=$(cygpath -aw ../osgeo4w/include) \
 	-D CURL_LIBRARY=$(cygpath -aw ../osgeo4w/lib/libcurl_imp.lib) \
@@ -68,7 +73,7 @@ cat <<EOF >$R/$P$abi-runtime/setup.hint
 sdesc: "The PROJ library and commands for coordinate system transformations (Runtime)."
 ldesc: "The PROJ library and commands for coordinate system transformations (Runtime)."
 category: Libs
-requires: msvcrt2019 sqlite3 libtiff curl proj-runtime-data proj-data
+requires: msvcrt2019 sqlite3 libtiff curl proj-runtime-data proj-data openssl zlib
 maintainer: $MAINTAINER
 external-source: $P
 EOF
