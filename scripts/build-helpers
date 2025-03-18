@@ -102,7 +102,6 @@ declare -x endlog
 
 errlog() {
 	log "ERROR: error $2 on line $1"
-	set -x
 	local i=1
 	while caller $(( i++ )); do
 		:
