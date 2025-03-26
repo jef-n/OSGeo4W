@@ -45,7 +45,7 @@ char *NetIO::net_ftp_user;
 char *NetIO::net_ftp_passwd;
 
 NetIO *
-NetIO::open (char const *url, bool cachable)
+NetIO::open (char const *url, bool cacheable)
 {
   NetIO *rv = 0;
   std::string file_url;
@@ -84,7 +84,7 @@ NetIO::open (char const *url, bool cachable)
       url = file_url.c_str();
     }
 
-  rv = new NetIO_IE5 (url, proto == file ? false : cachable);
+  rv = new NetIO_IE5 (url, proto == file ? false : cacheable);
 
   if (rv && !rv->ok ())
     {
