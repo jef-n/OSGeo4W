@@ -73,8 +73,8 @@ cd build
 export DESTDIR=../install
 export APPDIR=$DESTDIR/apps/$P
 export O4W=../osgeo4w
-export INCLUDE="$(cygpath -aw $O4W/include);$(cygpath -aw "$(find $VCINSTALLDIR -iname atlbase.h -printf '%h')");$INCLUDE"
-export LIB="$(cygpath -aw $O4W/lib);$(cygpath -aw "$(find $VCINSTALLDIR -path "*/x64/*" -iname atls.lib -printf '%h')");$LIB"
+export INCLUDE="$(cygpath -aw $O4W/include);$(cygpath -aw "$(find "$VCINSTALLDIR" -iname atlbase.h -printf '%h')");$INCLUDE"
+export LIB="$(cygpath -aw $O4W/lib);$(cygpath -aw "$(find "$VCINSTALLDIR" -path "*/x64/*" -iname atls.lib -printf '%h')");$LIB"
 
 [ -f ../installed ] || {
 	(

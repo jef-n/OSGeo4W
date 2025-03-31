@@ -73,8 +73,8 @@ mkdir -p build/s
 
 		cd $SUBST/b
 
-		export INCLUDE="$(cygpath -aw $OSGEO4W_PWD/osgeo4w/include);$(cygpath -aw "$(find $VCINSTALLDIR -iname atlbase.h -printf '%h')");$INCLUDE"
-		export LIB="$(cygpath -aw $OSGEO4W_PWD/osgeo4/lib);$(cygpath -aw "$(find $VCINSTALLDIR -path "*/x64/*" -iname atls.lib -printf '%h')");$LIB"
+		export INCLUDE="$(cygpath -aw $OSGEO4W_PWD/osgeo4w/include);$(cygpath -aw "$(find "$VCINSTALLDIR" -iname atlbase.h -printf '%h')");$INCLUDE"
+		export LIB="$(cygpath -aw $OSGEO4W_PWD/osgeo4/lib);$(cygpath -aw "$(find "$VCINSTALLDIR" -path "*/x64/*" -iname atls.lib -printf '%h')");$LIB"
 
 		[ -f build.ninja ] || {
 			CMAKE_INCLUDE_PATH=$(cygpath -am $OSGEO4W_PWD/osgeo4w/include) \

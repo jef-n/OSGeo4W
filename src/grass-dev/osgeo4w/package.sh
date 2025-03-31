@@ -2,7 +2,7 @@ export P=grass-dev
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="gdal-devel proj-devel geos-devel netcdf-devel libjpeg-turbo-devel libpq-devel libpng-devel libtiff-devel sqlite3-devel zstd-devel python3-ply python3-core python3-six python3-pywin32 python3-wxpython liblas-devel cairo-devel freetype-devel msvcrt2019"
+export BUILDDEPENDS="gdal-devel proj-devel geos-devel netcdf-devel libjpeg-turbo-devel libpq-devel libpng-devel libtiff-devel sqlite3-devel zstd-devel python3-ply python3-core python3-six python3-pywin32 python3-wxpython liblas-devel cairo-devel freetype-devel"
 export PACKAGES="grass-dev"
 
 REPO=https://github.com/OSGeo/grass
@@ -36,8 +36,6 @@ fi
 if [ -z "$OSGEO4W_SKIP_CLEAN" ]; then
 	patch -p1 -d ../grass --dry-run <patch
 	patch -p1 -d ../grass <patch
-	zcat osgeo4w/etc/setup/msvcrt2019.lst.gz | sed -e 's#/#\\#g; s#^.*$#copy "%OSGEO4W_ROOT%\\&" "%OSGEO4W_ROOT%\\apps\\grass\\grass@POSTFIX@\\&"#;' >>../grass/mswindows/osgeo4w/postinstall.bat
-	zcat osgeo4w/etc/setup/msvcrt2019.lst.gz | sed -e 's#/#\\#g; s#^.*$#del "%OSGEO4W_ROOT%\\apps\\grass\\grass@POSTFIX@\\&"#;' >>../grass/mswindows/osgeo4w/preremove.bat
 fi
 
 SHA=$(cd ../grass; git log -n1 --pretty=%h)

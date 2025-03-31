@@ -2,7 +2,7 @@ export P=grass
 export V=8.4.1
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="gdal-devel proj-devel geos-devel netcdf-devel libjpeg-turbo-devel libpq-devel libpng-devel libtiff-devel sqlite3-devel zstd-devel python3-ply python3-core python3-six python3-pywin32 python3-wxpython liblas-devel cairo-devel freetype-devel msvcrt2019"
+export BUILDDEPENDS="gdal-devel proj-devel geos-devel netcdf-devel libjpeg-turbo-devel libpq-devel libpng-devel libtiff-devel sqlite3-devel zstd-devel python3-ply python3-core python3-six python3-pywin32 python3-wxpython liblas-devel cairo-devel freetype-devel"
 export PACKAGES="grass"
 
 REPO=https://github.com/OSGeo/grass
@@ -21,9 +21,6 @@ MM=${MM//./}
 [ -f $p.tar.gz ] || wget -O $p.tar.gz $REPO/archive/refs/tags/$V.tar.gz
 [ -f ../$p/configure ] || tar -C .. -xzf $p.tar.gz
 [ -f ../$p/patched ] || {
-	zcat osgeo4w/etc/setup/msvcrt2019.lst.gz | sed -e 's#/#\\#g; s#^.*$#copy "%OSGEO4W_ROOT%\\&" "%OSGEO4W_ROOT%\\apps\\grass\\grass@POSTFIX@\\&"#;' >>../$p/mswindows/osgeo4w/postinstall.bat
-	zcat osgeo4w/etc/setup/msvcrt2019.lst.gz | sed -e 's#/#\\#g; s#^.*$#del "%OSGEO4W_ROOT%\\apps\\grass\\grass@POSTFIX@\\&"#;' >>../$p/mswindows/osgeo4w/preremove.bat
-
 	patch -d ../$p -p1 --dry-run <patch
 	patch -d ../$p -p1 <patch >../$p/patched
 }
