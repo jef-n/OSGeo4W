@@ -453,7 +453,7 @@ ldesc: "QGIS Desktop Full Free (meta package)
 without proprietary extensions"
 maintainer: $MAINTAINER
 category: Desktop
-requires: $P proj $P-grass-plugin python3-pyparsing python3-simplejson python3-shapely python3-matplotlib gdal-sosi python3-pygments qt5-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-setuptools python3-pillow python3-geopandas python3-geographiclib python3-pyserial python3-pypdf2 python3-reportlab python3-openpyxl python3-remotior-sensus saga python3-pyarrow
+requires: $P proj $P-grass-plugin python3-pyparsing python3-simplejson python3-shapely python3-matplotlib python3-pygments python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-setuptools python3-pillow python3-geopandas python3-geographiclib python3-pyserial python3-pypdf2 python3-reportlab python3-openpyxl python3-remotior-sensus saga python3-pyarrow qt5-tools gdal-sosi
 external-source: $P
 EOF
 

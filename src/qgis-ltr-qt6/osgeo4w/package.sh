@@ -262,7 +262,7 @@ sdesc: "QGIS (common; long term release; Qt6)"
 ldesc: "QGIS (common; long term release; Qt6)"
 maintainer: $MAINTAINER
 category: Libs
-requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl gdal libspatialite zlib libiconv libspatialindex qt6-libs qt6-qml qt6-tools qca-qt6 qwt-qt6-libs python3-sip python3-core python3-pyqt6 python3-psycopg2 python3-pyqt6-qscintilla python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-gdal python3-requests python3-plotly python3-pyproj python3-owslib qtkeychain-qt6-libs libzip opencl exiv2 hdf5 pdal pdal-libs python3-pyarrow
+requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl gdal libspatialite zlib libiconv libspatialindex qt6-libs qt6-qml qt6-tools qca-qt6 qwt-qt6-libs python3-sip python3-core python3-pyqt6 python3-psycopg2 python3-pyqt6-qscintilla python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-gdal python3-requests python3-plotly python3-pyproj python3-owslib qtkeychain-qt6-libs libzip opencl exiv2 hdf5 pdal pdal-libs
 external-source: $P
 EOF
 
@@ -456,7 +456,7 @@ ldesc: "QGIS Desktop Full Free (meta package; long term release; Qt6)
 without proprietary extensions"
 maintainer: $MAINTAINER
 category: Desktop
-requires: $P proj $P-grass-plugin python3-pyparsing python3-simplejson python3-shapely python3-matplotlib gdal-sosi python3-pygments qt6-tools python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-setuptools python3-pillow python3-geopandas python3-geographiclib python3-pyserial python3-pypdf2 python3-reportlab python3-openpyxl python3-remotior-sensus saga
+requires: $P proj $P-grass-plugin python3-pyparsing python3-simplejson python3-shapely python3-matplotlib python3-pygments python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-setuptools python3-pillow python3-geopandas python3-geographiclib python3-pyserial python3-pypdf2 python3-reportlab python3-openpyxl python3-remotior-sensus saga python3-pyarrow qt6-tools gdal-sosi
 external-source: $P
 EOF
 
