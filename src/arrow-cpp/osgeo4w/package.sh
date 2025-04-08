@@ -1,5 +1,5 @@
 export P=arrow-cpp
-export V=18.1.0
+export V=19.0.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="boost-devel openssl-devel thrift-devel zstd-devel bzip2-devel zlib-devel lz4-devel brotli-devel snappy-devel protobuf-devel utf8proc python3-devel python3-pip python3-setuptools python3-wheel python3-numpy"
@@ -10,7 +10,7 @@ source ../../../scripts/build-helpers
 startlog
 
 [ -f apache-arrow-$V.tar.gz ] || wget https://dist.apache.org/repos/dist/release/arrow/arrow-$V/apache-arrow-$V.tar.gz
-sha256sum -c apache-arrow-$V.tar.gz.sha256
+sha512sum -c apache-arrow-$V.tar.gz.sha512
 [ -d ../apache-arrow-$V ] || tar -C .. -xzf apache-arrow-$V.tar.gz
 [ -f ../apache-arrow-$V/patched ] || {
 	patch -d ../apache-arrow-$V -p1 --dry-run <diff
@@ -31,12 +31,19 @@ sha256sum -c apache-arrow-$V.tar.gz.sha256
 	mkdir -p build install
 	cd build
 
+	# unity build required, otherwise
+	# …\src\arrow-cpp\apache-arrow-19.0.1\cpp\src\parquet\size_statistics.cc(182): error C2079: 'partial_hist' uses undefined class 'std::array<std::vector<int64_t,std::allocator<int64_t>>,4>'
+	# (see also apache/arrow#45545)
+
 	cmake -G Ninja \
 		-D CMAKE_BUILD_TYPE=Release \
+		-D CMAKE_UNITY_BUILD=ON \
+		-D CMAKE_CXX_STANDARD=17 \
 		-D CMAKE_INSTALL_PREFIX=../install \
+		-D ARROW_BUILD_EXAMPLES=OFF \
 		-D ARROW_DEPENDENCY_SOURCE=SYSTEM \
 		-D ARROW_BOOST_USE_SHARED=OFF \
-		-D Boost_USE_STATIC_LIBS=OFF \
+			-D Boost_USE_STATIC_LIBS=OFF \
 		-D ARROW_BUILD_TESTS=OFF \
 		-D ARROW_BUILD_STATIC=OFF \
 		-D ARROW_COMPUTE=ON \
@@ -45,9 +52,9 @@ sha256sum -c apache-arrow-$V.tar.gz.sha256
 		-D ARROW_HDFS=ON \
 		-D ARROW_JSON=ON \
 		-D ARROW_PARQUET=ON \
+			-D PARQUET_REQUIRE_ENCRYPTION=ON \
 		-D ARROW_DATASET=ON \
 		-D ARROW_WITH_RE2=OFF \
-		-D ARROW_WITH_UTF8PROC=OFF \
 		-D ARROW_WITH_SNAPPY=ON \
 		-D ARROW_WITH_BROTLI=ON \
 		-D ARROW_WITH_LZ4=ON \
@@ -55,8 +62,6 @@ sha256sum -c apache-arrow-$V.tar.gz.sha256
 			-D ZLIB_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 			-D ZLIB_LIBRARY_RELEASE=$(cygpath -am ../osgeo4w/lib/zlib.lib) \
 		-D ARROW_WITH_ZSTD=ON \
-			-D ZSTD_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
-			-D ZSTD_LIB=$(cygpath -am ../osgeo4w/lib/zstd.lib) \
 		-D ARROW_WITH_BZ2=ON \
 			-D BZIP2_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 			-D BZIP2_LIBRARY_RELEASE=$(cygpath -am ../osgeo4w/lib/libbz2.lib) \

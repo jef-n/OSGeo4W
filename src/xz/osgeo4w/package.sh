@@ -1,5 +1,5 @@
 export P=xz
-export V=5.4.5
+export V=5.4.7
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
@@ -9,8 +9,7 @@ source ../../../scripts/build-helpers
 
 startlog
 
-[ -f $P-$V.tar.bz2 ] || wget -c -O $P-$V.tar.bz2 https://sourceforge.net/projects/lzmautils/files/$P-$V.tar.bz2
-[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xjf $P-$V.tar.bz2
+[ -d ../xz ] || git clone --single-branch --branch v5.4 https://github.com/tukaani-project/xz ../xz
 
 vsenv
 cmakeenv
@@ -24,7 +23,7 @@ cmake -G Ninja \
 	-D CMAKE_BUILD_TYPE=Release \
 	-D CMAKE_INSTALL_PREFIX=../install \
 	-D BUILD_SHARED_LIBS=ON \
-	../../$P-$V
+	../../xz
 
 cmake --build .
 cmake --build . --target install
@@ -34,7 +33,7 @@ cd ../build-static
 
 cmake -G Ninja \
 	-D CMAKE_BUILD_TYPE=Release \
-	../../$P-$V
+	../../xz
 
 cmake --build .
 
@@ -53,7 +52,7 @@ requires:
 category: Libs
 EOF
 
-cp ../$P-$V/COPYING $R/$P-$V-$B.txt
+cp ../xz/COPYING $R/$P-$V-$B.txt
 tar -C install -cjvf $R/$P-$V-$B.tar.bz2 bin
 
 cat <<EOF >$R/$P-devel/setup.hint
@@ -64,7 +63,7 @@ requires: $P
 category: Libs
 EOF
 
-cp ../$P-$V/COPYING $R/$P-devel/$P-devel-$V-$B.txt
+cp ../xz/COPYING $R/$P-devel/$P-devel-$V-$B.txt
 tar -C install -cjvf $R/$P-devel/$P-devel-$V-$B.tar.bz2 include lib
 
 tar -C .. -cjvf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
