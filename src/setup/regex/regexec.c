@@ -305,7 +305,7 @@ compat_symbol (libc, __compat_regexec, regexec, GLIBC_2_0);
    concerned.
 
    If REGS is not NULL, and BUFP->no_sub is not set, the offsets of the match
-   and all groups is stroed in REGS.  (For the "_2" variants, the offsets are
+   and all groups is stored in REGS.  (For the "_2" variants, the offsets are
    computed relative to the concatenation, not relative to the individual
    strings.)
 
@@ -480,7 +480,7 @@ re_search_stub (bufp, string, length, start, range, stop, regs, ret_len)
 
   rval = 0;
 
-  /* I hope we needn't fill ther regs with -1's when no match was found.  */
+  /* I hope we needn't fill their regs with -1's when no match was found.  */
   if (result != REG_NOERROR)
     rval = -1;
   else if (regs != NULL)
@@ -1072,7 +1072,7 @@ acquire_init_state_context (reg_errcode_t *err, const re_match_context_t *mctx,
    FL_LONGEST_MATCH means we want the POSIX longest matching.
    If P_MATCH_FIRST is not NULL, and the match fails, it is set to the
    next place where we may want to try matching.
-   Note that the matcher assume that the maching starts from the current
+   Note that the matcher assume that the matching starts from the current
    index of the buffer.  */
 
 static int
@@ -2234,7 +2234,7 @@ sift_states_iter_mb (const re_match_context_t *mctx, re_sift_context_t *sctx,
 			    dfa->nexts[node_idx]))
     /* The node can't accept the `multi byte', or the
        destination was already thrown away, then the node
-       could't accept the current input `multi byte'.   */
+       couldn't accept the current input `multi byte'.   */
     naccepted = 0;
   /* Otherwise, it is sure that the node could accept
      `naccepted' bytes input.  */
@@ -2416,7 +2416,7 @@ find_recover_state (reg_errcode_t *err, re_match_context_t *mctx)
 /* From the node set CUR_NODES, pick up the nodes whose types are
    OP_OPEN_SUBEXP and which have corresponding back references in the regular
    expression. And register them to use them later for evaluating the
-   correspoding back references.  */
+   corresponding back references.  */
 
 static reg_errcode_t
 internal_function
@@ -3341,7 +3341,7 @@ build_trtable (const re_dfa_t *dfa, re_dfastate_t *state)
   dests_node = dests_alloc->dests_node;
   dests_ch = dests_alloc->dests_ch;
 
-  /* Initialize transiton table.  */
+  /* Initialize transition table.  */
   state->word_trtable = state->trtable = NULL;
 
   /* At first, group all nodes belonging to `state' into several
@@ -4080,7 +4080,7 @@ extend_buffers (re_match_context_t *mctx)
   reg_errcode_t ret;
   re_string_t *pstr = &mctx->input;
 
-  /* Double the lengthes of the buffers.  */
+  /* Double the lengths of the buffers.  */
   ret = re_string_realloc_buffers (pstr, pstr->bufs_len * 2);
   if (BE (ret != REG_NOERROR, 0))
     return ret;
