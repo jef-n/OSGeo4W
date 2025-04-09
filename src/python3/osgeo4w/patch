@@ -116,18 +116,6 @@ diff -ur Python-3.12.3/PCbuild/_sqlite3.vcxproj ../Python-3.12.3/PCbuild/_sqlite
 -</Project>
 \ No newline at end of file
 +</Project>
-diff -ur Python-3.12.3/PCbuild/_ssl.vcxproj ../Python-3.12.3/PCbuild/_ssl.vcxproj
---- Python-3.12.3/PCbuild/_ssl.vcxproj	2024-04-09 10:09:14.000000000 +0200
-+++ ../Python-3.12.3/PCbuild/_ssl.vcxproj	2024-04-10 12:02:58.279627800 +0200
-@@ -99,7 +99,7 @@
-   </ItemDefinitionGroup>
-   <ItemGroup>
-     <ClCompile Include="..\Modules\_ssl.c" />
--    <ClCompile Include="$(opensslIncludeDir)\applink.c">
-+    <ClCompile Include="$(OSGEO4W_ROOT)\include\openssl\applink.c">
-       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;$(PreprocessorDefinitions)</PreprocessorDefinitions>
-     </ClCompile>
-   </ItemGroup>
 diff -ur Python-3.12.3/PCbuild/openssl.props ../Python-3.12.3/PCbuild/openssl.props
 --- Python-3.12.3/PCbuild/openssl.props	2024-04-09 10:09:14.000000000 +0200
 +++ ../Python-3.12.3/PCbuild/openssl.props	2024-04-10 12:02:58.291145400 +0200
