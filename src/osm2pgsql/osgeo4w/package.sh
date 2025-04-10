@@ -1,5 +1,5 @@
 export P=osm2pgsql
-export V=2.0.1
+export V=2.1.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="expat-devel proj-devel bzip2-devel zlib-devel boost-devel libpq-devel wingetopt-devel lua-devel"
