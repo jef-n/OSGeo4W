@@ -185,6 +185,9 @@ nextbinary
 		-D WITH_CUSTOM_WIDGETS=TRUE \
 		-D CMAKE_BUILD_TYPE=$BUILDCONF \
 		-D CMAKE_CONFIGURATION_TYPES="$BUILDCONF" \
+		-D HAS_KDE_QT5_PDF_TRANSFORM_FIX=TRUE \
+		-D HAS_KDE_QT5_SMALL_CAPS_FIX=TRUE \
+		-D HAS_KDE_QT5_FONT_STRETCH_FIX=TRUE \
 		-D SETUPAPI_LIBRARY="$(cygpath -am "/cygdrive/c/Program Files (x86)/Windows Kits/10/Lib/$UCRTVersion/um/x64/SetupAPI.Lib")" \
 		-D PROJ_INCLUDE_DIR=$(cygpath -am $O4W_ROOT/include) \
 		-D POSTGRES_INCLUDE_DIR=$(cygpath -am $O4W_ROOT/include) \
