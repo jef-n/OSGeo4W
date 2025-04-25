@@ -25,6 +25,7 @@ export LIB="$LIB;$(cygpath -aw osgeo4w/lib)"
 export PATH="$PATH:$OSGEO4W_PWD/osgeo4w/bin"
 type sqlite3
 
+CXXFLAGS="/D_DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR" \
 cmake -G Ninja \
 	-D CMAKE_BUILD_TYPE=Release \
 	-D CMAKE_INSTALL_PREFIX=../install \
