@@ -772,7 +772,7 @@ packagemeta::ScanDownloadedFiles ()
 	    ++i;
 	}
     }
-    /* Don't explicity iterate through sources - any sources that aren't
+    /* Don't explicitly iterate through sources - any sources that aren't
        referenced are unselectable anyway.  */
 }
 
