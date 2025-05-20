@@ -1,5 +1,5 @@
 export P=qwc-services
-export V=1.3.4
+export V=1.4.3
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-core python3-virtualenv"
@@ -1275,25 +1275,32 @@ EOF
 
 	pip3 install --ignore-installed --no-cache-dir \
 		Flask-WeasyPrint \
-		Flask==2.0.2 \
-		Flask-Bootstrap==3.3.7.1 \
-		Flask-JWT-Extended==4.3.1 \
+		Flask==3.0.3 \
+		Bootstrap-Flask==2.3.3 \
+		Flask-JWT-Extended==4.6.0 \
 		Flask-Login \
-		Flask-Mail==0.9.1 \
-		Flask-WTF==1.0.0 \
+		Flask-Mail2==1.0.2 \
+		Flask-WTF==1.2.2 \
 		alembic \
-		email_validator==1.0.5 \
+		email_validator==2.1.2 \
 		flask-cors==3.0.8 \
 		flask-ldap3-login \
-		flask-restx==0.5.1 \
-		jsonschema==4.0.0 \
-		pyotp==2.6.0 \
-		python-dotenv==0.19.2 \
-		qrcode==7.3.1 \
+		flask-restx==1.3.0 \
+		jsonschema==4.17.3 \
+		pyotp==2.9.0 \
+		python-dotenv==1.0.1 \
+		qrcode==7.4.2 \
 		$P-core==$V \
 		python-i18n==0.3.9 \
 		xlsxwriter \
-		psycopg2-binary
+		psycopg2-binary \
+		Werkzeug==3.0.6 \
+		requests==2.32.3 \
+		SQLAlchemy==2.0.37 \
+		Pillow==10.4.0 \
+		deepmerge==1.1.1 \
+		clamd==1.0.2 \
+		Jinja2==3.1.5
 
 	# Bad hack to circumvent
 	# ImportError: cannot import name 'encodings' from 'psycopg2._psycopg'
