@@ -1,0 +1,4277 @@
+diff --git a/.qmake.conf b/.qmake.conf
+new file mode 100644
+index 000000000..b303d719d
+--- /dev/null
++++ b/.qmake.conf
+@@ -0,0 +1,2 @@
++top_srcdir=$$PWD
++top_builddir=$$shadowed($$PWD)
+diff --git a/apps/apps.pri b/apps/apps.pri
+index 6204f2518..3289e6d41 100644
+--- a/apps/apps.pri
++++ b/apps/apps.pri
+@@ -29,7 +29,6 @@ DEPENDPATH += $$LIBGUI_ROOT \
+ 
+ unix:LIBS += $$QMAKE_LIBS_EXECINFO
+ windows:RCC_DIR=src/
+-windows:DESTDIR=$$PWD
+ 
+ isEqual(PRIVATE_PLUGINS, false) {
+   windows:RC_FILE=res/windows_ico.qrc
+diff --git a/apps/pgmodeler-se/pgmodeler-se.pro b/apps/pgmodeler-se/pgmodeler-se.pro
+index 6da11c6de..3bd2ba394 100644
+--- a/apps/pgmodeler-se/pgmodeler-se.pro
++++ b/apps/pgmodeler-se/pgmodeler-se.pro
+@@ -30,12 +30,12 @@ DEPENDPATH += ../pgmodeler \
+ # Forcing the linker to use the objects files generated
+ # during the compilation of the main executable since
+ # pgmodeler-se uses the same application class
+-OBJECTS += ../pgmodeler/obj/pgmodelerapp.o \
+-../pgmodeler/obj/moc_pgmodelerapp.o
++windows: OBJECTS += ../pgmodeler/obj/pgmodelerapp.obj ../pgmodeler/obj/moc_pgmodelerapp.obj
++else: OBJECTS += ../pgmodeler/obj/pgmodelerapp.o ../pgmodeler/obj/moc_pgmodelerapp.o
+ 
+ # Deployment settings
+ target.path = $$PRIVATEBINDIR
+ INSTALLS = target
+ 
+-# Print the current build settins (see pgmodeler.pri)
++# Print the current build settings (see pgmodeler.pri)
+ printBuildDetails()
+diff --git a/apps/pgmodeler-se/src/sourceeditorwidget.cpp b/apps/pgmodeler-se/src/sourceeditorwidget.cpp
+index 8548a8a2c..58da711be 100644
+--- a/apps/pgmodeler-se/src/sourceeditorwidget.cpp
++++ b/apps/pgmodeler-se/src/sourceeditorwidget.cpp
+@@ -230,7 +230,7 @@ void SourceEditorWidget::validateSyntax()
+ 	{
+ 		editor_txt->setPalette(def_editor_pal);
+ 		schparser.ignoreEmptyAttributes(true);
+-		schparser.ignoreUnkownAttributes(true);
++		schparser.ignoreUnknownAttributes(true);
+ 		schparser.setSearchPath(QFileInfo(filename).absolutePath());
+ 		schparser.loadBuffer(editor_txt->toPlainText());
+ 		schparser.getSourceCode({});
+diff --git a/libs/libcanvas/libcanvas.pro b/libs/libcanvas/libcanvas.pro
+index 3c6aca815..2b17f796b 100644
+--- a/libs/libcanvas/libcanvas.pro
++++ b/libs/libcanvas/libcanvas.pro
+@@ -2,7 +2,6 @@ include(../../pgmodeler.pri)
+ 
+ TEMPLATE = lib
+ TARGET = canvas
+-windows: DESTDIR = $$PWD
+ 
+ # Enables shared library symbols exporting
+ DEFINES += CANVAS_SYMBOLS
+diff --git a/libs/libcanvas/src/baseobjectview.h b/libs/libcanvas/src/baseobjectview.h
+index ebce35b8d..720264a73 100644
+--- a/libs/libcanvas/src/baseobjectview.h
++++ b/libs/libcanvas/src/baseobjectview.h
+@@ -136,16 +136,16 @@ class __libcanvas BaseObjectView: public QObject, public QGraphicsItemGroup {
+ 		void fade(bool fd_in, int duration, int loop_cnt = 1, qreal final_opacity = 1);
+ 
+ 	public:
+-		static constexpr double VertSpacing=2.0,
+-		HorizSpacing=2.0,
+-		DefaultFontSize=10.0,
+-		ObjectBorderWidth=1.00,
+-		MaxDpiFactor=1.4,
+-		ObjectShadowXPos=8,
+-		ObjectShadowYPos=8;
+-
+-		static constexpr int ObjectAlphaChannel=128,
+-		ObjectShadowAlphaChannel=50;
++		static constexpr double VertSpacing=2.0;
++		static constexpr double HorizSpacing=2.0;
++		static constexpr double DefaultFontSize=10.0;
++		static constexpr double ObjectBorderWidth=1.00;
++		static constexpr double MaxDpiFactor=1.4;
++		static constexpr double ObjectShadowXPos=8;
++		static constexpr double ObjectShadowYPos=8;
++
++		static constexpr int ObjectAlphaChannel=128;
++		static constexpr int ObjectShadowAlphaChannel=50;
+ 
+ 		BaseObjectView(BaseObject *object=nullptr);
+ 		virtual ~BaseObjectView();
+diff --git a/libs/libcanvas/src/basetableview.cpp b/libs/libcanvas/src/basetableview.cpp
+index 7ef59b9c8..69d9b6ddd 100644
+--- a/libs/libcanvas/src/basetableview.cpp
++++ b/libs/libcanvas/src/basetableview.cpp
+@@ -520,7 +520,7 @@ void BaseTableView::configureObjectShadow()
+ 	BaseObjectView::configureObjectShadow();
+ }
+ 
+-QList<TableObjectView *> BaseTableView::getSelectedChidren()
++QList<TableObjectView *> BaseTableView::getSelectedChildren()
+ {
+ 	return sel_child_objs;
+ }
+diff --git a/libs/libcanvas/src/basetableview.h b/libs/libcanvas/src/basetableview.h
+index 3746882ed..2e24d1cbd 100644
+--- a/libs/libcanvas/src/basetableview.h
++++ b/libs/libcanvas/src/basetableview.h
+@@ -64,10 +64,10 @@ class __libcanvas BaseTableView: public BaseObjectView {
+ 		*ext_attribs;
+ 
+ 		//! brief Indicates if the extended attributes body should be hidden
+-		static bool hide_ext_attribs,
++		static bool hide_ext_attribs;
+ 
+ 		//! brief Indicates if the tag object should be hidden
+-		hide_tags;
++		static bool hide_tags;
+ 
+ 		//! brief Controls the maximum amount of attributes visible per page (columns/references + extended attributes)
+ 		static unsigned attribs_per_page[2];
+@@ -172,7 +172,7 @@ class __libcanvas BaseTableView: public BaseObjectView {
+ 		void configureObjectShadow();
+ 
+ 		//! \brief Returns a list of selected children objects
+-		QList<TableObjectView *> getSelectedChidren();
++		QList<TableObjectView *> getSelectedChildren();
+ 
+ 		//! \brief Clear the selection over all selected children
+ 		void clearChildrenSelection();
+diff --git a/libs/libcanvas/src/objectsscene.cpp b/libs/libcanvas/src/objectsscene.cpp
+index 9051637a8..b9eb90eee 100644
+--- a/libs/libcanvas/src/objectsscene.cpp
++++ b/libs/libcanvas/src/objectsscene.cpp
+@@ -982,7 +982,7 @@ void ObjectsScene::handleChildrenSelectionChanged()
+ 	if(!tab_view)
+ 		return;
+ 
+-	if(tab_view->getSelectedChidren().empty())
++	if(tab_view->getSelectedChildren().empty())
+ 		tabs_sel_children.removeAll(tab_view);
+ 	else if(!tabs_sel_children.contains(tab_view))
+ 		tabs_sel_children.append(tab_view);
+@@ -1897,7 +1897,7 @@ QList<QGraphicsItem *> ObjectsScene::selectedItems() const
+ 
+ 	for(auto &tab_view :tabs_sel_children)
+ 	{
+-		for(auto &tab_obj : tab_view->getSelectedChidren())
++		for(auto &tab_obj : tab_view->getSelectedChildren())
+ 			items.append(tab_obj);
+ 	}
+ 
+diff --git a/libs/libcanvas/src/objectsscene.h b/libs/libcanvas/src/objectsscene.h
+index 8da17d3ab..382c12fdf 100644
+--- a/libs/libcanvas/src/objectsscene.h
++++ b/libs/libcanvas/src/objectsscene.h
+@@ -44,25 +44,25 @@ class __libcanvas ObjectsScene: public QGraphicsScene {
+ 		};
+ 
+ 		//! \brief Stores the default grid line color
+-		static const QColor DefaultGridColor,
++		static const QColor DefaultGridColor;
+ 
+ 		//! \brief Stores the default grid line color
+-		DefaultCanvasColor,
++		static const QColor DefaultCanvasColor;
+ 
+ 		//! \brief Stores the default page delimiter lines color
+-		DefaultDelimitersColor;
++		static const QColor DefaultDelimitersColor;
+ 
+ 	private:
+ 		static GridPattern grid_pattern;
+ 
+ 		//! \brief Stores the grid line color
+-		static QColor grid_color,
++		static QColor grid_color;
+ 
+ 		//! \brief Stores the canvas background color
+-		canvas_color,
++		static QColor canvas_color;
+ 
+ 		//! \brief Stores the page delimiter lines color
+-		delimiters_color;
++		static QColor delimiters_color;
+ 
+ 		//! \brief Holds the names of the layers on the scene used to separate in the objects on the canvas
+ 		QStringList layers,
+@@ -83,9 +83,9 @@ class __libcanvas ObjectsScene: public QGraphicsScene {
+ 
+ 		show_scene_limits;
+ 
+-		static constexpr int SceneMoveStep=20,
+-		SceneMoveTimeout=20,
+-		SceneMoveThreshold=100;
++		static constexpr int SceneMoveStep=20;
++		static constexpr int SceneMoveTimeout=20;
++		static constexpr int SceneMoveThreshold=100;
+ 
+ 		//! \brief Timer responsible to move the scene
+ 		QTimer scene_move_timer,
+@@ -107,37 +107,36 @@ class __libcanvas ObjectsScene: public QGraphicsScene {
+ 		int scene_move_dx, scene_move_dy;
+ 
+ 		//! \brief Object alignemnt, grid showing, page delimiter showing options
+-		static bool align_objs_grid,
++		static bool align_objs_grid;
++		static bool show_grid;
+ 
+-		show_grid,
+-
+-		show_page_delim,
++		static bool show_page_delim;
+ 
+ 		//! \brief Indicates if the corner move is enabled for the scene
+-		corner_move,
++		static bool corner_move;
+ 
+ 		/*! \brief Indicates that panning mode and range selection model are activate in inverse mode.
+ 		By default panning model is activated with a single left-click and range selection with SHIFT + left-click */
+-		invert_rangesel_trigger,
++		static bool invert_rangesel_trigger;
+ 
+-		lock_delim_scale;
++		static bool lock_delim_scale;
+ 
+ 		//! \brief Scene grid size
+-		static unsigned grid_size,
++		static unsigned grid_size;
+ 
+ 		//! \brief The number of pages in which the scene rect is expanded
+-		expansion_factor;
++		static unsigned expansion_factor;
+ 
+ 		//! \brief Used to store the canvas/printer page layout (size, orientation, margins)
+ 		static QPageLayout page_layout;
+ 
+-		static double delimiter_scale,
++		static double delimiter_scale;
+ 
+ 		//! \brief The minimum scene width is defined to be width of the current page layout * 2
+-		min_scene_width,
++		static double min_scene_width;
+ 
+ 		//! \brief The minimum scene height is defined to be height of the current page layout * 2
+-		min_scene_height;
++		static double min_scene_height;
+ 
+ 		//! \brief Indicates that there are objects being moved and the signal s_objectsMoved must be emitted
+ 		bool moving_objs,
+@@ -227,8 +226,8 @@ class __libcanvas ObjectsScene: public QGraphicsScene {
+ 			LayerRectColor
+ 		};
+ 
+-		static constexpr double MinScaleFactor = 0.100000,
+-		MaxScaleFactor = 5.000001;
++		static constexpr double MinScaleFactor = 0.100000;
++		static constexpr double MaxScaleFactor = 5.000001;
+ 
+ 		static constexpr unsigned DefaultLayer = 0;
+ 
+diff --git a/libs/libcanvas/src/relationshipview.h b/libs/libcanvas/src/relationshipview.h
+index e29799a60..f6a90a2ae 100644
+--- a/libs/libcanvas/src/relationshipview.h
++++ b/libs/libcanvas/src/relationshipview.h
+@@ -52,13 +52,13 @@ class __libcanvas RelationshipView: public BaseObjectView {
+ 		static constexpr double ConnLineLength=20.0;
+ 
+ 		//! \brief Indicates that the relationship labels must be hidden
+-		static bool hide_name_label,
++		static bool hide_name_label;
+ 
+ 		//! \brief Indicates that the relationship lines should be curved
+-		use_curved_lines,
++		static bool use_curved_lines;
+ 
+ 		//! \brief Indicates that the relationship should be drawn in Crow's foot notation
+-		use_crows_foot;
++		static bool use_crows_foot;
+ 
+ 		/*! \brief Specify the type of connection used by the lines. The first (classical)
+ 		is to connect the line to tables through their central points. The second (better semantics)
+diff --git a/libs/libcanvas/src/tableobjectview.h b/libs/libcanvas/src/tableobjectview.h
+index 07e1125d2..6526911d7 100644
+--- a/libs/libcanvas/src/tableobjectview.h
++++ b/libs/libcanvas/src/tableobjectview.h
+@@ -63,16 +63,16 @@ class __libcanvas TableObjectView: public BaseObjectView {
+ 		QString formatUserTypeName(PgSqlType type);
+ 
+ 	public:
+-		static const QString	TypeSeparator,
+-		ConstrSeparator,
+-		TextUnique,
+-		TextExclude,
+-		TextCheck,
+-		TextPrimaryKey,
+-		TextForeignKey,
+-		TextNotNull,
+-		ConstrDelimStart,
+-		ConstrDelimEnd;
++		static const QString TypeSeparator;
++		static const QString ConstrSeparator;
++		static const QString TextUnique;
++		static const QString TextExclude;
++		static const QString TextCheck;
++		static const QString TextPrimaryKey;
++		static const QString TextForeignKey;
++		static const QString TextNotNull;
++		static const QString ConstrDelimStart;
++		static const QString ConstrDelimEnd;
+ 
+ 		enum ChildObjectId: unsigned {
+ 			ObjDescriptor,
+diff --git a/libs/libcanvas/src/textboxview.h b/libs/libcanvas/src/textboxview.h
+index 352b750f5..5cbcf2bd5 100644
+--- a/libs/libcanvas/src/textboxview.h
++++ b/libs/libcanvas/src/textboxview.h
+@@ -53,7 +53,7 @@ class __libcanvas TextboxView: public BaseObjectView {
+ 	public:
+ 		TextboxView(Textbox *txtbox, bool override_style = false);
+ 
+-	 virtual ~TextboxView();
++		virtual ~TextboxView();
+ 
+ 		/*! \brief Sets the fill and border color for the text box. This method has effect only when
+ 		 the style can be overriden (via constructor) */
+diff --git a/libs/libcanvas/src/textpolygonitem.h b/libs/libcanvas/src/textpolygonitem.h
+index bbacfb097..2448d1e1e 100644
+--- a/libs/libcanvas/src/textpolygonitem.h
++++ b/libs/libcanvas/src/textpolygonitem.h
+@@ -34,9 +34,9 @@
+ class __libcanvas TextPolygonItem : public QGraphicsPolygonItem {
+ 	private:
+ 
+-	 QGraphicsTextItem *text_item;
++		QGraphicsTextItem *text_item;
+ 
+-	 bool word_wrap;
++		bool word_wrap;
+ 
+ 	public:
+ 		TextPolygonItem(QGraphicsItem *parent = nullptr);
+diff --git a/libs/libcli/libcli.pro b/libs/libcli/libcli.pro
+index e69f7eb6f..ca520fdbf 100644
+--- a/libs/libcli/libcli.pro
++++ b/libs/libcli/libcli.pro
+@@ -2,7 +2,6 @@ include(../../pgmodeler.pri)
+ 
+ TEMPLATE = lib
+ TARGET = cli
+-windows: DESTDIR = $$PWD
+ 
+ # Enables shared library symbols exporting
+ DEFINES += CLI_SYMBOLS
+diff --git a/libs/libcli/src/compat/view.cpp b/libs/libcli/src/compat/view.cpp
+index b4554ee6c..58d18a954 100644
+--- a/libs/libcli/src/compat/view.cpp
++++ b/libs/libcli/src/compat/view.cpp
+@@ -18,7 +18,7 @@
+ 
+ #include "view.h"
+ 
+-using namespace CompatNs;
++namespace CompatNs {
+ 
+ View::View() : BaseTable()
+ {
+@@ -608,3 +608,5 @@ QString View::getDropCode(bool cascade)
+ 	setSQLObjectAttribute();
+ 	return BaseObject::getDropCode(cascade);
+ }
++
++}
+diff --git a/libs/libcli/src/pgmodelercliapp.h b/libs/libcli/src/pgmodelercliapp.h
+index 021f797d8..15f6baf97 100644
+--- a/libs/libcli/src/pgmodelercliapp.h
++++ b/libs/libcli/src/pgmodelercliapp.h
+@@ -195,92 +195,92 @@ class __libcli PgModelerCliApp: public Application {
+ 
+ 	public:
+ 		//! \brief Option names constants
+-		static const QString AllChildren,
+-		Input,
+-		Output,
+-		InputDb,
+-		ExportToFile,
+-		ExportToPng,
+-		ExportToSvg,
+-		ExportToDbms,
+-		ExportToDict,
+-		ImportDb,
+-		NoIndex,
+-		Split,
+-		Markdown,
+-		DependenciesSql,
+-		ChildrenSql,
+-		GroupByType,
+-		GenDropScript,
+-		Diff,
+-		DropDatabase,
+-		DropObjects,
+-		NonTransactional,
+-		PgSqlVer,
+-		Help,
+-		ShowGrid,
+-		ShowDelimiters,
+-		PageByPage,
+-		OverrideBgColor,
+-		IgnoreDuplicates,
+-		IgnoreErrorCodes,
+-		ConnAlias,
+-		Host,
+-		Port,
+-		User,
+-		Passwd,
+-		InitialDb,
+-		Silent,
+-		ListConns,
+-		Simulate,
+-		FixModel,
+-		FixTries,
+-		ZoomFactor,
+-		UseTmpNames,
+-		DbmMimeType,
+-		Install,
+-		Uninstall,
+-		SystemWide,
+-		IgnoreImportErrors,
+-		ImportSystemObjs,
+-		ImportExtensionObjs,
+-		DebugMode,
+-		FilterObjects,
+-		MatchByName,
+-		ForceChildren,
+-		OnlyMatching,
+-		CommentsAsAliases,
+-		PartialDiff,
+-		Force,
+-		StartDate,
+-		EndDate,
+-		CompareTo,
+-		SaveDiff,
+-		ApplyDiff,
+-		NoDiffPreview,
+-		DropClusterObjs,
+-		RevokePermissions,
+-		DropMissingObjs,
+-		ForceDropColsConstrs,
+-		RenameDb,
+-		NoSequenceReuse,
+-		NoCascadeDrop,
+-		RecreateUnmod,
+-		ReplaceModified,
+-		ForceReCreateObjs,
+-		CreateConfigs,
+-		MissingOnly,
+-		IgnoreFaultyPlugins,
+-		ListPlugins,
+-
+-		ConnOptions,
+-		TagExpr,
+-		EndTagExpr,
+-		AttributeExpr,
+-		ModelFixLog,
+-
+-		MsgFileAssociated,
+-		MsgNoFileAssociation;
++		static const QString AllChildren;
++		static const QString Input;
++		static const QString Output;
++		static const QString InputDb;
++		static const QString ExportToFile;
++		static const QString ExportToPng;
++		static const QString ExportToSvg;
++		static const QString ExportToDbms;
++		static const QString ExportToDict;
++		static const QString ImportDb;
++		static const QString NoIndex;
++		static const QString Split;
++		static const QString Markdown;
++		static const QString DependenciesSql;
++		static const QString ChildrenSql;
++		static const QString GroupByType;
++		static const QString GenDropScript;
++		static const QString Diff;
++		static const QString DropDatabase;
++		static const QString DropObjects;
++		static const QString NonTransactional;
++		static const QString PgSqlVer;
++		static const QString Help;
++		static const QString ShowGrid;
++		static const QString ShowDelimiters;
++		static const QString PageByPage;
++		static const QString OverrideBgColor;
++		static const QString IgnoreDuplicates;
++		static const QString IgnoreErrorCodes;
++		static const QString ConnAlias;
++		static const QString Host;
++		static const QString Port;
++		static const QString User;
++		static const QString Passwd;
++		static const QString InitialDb;
++		static const QString Silent;
++		static const QString ListConns;
++		static const QString Simulate;
++		static const QString FixModel;
++		static const QString FixTries;
++		static const QString ZoomFactor;
++		static const QString UseTmpNames;
++		static const QString DbmMimeType;
++		static const QString Install;
++		static const QString Uninstall;
++		static const QString SystemWide;
++		static const QString IgnoreImportErrors;
++		static const QString ImportSystemObjs;
++		static const QString ImportExtensionObjs;
++		static const QString DebugMode;
++		static const QString FilterObjects;
++		static const QString MatchByName;
++		static const QString ForceChildren;
++		static const QString OnlyMatching;
++		static const QString CommentsAsAliases;
++		static const QString PartialDiff;
++		static const QString Force;
++		static const QString StartDate;
++		static const QString EndDate;
++		static const QString CompareTo;
++		static const QString SaveDiff;
++		static const QString ApplyDiff;
++		static const QString NoDiffPreview;
++		static const QString DropClusterObjs;
++		static const QString RevokePermissions;
++		static const QString DropMissingObjs;
++		static const QString ForceDropColsConstrs;
++		static const QString RenameDb;
++		static const QString NoSequenceReuse;
++		static const QString NoCascadeDrop;
++		static const QString RecreateUnmod;
++		static const QString ReplaceModified;
++		static const QString ForceReCreateObjs;
++		static const QString CreateConfigs;
++		static const QString MissingOnly;
++		static const QString IgnoreFaultyPlugins;
++		static const QString ListPlugins;
++
++		static const QString ConnOptions;
++		static const QString TagExpr;
++		static const QString EndTagExpr;
++		static const QString AttributeExpr;
++		static const QString ModelFixLog;
++
++		static const QString MsgFileAssociated;
++		static const QString MsgNoFileAssociation;
+ 
+ 		PgModelerCliApp(int argc, char **argv);
+ 
+@@ -289,7 +289,7 @@ class __libcli PgModelerCliApp: public Application {
+ 		//! \brief Shows the options menu
+ 		void showMenu();
+ 
+-					 //! \brief Shows the version info
++		//! \brief Shows the version info
+ 		void showVersionInfo();
+ 
+ 		/*! \brief Prints to the stdout the provided text appending a \n on the string
+diff --git a/libs/libconnector/libconnector.pro b/libs/libconnector/libconnector.pro
+index 66e8bc971..574e3f515 100644
+--- a/libs/libconnector/libconnector.pro
++++ b/libs/libconnector/libconnector.pro
+@@ -2,7 +2,6 @@ include(../../pgmodeler.pri)
+ 
+ TEMPLATE = lib
+ TARGET = connector
+-windows: DESTDIR = $$PWD
+ 
+ # Enables shared library symbols exporting
+ DEFINES += CONNECTOR_SYMBOLS
+diff --git a/libs/libconnector/src/catalog.cpp b/libs/libconnector/src/catalog.cpp
+index ec5dc28c7..bbad8bcf0 100644
+--- a/libs/libconnector/src/catalog.cpp
++++ b/libs/libconnector/src/catalog.cpp
+@@ -477,7 +477,7 @@ QString Catalog::getCatalogQuery(const QString &qry_type, ObjectType obj_type, b
+ 	}
+ 
+ 	loadCatalogQuery(BaseObject::getSchemaName(obj_type));
+-	schparser.ignoreUnkownAttributes(true);
++	schparser.ignoreUnknownAttributes(true);
+ 	schparser.ignoreEmptyAttributes(true);
+ 
+ 	attribs[Attributes::PgSqlVersion]=schparser.getPgSQLVersion();
+@@ -841,7 +841,7 @@ std::vector<attribs_map> Catalog::getMultipleAttributes(const QString &catalog_s
+ 		std::vector<attribs_map> obj_attribs;
+ 
+ 		loadCatalogQuery(catalog_sch);
+-		schparser.ignoreUnkownAttributes(true);
++		schparser.ignoreUnknownAttributes(true);
+ 		schparser.ignoreEmptyAttributes(true);
+ 
+ 		attribs[Attributes::PgSqlVersion]=schparser.getPgSQLVersion();
+@@ -1026,7 +1026,7 @@ attribs_map Catalog::getServerAttributes()
+ 		attribs_map tuple, attribs_aux;
+ 
+ 		loadCatalogQuery("server");
+-		schparser.ignoreUnkownAttributes(true);
++		schparser.ignoreUnknownAttributes(true);
+ 		schparser.ignoreEmptyAttributes(true);
+ 		sql = schparser.getSourceCode(attribs).simplified();
+ 		connection.executeDMLCommand(sql, res);
+diff --git a/libs/libconnector/src/catalog.h b/libs/libconnector/src/catalog.h
+index 845aa3a67..ef78c8e1a 100644
+--- a/libs/libconnector/src/catalog.h
++++ b/libs/libconnector/src/catalog.h
+@@ -58,32 +58,32 @@ class __libconnector Catalog {
+ 		SchemaParser schparser;
+ 
+ 		//! \brief Executes a list command on catalog
+-		static const QString QueryList,
++		static const QString QueryList;
+ 
+ 		//! \brief Executes a attribute retrieving command on catalog
+-		QueryAttribs,
++		static const QString QueryAttribs;
+ 
+ 		//! \brief Replacement for true 't' boolean value
+-		PgSqlTrue,
++		static const QString PgSqlTrue;
+ 
+ 		//! \brief Replacement for false 'f' boolean value
+-		PgSqlFalse,
++		static const QString PgSqlFalse;
+ 
+ 		//! \brief Suffix for boolean fields.
+-		BoolField,
++		static const QString BoolField;
+ 
+ 		/*! \brief Query used to retrieve extension objects.
+ 		 * This query retrieve all extension child object except for data types because
+ 		 * they are handled in extension catalog query */
+-		GetExtensionObjsSql,
++		static const QString GetExtensionObjsSql;
+ 
+ 		//! \brief This pattern matches the PostgreSQL array values in format [n:n]={a,b,c,d,...} or {a,b,c,d,...}
+-		ArrayPattern,
++		static const QString ArrayPattern;
+ 
+ 		//! \brief Holds a constant string used to mark invalid filter patterns
+-		InvFilterPattern,
++		static const QString InvFilterPattern;
+ 
+-		AliasPlaceholder;
++		static const QString AliasPlaceholder;
+ 
+ 		/*! \brief Stores the oid of objects that are created by extension.
+ 		 * The keys of this map are the names of the extensions that hold objects in the database,
+@@ -105,23 +105,23 @@ class __libconnector Catalog {
+ 
+ 		/*! \brief This map stores the oid field name for each object type. The oid field name can be
+ 		composed by the pg_[OBJECT_TYPE] table alias. Refer to catalog query schema files for details */
+-		static const std::map<ObjectType, QString> oid_fields,
++		static const std::map<ObjectType, QString> oid_fields;
+ 
+ 		//! \brief This map stores the relation names in catalogs for each object type
+-		obj_relnames,
++		static const std::map<ObjectType, QString> obj_relnames;
+ 		
+ 		/*! \brief This map stores the name field for each object type. Refer to catalog query schema files for details */
+-		name_fields,
++		static const std::map<ObjectType, QString> name_fields;
+ 
+ 		/*! \brief This map stores the oid field name that is used to check if the object (or its parent) is part of a extension
+ 		(see getNotExtObjectQuery()). By default the attribute oid_fields is used instead for that purpose, but, for some objects,
+ 		there are different fields that tells if the object (or its parent) is part of extension. */
+-		ext_oid_fields,
++		static const std::map<ObjectType, QString> ext_oid_fields;
+ 
+ 		/*! \brief This map stores the aliases that are used to reference the table (parent) on each table object catalog query.
+ 		 * This is mainly used to force the filter of constraints/indexes/triggers/rules/policies in presence of one or more table
+ 		 * filter (see setObjectFilter) */
+-		parent_aliases;
++		static const std::map<ObjectType, QString> parent_aliases;
+ 
+ 		//! \brief Store the cached catalog queries
+ 		static attribs_map catalog_queries;
+@@ -184,10 +184,10 @@ class __libconnector Catalog {
+ 
+ 	public:
+ 		//! \brief Stores the prefix of any temp object (in pg_temp) created during catalog reading by pgModeler
+-		static const QString PgModelerTempDbObj,
++		static const QString PgModelerTempDbObj;
+ 
+ 		//! \brief Stores the null char escaped in format \000
+-		EscapedNullChar;
++		static const QString EscapedNullChar;
+ 
+ 		Catalog();
+ 
+diff --git a/libs/libconnector/src/connection.cpp b/libs/libconnector/src/connection.cpp
+index 0256b9298..739112b93 100644
+--- a/libs/libconnector/src/connection.cpp
++++ b/libs/libconnector/src/connection.cpp
+@@ -31,6 +31,7 @@ bool Connection::ignore_db_version {false};
+ 
+ const QString	Connection::ParamAlias {"alias"};
+ const QString	Connection::ParamApplicationName {"application_name"};
++const QString	Connection::ParamService {"service"};
+ const QString	Connection::ParamServerFqdn {"host"};
+ const QString	Connection::ParamServerIp {"hostaddr"};
+ const QString	Connection::ParamPort {"port"};
+@@ -158,11 +159,6 @@ void Connection::generateConnectionString()
+ 				connection_str += value;
+ 		}
+ 	}
+-
+-	if(!connection_str.contains(ParamDbName) ||
+-		 (!connection_str.contains(ParamServerFqdn) &&
+-			!connection_str.contains(ParamServerIp)))
+-		connection_str.clear();
+ }
+ 
+ void Connection::noticeProcessor(void *, const char *message)
+@@ -186,8 +182,10 @@ void Connection::validateConnectionStatus()
+ 
+ 	if(PQstatus(connection)==CONNECTION_BAD)
+ 		throw Exception(Exception::getErrorMessage(ErrorCode::ConnectionBroken)
+-										.arg(connection_params[ParamServerFqdn].isEmpty() ? connection_params[ParamServerIp] : connection_params[ParamServerFqdn])
+-										.arg(connection_params[ParamPort]),
++										.arg(connection_params[ParamService].isEmpty()
++									       ? QString(QT_TR_NOOP("`%1` at port `%2`")).arg(connection_params[ParamServerFqdn].isEmpty() ? connection_params[ParamServerIp] : connection_params[ParamServerFqdn], connection_params[ParamPort])
++										     : QString(QT_TR_NOOP("server %1")).arg(connection_params[ParamService])
++										),
+ 										ErrorCode::ConnectionBroken, __PRETTY_FUNCTION__, __FILE__, __LINE__);
+ }
+ 
+@@ -241,11 +239,11 @@ void Connection::connect()
+ 	else if(connection)
+ 	{
+ 		if(!silence_conn_err)
+-			throw Exception(ErrorCode::ConnectionAlreadyStablished, __PRETTY_FUNCTION__, __FILE__, __LINE__);
++			throw Exception(ErrorCode::ConnectionAlreadyEstablished, __PRETTY_FUNCTION__, __FILE__, __LINE__);
+ 		else
+ 		{
+ 			QTextStream err(stderr);
+-			err << QT_TR_NOOP("ERROR: trying to open an already stablished connection.") << Qt::endl
++			err << QT_TR_NOOP("ERROR: trying to open an already established connection.") << Qt::endl
+ 				<< "Conn. info: [ " << connection_str << "]" << Qt::endl;
+ 			this->close();
+ 		}
+@@ -260,8 +258,8 @@ void Connection::connect()
+ 	if(connection==nullptr || PQstatus(connection)==CONNECTION_BAD)
+ 	{
+ 		//Raise the error generated by the DBMS
+-		throw Exception(Exception::getErrorMessage(ErrorCode::ConnectionNotStablished)
+-						.arg(PQerrorMessage(connection)), ErrorCode::ConnectionNotStablished,
++		throw Exception(Exception::getErrorMessage(ErrorCode::ConnectionNotEstablished)
++						.arg(PQerrorMessage(connection)), ErrorCode::ConnectionNotEstablished,
+ 						__PRETTY_FUNCTION__, __FILE__, __LINE__);
+ 	}
+ 
+@@ -349,13 +347,18 @@ QString Connection::getConnectionId(bool host_port_only, bool incl_db_name, bool
+ 	if(!isConfigured())
+ 		return "";
+ 
+-	if(!connection_params[ParamServerFqdn].isEmpty())
+-		addr=connection_params[ParamServerFqdn];
++	if(!connection_params[ParamService].isEmpty())
++		addr = connection_params[ParamService];
+ 	else
+-		addr=connection_params[ParamServerIp];
++	{
++		if(!connection_params[ParamServerFqdn].isEmpty())
++			addr=connection_params[ParamServerFqdn];
++		else
++			addr=connection_params[ParamServerIp];
+ 
+-	if(!connection_params[ParamPort].isEmpty())
+-		port = QString(":%1").arg(connection_params[ParamPort]);
++		if(!connection_params[ParamPort].isEmpty())
++			port = QString(":%1").arg(connection_params[ParamPort]);
++	}
+ 
+ 	if(incl_db_name)
+ 		db_name = QString("%1@").arg(connection_params[ParamDbName]);
+@@ -375,9 +378,9 @@ QString Connection::getConnectionId(bool host_port_only, bool incl_db_name, bool
+ 	return conn_id;
+ }
+ 
+-bool Connection::isStablished()
++bool Connection::isEstablished()
+ {
+-	return (connection != nullptr);
++	return connection != nullptr;
+ }
+ 
+ bool Connection::isConfigured()
+@@ -530,7 +533,7 @@ void Connection::switchToDatabase(const QString &dbname)
+ 	try
+ 	{
+ 		//Closing the current connection if it's opened
+-		if(isStablished())
++		if(isEstablished())
+ 			close();
+ 
+ 		//Change the database name and reconfigure the connection string
+@@ -551,7 +554,7 @@ void Connection::switchToDatabase(const QString &dbname)
+ 
+ void Connection::operator = (const Connection &conn)
+ {
+-	if(this->isStablished())
++	if(this->isEstablished())
+ 		this->close();
+ 
+ 	this->auto_browse_db=conn.auto_browse_db;
+diff --git a/libs/libconnector/src/connection.h b/libs/libconnector/src/connection.h
+index 4a037b2a0..6fa1253aa 100644
+--- a/libs/libconnector/src/connection.h
++++ b/libs/libconnector/src/connection.h
+@@ -61,7 +61,7 @@ class __libconnector Connection {
+ 
+ 		/*! \brief This static method disable the notice messages when executing commands.
+ 		By default all connections are created with notice disabled. To enable it the user
+-		must call Connection::setNoticeEnabled(). Note: connections already stablished
++		must call Connection::setNoticeEnabled(). Note: already established connections 
+ 		aren't affected when calling this method the user must disconnect then connect again
+ 		to enable output. */
+ 		static void disableNoticeOutput(void *, const PGresult *){}
+@@ -72,17 +72,17 @@ class __libconnector Connection {
+ 		static void noticeProcessor(void *, const char *message);
+ 
+ 		//! \brief Indicates if notices are enabled
+-		static bool notice_enabled,
++		static bool notice_enabled;
+ 
+ 		//! \brief Indicates if executed sql must be printed (stdout) [default is false]
+-		print_sql,
++		static bool print_sql;
+ 
+ 		//! \brief Indicates if error silence is enabled
+-		silence_conn_err,
++		static bool silence_conn_err;
+ 
+ 		/*! \brief Indicates if the PostgreSQL version checking must be ignored during connection.
+ 		 * This flag allows connecting (poorly and error-prone!) to older versions ( < 10). */
+-		ignore_db_version;
++		static bool ignore_db_version;
+ 
+ 		/*! \brief Indicates that the initial database configured in the connection can be automatically
+ 		browsed after connect the server. This attribute is useful only in SQLTool */
+@@ -99,40 +99,41 @@ class __libconnector Connection {
+ 
+ 	public:
+ 		//! \brief Constants used to reference the connections parameters
+-		static const QString	ParamAlias,
+-		ParamApplicationName,
+-		ParamServerFqdn,
+-		ParamServerIp,
+-		ParamPort,
+-		ParamDbName,
+-		ParamUser,
+-		ParamPassword,
+-		ParamConnTimeout,
+-		ParamOthers,
+-		ParamSslMode,
+-		ParamSslCert,
+-		ParamSslKey,
+-		ParamSslRootCert,
+-		ParamSslCrl,
+-		ParamKerberosServer,
+-		ParamLibGssapi,
++		static const QString ParamAlias;
++		static const QString ParamApplicationName;
++		static const QString ParamService;
++		static const QString ParamServerFqdn;
++		static const QString ParamServerIp;
++		static const QString ParamPort;
++		static const QString ParamDbName;
++		static const QString ParamUser;
++		static const QString ParamPassword;
++		static const QString ParamConnTimeout;
++		static const QString ParamOthers;
++		static const QString ParamSslMode;
++		static const QString ParamSslCert;
++		static const QString ParamSslKey;
++		static const QString ParamSslRootCert;
++		static const QString ParamSslCrl;
++		static const QString ParamKerberosServer;
++		static const QString ParamLibGssapi;
+ 
+ 		/*! \brief Special parameter that store the name of the role
+ 		 *  to be switched in case of a successful connection */
+-		ParamSetRole,
++		static const QString ParamSetRole;
+ 
+ 		//! \brief Constants used to reference the connection ssl mode
+-		SslDisable,
+-		SslAllow,
+-		SslPrefer,
+-		SslRequire,
+-		SslCaVerify,
+-		SslFullVerify,
++		static const QString SslDisable;
++		static const QString SslAllow;
++		static const QString SslPrefer;
++		static const QString SslRequire;
++		static const QString SslCaVerify;
++		static const QString SslFullVerify;
+ 
+ 		//! \brief Constants used to reference the server info details (see getServerInfo())
+-		ServerVersion,
+-		ServerProtocol,
+-		ServerPid;
++		static const QString ServerVersion;
++		static const QString ServerProtocol;
++		static const QString ServerPid;
+ 
+ 		//! \brief Constants used to reference the default usage in model operations (see setDefaultForOperation())
+ 		enum ConnOperation: unsigned {
+@@ -233,13 +234,13 @@ class __libconnector Connection {
+ 		static QStringList getNotices();
+ 
+ 		/*! \brief Change the current database to the specified db name using the parameters from the current
+-		stablished connection causing the connection to be reset and moved to the new database.
++		established connection causing the connection to be reset and moved to the new database.
+ 		The effect of this is the same by type \c dbname on psql console. In case of errors the method will
+ 		raise an exception and switch back to the previous database. */
+ 		void switchToDatabase(const QString &dbname);
+ 
+-		//! \brief Returns if the connection is stablished
+-		bool isStablished();
++		//! \brief Returns if the connection is established
++		bool isEstablished();
+ 
+ 		//! \brief Returns if the connection is configured (has some attributes set)
+ 		bool isConfigured();
+diff --git a/libs/libcore/libcore.pro b/libs/libcore/libcore.pro
+index 4a866f519..36b683aa2 100644
+--- a/libs/libcore/libcore.pro
++++ b/libs/libcore/libcore.pro
+@@ -2,7 +2,6 @@ include(../../pgmodeler.pri)
+ 
+ TEMPLATE = lib
+ TARGET = core
+-windows: DESTDIR = $$PWD
+ 
+ # Enables shared library symbols exporting
+ DEFINES += CORE_SYMBOLS
+diff --git a/libs/libcore/src/basegraphicobject.h b/libs/libcore/src/basegraphicobject.h
+index bc2d11e1a..eaa898356 100644
+--- a/libs/libcore/src/basegraphicobject.h
++++ b/libs/libcore/src/basegraphicobject.h
+@@ -83,8 +83,8 @@ class __libcore BaseGraphicObject: public QObject, public BaseObject {
+ 		void setLayersAttribute();
+ 
+ 	public:
+-		static constexpr int MaxZValue = 50,
+-		MinZValue = -50;
++		static constexpr int MaxZValue = 50;
++		static constexpr int MinZValue = -50;
+ 
+ 		BaseGraphicObject();
+ 
+diff --git a/libs/libcore/src/baseobject.cpp b/libs/libcore/src/baseobject.cpp
+index 0e3d6e03f..b60f60246 100644
+--- a/libs/libcore/src/baseobject.cpp
++++ b/libs/libcore/src/baseobject.cpp
+@@ -890,7 +890,7 @@ QString BaseObject::getSourceCode(SchemaParser::CodeType def_type, bool reduced_
+ 					SchemaParser sch_parser;
+ 					QString filename=GlobalAttributes::getSchemaFilePath(GlobalAttributes::AlterSchemaDir, Attributes::Owner);
+ 
+-					sch_parser.ignoreUnkownAttributes(true);
++					sch_parser.ignoreUnknownAttributes(true);
+ 					attributes[Attributes::Owner]=sch_parser.getSourceCode(filename, attributes);
+ 				}
+ 			}
+@@ -909,7 +909,7 @@ QString BaseObject::getSourceCode(SchemaParser::CodeType def_type, bool reduced_
+ 			else
+ 				attributes[Attributes::Comment]=comment;
+ 
+-			schparser.ignoreUnkownAttributes(true);
++			schparser.ignoreUnknownAttributes(true);
+ 
+ 			attributes[Attributes::Comment]=
+ 					schparser.getSourceCode(Attributes::Comment, attributes, def_type);
+@@ -921,7 +921,7 @@ QString BaseObject::getSourceCode(SchemaParser::CodeType def_type, bool reduced_
+ 
+ 			if(def_type==SchemaParser::XmlCode)
+ 			{
+-				schparser.ignoreUnkownAttributes(true);
++				schparser.ignoreUnknownAttributes(true);
+ 				attributes[Attributes::AppendedSql]=
+ 						schparser.getSourceCode(QString(Attributes::AppendedSql).remove('-'), attributes, def_type);
+ 			}
+@@ -937,7 +937,7 @@ QString BaseObject::getSourceCode(SchemaParser::CodeType def_type, bool reduced_
+ 
+ 			if(def_type==SchemaParser::XmlCode)
+ 			{
+-				schparser.ignoreUnkownAttributes(true);
++				schparser.ignoreUnknownAttributes(true);
+ 				attributes[Attributes::PrependedSql]=
+ 						schparser.getSourceCode(QString(Attributes::PrependedSql).remove('-'), attributes, def_type);
+ 			}
+@@ -1350,7 +1350,7 @@ QString BaseObject::getDropCode(bool cascade)
+ 
+ 			setBasicAttributes(true);
+ 			schparser.setPgSQLVersion(BaseObject::pgsql_ver, ignore_db_version);
+-			schparser.ignoreUnkownAttributes(true);
++			schparser.ignoreUnknownAttributes(true);
+ 			schparser.ignoreEmptyAttributes(true);
+ 
+ 			attribs=attributes;
+@@ -1382,7 +1382,7 @@ QString BaseObject::getAlterCode(QString sch_name, attribs_map &attribs, bool ig
+ 
+ 		schparser.setPgSQLVersion(BaseObject::pgsql_ver, ignore_db_version);
+ 		schparser.ignoreEmptyAttributes(ignore_empty_attribs);
+-		schparser.ignoreUnkownAttributes(ignore_ukn_attribs);
++		schparser.ignoreUnknownAttributes(ignore_ukn_attribs);
+ 		return schparser.getSourceCode(alter_sch_file, attribs);
+ 	}
+ 	catch(Exception &e)
+@@ -1472,7 +1472,7 @@ QString BaseObject::getAlterCommentDefinition(BaseObject *object, attribs_map at
+ 				attributes[Attributes::Comment]=comm_obj;
+ 			}
+ 
+-			schparser.ignoreUnkownAttributes(true);
++			schparser.ignoreUnknownAttributes(true);
+ 			schparser.ignoreEmptyAttributes(true);
+ 			return schparser.getSourceCode(Attributes::Comment, attributes, SchemaParser::SqlCode);
+ 		}
+diff --git a/libs/libcore/src/baseobject.h b/libs/libcore/src/baseobject.h
+index faf796270..98043866b 100644
+--- a/libs/libcore/src/baseobject.h
++++ b/libs/libcore/src/baseobject.h
+@@ -36,7 +36,7 @@
+ #include "exception.h"
+ #include "pgsqlversions.h"
+ 
+-enum class ObjectType: unsigned {
++enum class __libcore ObjectType: unsigned {
+ 	Column,
+ 	Constraint,
+ 	Function,
+@@ -91,10 +91,10 @@ class __libcore BaseObject {
+ 		//! \brief Current PostgreSQL version used in SQL code generation
+ 		static QString pgsql_ver;
+ 
+-		static bool escape_comments,
++		static bool escape_comments;
+ 
+ 		//! \brief Indicates if the dependences/references of the object must be erased on the destructor
+-		clear_deps_in_dtor;
++		static bool clear_deps_in_dtor;
+ 
+ 		//! \brief Stores the set of special (valid) chars that forces the object's name quoting
+ 		static const QByteArray special_chars;
+@@ -192,15 +192,15 @@ class __libcore BaseObject {
+ 		 *
+ 		 * CAUTION: If both amount and order of the object type enumerations are modified
+ 		 * then the order and amount of the elements of this vector must also be modified */
+-		static const QString objs_schemas[ObjectTypeCount],
++		static const QString objs_schemas[ObjectTypeCount];
+ 
+ 		/*! \brief This map associates the object type to a keyword on
+ 		 SQL language that represents the object */
+-		objs_sql[ObjectTypeCount],
++		static const QString objs_sql[ObjectTypeCount];
+ 
+ 		/*! \brief Stores the name of the type of objects to be used in error messages formatting
+ 		 and others operations that envolves object type name */
+-		obj_type_names[ObjectTypeCount];
++		static const QString obj_type_names[ObjectTypeCount];
+ 
+ 		//! \brief This map stores the translate human readable names of each search attribute use by the object
+ 		static const attribs_map search_attribs_i18n;
+@@ -600,19 +600,19 @@ class __libcore BaseObject {
+ 		bool isCodeInvalidated();
+ 
+ 		/*! \brief Compares the xml code between the "this" object and another one. The user can specify which attributes
+-		and tags must be ignored when makin the comparison. NOTE: only the name for attributes and tags must be informed */
++		 * and tags must be ignored when makin the comparison. NOTE: only the name for attributes and tags must be informed */
+ 		virtual bool isCodeDiffersFrom(BaseObject *object, const QStringList &ignored_attribs={}, const QStringList &ignored_tags={});
+ 
+ 		/*! \brief Returns the valid object types in a vector. The types
+-		ObjectType::ObjBaseObject, TYPE_ATTRIBUTE and ObjectType::ObjBaseTable aren't included in return vector.
+-		By default table objects (columns, trigger, constraints, etc) are included. To
+-		avoid the insertion of these types set the boolean param to false. */
++		 * ObjectType::ObjBaseObject, TYPE_ATTRIBUTE and ObjectType::ObjBaseTable aren't included in return vector.
++		 * By default table objects (columns, trigger, constraints, etc) are included. To
++		 * avoid the insertion of these types set the boolean param to false. */
+ 		static std::vector<ObjectType> getObjectTypes(bool inc_table_objs=true, std::vector<ObjectType> exclude_types={});
+ 
+ 		/*! \brief Returns the valid object types that are child or grouped under the specified type.
+-	This method works a litte different from getObjectTypes() since this latter returns all valid types
+-	and this one returns only the valid types for the current specified type. For now the only accepted
+-	types are ObjectType::Database, ObjectType::Schema, ObjectType::Table, ObjectType::ForeignTable */
++		 * This method works a litte different from getObjectTypes() since this latter returns all valid types
++		 * and this one returns only the valid types for the current specified type. For now the only accepted
++		 * types are ObjectType::Database, ObjectType::Schema, ObjectType::Table, ObjectType::ForeignTable */
+ 		static std::vector<ObjectType> getChildObjectTypes(ObjectType obj_type);
+ 
+ 		//! \brief Returns true when the child_type is in the list of children types of the parent_type
+diff --git a/libs/libcore/src/databasemodel.cpp b/libs/libcore/src/databasemodel.cpp
+index 734af9e5b..ceb4ccb07 100644
+--- a/libs/libcore/src/databasemodel.cpp
++++ b/libs/libcore/src/databasemodel.cpp
+@@ -7199,7 +7199,7 @@ BaseRelationship *DatabaseModel::createRelationship()
+ 			rel->setActionType(upd_action, Constraint::UpdateAction);
+ 			rel->setActionType(del_action, Constraint::DeleteAction);
+ 			rel->setSQLDisabled(sql_disabled);
+-			rel->setSiglePKColumn(single_pk_col);
++			rel->setSinglePKColumn(single_pk_col);
+ 			rel->setDeferrable(deferrable);
+ 			rel->setDeferralType(defer_type);
+ 			rel->setCopyOptions(CopyOptions(static_cast<CopyOptions::CopyMode>(attribs[Attributes::CopyMode].toUInt()),
+@@ -9339,7 +9339,7 @@ void DatabaseModel::saveObjectsMetadata(const QString &filename, MetaAttrOptions
+ 
+ 					if(obj_type!=ObjectType::Schema || !attribs[Attributes::XPos].isEmpty())
+ 					{
+-						schparser.ignoreUnkownAttributes(true);
++						schparser.ignoreUnknownAttributes(true);
+ 						attribs[Attributes::Position]=
+ 								schparser.getSourceCode(GlobalAttributes::getSchemaFilePath(GlobalAttributes::XMLSchemaDir, Attributes::Position),
+ 																						attribs);
+@@ -9365,7 +9365,7 @@ void DatabaseModel::saveObjectsMetadata(const QString &filename, MetaAttrOptions
+ 						attribs[Attributes::XPos]=QString::number(pnt.x());
+ 						attribs[Attributes::YPos]=QString::number(pnt.y());
+ 
+-						schparser.ignoreUnkownAttributes(true);
++						schparser.ignoreUnknownAttributes(true);
+ 						attribs[Attributes::Position]+=
+ 								schparser.getSourceCode(GlobalAttributes::getSchemaFilePath(GlobalAttributes::XMLSchemaDir, Attributes::Position),
+ 																						attribs);
+@@ -9430,7 +9430,7 @@ void DatabaseModel::saveObjectsMetadata(const QString &filename, MetaAttrOptions
+ 														tr("Saving metadata of the object `%1' (%2)")
+ 														.arg(object->getSignature()).arg(object->getTypeName()), enum_t(obj_type));
+ 
+-				schparser.ignoreUnkownAttributes(true);
++				schparser.ignoreUnknownAttributes(true);
+ 
+ 				objs_def +=	schparser.getSourceCode(
+ 											GlobalAttributes::getSchemaFilePath(GlobalAttributes::XMLSchemaDir,
+diff --git a/libs/libcore/src/extension.cpp b/libs/libcore/src/extension.cpp
+index 5662ac8b3..be2fcb139 100644
+--- a/libs/libcore/src/extension.cpp
++++ b/libs/libcore/src/extension.cpp
+@@ -162,7 +162,7 @@ QString Extension::getSourceCode(SchemaParser::CodeType def_type)
+ 				obj_attr[Attributes::Type] = BaseObject::getSchemaName(ext_obj.getType());
+ 				obj_attr[Attributes::Parent] = ext_obj.getParent();
+ 
+-				schparser.ignoreUnkownAttributes(true);
++				schparser.ignoreUnknownAttributes(true);
+ 				schparser.ignoreEmptyAttributes(true);
+ 				attributes[Attributes::Objects] += schparser.getSourceCode(Attributes::Object, obj_attr, def_type);
+ 			}
+diff --git a/libs/libcore/src/foreignobject.h b/libs/libcore/src/foreignobject.h
+index e69f1540c..c1ecfa042 100644
+--- a/libs/libcore/src/foreignobject.h
++++ b/libs/libcore/src/foreignobject.h
+@@ -37,8 +37,8 @@ class __libcore ForeignObject {
+ 
+ 	public:
+ 		//! \brief Store the character used to separate options/values in the XML code
+-		static const QString OptionsSeparator,
+-		OptionValueSeparator;
++		static const QString OptionsSeparator;
++		static const QString OptionValueSeparator;
+ 
+ 		ForeignObject();
+ 
+diff --git a/libs/libcore/src/pgsqltypes/actiontype.h b/libs/libcore/src/pgsqltypes/actiontype.h
+index 8dd153046..8654ced0e 100644
+--- a/libs/libcore/src/pgsqltypes/actiontype.h
++++ b/libs/libcore/src/pgsqltypes/actiontype.h
+@@ -32,11 +32,11 @@ class __libcore ActionType: public TemplateType<ActionType>{
+ 		static const QStringList type_names;
+ 
+ 	public:
+-		static constexpr unsigned NoAction = 1,
+-		Restrict = 2,
+-		Cascade = 3,
+-		SetNull = 4,
+-		SetDefault = 5;
++		static constexpr unsigned NoAction = 1;
++		static constexpr unsigned Restrict = 2;
++		static constexpr unsigned Cascade = 3;
++		static constexpr unsigned SetNull = 4;
++		static constexpr unsigned SetDefault = 5;
+ 
+ 		ActionType(const QString &type_name);
+ 		ActionType(unsigned type_id);
+diff --git a/libs/libcore/src/pgsqltypes/behaviortype.h b/libs/libcore/src/pgsqltypes/behaviortype.h
+index 67809b35f..be288787d 100644
+--- a/libs/libcore/src/pgsqltypes/behaviortype.h
++++ b/libs/libcore/src/pgsqltypes/behaviortype.h
+@@ -32,9 +32,9 @@ class __libcore BehaviorType: public TemplateType<BehaviorType>{
+ 		static const QStringList type_names;
+ 
+ 	public:
+-		static constexpr unsigned CalledOnNullInput = 1,
+-		ReturnsNullOnNullInput = 2;//,
+-		//Strict = 3;
++		static constexpr unsigned CalledOnNullInput = 1;
++		static constexpr unsigned ReturnsNullOnNullInput = 2;
++		// static constexpr unsigned Strict = 3;
+ 
+ 		BehaviorType(const QString &type_name);
+ 		BehaviorType(unsigned type_id);
+diff --git a/libs/libcore/src/pgsqltypes/categorytype.h b/libs/libcore/src/pgsqltypes/categorytype.h
+index e247bf23d..d8cdcf086 100644
+--- a/libs/libcore/src/pgsqltypes/categorytype.h
++++ b/libs/libcore/src/pgsqltypes/categorytype.h
+@@ -32,20 +32,20 @@ class __libcore CategoryType: public TemplateType<CategoryType>{
+ 		static const QStringList type_names;
+ 
+ 	public:
+-		static constexpr unsigned UserDefined = 1,
+-		Array = 2,
+-		Boolean = 3,
+-		Composite = 4,
+-		DateTime = 5,
+-		Enumeration = 6,
+-		Geometric = 7,
+-		NetworkAddr = 8,
+-		Numeric = 9,
+-		PseudoTypes = 10,
+-		Stringt = 11,
+-		Timespan = 12,
+-		BitString = 13,
+-		Unknown = 14;
++		static constexpr unsigned UserDefined = 1;
++		static constexpr unsigned Array = 2;
++		static constexpr unsigned Boolean = 3;
++		static constexpr unsigned Composite = 4;
++		static constexpr unsigned DateTime = 5;
++		static constexpr unsigned Enumeration = 6;
++		static constexpr unsigned Geometric = 7;
++		static constexpr unsigned NetworkAddr = 8;
++		static constexpr unsigned Numeric = 9;
++		static constexpr unsigned PseudoTypes = 10;
++		static constexpr unsigned Stringt = 11;
++		static constexpr unsigned Timespan = 12;
++		static constexpr unsigned BitString = 13;
++		static constexpr unsigned Unknown = 14;
+ 
+ 		CategoryType(unsigned type_id);
+ 		CategoryType(const QString &type_name);
+diff --git a/libs/libcore/src/pgsqltypes/checkoptiontype.h b/libs/libcore/src/pgsqltypes/checkoptiontype.h
+index 3a7f618e2..185e802ff 100644
+--- a/libs/libcore/src/pgsqltypes/checkoptiontype.h
++++ b/libs/libcore/src/pgsqltypes/checkoptiontype.h
+@@ -32,9 +32,8 @@ class __libcore CheckOptionType: public TemplateType<CheckOptionType>{
+ 		static const QStringList type_names;
+ 
+ 	public:
+-		static constexpr unsigned
+-		Local = 2,
+-		Cascaded = 3;
++		static constexpr unsigned Local = 2;
++		static constexpr unsigned Cascaded = 3;
+ 
+ 		CheckOptionType(const QString &type_name);
+ 		CheckOptionType(unsigned type_id);
+diff --git a/libs/libcore/src/pgsqltypes/constrainttype.h b/libs/libcore/src/pgsqltypes/constrainttype.h
+index b0f8b1054..9250b7ca4 100644
+--- a/libs/libcore/src/pgsqltypes/constrainttype.h
++++ b/libs/libcore/src/pgsqltypes/constrainttype.h
+@@ -32,11 +32,11 @@ class __libcore ConstraintType: public TemplateType<ConstraintType>{
+ 		static const QStringList type_names;
+ 
+ 	public:
+-		static constexpr unsigned PrimaryKey = 1,
+-		ForeignKey = 2,
+-		Check = 3,
+-		Unique = 4,
+-		Exclude= 5;
++		static constexpr unsigned PrimaryKey = 1;
++		static constexpr unsigned ForeignKey = 2;
++		static constexpr unsigned Check = 3;
++		static constexpr unsigned Unique = 4;
++		static constexpr unsigned Exclude= 5;
+ 
+ 		ConstraintType(const QString &type_name);
+ 		ConstraintType(unsigned type_id);
+diff --git a/libs/libcore/src/pgsqltypes/deferraltype.h b/libs/libcore/src/pgsqltypes/deferraltype.h
+index 6affedcab..b94c13514 100644
+--- a/libs/libcore/src/pgsqltypes/deferraltype.h
++++ b/libs/libcore/src/pgsqltypes/deferraltype.h
+@@ -32,8 +32,8 @@ class __libcore DeferralType: public TemplateType<DeferralType>{
+ 		static const QStringList type_names;
+ 
+ 	public:
+-		static constexpr unsigned Immediate = 1,
+-		Deferred = 2;
++		static constexpr unsigned Immediate = 1;
++		static constexpr unsigned Deferred = 2;
+ 
+ 		DeferralType(unsigned type_id);
+ 		DeferralType(const QString &type_name);
+diff --git a/libs/libcore/src/pgsqltypes/eventtriggertype.h b/libs/libcore/src/pgsqltypes/eventtriggertype.h
+index 085e220f8..e9b6f7aac 100644
+--- a/libs/libcore/src/pgsqltypes/eventtriggertype.h
++++ b/libs/libcore/src/pgsqltypes/eventtriggertype.h
+@@ -32,10 +32,10 @@ class __libcore EventTriggerType: public TemplateType<EventTriggerType>{
+ 		static const QStringList type_names;
+ 
+ 	public:
+-		static constexpr unsigned DdlCommandStart = 1,
+-		DdlCommandEnd = 2,
+-		SqlDrop = 3,
+-		TableRewrite = 4;
++		static constexpr unsigned DdlCommandStart = 1;
++		static constexpr unsigned DdlCommandEnd = 2;
++		static constexpr unsigned SqlDrop = 3;
++		static constexpr unsigned TableRewrite = 4;
+ 
+ 		EventTriggerType(const QString &type_name);
+ 		EventTriggerType(unsigned type_id);
+diff --git a/libs/libcore/src/pgsqltypes/eventtype.h b/libs/libcore/src/pgsqltypes/eventtype.h
+index e09a896c4..725c696d1 100644
+--- a/libs/libcore/src/pgsqltypes/eventtype.h
++++ b/libs/libcore/src/pgsqltypes/eventtype.h
+@@ -32,11 +32,11 @@ class __libcore EventType: public TemplateType<EventType>{
+ 		static const QStringList type_names;
+ 
+ 	public:
+-		static constexpr unsigned OnSelect = 1,
+-		OnInsert = 2,
+-		OnDelete = 3,
+-		OnUpdate = 4,
+-		OnTruncate = 5;
++		static constexpr unsigned OnSelect = 1;
++		static constexpr unsigned OnInsert = 2;
++		static constexpr unsigned OnDelete = 3;
++		static constexpr unsigned OnUpdate = 4;
++		static constexpr unsigned OnTruncate = 5;
+ 
+ 		EventType(const QString &type_name);
+ 		EventType(unsigned type_id);
+diff --git a/libs/libcore/src/pgsqltypes/executiontype.h b/libs/libcore/src/pgsqltypes/executiontype.h
+index 6cc72b372..21272d65b 100644
+--- a/libs/libcore/src/pgsqltypes/executiontype.h
++++ b/libs/libcore/src/pgsqltypes/executiontype.h
+@@ -32,8 +32,8 @@ class __libcore ExecutionType: public TemplateType<ExecutionType>{
+ 		static const QStringList type_names;
+ 
+ 	public:
+-		static constexpr unsigned Also = 1,
+-		Instead = 2;
++		static constexpr unsigned Also = 1;
++		static constexpr unsigned Instead = 2;
+ 
+ 		ExecutionType(const QString &type_name);
+ 		ExecutionType(unsigned type_id);
+diff --git a/libs/libcore/src/pgsqltypes/firingtype.h b/libs/libcore/src/pgsqltypes/firingtype.h
+index 982c5d63f..f4377063e 100644
+--- a/libs/libcore/src/pgsqltypes/firingtype.h
++++ b/libs/libcore/src/pgsqltypes/firingtype.h
+@@ -32,9 +32,9 @@ class __libcore FiringType: public TemplateType<FiringType>{
+ 		static const QStringList type_names;
+ 
+ 	public:
+-		static constexpr unsigned Before = 1,
+-		After = 2,
+-		InsteadOf = 3;
++		static constexpr unsigned Before = 1;
++		static constexpr unsigned After = 2;
++		static constexpr unsigned InsteadOf = 3;
+ 
+ 		FiringType(const QString &type_name);
+ 		FiringType(unsigned type_id);
+diff --git a/libs/libcore/src/pgsqltypes/functiontype.h b/libs/libcore/src/pgsqltypes/functiontype.h
+index 41faf66eb..2535e4b5a 100644
+--- a/libs/libcore/src/pgsqltypes/functiontype.h
++++ b/libs/libcore/src/pgsqltypes/functiontype.h
+@@ -32,9 +32,9 @@ class __libcore FunctionType: public TemplateType<FunctionType>{
+ 		static const QStringList type_names;
+ 
+ 	public:
+-		static constexpr unsigned Volatile = 1,
+-		Stable = 2,
+-		Immutable= 3;
++		static constexpr unsigned Volatile = 1;
++		static constexpr unsigned Stable = 2;
++		static constexpr unsigned Immutable= 3;
+ 
+ 		FunctionType(const QString &type_name);
+ 		FunctionType(unsigned type_id);
+diff --git a/libs/libcore/src/pgsqltypes/identitytype.h b/libs/libcore/src/pgsqltypes/identitytype.h
+index cceece63d..c255e39e9 100644
+--- a/libs/libcore/src/pgsqltypes/identitytype.h
++++ b/libs/libcore/src/pgsqltypes/identitytype.h
+@@ -32,8 +32,8 @@ class __libcore IdentityType: public TemplateType<IdentityType>{
+ 		static const QStringList type_names;
+ 
+ 	public:
+-		static constexpr unsigned Always = 1,
+-		ByDefault = 2;
++		static constexpr unsigned Always = 1;
++		static constexpr unsigned ByDefault = 2;
+ 
+ 		IdentityType(const QString &type_name);
+ 		IdentityType(unsigned type_id);
+diff --git a/libs/libcore/src/pgsqltypes/indexingtype.h b/libs/libcore/src/pgsqltypes/indexingtype.h
+index 3a1aa3b83..a558ce2a7 100644
+--- a/libs/libcore/src/pgsqltypes/indexingtype.h
++++ b/libs/libcore/src/pgsqltypes/indexingtype.h
+@@ -32,12 +32,12 @@ class __libcore IndexingType: public TemplateType<IndexingType>{
+ 		static const QStringList type_names;
+ 
+ 	public:
+-		static constexpr unsigned Btree = 1,
+-		Brin = 2,
+-		Gist = 3,
+-		Gin = 4,
+-		Hash = 5,
+-		Spgist = 6;
++		static constexpr unsigned Btree = 1;
++		static constexpr unsigned Brin = 2;
++		static constexpr unsigned Gist = 3;
++		static constexpr unsigned Gin = 4;
++		static constexpr unsigned Hash = 5;
++		static constexpr unsigned Spgist = 6;
+ 
+ 		IndexingType(const QString &type_name);
+ 		IndexingType(unsigned type_id);
+diff --git a/libs/libcore/src/pgsqltypes/intervaltype.h b/libs/libcore/src/pgsqltypes/intervaltype.h
+index 95803a404..5175d9298 100644
+--- a/libs/libcore/src/pgsqltypes/intervaltype.h
++++ b/libs/libcore/src/pgsqltypes/intervaltype.h
+@@ -32,19 +32,19 @@ class __libcore IntervalType: public TemplateType<IntervalType>{
+ 		static const QStringList type_names;
+ 
+ 	public:
+-		static constexpr unsigned Year = 1,
+-		Month = 2,
+-		Day = 3,
+-		Hour= 4,
+-		Minute = 5,
+-		Second = 6,
+-		YearToMonth = 7,
+-		DayToHour = 8,
+-		DayToMinute = 9,
+-		DayToSecond = 10,
+-		HourToMinute = 11,
+-		HourToSecond = 12,
+-		MinuteToSecond = 13;
++		static constexpr unsigned Year = 1;
++		static constexpr unsigned Month = 2;
++		static constexpr unsigned Day = 3;
++		static constexpr unsigned Hour= 4;
++		static constexpr unsigned Minute = 5;
++		static constexpr unsigned Second = 6;
++		static constexpr unsigned YearToMonth = 7;
++		static constexpr unsigned DayToHour = 8;
++		static constexpr unsigned DayToMinute = 9;
++		static constexpr unsigned DayToSecond = 10;
++		static constexpr unsigned HourToMinute = 11;
++		static constexpr unsigned HourToSecond = 12;
++		static constexpr unsigned MinuteToSecond = 13;
+ 
+ 		IntervalType(const QString &type_name);
+ 		IntervalType(unsigned type_id);
+diff --git a/libs/libcore/src/pgsqltypes/matchtype.h b/libs/libcore/src/pgsqltypes/matchtype.h
+index d08edad7a..848672d66 100644
+--- a/libs/libcore/src/pgsqltypes/matchtype.h
++++ b/libs/libcore/src/pgsqltypes/matchtype.h
+@@ -32,9 +32,9 @@ class __libcore MatchType: public TemplateType<MatchType>{
+ 		static const QStringList type_names;
+ 
+ 	public:
+-		static constexpr unsigned Simple = 1,
+-		Full = 2,
+-		Partial = 3;
++		static constexpr unsigned Simple = 1;
++		static constexpr unsigned Full = 2;
++		static constexpr unsigned Partial = 3;
+ 
+ 		MatchType(unsigned type_id);
+ 		MatchType(const QString &type_name);
+diff --git a/libs/libcore/src/pgsqltypes/paralleltype.h b/libs/libcore/src/pgsqltypes/paralleltype.h
+index 1a1f13507..ba8362c54 100644
+--- a/libs/libcore/src/pgsqltypes/paralleltype.h
++++ b/libs/libcore/src/pgsqltypes/paralleltype.h
+@@ -32,9 +32,9 @@ class __libcore ParallelType: public TemplateType<ParallelType>{
+ 		static const QStringList type_names;
+ 
+ 	public:
+-		static constexpr unsigned Unsafe = 1,
+-		Restricted = 2,
+-		Safe = 3;
++		static constexpr unsigned Unsafe = 1;
++		static constexpr unsigned Restricted = 2;
++		static constexpr unsigned Safe = 3;
+ 
+ 		ParallelType(const QString &type_name);
+ 		ParallelType(unsigned type_id);
+diff --git a/libs/libcore/src/pgsqltypes/partitioningtype.h b/libs/libcore/src/pgsqltypes/partitioningtype.h
+index 3b96839e3..60a4957ea 100644
+--- a/libs/libcore/src/pgsqltypes/partitioningtype.h
++++ b/libs/libcore/src/pgsqltypes/partitioningtype.h
+@@ -32,9 +32,9 @@ class __libcore PartitioningType: public TemplateType<PartitioningType> {
+ 		static const QStringList type_names;
+ 
+ 	public:
+-		static constexpr unsigned Range = 1,
+-		List = 2,
+-		Hash = 3;
++		static constexpr unsigned Range = 1;
++		static constexpr unsigned List = 2;
++		static constexpr unsigned Hash = 3;
+ 
+ 		PartitioningType(const QString &type_name);
+ 		PartitioningType(unsigned type_id);
+diff --git a/libs/libcore/src/pgsqltypes/pgsqltype.h b/libs/libcore/src/pgsqltypes/pgsqltype.h
+index 3bfee4fc3..e57e93055 100644
+--- a/libs/libcore/src/pgsqltypes/pgsqltype.h
++++ b/libs/libcore/src/pgsqltypes/pgsqltype.h
+@@ -36,16 +36,16 @@ class __libcore PgSqlType: public TemplateType<PgSqlType>{
+ 		static const QStringList type_names;
+ 
+ 		//! \brief Offset for all PostGiS types
+-		static constexpr unsigned PostGiSStart = 64,
+-		PostGiSEnd = 82;
++		static constexpr unsigned PostGiSStart = 64;
++		static constexpr unsigned PostGiSEnd = 82;
+ 
+ 		//! \brief Offset for oid types
+-		static constexpr unsigned OidStart = 94,
+-		OidEnd = 108;
++		static constexpr unsigned OidStart = 94;
++		static constexpr unsigned OidEnd = 108;
+ 
+ 		//! \brief Offset for pseudo types
+-		static constexpr unsigned PseudoStart = 109,
+-		PseudoEnd = 133;
++		static constexpr unsigned PseudoStart = 109;
++		static constexpr unsigned PseudoEnd = 133;
+ 
+ 		//! \brief Configuration for user defined types
+ 		static std::vector<UserTypeConfig> user_types;
+diff --git a/libs/libcore/src/pgsqltypes/policycmdtype.h b/libs/libcore/src/pgsqltypes/policycmdtype.h
+index bd5a4e738..d418e5414 100644
+--- a/libs/libcore/src/pgsqltypes/policycmdtype.h
++++ b/libs/libcore/src/pgsqltypes/policycmdtype.h
+@@ -32,11 +32,11 @@ class __libcore PolicyCmdType: public TemplateType<PolicyCmdType> {
+ 		static const QStringList type_names;
+ 
+ 	public:
+-		static constexpr unsigned All = 1,
+-		Select = 2,
+-		Insert = 3,
+-		Update = 4,
+-		Delete = 5;
++		static constexpr unsigned All = 1;
++		static constexpr unsigned Select = 2;
++		static constexpr unsigned Insert = 3;
++		static constexpr unsigned Update = 4;
++		static constexpr unsigned Delete = 5;
+ 
+ 		PolicyCmdType(const QString &type_name);
+ 		PolicyCmdType(unsigned type_id);
+diff --git a/libs/libcore/src/pgsqltypes/providertype.h b/libs/libcore/src/pgsqltypes/providertype.h
+index 7f121eaf4..eca1129d3 100644
+--- a/libs/libcore/src/pgsqltypes/providertype.h
++++ b/libs/libcore/src/pgsqltypes/providertype.h
+@@ -32,8 +32,8 @@ class __libcore ProviderType: public TemplateType<ProviderType>{
+ 		static const QStringList type_names;
+ 
+ 	public:
+-		static constexpr unsigned 	LibC = 1,
+-		Icu = 2;
++		static constexpr unsigned LibC = 1;
++		static constexpr unsigned Icu = 2;
+ 
+ 		ProviderType(const QString &type_name);
+ 		ProviderType(unsigned type_id);
+diff --git a/libs/libcore/src/pgsqltypes/securitytype.h b/libs/libcore/src/pgsqltypes/securitytype.h
+index e9eaad06c..7e315974b 100644
+--- a/libs/libcore/src/pgsqltypes/securitytype.h
++++ b/libs/libcore/src/pgsqltypes/securitytype.h
+@@ -32,8 +32,8 @@ class __libcore SecurityType: public TemplateType<SecurityType>{
+ 		static const QStringList type_names;
+ 
+ 	public:
+-		static constexpr unsigned Invoker = 1,
+-		Definer = 2;
++		static constexpr unsigned Invoker = 1;
++		static constexpr unsigned Definer = 2;
+ 
+ 		SecurityType(unsigned type_id);
+ 		SecurityType(const QString &type_name);
+diff --git a/libs/libcore/src/pgsqltypes/spatialtype.h b/libs/libcore/src/pgsqltypes/spatialtype.h
+index ebe36d90c..25fe99d3b 100644
+--- a/libs/libcore/src/pgsqltypes/spatialtype.h
++++ b/libs/libcore/src/pgsqltypes/spatialtype.h
+@@ -47,14 +47,14 @@ class __libcore SpatialType: public TemplateType<SpatialType>{
+ 		int srid;
+ 
+ 	public:
+-		static constexpr unsigned Point = 1,
+-		LineString = 2,
+-		Polygon = 3,
+-		MultiPoint = 4,
+-		MultiLineString = 5,
+-		MultiPolygon = 6,
+-		Geometry = 7,
+-		GeometryCollection = 8;
++		static constexpr unsigned Point = 1;
++		static constexpr unsigned LineString = 2;
++		static constexpr unsigned Polygon = 3;
++		static constexpr unsigned MultiPoint = 4;
++		static constexpr unsigned MultiLineString = 5;
++		static constexpr unsigned MultiPolygon = 6;
++		static constexpr unsigned Geometry = 7;
++		static constexpr unsigned GeometryCollection = 8;
+ 
+ 		SpatialType(const QString &type_name, int srid, VariationId variation_id=SpatialType::NoVar);
+ 		SpatialType(unsigned type_id, int srid, VariationId var_id=SpatialType::NoVar);
+diff --git a/libs/libcore/src/pgsqltypes/storagetype.h b/libs/libcore/src/pgsqltypes/storagetype.h
+index 3ee39e6e0..573bc539b 100644
+--- a/libs/libcore/src/pgsqltypes/storagetype.h
++++ b/libs/libcore/src/pgsqltypes/storagetype.h
+@@ -32,10 +32,10 @@ class __libcore StorageType: public TemplateType<StorageType>{
+ 		static const QStringList type_names;
+ 
+ 	public:
+-		static constexpr unsigned Plain = 1,
+-		External = 2,
+-		Extended = 3,
+-		Main = 4;
++		static constexpr unsigned Plain = 1;
++		static constexpr unsigned External = 2;
++		static constexpr unsigned Extended = 3;
++		static constexpr unsigned Main = 4;
+ 
+ 		StorageType();
+ 		StorageType(const QString &type_name);
+diff --git a/libs/libcore/src/pgsqltypes/templatetype.h b/libs/libcore/src/pgsqltypes/templatetype.h
+index d978769ff..efb72b030 100644
+--- a/libs/libcore/src/pgsqltypes/templatetype.h
++++ b/libs/libcore/src/pgsqltypes/templatetype.h
+@@ -43,7 +43,7 @@ https://www.fluentcpp.com/2017/05/12/curiously-recurring-template-pattern/
+ #include "exception.h"
+ 
+ template<class Class>
+-class __libcore TemplateType {
++class TemplateType {
+ 	protected:	
+ 		//! \brief Index of the type on the type_list vector
+ 		unsigned type_idx;
+diff --git a/libs/libcore/src/physicaltable.cpp b/libs/libcore/src/physicaltable.cpp
+index 3a6191a12..70fd9d1ad 100644
+--- a/libs/libcore/src/physicaltable.cpp
++++ b/libs/libcore/src/physicaltable.cpp
+@@ -162,12 +162,12 @@ void PhysicalTable::setCommentAttribute(TableObject *tab_obj)
+ 		attribs[Attributes::EscapeComment]=BaseObject::isEscapeComments() ? Attributes::True : "";
+ 		attribs[Attributes::Comment]=comment;
+ 
+-		schparser.ignoreUnkownAttributes(true);
++		schparser.ignoreUnknownAttributes(true);
+ 		if(tab_obj->isSQLDisabled())
+ 			attributes[Attributes::ColsComment]+="-- ";
+ 
+ 		attributes[Attributes::ColsComment]+=schparser.getSourceCode(Attributes::Comment, attribs, SchemaParser::SqlCode);
+-		schparser.ignoreUnkownAttributes(false);
++		schparser.ignoreUnknownAttributes(false);
+ 	}
+ }
+ 
+@@ -201,7 +201,7 @@ void PhysicalTable::setRelObjectsIndexesAttribute()
+ 				aux_attribs[Attributes::Name]=obj_idx.first;
+ 				aux_attribs[Attributes::Index]=QString::number(obj_idx.second);
+ 
+-				schparser.ignoreUnkownAttributes(true);
++				schparser.ignoreUnknownAttributes(true);
+ 				aux_attribs[Attributes::Objects]+=schparser.getSourceCode(Attributes::Object, aux_attribs, SchemaParser::XmlCode);
+ 			}
+ 
+diff --git a/libs/libcore/src/relationship.cpp b/libs/libcore/src/relationship.cpp
+index 4c06a674c..0f6a0f5b5 100644
+--- a/libs/libcore/src/relationship.cpp
++++ b/libs/libcore/src/relationship.cpp
+@@ -2295,7 +2295,7 @@ PhysicalTable *Relationship::getReferenceTable()
+ 	}
+ }
+ 
+-void Relationship::setSiglePKColumn(bool value)
++void Relationship::setSinglePKColumn(bool value)
+ {
+ 	if(rel_type==RelationshipNn)
+ 	{
+@@ -2304,7 +2304,7 @@ void Relationship::setSiglePKColumn(bool value)
+ 	}
+ }
+ 
+-bool Relationship::isSiglePKColumn()
++bool Relationship::isSinglePKColumn()
+ {
+ 	return single_pk_column;
+ }
+diff --git a/libs/libcore/src/relationship.h b/libs/libcore/src/relationship.h
+index 0f2113c4c..281fa4335 100644
+--- a/libs/libcore/src/relationship.h
++++ b/libs/libcore/src/relationship.h
+@@ -346,11 +346,11 @@ class __libcore Relationship: public BaseRelationship {
+ 
+ 	public:
+ 		//! \brief String used as the name suffix separator. Default '_'
+-		static const QString	SuffixSeparator,
+-		SrcTabToken,
+-		DstTabToken,
+-		GenTabToken,
+-		SrcColToken;
++		static const QString SuffixSeparator;
++		static const QString SrcTabToken;
++		static const QString DstTabToken;
++		static const QString GenTabToken;
++		static const QString SrcColToken;
+ 
+ 		Relationship(Relationship *rel);
+ 
+@@ -536,9 +536,9 @@ class __libcore Relationship: public BaseRelationship {
+ 		 has 2 reference tables, which may be obtained by the method BaseRelationship::getTable() */
+ 		PhysicalTable *getReferenceTable();
+ 
+-		void setSiglePKColumn(bool value);
++		void setSinglePKColumn(bool value);
+ 
+-		bool isSiglePKColumn();
++		bool isSinglePKColumn();
+ 
+ 		//! \brief Returns SQL / XML definition for the relationship.
+ 		virtual QString getSourceCode(SchemaParser::CodeType def_type) final;
+diff --git a/libs/libcore/src/sequence.h b/libs/libcore/src/sequence.h
+index 09191c78c..3d1732ab8 100644
+--- a/libs/libcore/src/sequence.h
++++ b/libs/libcore/src/sequence.h
+@@ -66,17 +66,16 @@ class __libcore Sequence: public BaseObject {
+ 	public:
+ 		//! \brief Constants that indicates the maximum and minimum values accepted by sequence
+ 		//For serial sequences
+-		static const QString
+-		MaxPositiveValue,
+-		MaxNegativeValue,
++		static const QString MaxPositiveValue;
++		static const QString MaxNegativeValue;
+ 
+ 		//For smallserial sequences
+-		MaxSmallPositiveValue,
+-		MaxSmallNegativeValue,
++		static const QString MaxSmallPositiveValue;
++		static const QString MaxSmallNegativeValue;
+ 
+ 		//For bigserial sequences
+-		MaxBigPositiveValue,
+-		MaxBigNegativeValue;
++		static const QString MaxBigPositiveValue;
++		static const QString MaxBigNegativeValue;
+ 
+ 		Sequence();
+ 
+diff --git a/libs/libcore/src/view.cpp b/libs/libcore/src/view.cpp
+index 37cfda052..75d81eb4e 100644
+--- a/libs/libcore/src/view.cpp
++++ b/libs/libcore/src/view.cpp
+@@ -893,7 +893,7 @@ QString View::getDataDictionary(bool split, bool md_format, const attribs_map &e
+ 			aux_attrs[Attributes::Name] = col.getName();
+ 			aux_attrs[Attributes::Type] = col.getType();
+ 
+-			schparser.ignoreUnkownAttributes(true);
++			schparser.ignoreUnknownAttributes(true);
+ 			attribs[Attributes::Columns] += schparser.getSourceCode(GlobalAttributes::getDictSchemaFilePath(md_format, BaseObject::getSchemaName(ObjectType::Column)), aux_attrs);
+ 			aux_attrs.clear();
+ 		}
+@@ -907,7 +907,7 @@ QString View::getDataDictionary(bool split, bool md_format, const attribs_map &e
+ 		for(auto &obj : indexes)
+ 			attribs[Attributes::Indexes] +=  dynamic_cast<Index *>(obj)->getDataDictionary(md_format);
+ 
+-		schparser.ignoreUnkownAttributes(true);
++		schparser.ignoreUnknownAttributes(true);
+ 		attribs[Attributes::Objects] += schparser.getSourceCode(GlobalAttributes::getDictSchemaFilePath(md_format, Attributes::Objects), attribs);
+ 
+ 		schparser.ignoreEmptyAttributes(true);
+diff --git a/libs/libgui/libgui.pro b/libs/libgui/libgui.pro
+index 9146ba0d6..e21f60ec2 100644
+--- a/libs/libgui/libgui.pro
++++ b/libs/libgui/libgui.pro
+@@ -16,7 +16,6 @@ isEqual(PRIVATE_PLUGINS, false) {
+ RESOURCES += res/resources.qrc
+ 
+ windows:RCC_DIR += src
+-windows:DESTDIR = $$PWD
+ 
+ # Enables shared library symbols exporting
+ DEFINES += GUI_SYMBOLS
+@@ -382,7 +381,8 @@ INCLUDEPATH += $$LIBCANVAS_INC \
+ 	       $$PWD/src/settings \
+ 	       $$PWD/src/tools \
+ 	       $$PWD/src/utils \
+-	       $$PWD/src/widgets
++	       $$PWD/src/widgets \
++	       $$PWD/src
+ 
+ DEPENDPATH += $$LIBCANVAS_ROOT \
+ 	      $$LIBCONNECTOR_ROOT \
+diff --git a/libs/libgui/src/dbobjects/baseobjectwidget.h b/libs/libgui/src/dbobjects/baseobjectwidget.h
+index 75da3ba4b..dc5d9aec3 100644
+--- a/libs/libgui/src/dbobjects/baseobjectwidget.h
++++ b/libs/libgui/src/dbobjects/baseobjectwidget.h
+@@ -128,9 +128,9 @@ class __libgui BaseObjectWidget: public QWidget, public Ui::BaseObjectWidget {
+ 			
+ 	public:
+ 		//! \brief Constants used to generate version intervals for version alert frame
+-		static constexpr unsigned UntilVersion=0,
+-		VersionsInterval=1,
+-		AfterVersion=2;
++		static constexpr unsigned UntilVersion=0;
++		static constexpr unsigned VersionsInterval=1;
++		static constexpr unsigned AfterVersion=2;
+ 		
+ 		BaseObjectWidget(QWidget * parent = nullptr, ObjectType obj_type=ObjectType::BaseObject);
+ 		
+diff --git a/libs/libgui/src/dbobjects/relationshipwidget.cpp b/libs/libgui/src/dbobjects/relationshipwidget.cpp
+index c1e7dd8af..7804d9a6d 100644
+--- a/libs/libgui/src/dbobjects/relationshipwidget.cpp
++++ b/libs/libgui/src/dbobjects/relationshipwidget.cpp
+@@ -312,7 +312,7 @@ void RelationshipWidget::setAttributes(DatabaseModel *model, OperationList *op_l
+ 
+ 	if(aux_rel)
+ 	{
+-		single_pk_chk->setChecked(aux_rel->isSiglePKColumn());
++		single_pk_chk->setChecked(aux_rel->isSinglePKColumn());
+ 		table1_mand_chk->setChecked(aux_rel->isTableMandatory(BaseRelationship::SrcTable));
+ 		table2_mand_chk->setChecked(aux_rel->isTableMandatory(BaseRelationship::DstTable));
+ 		identifier_chk->setChecked(aux_rel->isIdentifier());
+@@ -1183,7 +1183,7 @@ void RelationshipWidget::applyConfiguration()
+ 				rel->setFKIndexType(index_type_cmb->currentIndex() != 0 ? IndexingType(index_type_cmb->currentText()) : IndexingType::Null);
+ 
+ 				if(rel_type == BaseRelationship::RelationshipNn)
+-					rel->setSiglePKColumn(single_pk_chk->isChecked());
++					rel->setSinglePKColumn(single_pk_chk->isChecked());
+ 			}
+ 
+ 			count=rel_columns_lst->count();
+diff --git a/libs/libgui/src/settings/appearanceconfigwidget.h b/libs/libgui/src/settings/appearanceconfigwidget.h
+index f39bfcca3..8182b7cac 100644
+--- a/libs/libgui/src/settings/appearanceconfigwidget.h
++++ b/libs/libgui/src/settings/appearanceconfigwidget.h
+@@ -49,21 +49,21 @@ class __libgui AppearanceConfigWidget: public BaseConfigWidget, public Ui::Appea
+ 		/*! \brief Holds the QPalette settings that defines dark theme.
+ 		 * This map key is a color role which value is a string list that
+ 		 * contains 3 elements: active color, inactive color and disabled color. */
+-		static std::map<QPalette::ColorRole, QStringList> dark_ui_colors,
++		static std::map<QPalette::ColorRole, QStringList> dark_ui_colors;
+ 
+ 		/*! \brief Holds the QPalette settings that defines light theme.
+ 		 * This map key is a color role which value is a string list that
+ 		 * contains 3 elements: active color, inactive color and disabled color. */
+-		light_ui_colors,
++		static std::map<QPalette::ColorRole, QStringList> light_ui_colors;
+ 
+ 		//! \brief Holds the default/system QPalette settings.
+-		system_ui_colors;
++		static std::map<QPalette::ColorRole, QStringList> system_ui_colors;
+ 
+ 		//! \brief Colors used for ObjectTableWidget items when in dark theme
+-		static QStringList dark_tab_item_colors,
++		static QStringList dark_tab_item_colors;
+ 
+ 		//! \brief Colors used for ObjectTableWidget items when in light theme
+-		light_tab_item_colors;
++		static QStringList light_tab_item_colors;
+ 
+ 		//! \brief Holds the current user interface theme id (light/dark)
+ 		static QString UiThemeId;
+diff --git a/libs/libgui/src/settings/connectionsconfigwidget.cpp b/libs/libgui/src/settings/connectionsconfigwidget.cpp
+index 9f81ca680..b6cbcdf2b 100644
+--- a/libs/libgui/src/settings/connectionsconfigwidget.cpp
++++ b/libs/libgui/src/settings/connectionsconfigwidget.cpp
+@@ -47,6 +47,7 @@ ConnectionsConfigWidget::ConnectionsConfigWidget(QWidget * parent) : BaseConfigW
+ 	connect(add_tb, &QPushButton::clicked, this, __slot(this, ConnectionsConfigWidget::handleConnection));
+ 
+ 	connect(alias_edt, &QLineEdit::textChanged, this, &ConnectionsConfigWidget::enableConnectionTest);
++	connect(service_edt, &QLineEdit::textChanged, this, &ConnectionsConfigWidget::enableConnectionTest);
+ 	connect(host_edt, &QLineEdit::textChanged, this, &ConnectionsConfigWidget::enableConnectionTest);
+ 	connect(user_edt, &QLineEdit::textChanged, this, &ConnectionsConfigWidget::enableConnectionTest);
+ 	connect(passwd_edt, &QLineEdit::textChanged, this, &ConnectionsConfigWidget::enableConnectionTest);
+@@ -67,6 +68,7 @@ void ConnectionsConfigWidget::hideEvent(QHideEvent *event)
+ 	{
+ 		newConnection();
+ 		one_time_conn_edit = false;
++		service_edt->setEnabled(true);
+ 		host_edt->setEnabled(true);
+ 		port_sbp->setEnabled(true);
+ 		conn_btns_wgt->setVisible(true);
+@@ -160,14 +162,16 @@ void ConnectionsConfigWidget::loadConfiguration()
+ 	}
+ }
+ 
+-void ConnectionsConfigWidget::setOneTimeEditMode(bool one_time_edit, const QString &conn_alias, const QString &dbname, const QString &host, int port, const QString &username, const QString &password)
++void ConnectionsConfigWidget::setOneTimeEditMode(bool one_time_edit, const QString &conn_alias, const QString &service, const QString &host, int port, const QString &dbname, const QString &username, const QString &password)
+ {
+ 	one_time_conn_edit = one_time_edit;
+ 	conn_btns_wgt->setVisible(!one_time_edit);
+ 	add_tb->setVisible(!one_time_edit);
++	service_edt->setDisabled(one_time_edit && !service.isEmpty());
+ 	host_edt->setDisabled(one_time_edit && !host.isEmpty());
+ 	port_sbp->setDisabled(one_time_edit && port > 0);
+ 	alias_edt->setText(conn_alias);
++	service_edt->setText(service);
+ 	conn_db_edt->setText(dbname);
+ 	host_edt->setText(host);
+ 	port_sbp->setValue(port);
+@@ -189,10 +193,7 @@ void ConnectionsConfigWidget::enableCertificates()
+ 
+ void ConnectionsConfigWidget::enableConnectionTest()
+ {
+-	test_tb->setEnabled(!alias_edt->text().isEmpty() &&
+-						!host_edt->text().isEmpty() &&
+-						!user_edt->text().isEmpty() &&
+-						!conn_db_edt->text().isEmpty());
++	test_tb->setEnabled(!alias_edt->text().isEmpty());
+ 	add_tb->setEnabled(test_tb->isEnabled());
+ 	update_tb->setEnabled(test_tb->isEnabled());
+ 
+@@ -211,6 +212,7 @@ void ConnectionsConfigWidget::newConnection()
+ 		conn_db_edt->clear();
+ 		alias_edt->clear();
+ 		user_edt->clear();
++		service_edt->clear();
+ 		host_edt->clear();
+ 		port_sbp->setValue(5432);
+ 		passwd_edt->clear();
+@@ -336,6 +338,8 @@ void ConnectionsConfigWidget::editConnection()
+ 		import_chk->setChecked(conn->isDefaultForOperation(Connection::OpImport));
+ 		validation_chk->setChecked(conn->isDefaultForOperation(Connection::OpValidation));
+ 
++		service_edt->setText(conn->getConnectionParam(Connection::ParamService));
++
+ 		if(!conn->getConnectionParam(Connection::ParamServerFqdn).isEmpty())
+ 			host_edt->setText(conn->getConnectionParam(Connection::ParamServerFqdn));
+ 		else
+@@ -400,6 +404,7 @@ void ConnectionsConfigWidget::configureConnection(Connection *conn, bool is_upda
+ 		}
+ 
+ 		conn->setConnectionParam(Connection::ParamAlias, alias);
++		conn->setConnectionParam(Connection::ParamService, service_edt->text());
+ 		conn->setConnectionParam(Connection::ParamServerIp, "");
+ 		conn->setConnectionParam(Connection::ParamServerFqdn, host_edt->text());
+ 		conn->setConnectionParam(Connection::ParamPort, QString("%1").arg(port_sbp->value()));
+@@ -543,19 +548,19 @@ void ConnectionsConfigWidget::saveConfiguration()
+ 				attribs[DefaultFor.arg(Attributes::Diff)]=(conn->isDefaultForOperation(Connection::OpDiff) ? Attributes::True : "");
+ 				attribs[DefaultFor.arg(Attributes::Validation)]=(conn->isDefaultForOperation(Connection::OpValidation) ? Attributes::True : "");
+ 
+-				schparser.ignoreUnkownAttributes(true);
++				schparser.ignoreUnknownAttributes(true);
+ 				config_params[GlobalAttributes::ConnectionsConf][Attributes::Connections]+=
+ 						schparser.getSourceCode(GlobalAttributes::getTmplConfigurationFilePath(GlobalAttributes::SchemasDir,
+ 																																											 GlobalAttributes::ConnectionsConf +
+ 																																											 GlobalAttributes::SchemaExt), attribs);
+ 
+-				schparser.ignoreUnkownAttributes(false);
++				schparser.ignoreUnknownAttributes(false);
+ 			}
+ 		}
+ 
+-		schparser.ignoreUnkownAttributes(true);
++		schparser.ignoreUnknownAttributes(true);
+ 		BaseConfigWidget::saveConfiguration(GlobalAttributes::ConnectionsConf, config_params);
+-		schparser.ignoreUnkownAttributes(false);
++		schparser.ignoreUnknownAttributes(false);
+ 		//setConfigurationChanged(false);
+ 	}
+ 	catch(Exception &e)
+@@ -630,8 +635,11 @@ void ConnectionsConfigWidget::fillConnectionsComboBox(QComboBox *combo, bool inc
+ }
+ 
+ bool ConnectionsConfigWidget::openConnectionsConfiguration(bool one_time_edit,
+-																													 const QString &conn_alias, const QString &dbname, const QString &host,
+-																													 int port, const QString &username, const QString &password)
++																													 const QString &conn_alias,
++																													 const QString &service,
++																													 const QString &host, int port,
++																													 const QString &dbname,
++																													 const QString &username, const QString &password)
+ {
+ 	BaseForm parent_form;
+ 	ConnectionsConfigWidget conn_cfg_wgt;
+@@ -656,7 +664,7 @@ bool ConnectionsConfigWidget::openConnectionsConfiguration(bool one_time_edit,
+ 		)
+ 	});
+ 
+-	conn_cfg_wgt.setOneTimeEditMode(one_time_edit, conn_alias, dbname, host, port, username, password);
++	conn_cfg_wgt.setOneTimeEditMode(one_time_edit, conn_alias, service, host, port, dbname, username, password);
+ 	parent_form.setWindowTitle(tr("Edit database connections"));
+ 	parent_form.setWindowFlags(Qt::Dialog | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
+ 	parent_form.setMainWidget(&conn_cfg_wgt);
+diff --git a/libs/libgui/src/settings/connectionsconfigwidget.h b/libs/libgui/src/settings/connectionsconfigwidget.h
+index 4de1556c2..27a9b4af2 100644
+--- a/libs/libgui/src/settings/connectionsconfigwidget.h
++++ b/libs/libgui/src/settings/connectionsconfigwidget.h
+@@ -65,8 +65,10 @@ class __libgui ConnectionsConfigWidget: public BaseConfigWidget, public Ui::Conn
+ 		 *  for them. Once the user accepts or rejects the editions the form
+ 		 *  returns to the original operation mode */
+ 		void setOneTimeEditMode(bool one_time_edit,
+-														const QString &conn_alias, const QString &dbname,
++														const QString &conn_alias,
++														const QString &service,
+ 														const QString &host, int port,
++														const QString &dbname,
+ 														const QString &username, const QString &password);
+ 		
+ 		static std::map<QString, attribs_map> getConfigurationParams();
+@@ -96,8 +98,10 @@ class __libgui ConnectionsConfigWidget: public BaseConfigWidget, public Ui::Conn
+ 		 *  Returns true when the connection were changed somehow, either by restoring the defaults, adding new connections
+ 		 *  or removing current ones. Default values for connection alias, dbname, host, port and user can be provided. */
+ 		static bool openConnectionsConfiguration(bool one_time_edit = false,
+-																						 const QString &conn_alias = "", const QString &dbname = "",
++																						 const QString &conn_alias = "",
++																						 const QString &service= "",
+ 																						 const QString &host = "", int port = 5432,
++																						 const QString &dbname = "",
+ 																						 const QString &username = "", const QString &password = "");
+ 
+ 		//! \brief Returns the first connection found which is defined as the default for the specified operation
+diff --git a/libs/libgui/src/settings/generalconfigwidget.cpp b/libs/libgui/src/settings/generalconfigwidget.cpp
+index 42444a6cb..e38d5be34 100644
+--- a/libs/libgui/src/settings/generalconfigwidget.cpp
++++ b/libs/libgui/src/settings/generalconfigwidget.cpp
+@@ -518,11 +518,11 @@ void GeneralConfigWidget::saveConfiguration()
+ 							itr->first==Attributes::SqlTool ||
+ 							itr->first==Attributes::LayersConfig)
+ 			{
+-				schparser.ignoreUnkownAttributes(true);
++				schparser.ignoreUnknownAttributes(true);
+ 				schparser.ignoreEmptyAttributes(true);
+ 				config_params[Attributes::Configuration][Attributes::DockWidgets]+=
+ 						schparser.getSourceCode(widget_sch, itr->second);
+-				schparser.ignoreUnkownAttributes(false);
++				schparser.ignoreUnknownAttributes(false);
+ 				schparser.ignoreEmptyAttributes(false);
+ 			}
+ 
+@@ -547,10 +547,10 @@ void GeneralConfigWidget::saveConfiguration()
+ 				attribs[Attributes::Height] = QString::number(itr.second.geometry.height());
+ 				attribs[Attributes::Maximized] = itr.second.maximized ? Attributes::True : "";
+ 
+-				schparser.ignoreUnkownAttributes(true);
++				schparser.ignoreUnknownAttributes(true);
+ 				config_params[Attributes::Configuration][Attributes::WidgetsGeometry]+=
+ 						schparser.getSourceCode(widget_sch, attribs);
+-				schparser.ignoreUnkownAttributes(false);
++				schparser.ignoreUnknownAttributes(false);
+ 			}
+ 		}
+ 
+diff --git a/libs/libgui/src/settings/relationshipconfigwidget.cpp b/libs/libgui/src/settings/relationshipconfigwidget.cpp
+index e436eaae0..9a1deda89 100644
+--- a/libs/libgui/src/settings/relationshipconfigwidget.cpp
++++ b/libs/libgui/src/settings/relationshipconfigwidget.cpp
+@@ -174,7 +174,7 @@ void RelationshipConfigWidget::saveConfiguration()
+ 
+ 		for(auto &itr : patterns)
+ 		{
+-			schparser.ignoreUnkownAttributes(true);
++			schparser.ignoreUnknownAttributes(true);
+ 			schparser.ignoreEmptyAttributes(true);
+ 			config_params[itr.first] = itr.second;
+ 			config_params[Attributes::NamePatterns][Attributes::Patterns] += schparser.getSourceCode(patterns_sch, itr.second);
+diff --git a/libs/libgui/src/settings/snippetsconfigwidget.cpp b/libs/libgui/src/settings/snippetsconfigwidget.cpp
+index afb2ee19f..dc1325bb6 100644
+--- a/libs/libgui/src/settings/snippetsconfigwidget.cpp
++++ b/libs/libgui/src/settings/snippetsconfigwidget.cpp
+@@ -181,7 +181,7 @@ QString SnippetsConfigWidget::parseSnippet(attribs_map snippet, attribs_map attr
+ 		}
+ 
+ 		schparser.ignoreEmptyAttributes(true);
+-		schparser.ignoreUnkownAttributes(true);
++		schparser.ignoreUnknownAttributes(true);
+ 		return schparser.getSourceCode(attribs);
+ 	}
+ 	catch(Exception &e)
+@@ -238,7 +238,7 @@ bool SnippetsConfigWidget::isSnippetValid(attribs_map &attribs, const QString &o
+ 
+ 			schparser.loadBuffer(buf);
+ 			schparser.ignoreEmptyAttributes(true);
+-			schparser.ignoreUnkownAttributes(true);
++			schparser.ignoreUnknownAttributes(true);
+ 			schparser.getSourceCode(attribs);
+ 		}
+ 		catch(Exception &e)
+diff --git a/libs/libgui/src/tools/databaseexplorerwidget.cpp b/libs/libgui/src/tools/databaseexplorerwidget.cpp
+index 2b09e9125..629e83148 100644
+--- a/libs/libgui/src/tools/databaseexplorerwidget.cpp
++++ b/libs/libgui/src/tools/databaseexplorerwidget.cpp
+@@ -1428,7 +1428,7 @@ void DatabaseExplorerWidget::dropObject(QTreeWidgetItem *item, bool cascade)
+ 
+ 				//Generate the drop command
+ 				schparser.ignoreEmptyAttributes(true);
+-				schparser.ignoreUnkownAttributes(true);
++				schparser.ignoreUnknownAttributes(true);
+ 				drop_cmd=schparser.getSourceCode(Attributes::Drop, attribs, SchemaParser::SqlCode);
+ 
+ 				if(cascade)
+@@ -1495,7 +1495,7 @@ bool DatabaseExplorerWidget::truncateTable(const QString &sch_name, const QStrin
+ 
+ 			//Generate the truncate command
+ 			schparser.ignoreEmptyAttributes(true);
+-			schparser.ignoreUnkownAttributes(true);
++			schparser.ignoreUnknownAttributes(true);
+ 
+ 			truc_cmd=schparser.getSourceCode(GlobalAttributes::getSchemaFilePath(GlobalAttributes::AlterSchemaDir, Attributes::Truncate),
+ 																					 attribs);
+@@ -2015,7 +2015,7 @@ void DatabaseExplorerWidget::finishObjectRename()
+ 
+ 			//Generate the drop command
+ 			schparser.ignoreEmptyAttributes(true);
+-			schparser.ignoreUnkownAttributes(true);
++			schparser.ignoreUnknownAttributes(true);
+ 
+ 			rename_cmd=schparser.getSourceCode(GlobalAttributes::getSchemaFilePath(GlobalAttributes::AlterSchemaDir, Attributes::Rename),
+ 													 attribs);
+diff --git a/libs/libgui/src/tools/databaseexplorerwidget.h b/libs/libgui/src/tools/databaseexplorerwidget.h
+index f2b02d71e..db1432715 100644
+--- a/libs/libgui/src/tools/databaseexplorerwidget.h
++++ b/libs/libgui/src/tools/databaseexplorerwidget.h
+@@ -45,9 +45,9 @@ class __libgui DatabaseExplorerWidget: public QWidget, public Ui::DatabaseExplor
+ 		 * This attribute is used by saveTreeState() and restoreTreeState() */
+ 		QStringList items_state;
+ 
+-		static const QString DepNotDefined,
+-		DepNotFound,
+-		DefaultSourceCode;
++		static const QString DepNotDefined;
++		static const QString DepNotFound;
++		static const QString DefaultSourceCode;
+ 		
+ 		//! \brief Stores the translations of all used attributes at properties panel
+ 		static const attribs_map attribs_i18n;
+diff --git a/libs/libgui/src/tools/databaseimporthelper.cpp b/libs/libgui/src/tools/databaseimporthelper.cpp
+index 75cabca0e..b8f56a21c 100644
+--- a/libs/libgui/src/tools/databaseimporthelper.cpp
++++ b/libs/libgui/src/tools/databaseimporthelper.cpp
+@@ -21,7 +21,7 @@
+ #include "utilsns.h"
+ #include "coreutilsns.h"
+ 
+-const QString DatabaseImportHelper::UnkownObjectOidXml {"\t<!--[ unknown object OID=%1 ]-->\n"};
++const QString DatabaseImportHelper::UnknownObjectOidXml {"\t<!--[ unknown object OID=%1 ]-->\n"};
+ 
+ DatabaseImportHelper::DatabaseImportHelper(QObject *parent) : QObject(parent)
+ {
+@@ -954,9 +954,9 @@ QString DatabaseImportHelper::getDependencyObject(const QString &oid, ObjectType
+ 			if(generate_xml)
+ 			{
+ 				obj_attr[Attributes::ReducedForm] = Attributes::True;
+-				schparser.ignoreUnkownAttributes(true);
++				schparser.ignoreUnknownAttributes(true);
+ 				xml_def = schparser.getSourceCode(BaseObject::getSchemaName(obj_type), obj_attr, SchemaParser::XmlCode);
+-				schparser.ignoreUnkownAttributes(false);
++				schparser.ignoreUnknownAttributes(false);
+ 			}
+ 			else
+ 				xml_def = obj_name;
+@@ -964,7 +964,7 @@ QString DatabaseImportHelper::getDependencyObject(const QString &oid, ObjectType
+ 		else
+ 			/* If the object oid is valid but there is no attribute set to it creates a xml definition
+ 				 containing an alert indicating that the object is unknown */
+-			xml_def = UnkownObjectOidXml.arg(oid);
++			xml_def = UnknownObjectOidXml.arg(oid);
+ 
+ 		return xml_def;
+ 	}
+@@ -980,10 +980,10 @@ void DatabaseImportHelper::loadObjectXML(ObjectType obj_type, attribs_map &attri
+ 
+ 	try
+ 	{
+-		schparser.ignoreUnkownAttributes(true);
++		schparser.ignoreUnknownAttributes(true);
+ 		xml_buf=schparser.getSourceCode(BaseObject::getSchemaName(obj_type), attribs, SchemaParser::XmlCode);
+ 
+-		schparser.ignoreUnkownAttributes(false);
++		schparser.ignoreUnknownAttributes(false);
+ 		xmlparser->restartParser();
+ 
+ 		if(debug_mode)
+@@ -1197,7 +1197,7 @@ Extension *DatabaseImportHelper::createExtension(attribs_map &attribs)
+ 			aux_attrs[Attributes::Type] = BaseObject::getSchemaName(ObjectType::Schema);
+ 
+ 			schparser.ignoreEmptyAttributes(true);
+-			schparser.ignoreUnkownAttributes(true);
++			schparser.ignoreUnknownAttributes(true);
+ 			attribs[Attributes::Objects] += schparser.getSourceCode(Attributes::Object, aux_attrs, SchemaParser::XmlCode);
+ 		}
+ 
+@@ -1227,7 +1227,7 @@ Extension *DatabaseImportHelper::createExtension(attribs_map &attribs)
+ 			aux_attrs[Attributes::Type] = BaseObject::getSchemaName(ObjectType::Type);
+ 
+ 			schparser.ignoreEmptyAttributes(true);
+-			schparser.ignoreUnkownAttributes(true);
++			schparser.ignoreUnknownAttributes(true);
+ 			attribs[Attributes::Objects] += schparser.getSourceCode(Attributes::Object, aux_attrs, SchemaParser::XmlCode);
+ 		}
+ 
+@@ -1564,9 +1564,9 @@ OperatorClass *DatabaseImportHelper::createOperatorClass(attribs_map &attribs)
+ 		//Generating the complete XML code for operator class elements
+ 		for(unsigned i=0; i < elems.size(); i++)
+ 		{
+-			schparser.ignoreUnkownAttributes(true);
++			schparser.ignoreUnknownAttributes(true);
+ 			attribs[Attributes::Elements]+=schparser.getSourceCode(Attributes::Element, elems[i], SchemaParser::XmlCode);
+-			schparser.ignoreUnkownAttributes(false);
++			schparser.ignoreUnknownAttributes(false);
+ 		}
+ 
+ 		loadObjectXML(ObjectType::OpClass, attribs);
+@@ -3666,9 +3666,9 @@ QString DatabaseImportHelper::getType(const QString &oid_str, bool generate_xml,
+ 			extra_attribs[Attributes::Name]=obj_name;
+ 			extra_attribs[Attributes::Dimension]=(dimension > 0 ? QString::number(dimension) : "");
+ 
+-			schparser.ignoreUnkownAttributes(true);
++			schparser.ignoreUnknownAttributes(true);
+ 			xml_def = schparser.getSourceCode(Attributes::PgSqlBaseType, extra_attribs, SchemaParser::XmlCode);
+-			schparser.ignoreUnkownAttributes(false);
++			schparser.ignoreUnknownAttributes(false);
+ 
+ 			return xml_def;
+ 		}
+diff --git a/libs/libgui/src/tools/databaseimporthelper.h b/libs/libgui/src/tools/databaseimporthelper.h
+index 1e605ed16..5eaada4ed 100644
+--- a/libs/libgui/src/tools/databaseimporthelper.h
++++ b/libs/libgui/src/tools/databaseimporthelper.h
+@@ -40,7 +40,7 @@ class __libgui DatabaseImportHelper: public QObject {
+ 		//! \brief Random number generator engine used to generate random colors for imported schemas
+ 		std::default_random_engine rand_num_engine;
+ 		
+-		static const QString UnkownObjectOidXml;
++		static const QString UnknownObjectOidXml;
+ 		
+ 		/*! \brief File handle to log the import process. This file is opened for writing only when
+ 		the 'ignore_errors' is true */
+diff --git a/libs/libgui/src/tools/modeldatabasediffform.cpp b/libs/libgui/src/tools/modeldatabasediffform.cpp
+index 847d9b8e8..ca4cf05ee 100644
+--- a/libs/libgui/src/tools/modeldatabasediffform.cpp
++++ b/libs/libgui/src/tools/modeldatabasediffform.cpp
+@@ -1229,10 +1229,10 @@ void ModelDatabaseDiffForm::saveConfiguration()
+ 
+ 		for(auto &conf : config_params)
+ 		{
+-			schparser.ignoreUnkownAttributes(true);
++			schparser.ignoreUnknownAttributes(true);
+ 			schparser.ignoreEmptyAttributes(true);
+ 			presets += schparser.getSourceCode(preset_sch, conf.second);
+-			schparser.ignoreUnkownAttributes(false);
++			schparser.ignoreUnknownAttributes(false);
+ 			schparser.ignoreEmptyAttributes(false);
+ 		}
+ 
+diff --git a/libs/libgui/src/tools/modelexporthelper.cpp b/libs/libgui/src/tools/modelexporthelper.cpp
+index b0187f519..8bc6e2523 100644
+--- a/libs/libgui/src/tools/modelexporthelper.cpp
++++ b/libs/libgui/src/tools/modelexporthelper.cpp
+@@ -867,7 +867,7 @@ void ModelExportHelper::exportBufferToDBMS(const QString &buffer, Connection &co
+    to permit the user, in case of error, identify what object is wrongly configured. */
+ 	ts.setString(&sql_buf);
+ 
+-	if(!conn.isStablished())
++	if(!conn.isEstablished())
+ 	{
+ 		orig_conn_db_name = conn.getConnectionParam(Connection::ParamDbName);
+ 
+@@ -1141,7 +1141,7 @@ void ModelExportHelper::exportBufferToDBMS(const QString &buffer, Connection &co
+ 		}
+ 		catch(Exception &e)
+ 		{
+-			if(conn.isStablished() && in_transaction)
++			if(conn.isEstablished() && in_transaction)
+ 			{
+ 				try
+ 				{
+diff --git a/libs/libgui/src/tools/modelsdiffhelper.h b/libs/libgui/src/tools/modelsdiffhelper.h
+index e81f90603..39918c93e 100644
+--- a/libs/libgui/src/tools/modelsdiffhelper.h
++++ b/libs/libgui/src/tools/modelsdiffhelper.h
+@@ -34,18 +34,16 @@ class __libgui ModelsDiffHelper: public QObject {
+ 
+ 	private:
+ 		//! \brief List of attributes ignored when comparing XML code of table children objects
+-		static const QStringList
+-
+-		TableObjsIgnoredAttribs,
++		static const QStringList TableObjsIgnoredAttribs;
+ 
+ 		//! \brief List of tags ignored when comparing XML code of roles specifically
+-		RolesIgnoredTags,
++		static const QStringList RolesIgnoredTags;
+ 
+ 		//! \brief List of attributes ignored when comparing XML code of other database objects
+-		ObjectsIgnoredAttribs,
++		static const QStringList ObjectsIgnoredAttribs;
+ 
+ 		//! \brief List of tags ignored when comparing XML code of other database objects
+-		ObjectsIgnoredTags;
++		static const QStringList ObjectsIgnoredTags;
+ 
+ 		//! \brief Stores the SQL code that represents the diff between model and database
+ 		QString diff_def,
+diff --git a/libs/libgui/src/tools/sqlexecutionhelper.cpp b/libs/libgui/src/tools/sqlexecutionhelper.cpp
+index e873e07f5..4bcc497bd 100644
+--- a/libs/libgui/src/tools/sqlexecutionhelper.cpp
++++ b/libs/libgui/src/tools/sqlexecutionhelper.cpp
+@@ -66,7 +66,7 @@ void SQLExecutionHelper::executeCommand()
+ 		result_model = nullptr;
+ 		cancelled = false;
+ 
+-		if(!connection.isStablished())
++		if(!connection.isEstablished())
+ 		{
+ 			connection.setNoticeEnabled(true);
+ 			connection.connect();
+@@ -92,7 +92,7 @@ void SQLExecutionHelper::executeCommand()
+ 
+ void SQLExecutionHelper::cancelCommand()
+ {
+-	if(connection.isStablished())
++	if(connection.isEstablished())
+ 	{
+ 		connection.requestCancel();
+ 		cancelled = true;
+diff --git a/libs/libgui/src/utils/objectslistmodel.h b/libs/libgui/src/utils/objectslistmodel.h
+index 4f14dcdfc..933904c27 100644
+--- a/libs/libgui/src/utils/objectslistmodel.h
++++ b/libs/libgui/src/utils/objectslistmodel.h
+@@ -67,9 +67,8 @@ class __libgui ObjectsListModel: public QAbstractTableModel {
+ 
+ 	QList<ItemData> header_data;
+ 
+-	static const QStringList HeaderTexts,
+-
+-	HeaderIcons;
++	static const QStringList HeaderTexts;
++	static const QStringList HeaderIcons;
+ 
+ 	inline QVariant getItemData(const ItemData &item_dt, int role) const;
+ 	static std::tuple<int, int, int> getIndexMargins();
+diff --git a/libs/libgui/src/utils/syntaxhighlighter.h b/libs/libgui/src/utils/syntaxhighlighter.h
+index ad2777ff8..efdcb027d 100644
+--- a/libs/libgui/src/utils/syntaxhighlighter.h
++++ b/libs/libgui/src/utils/syntaxhighlighter.h
+@@ -76,12 +76,12 @@ class __libgui SyntaxHighlighter: public QSyntaxHighlighter {
+ 		static QFont default_font;
+ 
+ 		//! \brief Indicates that the current block has no special meaning
+-		static constexpr int SimpleBlock = -1,
++		static constexpr int SimpleBlock = -1;
+ 
+ 		/*! \brief Indicates that the current block was last formatted by a persistent group,
+ 		 * Indicating that the highlight was applied to the start position of the group
+ 		 * until the end of the block. */
+-		PersistentBlock = 0,
++		static constexpr int PersistentBlock = 0;
+ 
+ 		/*! \brief Indicates that the current block has an open (but still to close) expression (e.g. multline comments)
+ 		* When the highlighter finds this const it'll do special operation like highlight next blocks with the same
+@@ -89,7 +89,7 @@ class __libgui SyntaxHighlighter: public QSyntaxHighlighter {
+ 		* calls using this as parameter will always use the group index as extra value. For example, say we have a
+ 		* "multi-line-comment" group which index is 1 and was applied to the current block, then the block state will
+ 		* be set as OpenExprBlock + 1 */
+-		OpenExprBlock = 1;
++		static constexpr int OpenExprBlock = 1;
+ 
+ 		//! \brief Stores the order in which the groups must be applied
+ 		QStringList groups_order, multilines_order;
+diff --git a/libs/libgui/src/widgets/elementstablewidget.cpp b/libs/libgui/src/widgets/elementstablewidget.cpp
+deleted file mode 100644
+index 1601c1a38..000000000
+--- a/libs/libgui/src/widgets/elementstablewidget.cpp
++++ /dev/null
+@@ -1,186 +0,0 @@
+-/*
+-# PostgreSQL Database Modeler (pgModeler)
+-#
+-# Copyright 2006-2021 - Raphael Araújo e Silva <raphael@pgmodeler.io>
+-#
+-# This program is free software: you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License as published by
+-# the Free Software Foundation version 3.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# The complete text of GPLv3 is at LICENSE file on source code root directory.
+-# Also, you can get the complete GNU General Public License at <http://www.gnu.org/licenses/>
+-*/
+-
+-#include "elementstablewidget.h"
+-#include "generalconfigwidget.h"
+-
+-ElementsTableWidget::ElementsTableWidget(QWidget *parent) : QWidget(parent)
+-{
+-	try
+-	{
+-		handled_elem = nullptr;
+-		model = nullptr;
+-		parent_obj = nullptr;
+-
+-		element_wgt = new ElementWidget;
+-		element_form.setMainWidget(element_wgt);
+-		element_form.setButtonConfiguration();
+-		connect(&element_form, SIGNAL(accepted()), element_wgt, SLOT(applyConfiguration()));
+-
+-		QVBoxLayout *vbox = new QVBoxLayout(this);
+-		elements_tab=new ObjectsTableWidget(ObjectsTableWidget::AllButtons ^
+-																				(ObjectsTableWidget::UpdateButton | ObjectsTableWidget::DuplicateButton), true, this);
+-
+-		elements_tab->setColumnCount(7);
+-		elements_tab->setHeaderLabel(tr("Element"), 0);
+-		elements_tab->setHeaderIcon(QPixmap(GuiUtilsNs::getIconPath("column")),0);
+-		elements_tab->setHeaderLabel(tr("Type"), 1);
+-		elements_tab->setHeaderIcon(QPixmap(GuiUtilsNs::getIconPath("usertype")),1);
+-		elements_tab->setHeaderLabel(tr("Operator"), 2);
+-		elements_tab->setHeaderIcon(QPixmap(GuiUtilsNs::getIconPath("operator")),2);
+-		elements_tab->setHeaderLabel(tr("Operator Class"), 3);
+-		elements_tab->setHeaderIcon(QPixmap(GuiUtilsNs::getIconPath("opclass")),3);
+-		elements_tab->setHeaderLabel(tr("Collation"), 4);
+-		elements_tab->setHeaderIcon(QPixmap(GuiUtilsNs::getIconPath("collation")),4);
+-		elements_tab->setHeaderLabel(tr("Sorting"), 5);
+-		elements_tab->setHeaderLabel(tr("Nulls First"), 6);
+-
+-		vbox->setContentsMargins(4,4,4,4);
+-		vbox->addWidget(elements_tab);
+-
+-		connect(elements_tab, SIGNAL(s_rowAdded(int)), this, SLOT(addElement(int)));
+-		connect(elements_tab, SIGNAL(s_rowEdited(int)), this, SLOT(editElement(int)));
+-	}
+-	catch(Exception &e)
+-	{
+-		throw Exception(e.getErrorMessage(),e.getErrorCode(),__PRETTY_FUNCTION__,__FILE__,__LINE__, &e);
+-	}
+-}
+-
+-ElementsTableWidget::~ElementsTableWidget()
+-{
+-	if(handled_elem)
+-		delete handled_elem;
+-}
+-
+-void ElementsTableWidget::showElementData(Element *elem, int elem_idx)
+-{
+-	if(!elem)
+-		return;
+-
+-	if(elem->getColumn())
+-	{
+-		elements_tab->setCellText(elem->getColumn()->getName(), elem_idx, 0);
+-		elements_tab->setCellText(elem->getColumn()->getTypeName(), elem_idx, 1);
+-	}
+-	else
+-	{
+-		elements_tab->setCellText(elem->getExpression(), elem_idx, 0);
+-		elements_tab->setCellText(tr("Expression"), elem_idx, 1);
+-	}
+-
+-	elements_tab->clearCellText(elem_idx, 2);
+-	if(elem->getOperator())
+-		elements_tab->setCellText(elem->getOperator()->getSignature(true), elem_idx, 2);
+-
+-	elements_tab->clearCellText(elem_idx, 3);
+-	if(elem->getOperatorClass())
+-		elements_tab->setCellText(elem->getOperatorClass()->getName(true), elem_idx, 3);
+-
+-	elements_tab->clearCellText(elem_idx, 4);
+-	if(elem->getCollation())
+-		elements_tab->setCellText(elem->getCollation()->getName(true), elem_idx, 4);
+-
+-	if(elem->isSortingEnabled())
+-	{
+-		if(elem->getSortingAttribute(IndexElement::AscOrder))
+-			elements_tab->setCellText(tr("Ascending"), elem_idx, 5);
+-		else
+-			elements_tab->setCellText(tr("Descending"), elem_idx, 5);
+-
+-		if(elem->getSortingAttribute(IndexElement::NullsFirst))
+-			elements_tab->setCellText(tr("Yes"), elem_idx, 6);
+-		else
+-			elements_tab->setCellText(tr("No"), elem_idx, 6);
+-	}
+-	else
+-	{
+-		elements_tab->clearCellText(elem_idx, 4);
+-		elements_tab->clearCellText(elem_idx, 5);
+-	}
+-
+-	elements_tab->setRowData(copyElementData(elem), elem_idx);
+-}
+-
+-QVariant ElementsTableWidget::copyElementData(Element *elem)
+-{
+-	if(dynamic_cast<IndexElement *>(elem))
+-		return QVariant::fromValue<IndexElement>(*dynamic_cast<IndexElement *>(elem));
+-
+-	if(dynamic_cast<ExcludeElement *>(elem))
+-		return QVariant::fromValue<ExcludeElement>(*dynamic_cast<ExcludeElement *>(elem));
+-
+-	if(dynamic_cast<PartitionKey *>(elem))
+-		return QVariant::fromValue<PartitionKey>(*dynamic_cast<PartitionKey *>(elem));
+-
+-	return QVariant();
+-}
+-
+-int ElementsTableWidget::openElementForm(Element *elem)
+-{
+-	int res = 0;
+-
+-	GeneralConfigWidget::restoreWidgetGeometry(&element_form, element_wgt->metaObject()->className());
+-	element_wgt->setAttributes(model, parent_obj, elem);
+-	element_form.setWindowTitle(element_wgt->windowTitle());
+-	res = element_form.exec();
+-	GeneralConfigWidget::saveWidgetGeometry(&element_form, element_wgt->metaObject()->className());
+-
+-	return res;
+-}
+-
+-void ElementsTableWidget::editElement(int elem_idx)
+-{
+-	QVariant data = elements_tab->getRowData(elem_idx);
+-	Element *elem = nullptr;
+-	IndexElement idx_elem;
+-	ExcludeElement exc_elem;
+-	PartitionKey part_key;
+-	int res = 0;
+-
+-	if(data.canConvert<IndexElement>())
+-	{
+-		idx_elem = data.value<IndexElement>();
+-		elem = &idx_elem;
+-	}
+-
+-	if(data.canConvert<ExcludeElement>())
+-	{
+-		exc_elem = data.value<ExcludeElement>();
+-		elem = &exc_elem;
+-	}
+-
+-	if(data.canConvert<PartitionKey>())
+-	{
+-		part_key = data.value<PartitionKey>();
+-		elem = &part_key;
+-	}
+-
+-	res = openElementForm(elem);
+-
+-	if(elem && res == QDialog::Accepted)
+-		showElementData(element_wgt->getElement(), elem_idx);
+-}
+-
+-void ElementsTableWidget::addElement(int elem_idx)
+-{
+-	if(openElementForm(handled_elem) == QDialog::Accepted)
+-		showElementData(element_wgt->getElement(), elem_idx);
+-	else
+-		elements_tab->removeRow(elem_idx);
+-}
+diff --git a/libs/libgui/src/widgets/elementstablewidget.h b/libs/libgui/src/widgets/elementstablewidget.h
+deleted file mode 100644
+index 319b87572..000000000
+--- a/libs/libgui/src/widgets/elementstablewidget.h
++++ /dev/null
+@@ -1,140 +0,0 @@
+-/*
+-# PostgreSQL Database Modeler (pgModeler)
+-#
+-# Copyright 2006-2021 - Raphael Araújo e Silva <raphael@pgmodeler.io>
+-#
+-# This program is free software: you can redistribute it and/or modify
+-# it under the terms of the GNU General Public License as published by
+-# the Free Software Foundation version 3.
+-#
+-# This program is distributed in the hope that it will be useful,
+-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-# GNU General Public License for more details.
+-#
+-# The complete text of GPLv3 is at LICENSE file on source code root directory.
+-# Also, you can get the complete GNU General Public License at <http://www.gnu.org/licenses/>
+-*/
+-
+-/**
+-\ingroup libgui
+-\class ElementsTableWidget
+-\brief Implements the operations to create/edit constraints (exclude), indexes and partition keys elements via form storing them on a objects table (grid).
+-*/
+-
+-#ifndef ELEMENTS_TABLES_WIDGET_H
+-#define ELEMENTS_TABLES_WIDGET_H
+-
+-#include <QtWidgets>
+-#include "objectstablewidget.h"
+-#include "indexelement.h"
+-#include "excludeelement.h"
+-#include "partitionkey.h"
+-#include "baseform.h"
+-#include "elementwidget.h"
+-
+-/* Declaring the IndexElement and ExcludeElement class as a Qt metatype in order to permit
+- * that instances of the class be used as data of QVariant and QMetaType */
+-#include <QMetaType>
+-Q_DECLARE_METATYPE(IndexElement)
+-Q_DECLARE_METATYPE(ExcludeElement)
+-Q_DECLARE_METATYPE(PartitionKey)
+-
+-class ElementsTableWidget: public QWidget {
+-	private:
+-		Q_OBJECT
+-
+-		/*! \brief Store an instance of the element being handled (see setAttributes())
+-		 * This one is used to determine the settings of the element widget open when the user
+-		 * wants to create new elements on the grid */
+-		Element *handled_elem;
+-
+-		ElementWidget *element_wgt;
+-
+-		BaseForm element_form;
+-
+-		DatabaseModel *model;
+-
+-		BaseObject *parent_obj;
+-
+-		//! \brief Table widget used to control the index elements
+-		ObjectsTableWidget *elements_tab;
+-		
+-		//! \brief Shows the element data on the elements table at the specified line
+-		void showElementData(Element *elem, int elem_idx);
+-
+-		//! \brief Copies the provided element storing it on a QVariant according to its real type (class)
+-		QVariant copyElementData(Element *elem);
+-		
+-		//! \brief Opens the element editing form using the attributes of the provided element
+-		int openElementForm(Element *elem);
+-
+-	public:
+-		ElementsTableWidget(QWidget *parent = nullptr);
+-		virtual ~ElementsTableWidget();
+-
+-		//! \brief Configures the grid based upon the template Class in use
+-		template<class Class>
+-		void setAttributes(DatabaseModel *model, BaseObject *parent_obj)
+-		{
+-			if(handled_elem && !dynamic_cast<Class *>(handled_elem))
+-			{
+-				delete handled_elem;
+-				handled_elem = nullptr;
+-			}
+-
+-			if(!handled_elem)
+-				handled_elem = new Class;
+-
+-			this->model = model;
+-			this->parent_obj = parent_obj;
+-
+-			if(dynamic_cast<IndexElement *>(handled_elem))
+-				elements_tab->setHeaderVisible(2, false);
+-
+-			if(dynamic_cast<ExcludeElement *>(handled_elem))
+-				elements_tab->setHeaderVisible(4, false);
+-
+-			if(dynamic_cast<PartitionKey *>(handled_elem))
+-			{
+-				elements_tab->setHeaderVisible(2, false);
+-				elements_tab->setHeaderVisible(5, false);
+-				elements_tab->setHeaderVisible(6, false);
+-			}
+-		}
+-
+-		//! \brief Fills the grid with the elements on the vector vector
+-		template<class Class>
+-		void setElements(vector<Class> elems)
+-		{
+-			elements_tab->blockSignals(true);
+-			for(auto &elem : elems)
+-			{
+-				elements_tab->addRow();
+-				showElementData(&elem, elements_tab->getRowCount() - 1);
+-			}
+-			elements_tab->clearSelection();
+-			elements_tab->blockSignals(false);
+-		}
+-
+-		//! \brief Fills the provided vector with the elements on the grid
+-		template<class Class>
+-		void getElements(vector<Class> &elems)
+-		{
+-			if(elements_tab->getRowCount() > 0)
+-			{
+-				if(elements_tab->getRowData(0).canConvert<Class>())
+-				{
+-					elems.clear();
+-					for(unsigned i=0; i < elements_tab->getRowCount(); i++)
+-						elems.push_back(elements_tab->getRowData(i).value<Class>());
+-				}
+-			}
+-		}
+-		
+-	private slots:
+-		void addElement(int elem_idx);
+-		void editElement(int elem_idx);
+-};
+-
+-#endif
+diff --git a/libs/libgui/src/widgets/linenumberswidget.h b/libs/libgui/src/widgets/linenumberswidget.h
+index 7e8504c58..6917ebecf 100644
+--- a/libs/libgui/src/widgets/linenumberswidget.h
++++ b/libs/libgui/src/widgets/linenumberswidget.h
+@@ -53,10 +53,10 @@ class __libgui LineNumbersWidget : public QWidget {
+ 		start_sel_line, start_sel_pos;
+ 
+ 		//! \brief Font color for drawn line numbers
+-		static QColor font_color,
++		static QColor font_color;
+ 
+ 		//! \brief Widget's background color
+-		bg_color;
++		static QColor bg_color;
+ 
+ 	protected:
+ 		void paintEvent(QPaintEvent *event);
+diff --git a/libs/libgui/src/widgets/modelwidget.cpp b/libs/libgui/src/widgets/modelwidget.cpp
+index c2d2f9cba..bd958655e 100644
+--- a/libs/libgui/src/widgets/modelwidget.cpp
++++ b/libs/libgui/src/widgets/modelwidget.cpp
+@@ -1491,7 +1491,7 @@ void ModelWidget::convertRelationshipNN()
+ 				tab_name = tab->getName();
+ 
+ 				//Forcing the creation of the single pk column
+-				if(rel->isSiglePKColumn())
++				if(rel->isSinglePKColumn())
+ 				{
+ 					col = pk->getColumn(0, Constraint::SourceCols);
+ 					pk_cols.push_back(col->getName());
+@@ -1595,7 +1595,7 @@ void ModelWidget::convertRelationshipNN()
+ 						The relationship will be identifier if the single pk column attribute of the original relationship is false */
+ 					rel1 = new Relationship(Relationship::Relationship1n,
+ 																	src_tab, tab, src_mand, false,
+-																	!rel->isSiglePKColumn());
++																	!rel->isSinglePKColumn());
+ 					rel1->setLayers(layers);
+ 					rel1->setCustomColor(rel_color);
+ 					rel1->setLayers(layers);
+@@ -1607,7 +1607,7 @@ void ModelWidget::convertRelationshipNN()
+ 						The relationship will be identifier if the single pk column attribute of the original relationship is false */
+ 					rel2 = new Relationship(Relationship::Relationship1n,
+ 																	dst_tab, tab, dst_mand,
+-																	false, !rel->isSiglePKColumn());
++																	false, !rel->isSinglePKColumn());
+ 					rel2->setLayers(layers);
+ 					rel2->setCustomColor(rel_color);
+ 					rel2->setLayers(layers);
+diff --git a/libs/libgui/src/widgets/modelwidget.h b/libs/libgui/src/widgets/modelwidget.h
+index 530cb93d9..6baf3995a 100644
+--- a/libs/libgui/src/widgets/modelwidget.h
++++ b/libs/libgui/src/widgets/modelwidget.h
+@@ -75,9 +75,8 @@ class __libgui ModelWidget: public QWidget {
+ 		};
+ 
+ 		//! \brief Constants used to control the object stacking method
+-		static constexpr int BringToFront = 1,
+-
+-		SendToBack = -1;
++		static constexpr int BringToFront = 1;
++		static constexpr int SendToBack = -1;
+ 
+ 		XmlParser *xmlparser;
+ 
+@@ -111,15 +110,15 @@ class __libgui ModelWidget: public QWidget {
+ 
+ 		/*! \brief Indicates if the cut operation is currently activated. This flag modifies
+ 		the way the methods copyObjects() and removeObject() works. */
+-		static bool cut_operation,
++		static bool cut_operation;
+ 
+ 		//! \brief Indicates if the last position and zoom must be saved/restored
+-		save_restore_pos,
++		static bool save_restore_pos;
+ 
+ 		//! \brief Indicates that graphical objects like table, view and textboxes can be created without click canvas (direclty from their editing form)
+-		simple_obj_creation,
++		static bool simple_obj_creation;
+ 
+-		disable_render_smooth;
++		static bool disable_render_smooth;
+ 
+ 		//! \brief Indicates if the minimum object opacity used when appliyng fade out to objects
+ 		static double min_object_opacity;
+@@ -129,10 +128,10 @@ class __libgui ModelWidget: public QWidget {
+ 		static ModelWidget *src_model;
+ 
+ 		//! \brief Copied object on the source model
+-		static std::vector<BaseObject *> copied_objects,
++		static std::vector<BaseObject *> copied_objects;
+ 
+ 		//! \brief Stores the cutted object on source model (only when executing cut command)
+-		cut_objects;
++		static std::vector<BaseObject *> cut_objects;
+ 
+ 		//! \brief Frame that indicates if the model is protected
+ 		QFrame *protected_model_frm;
+@@ -384,9 +383,9 @@ class __libgui ModelWidget: public QWidget {
+ 		void setAllCollapseMode(BaseTable::CollapseMode mode);
+ 
+ 	public:
+-		static constexpr double MinimumZoom = ObjectsScene::MinScaleFactor,
+-		MaximumZoom = ObjectsScene::MaxScaleFactor,
+-		ZoomIncrement = 0.050000;
++		static constexpr double MinimumZoom = ObjectsScene::MinScaleFactor;
++		static constexpr double MaximumZoom = ObjectsScene::MaxScaleFactor;
++		static constexpr double ZoomIncrement = 0.050000;
+ 
+ 		ModelWidget(QWidget *parent = nullptr);
+ 		virtual ~ModelWidget();
+diff --git a/libs/libgui/src/widgets/numberedtexteditor.h b/libs/libgui/src/widgets/numberedtexteditor.h
+index f8a44ec4f..33862f021 100644
+--- a/libs/libgui/src/widgets/numberedtexteditor.h
++++ b/libs/libgui/src/widgets/numberedtexteditor.h
+@@ -40,10 +40,10 @@ class __libgui NumberedTextEditor : public QPlainTextEdit {
+ 		/*! \brief Controls globally line numbers visibility.
+ 		 *  If this flag is set to false then toggleLineNumbers will
+ 		 *  have no effect */
+-		static bool line_nums_visible,
++		static bool line_nums_visible;
+ 
+ 		//! \brief Controls if current line must be highlighted
+-		highlight_lines;
++		static bool highlight_lines;
+ 
+ 		//! \brief Line highlight color
+ 		static QColor line_hl_color;
+diff --git a/libs/libgui/ui/settings/connectionsconfigwidget.ui b/libs/libgui/ui/settings/connectionsconfigwidget.ui
+index 705cf645f..36d4a9bf9 100644
+--- a/libs/libgui/ui/settings/connectionsconfigwidget.ui
++++ b/libs/libgui/ui/settings/connectionsconfigwidget.ui
+@@ -70,7 +70,266 @@
+        <property name="spacing">
+         <number>5</number>
+        </property>
+-       <item row="10" column="0" colspan="2">
++       <item row="4" column="2">
++        <widget class="QLineEdit" name="user_edt">
++         <property name="minimumSize">
++          <size>
++           <width>0</width>
++           <height>0</height>
++          </size>
++         </property>
++         <property name="text">
++          <string/>
++         </property>
++         <property name="placeholderText">
++          <string/>
++         </property>
++         <property name="clearButtonEnabled">
++          <bool>true</bool>
++         </property>
++        </widget>
++       </item>
++       <item row="7" column="2">
++        <widget class="QLineEdit" name="set_role_edt">
++         <property name="toolTip">
++          <string>When successfully connecting to the database the current user will be switched to the one specified in this field via &lt;strong&gt;SET ROLE [role_name]&lt;/strong&gt;.</string>
++         </property>
++         <property name="statusTip">
++          <string/>
++         </property>
++         <property name="clearButtonEnabled">
++          <bool>true</bool>
++         </property>
++        </widget>
++       </item>
++       <item row="7" column="0">
++        <widget class="QLabel" name="set_role_lbl">
++         <property name="sizePolicy">
++          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
++           <horstretch>0</horstretch>
++           <verstretch>0</verstretch>
++          </sizepolicy>
++         </property>
++         <property name="text">
++          <string>Set role:</string>
++         </property>
++        </widget>
++       </item>
++       <item row="3" column="0">
++        <widget class="QLabel" name="host_lbl">
++         <property name="sizePolicy">
++          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
++           <horstretch>0</horstretch>
++           <verstretch>0</verstretch>
++          </sizepolicy>
++         </property>
++         <property name="text">
++          <string>Host/Port:</string>
++         </property>
++        </widget>
++       </item>
++       <item row="6" column="0">
++        <widget class="QLabel" name="timeout_lbl">
++         <property name="sizePolicy">
++          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
++           <horstretch>0</horstretch>
++           <verstretch>0</verstretch>
++          </sizepolicy>
++         </property>
++         <property name="text">
++          <string>Timeout:</string>
++         </property>
++        </widget>
++       </item>
++       <item row="12" column="0">
++        <spacer name="verticalSpacer">
++         <property name="orientation">
++          <enum>Qt::Orientation::Vertical</enum>
++         </property>
++         <property name="sizeHint" stdset="0">
++          <size>
++           <width>20</width>
++           <height>40</height>
++          </size>
++         </property>
++        </spacer>
++       </item>
++       <item row="9" column="2">
++        <layout class="QHBoxLayout" name="horizontalLayout_5">
++         <property name="spacing">
++          <number>5</number>
++         </property>
++         <item>
++          <widget class="QCheckBox" name="diff_chk">
++           <property name="toolTip">
++            <string/>
++           </property>
++           <property name="text">
++            <string>Diff</string>
++           </property>
++          </widget>
++         </item>
++         <item>
++          <widget class="QCheckBox" name="export_chk">
++           <property name="text">
++            <string>Export</string>
++           </property>
++          </widget>
++         </item>
++         <item>
++          <widget class="QCheckBox" name="import_chk">
++           <property name="text">
++            <string>Import</string>
++           </property>
++          </widget>
++         </item>
++         <item>
++          <widget class="QCheckBox" name="validation_chk">
++           <property name="text">
++            <string>Validation</string>
++           </property>
++          </widget>
++         </item>
++         <item>
++          <spacer name="horizontalSpacer_3">
++           <property name="orientation">
++            <enum>Qt::Orientation::Horizontal</enum>
++           </property>
++           <property name="sizeHint" stdset="0">
++            <size>
++             <width>40</width>
++             <height>20</height>
++            </size>
++           </property>
++          </spacer>
++         </item>
++        </layout>
++       </item>
++       <item row="8" column="0">
++        <widget class="QLabel" name="other_params_lbl">
++         <property name="sizePolicy">
++          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
++           <horstretch>0</horstretch>
++           <verstretch>0</verstretch>
++          </sizepolicy>
++         </property>
++         <property name="text">
++          <string>Other params:</string>
++         </property>
++        </widget>
++       </item>
++       <item row="5" column="2">
++        <widget class="QLineEdit" name="passwd_edt">
++         <property name="echoMode">
++          <enum>QLineEdit::EchoMode::Password</enum>
++         </property>
++         <property name="clearButtonEnabled">
++          <bool>true</bool>
++         </property>
++        </widget>
++       </item>
++       <item row="1" column="0">
++        <widget class="QLabel" name="conn_db_lbl">
++         <property name="sizePolicy">
++          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
++           <horstretch>0</horstretch>
++           <verstretch>0</verstretch>
++          </sizepolicy>
++         </property>
++         <property name="text">
++          <string>Connection DB:</string>
++         </property>
++        </widget>
++       </item>
++       <item row="8" column="2">
++        <layout class="QHBoxLayout" name="horizontalLayout_9">
++         <property name="spacing">
++          <number>5</number>
++         </property>
++         <item>
++          <widget class="QLineEdit" name="other_params_edt">
++           <property name="toolTip">
++            <string>Specify additional connection parameters in the form [param]=[value]. These parameters are described in the &lt;strong&gt;libpq&lt;/strong&gt; chapter at PostgreSQL docs.</string>
++           </property>
++           <property name="statusTip">
++            <string/>
++           </property>
++           <property name="clearButtonEnabled">
++            <bool>true</bool>
++           </property>
++          </widget>
++         </item>
++        </layout>
++       </item>
++       <item row="10" column="0">
++        <spacer name="verticalSpacer_3">
++         <property name="orientation">
++          <enum>Qt::Orientation::Vertical</enum>
++         </property>
++         <property name="sizeType">
++          <enum>QSizePolicy::Policy::Fixed</enum>
++         </property>
++         <property name="sizeHint" stdset="0">
++          <size>
++           <width>20</width>
++           <height>10</height>
++          </size>
++         </property>
++        </spacer>
++       </item>
++       <item row="4" column="0">
++        <widget class="QLabel" name="user_lbl">
++         <property name="sizePolicy">
++          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
++           <horstretch>0</horstretch>
++           <verstretch>0</verstretch>
++          </sizepolicy>
++         </property>
++         <property name="text">
++          <string>User:</string>
++         </property>
++        </widget>
++       </item>
++       <item row="1" column="2">
++        <layout class="QHBoxLayout" name="horizontalLayout_4">
++         <property name="spacing">
++          <number>5</number>
++         </property>
++         <item>
++          <widget class="QLineEdit" name="conn_db_edt">
++           <property name="sizePolicy">
++            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
++             <horstretch>0</horstretch>
++             <verstretch>0</verstretch>
++            </sizepolicy>
++           </property>
++           <property name="text">
++            <string/>
++           </property>
++           <property name="placeholderText">
++            <string/>
++           </property>
++           <property name="clearButtonEnabled">
++            <bool>true</bool>
++           </property>
++          </widget>
++         </item>
++         <item>
++          <widget class="QCheckBox" name="auto_browse_chk">
++           <property name="toolTip">
++            <string>Automatically browses the named database when using this connection to manage databases on &lt;strong&gt;Manage&lt;/strong&gt; view.</string>
++           </property>
++           <property name="statusTip">
++            <string/>
++           </property>
++           <property name="text">
++            <string>Auto browse</string>
++           </property>
++          </widget>
++         </item>
++        </layout>
++       </item>
++       <item row="11" column="0" colspan="3">
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <property name="spacing">
+           <number>5</number>
+@@ -186,33 +445,7 @@
+          </item>
+         </layout>
+        </item>
+-       <item row="11" column="0">
+-        <spacer name="verticalSpacer">
+-         <property name="orientation">
+-          <enum>Qt::Orientation::Vertical</enum>
+-         </property>
+-         <property name="sizeHint" stdset="0">
+-          <size>
+-           <width>20</width>
+-           <height>40</height>
+-          </size>
+-         </property>
+-        </spacer>
+-       </item>
+-       <item row="3" column="0">
+-        <widget class="QLabel" name="user_lbl">
+-         <property name="sizePolicy">
+-          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+-           <horstretch>0</horstretch>
+-           <verstretch>0</verstretch>
+-          </sizepolicy>
+-         </property>
+-         <property name="text">
+-          <string>User:</string>
+-         </property>
+-        </widget>
+-       </item>
+-       <item row="0" column="1">
++       <item row="0" column="2">
+         <widget class="QLineEdit" name="alias_edt">
+          <property name="minimumSize">
+           <size>
+@@ -228,20 +461,23 @@
+          </property>
+         </widget>
+        </item>
+-       <item row="2" column="0">
+-        <widget class="QLabel" name="host_lbl">
++       <item row="9" column="0">
++        <widget class="QLabel" name="options_lbl_2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
++         <property name="toolTip">
++          <string>&lt;p&gt;Indicates in which operations (diff, export, import or validation) the connection is used if none is explicitly specified by the user.&lt;/p&gt;</string>
++         </property>
+          <property name="text">
+-          <string>Host/Port:</string>
++          <string>Default for:</string>
+          </property>
+         </widget>
+        </item>
+-       <item row="4" column="0">
++       <item row="5" column="0">
+         <widget class="QLabel" name="passwd_lbl">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+@@ -254,132 +490,7 @@
+          </property>
+         </widget>
+        </item>
+-       <item row="3" column="1">
+-        <widget class="QLineEdit" name="user_edt">
+-         <property name="minimumSize">
+-          <size>
+-           <width>0</width>
+-           <height>0</height>
+-          </size>
+-         </property>
+-         <property name="text">
+-          <string/>
+-         </property>
+-         <property name="placeholderText">
+-          <string/>
+-         </property>
+-         <property name="clearButtonEnabled">
+-          <bool>true</bool>
+-         </property>
+-        </widget>
+-       </item>
+-       <item row="9" column="0">
+-        <spacer name="verticalSpacer_3">
+-         <property name="orientation">
+-          <enum>Qt::Orientation::Vertical</enum>
+-         </property>
+-         <property name="sizeType">
+-          <enum>QSizePolicy::Policy::Fixed</enum>
+-         </property>
+-         <property name="sizeHint" stdset="0">
+-          <size>
+-           <width>20</width>
+-           <height>10</height>
+-          </size>
+-         </property>
+-        </spacer>
+-       </item>
+-       <item row="8" column="1">
+-        <layout class="QHBoxLayout" name="horizontalLayout_5">
+-         <property name="spacing">
+-          <number>5</number>
+-         </property>
+-         <item>
+-          <widget class="QCheckBox" name="diff_chk">
+-           <property name="toolTip">
+-            <string/>
+-           </property>
+-           <property name="text">
+-            <string>Diff</string>
+-           </property>
+-          </widget>
+-         </item>
+-         <item>
+-          <widget class="QCheckBox" name="export_chk">
+-           <property name="text">
+-            <string>Export</string>
+-           </property>
+-          </widget>
+-         </item>
+-         <item>
+-          <widget class="QCheckBox" name="import_chk">
+-           <property name="text">
+-            <string>Import</string>
+-           </property>
+-          </widget>
+-         </item>
+-         <item>
+-          <widget class="QCheckBox" name="validation_chk">
+-           <property name="text">
+-            <string>Validation</string>
+-           </property>
+-          </widget>
+-         </item>
+-         <item>
+-          <spacer name="horizontalSpacer_3">
+-           <property name="orientation">
+-            <enum>Qt::Orientation::Horizontal</enum>
+-           </property>
+-           <property name="sizeHint" stdset="0">
+-            <size>
+-             <width>40</width>
+-             <height>20</height>
+-            </size>
+-           </property>
+-          </spacer>
+-         </item>
+-        </layout>
+-       </item>
+-       <item row="2" column="1">
+-        <layout class="QHBoxLayout" name="horizontalLayout">
+-         <property name="spacing">
+-          <number>5</number>
+-         </property>
+-         <item>
+-          <widget class="QLineEdit" name="host_edt">
+-           <property name="minimumSize">
+-            <size>
+-             <width>0</width>
+-             <height>0</height>
+-            </size>
+-           </property>
+-           <property name="text">
+-            <string/>
+-           </property>
+-           <property name="placeholderText">
+-            <string/>
+-           </property>
+-           <property name="clearButtonEnabled">
+-            <bool>true</bool>
+-           </property>
+-          </widget>
+-         </item>
+-         <item>
+-          <widget class="QSpinBox" name="port_sbp">
+-           <property name="minimum">
+-            <number>1</number>
+-           </property>
+-           <property name="maximum">
+-            <number>65535</number>
+-           </property>
+-           <property name="value">
+-            <number>5432</number>
+-           </property>
+-          </widget>
+-         </item>
+-        </layout>
+-       </item>
+-       <item row="5" column="1">
++       <item row="6" column="2">
+         <layout class="QHBoxLayout" name="horizontalLayout_7">
+          <property name="spacing">
+           <number>5</number>
+@@ -406,52 +517,6 @@
+          </item>
+         </layout>
+        </item>
+-       <item row="1" column="0">
+-        <widget class="QLabel" name="conn_db_lbl">
+-         <property name="sizePolicy">
+-          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+-           <horstretch>0</horstretch>
+-           <verstretch>0</verstretch>
+-          </sizepolicy>
+-         </property>
+-         <property name="text">
+-          <string>Connection DB:</string>
+-         </property>
+-        </widget>
+-       </item>
+-       <item row="7" column="1">
+-        <layout class="QHBoxLayout" name="horizontalLayout_9">
+-         <property name="spacing">
+-          <number>5</number>
+-         </property>
+-         <item>
+-          <widget class="QLineEdit" name="other_params_edt">
+-           <property name="toolTip">
+-            <string>Specify additional connection parameters in the form [param]=[value]. These parameters are described in the &lt;strong&gt;libpq&lt;/strong&gt; chapter at PostgreSQL docs.</string>
+-           </property>
+-           <property name="statusTip">
+-            <string/>
+-           </property>
+-           <property name="clearButtonEnabled">
+-            <bool>true</bool>
+-           </property>
+-          </widget>
+-         </item>
+-        </layout>
+-       </item>
+-       <item row="5" column="0">
+-        <widget class="QLabel" name="timeout_lbl">
+-         <property name="sizePolicy">
+-          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+-           <horstretch>0</horstretch>
+-           <verstretch>0</verstretch>
+-          </sizepolicy>
+-         </property>
+-         <property name="text">
+-          <string>Timeout:</string>
+-         </property>
+-        </widget>
+-       </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="alias_lbl">
+          <property name="sizePolicy">
+@@ -465,44 +530,18 @@
+          </property>
+         </widget>
+        </item>
+-       <item row="4" column="1">
+-        <widget class="QLineEdit" name="passwd_edt">
+-         <property name="echoMode">
+-          <enum>QLineEdit::EchoMode::Password</enum>
+-         </property>
+-         <property name="clearButtonEnabled">
+-          <bool>true</bool>
+-         </property>
+-        </widget>
+-       </item>
+-       <item row="8" column="0">
+-        <widget class="QLabel" name="options_lbl_2">
+-         <property name="sizePolicy">
+-          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+-           <horstretch>0</horstretch>
+-           <verstretch>0</verstretch>
+-          </sizepolicy>
+-         </property>
+-         <property name="toolTip">
+-          <string>&lt;p&gt;Indicates in which operations (diff, export, import or validation) the connection is used if none is explicitly specified by the user.&lt;/p&gt;</string>
+-         </property>
+-         <property name="text">
+-          <string>Default for:</string>
+-         </property>
+-        </widget>
+-       </item>
+-       <item row="1" column="1">
+-        <layout class="QHBoxLayout" name="horizontalLayout_4">
++       <item row="3" column="2">
++        <layout class="QHBoxLayout" name="horizontalLayout">
+          <property name="spacing">
+           <number>5</number>
+          </property>
+          <item>
+-          <widget class="QLineEdit" name="conn_db_edt">
+-           <property name="sizePolicy">
+-            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+-             <horstretch>0</horstretch>
+-             <verstretch>0</verstretch>
+-            </sizepolicy>
++          <widget class="QLineEdit" name="host_edt">
++           <property name="minimumSize">
++            <size>
++             <width>0</width>
++             <height>0</height>
++            </size>
+            </property>
+            <property name="text">
+             <string/>
+@@ -516,26 +555,32 @@
+           </widget>
+          </item>
+          <item>
+-          <widget class="QCheckBox" name="auto_browse_chk">
+-           <property name="toolTip">
+-            <string>Automatically browses the named database when using this connection to manage databases on &lt;strong&gt;Manage&lt;/strong&gt; view.</string>
++          <widget class="QSpinBox" name="port_sbp">
++           <property name="minimum">
++            <number>1</number>
+            </property>
+-           <property name="statusTip">
+-            <string/>
++           <property name="maximum">
++            <number>65535</number>
+            </property>
+-           <property name="text">
+-            <string>Auto browse</string>
++           <property name="value">
++            <number>5432</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+-       <item row="6" column="1">
+-        <widget class="QLineEdit" name="set_role_edt">
+-         <property name="toolTip">
+-          <string>When successfully connecting to the database the current user will be switched to the one specified in this field via &lt;strong&gt;SET ROLE [role_name]&lt;/strong&gt;.</string>
++       <item row="2" column="2">
++        <widget class="QLineEdit" name="service_edt">
++         <property name="minimumSize">
++          <size>
++           <width>0</width>
++           <height>0</height>
++          </size>
+          </property>
+-         <property name="statusTip">
++         <property name="text">
++          <string/>
++         </property>
++         <property name="placeholderText">
+           <string/>
+          </property>
+          <property name="clearButtonEnabled">
+@@ -543,8 +588,8 @@
+          </property>
+         </widget>
+        </item>
+-       <item row="7" column="0">
+-        <widget class="QLabel" name="other_params_lbl">
++       <item row="2" column="0" colspan="2">
++        <widget class="QLabel" name="user_lbl_2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+@@ -552,20 +597,7 @@
+           </sizepolicy>
+          </property>
+          <property name="text">
+-          <string>Other params:</string>
+-         </property>
+-        </widget>
+-       </item>
+-       <item row="6" column="0">
+-        <widget class="QLabel" name="set_role_lbl">
+-         <property name="sizePolicy">
+-          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+-           <horstretch>0</horstretch>
+-           <verstretch>0</verstretch>
+-          </sizepolicy>
+-         </property>
+-         <property name="text">
+-          <string>Set role:</string>
++          <string>Service</string>
+          </property>
+         </widget>
+        </item>
+@@ -1046,6 +1078,7 @@
+   <tabstop>conn_attribs_tbw</tabstop>
+   <tabstop>alias_edt</tabstop>
+   <tabstop>conn_db_edt</tabstop>
++  <tabstop>service_edt</tabstop>
+   <tabstop>auto_browse_chk</tabstop>
+   <tabstop>host_edt</tabstop>
+   <tabstop>port_sbp</tabstop>
+@@ -1067,6 +1100,13 @@
+   <tabstop>crl_edt</tabstop>
+   <tabstop>krb_server_edt</tabstop>
+   <tabstop>gssapi_auth_chk</tabstop>
++  <tabstop>connections_cmb</tabstop>
++  <tabstop>new_tb</tabstop>
++  <tabstop>cancel_tb</tabstop>
++  <tabstop>duplicate_tb</tabstop>
++  <tabstop>edit_tb</tabstop>
++  <tabstop>remove_tb</tabstop>
++  <tabstop>set_role_edt</tabstop>
+  </tabstops>
+  <resources>
+   <include location="../../res/resources.qrc"/>
+diff --git a/libs/libparsers/libparsers.pro b/libs/libparsers/libparsers.pro
+index 0e87689a9..ee1fe04b2 100644
+--- a/libs/libparsers/libparsers.pro
++++ b/libs/libparsers/libparsers.pro
+@@ -2,7 +2,6 @@ include(../../pgmodeler.pri)
+ 
+ TEMPLATE = lib
+ TARGET = parsers
+-windows: DESTDIR = $$PWD
+ 
+ # Enables shared library symbols exporting
+ DEFINES += PARSERS_SYMBOLS
+diff --git a/libs/libparsers/src/csvdocument.h b/libs/libparsers/src/csvdocument.h
+index cec9525b9..213b5be29 100644
+--- a/libs/libparsers/src/csvdocument.h
++++ b/libs/libparsers/src/csvdocument.h
+@@ -59,13 +59,13 @@ class __libparsers CsvDocument {
+ 
+ 	public:
+ 		//! \brief Default character used as text delimiter
+-		static const QChar TextDelimiter,
++		static const QChar TextDelimiter;
+ 
+ 		//! \brief Default character used as value separator
+-		Separator,
++		static const QChar Separator;
+ 
+ 		//! \brief Default character used as line break
+-		LineBreak;
++		static const QChar LineBreak;
+ 
+ 		CsvDocument();
+ 
+diff --git a/libs/libparsers/src/schemaparser.cpp b/libs/libparsers/src/schemaparser.cpp
+index ebf7e6e57..e735ff097 100644
+--- a/libs/libparsers/src/schemaparser.cpp
++++ b/libs/libparsers/src/schemaparser.cpp
+@@ -734,8 +734,8 @@ bool SchemaParser::evaluateComparisonExpr()
+ 				}
+ 				else if(attributes.count(attrib)==0 && !ignore_unk_atribs)
+ 				{
+-					throw Exception(getParseError(ErrorCode::UnkownAttribute, "", attrib),
+-													ErrorCode::UnkownAttribute, __PRETTY_FUNCTION__, __FILE__, __LINE__);
++					throw Exception(getParseError(ErrorCode::UnknownAttribute, "", attrib),
++													ErrorCode::UnknownAttribute, __PRETTY_FUNCTION__, __FILE__, __LINE__);
+ 				}
+ 				else
+ 				{
+@@ -853,8 +853,8 @@ void SchemaParser::defineAttribute()
+ 
+ 					if(attributes.count(attrib)==0 && !ignore_unk_atribs)
+ 					{
+-						throw Exception(getParseError(ErrorCode::UnkownAttribute),
+-														ErrorCode::UnkownAttribute, __PRETTY_FUNCTION__, __FILE__, __LINE__);
++						throw Exception(getParseError(ErrorCode::UnknownAttribute),
++														ErrorCode::UnknownAttribute, __PRETTY_FUNCTION__, __FILE__, __LINE__);
+ 					}
+ 
+ 					value += to_xml_entity ? UtilsNs::convertToXmlEntities(attributes[attrib]) : attributes[attrib];
+@@ -942,8 +942,8 @@ void SchemaParser::unsetAttribute()
+ 
+ 				if(attributes.count(attrib)==0 && !ignore_unk_atribs)
+ 				{
+-					throw Exception(getParseError(ErrorCode::UnkownAttribute, "", attrib),
+-													 ErrorCode::UnkownAttribute, __PRETTY_FUNCTION__, __FILE__, __LINE__);
++					throw Exception(getParseError(ErrorCode::UnknownAttribute, "", attrib),
++													 ErrorCode::UnknownAttribute, __PRETTY_FUNCTION__, __FILE__, __LINE__);
+ 				}
+ 				else if(!AttribRegExp.match(attrib).hasMatch())
+ 				{
+@@ -1037,8 +1037,8 @@ bool SchemaParser::evaluateExpression()
+ 							 //Raises an error if the attribute does is unknown
+ 				if(attributes.count(attrib)==0 && !ignore_unk_atribs)
+ 				{
+-					throw Exception(getParseError(ErrorCode::UnkownAttribute, "", attrib),
+-													ErrorCode::UnkownAttribute, __PRETTY_FUNCTION__, __FILE__, __LINE__);
++					throw Exception(getParseError(ErrorCode::UnknownAttribute, "", attrib),
++													ErrorCode::UnknownAttribute, __PRETTY_FUNCTION__, __FILE__, __LINE__);
+ 				}
+ 
+ 				//Error 1: A conditional token other than %or %not %and if found on conditional expression
+@@ -1232,7 +1232,7 @@ QString SchemaParser::getSourceCode(const QString & obj_name, attribs_map &attri
+ 	}
+ }
+ 
+-void SchemaParser::ignoreUnkownAttributes(bool ignore)
++void SchemaParser::ignoreUnknownAttributes(bool ignore)
+ {
+ 	ignore_unk_atribs=ignore;
+ }
+@@ -1330,8 +1330,8 @@ QString SchemaParser::getSourceCode(const attribs_map &attribs)
+ 				{
+ 					if(!ignore_unk_atribs)
+ 					{
+-						throw Exception(getParseError(ErrorCode::UnkownAttribute, "", atrib),
+-														ErrorCode::UnkownAttribute, __PRETTY_FUNCTION__, __FILE__, __LINE__);
++						throw Exception(getParseError(ErrorCode::UnknownAttribute, "", atrib),
++														ErrorCode::UnknownAttribute, __PRETTY_FUNCTION__, __FILE__, __LINE__);
+ 					}
+ 					else
+ 						attributes[atrib]	= "";
+diff --git a/libs/libparsers/src/schemaparser.h b/libs/libparsers/src/schemaparser.h
+index ff4a67ddb..d85b1ec21 100644
+--- a/libs/libparsers/src/schemaparser.h
++++ b/libs/libparsers/src/schemaparser.h
+@@ -241,58 +241,58 @@ class __libparsers SchemaParser {
+ 		}
+ 
+ 	public:
+-		static const QChar CharComment, //! \brief Character that starts a comment
+-		CharLineEnd, //! \brief Character that indicates end of line
+-		CharSpace, //! \brief Character that indicates spacing
+-		CharTabulation, //! \brief Character that indicates tabulation
+-		CharStartAttribute, //! \brief Character that indicates a reference to an attribute
+-		CharEndAttribute, //! \brief Character that delimits on the right the attribute name
+-		CharStartConditional, //! \brief Character that starts a conditional instruction
+-		CharStartMetachar, //! \brief Character that starts a metacharacter
+-		CharStartPlainText, //! \brief Character that starts a plain text
+-		CharEndPlainText, //! \brief Character that ends a plain text
+-		CharStartCompExpr, //! \brief Character that starts a comparison expression
+-		CharEndCompExpr, //! \brief Character that ends a comparison expression
+-		CharValueDelim, //! \brief Character that delimiters a value (string)
+-		CharValueOf, //! \brief Character that is used on %set instructions to create an attribute name based upon another attribute value
+-		CharToXmlEntity, //! \brief Character that is used on attributes, e.g. &{attribute}, to indicate that their content must be converted to xml entities
+-		CharStartEscaped; //! \brief Character that is used on escapade special characters, e.g. \# \$ \% #\$ \& \] \[ \{ \}
++		static const QChar CharComment; //! \brief Character that starts a comment
++		static const QChar CharLineEnd; //! \brief Character that indicates end of line
++		static const QChar CharSpace; //! \brief Character that indicates spacing
++		static const QChar CharTabulation; //! \brief Character that indicates tabulation
++		static const QChar CharStartAttribute; //! \brief Character that indicates a reference to an attribute
++		static const QChar CharEndAttribute; //! \brief Character that delimits on the right the attribute name
++		static const QChar CharStartConditional; //! \brief Character that starts a conditional instruction
++		static const QChar CharStartMetachar; //! \brief Character that starts a metacharacter
++		static const QChar CharStartPlainText; //! \brief Character that starts a plain text
++		static const QChar CharEndPlainText; //! \brief Character that ends a plain text
++		static const QChar CharStartCompExpr; //! \brief Character that starts a comparison expression
++		static const QChar CharEndCompExpr; //! \brief Character that ends a comparison expression
++		static const QChar CharValueDelim; //! \brief Character that delimiters a value (string)
++		static const QChar CharValueOf; //! \brief Character that is used on %set instructions to create an attribute name based upon another attribute value
++		static const QChar CharToXmlEntity; //! \brief Character that is used on attributes, e.g. &{attribute}, to indicate that their content must be converted to xml entities
++		static const QChar CharStartEscaped; //! \brief Character that is used on escapade special characters, e.g. \# \$ \% #\$ \& \] \[ \{ \}
+ 
+ 		//! \brief Tokens related to conditional instructions and operators
+-		static const QString	TokenIf,
+-		TokenThen,
+-		TokenElse,
+-		TokenEnd,
+-		TokenOr,
+-		TokenAnd,
+-		TokenNot,
+-		TokenSet,
+-		TokenUnset,
+-		TokenInclude,
++		static const QString TokenIf;
++		static const QString TokenThen;
++		static const QString TokenElse;
++		static const QString TokenEnd;
++		static const QString TokenOr;
++		static const QString TokenAnd;
++		static const QString TokenNot;
++		static const QString TokenSet;
++		static const QString TokenUnset;
++		static const QString TokenInclude;
+ 
+ 		//! \brief Tokens related to metacharacters
+-		TokenMetaSp,// $sp (space)
+-		TokenMetaBr, // $br (line break)
+-		TokenMetaTb, // $tb (tabulation)
+-		TokenMetaOb, // $ob (open square bracket '[')
+-		TokenMetaCb, // $cb (close square bracket ']')
+-		TokenMetaOc, // $oc (open curly bracket '{')
+-		TokenMetaCc, // $cc (close curly bracket '}')
+-		TokenMetaMs, // $ms (money sign '$')
+-		TokenMetaHs, // $hs (hash/number sign '#')
+-		TokenMetaPs, // $ps (percentage sign '%')
+-		TokenMetaAt, // $at (at character '@')
+-		TokenMetaDs, // $ds (special data separator character '•')
+-		TokenMetaAm, // $am (ampersand character '&')
+-		TokenMetaBs, // $bs (backslash character '\')
++		static const QString TokenMetaSp; // $sp (space)
++		static const QString TokenMetaBr; // $br (line break)
++		static const QString TokenMetaTb; // $tb (tabulation)
++		static const QString TokenMetaOb; // $ob (open square bracket '[')
++		static const QString TokenMetaCb; // $cb (close square bracket ']')
++		static const QString TokenMetaOc; // $oc (open curly bracket '{')
++		static const QString TokenMetaCc; // $cc (close curly bracket '}')
++		static const QString TokenMetaMs; // $ms (money sign '$')
++		static const QString TokenMetaHs; // $hs (hash/number sign '#')
++		static const QString TokenMetaPs; // $ps (percentage sign '%')
++		static const QString TokenMetaAt; // $at (at character '@')
++		static const QString TokenMetaDs; // $ds (special data separator character '•')
++		static const QString TokenMetaAm; // $am (ampersand character '&')
++		static const QString TokenMetaBs; // $bs (backslash character '\')
+ 
+ 		//! \brief Tokens related to comparison expressions
+-		TokenEqOper, // == (equal)
+-		TokenNeOper, // != (not equal)
+-		TokenGtOper, // > (greater than)
+-		TokenLtOper, // < (less than)
+-		TokenGtEqOper, // >= (greater or equal to)
+-		TokenLtEqOper; // <= (less or equal to)
++		static const QString TokenEqOper; // == (equal)
++		static const QString TokenNeOper; // != (not equal)
++		static const QString TokenGtOper; // > (greater than)
++		static const QString TokenLtOper; // < (less than)
++		static const QString TokenGtEqOper; // >= (greater or equal to)
++		static const QString TokenLtEqOper; // <= (less or equal to)
+ 
+ 		//! \brief Token related to schema files inclusion (@include)
+ 		static const QRegularExpression TokenIncludeRegexp;
+@@ -336,7 +336,7 @@ class __libparsers SchemaParser {
+ 		void restartParser();
+ 
+ 		//! \brief Set if the parser must ignore unknown attributes avoiding exception throwing
+-		void ignoreUnkownAttributes(bool ignore);
++		void ignoreUnknownAttributes(bool ignore);
+ 
+ 		//! \brief Set if the parser must ignore empty attributes avoiding exception throwing
+ 		void ignoreEmptyAttributes(bool ignore);
+diff --git a/libs/libutils/libutils.pro b/libs/libutils/libutils.pro
+index ddb4d90b1..8ce1b1317 100644
+--- a/libs/libutils/libutils.pro
++++ b/libs/libutils/libutils.pro
+@@ -2,7 +2,6 @@ include(../../pgmodeler.pri)
+ 
+ TEMPLATE = lib
+ TARGET = utils
+-windows: DESTDIR = $$PWD
+ 
+ # Enables shared library symbols exporting
+ DEFINES += UTILS_SYMBOLS
+diff --git a/libs/libutils/src/exception.cpp b/libs/libutils/src/exception.cpp
+index 5cf710c5b..2196b2626 100644
+--- a/libs/libutils/src/exception.cpp
++++ b/libs/libutils/src/exception.cpp
+@@ -166,7 +166,7 @@ QString Exception::messages[Exception::ErrorCount][2]={
+ 	{"InvalidSyntax", QT_TR_NOOP("Invalid syntax in file `%1', line %2, column %3!")},
+ 	{"InvalidInclude", QT_TR_NOOP("Invalid include statement in file `%1', line %2, column %3!")},
+ 	{"InvalidInstruction", QT_TR_NOOP("Invalid instruction `%1' on file `%2', line %3, column %4!")},
+-	{"UnkownAttribute", QT_TR_NOOP("Unknown attribute `%1' in file `%2', line %3, column %4!")},
++	{"UnknownAttribute", QT_TR_NOOP("Unknown attribute `%1' in file `%2', line %3, column %4!")},
+ 	{"InvalidMetacharacter", QT_TR_NOOP("Invalid metacharacter `%1' in file `%2', line %3, column %4!")},
+ 	{"InvalidOperatorInExpression", QT_TR_NOOP("Invalid operator `%1' in comparison expression, file `%2', line %3, column %4!")},
+ 	{"UndefinedAttributeValue", QT_TR_NOOP("Attribute `%1' with an undefined value in file `%2', line %3, column %4!")},
+@@ -182,9 +182,9 @@ QString Exception::messages[Exception::ErrorCount][2]={
+ 	{"OprInexistentElement", QT_TR_NOOP("Operation with element which does not exists in the element tree currently loaded!")},
+ 	{"AsgInvalidConnParameter", QT_TR_NOOP("Assignment of a value to an invalid connection parameter!")},
+ 	{"OprNotAllocatedConnection", QT_TR_NOOP("Operation on connection not established!")},
+-	{"ConnectionNotConfigured", QT_TR_NOOP("Attempt to connect without define configuration parameters!")},
+-	{"ConnectionAlreadyStablished", QT_TR_NOOP("Attempt to start a connection already stablished!")},
+-	{"ConnectionNotStablished", QT_TR_NOOP("Could not connect to the database.\nMessage returned: `%1'")},
++	{"ConnectionNotConfigured", QT_TR_NOOP("Attempt to connect without defined configuration parameters!")},
++	{"ConnectionAlreadyEstablished", QT_TR_NOOP("Attempt to start an already established connection!")},
++	{"ConnectionNotEstablished", QT_TR_NOOP("Could not connect to the database.\nMessage returned: `%1'")},
+ 	{"AsgNotAllocatedSQLResult", QT_TR_NOOP("Assignment of not allocated SQL command result!")},
+ 	{"IncomprehensibleDBMSResponse", QT_TR_NOOP("Unable to allocate the result of the SQL command because the response from the DBMS was not understood by the client!")},
+ 	{"DBMSFatalError", QT_TR_NOOP("Unable to allocate command result for the SQL because the server has generated a fatal error!\nMessage returned by the DBMS: `%1'")},
+@@ -213,7 +213,7 @@ QString Exception::messages[Exception::ErrorCount][2]={
+ 	{"InvUsageInsteadOfUpdateTrigger", QT_TR_NOOP("A trigger cannot make reference to columns when using INSTEAD OF mode and UPDATE event!")},
+ 	{"AsgColumnNoParent", QT_TR_NOOP("Assignment of a column which has no parent table to the object `%1' (%2)!")},
+ 	{"InvUseConstraintTriggerAttribs", QT_TR_NOOP("Only constraint triggers can be deferrable or reference another table!")},
+-	{"RefInvalidFunctionIdTypeConfig", QT_TR_NOOP("Reference to a function id which is incompatible with the user define type configuration!")},
++	{"RefInvalidFunctionIdTypeConfig", QT_TR_NOOP("Reference to a function id which is incompatible with the user defined type configuration!")},
+ 	{"AsgInvalidOpClassObject", QT_TR_NOOP("The operator class assigned to the object `%1' (%2) must use `btree' as indexing method!")},
+ 	{"InvPostgreSQLVersion", QT_TR_NOOP("Unsupported PostgreSQL version (%1) detected! Valid versions must be between %2 and %3.")},
+ 	{"ValidationFailure", QT_TR_NOOP("The validation process failed due to an error triggered by the validation helper. For more details about the error check the exception stack!")},
+@@ -245,7 +245,7 @@ QString Exception::messages[Exception::ErrorCount][2]={
+ 	{"AsgEnumInvalidChars", QT_TR_NOOP("The enumeration `%1' can't be assigned to the type `%2' because contains invalid characters!")},
+ 	{"AsgEnumLongName", QT_TR_NOOP("The enumeration `%1' can't be assigned to the type `%2' because is too long!")},
+ 	{"ConnectionTimeout", QT_TR_NOOP("The connection was idle for too long and was automatically closed!")},
+-	{"ConnectionBroken", QT_TR_NOOP("The connection was unexpectedly closed by the database server `%1' at port `%2'!")},
++	{"ConnectionBroken", QT_TR_NOOP("The connection was unexpectedly closed by the database server %1!")},
+ 	{"DropCurrentDBDefault", QT_TR_NOOP("Failed to drop the database `%1' because it is defined as the default database for the connection `%2'!")},
+ 	{"NullPrimaryKeyColumn", QT_TR_NOOP("The column `%1' must be `NOT NULL' because it composes the primary key of the table `%2'. You need to remove the column from the mentioned contraint in order to disable the `NOT NULL' on it!")},
+ 	{"InvalidIdentityColumn", QT_TR_NOOP("The identity column `%1' has an invalid data type! The data type must be `smallint', `integer' or `bigint'.")},
+diff --git a/libs/libutils/src/exception.h b/libs/libutils/src/exception.h
+index c102b649a..dd49540f9 100644
+--- a/libs/libutils/src/exception.h
++++ b/libs/libutils/src/exception.h
+@@ -180,7 +180,7 @@ enum class ErrorCode: unsigned {
+ 	InvalidSyntax,
+ 	InvalidInclude,
+ 	InvalidInstruction,
+-	UnkownAttribute,
++	UnknownAttribute,
+ 	InvalidMetacharacter,
+ 	InvalidOperatorInExpression,
+ 	UndefinedAttributeValue,
+@@ -197,8 +197,8 @@ enum class ErrorCode: unsigned {
+ 	AsgInvalidConnParameter,
+ 	OprNotAllocatedConnection,
+ 	ConnectionNotConfigured,
+-	ConnectionAlreadyStablished,
+-	ConnectionNotStablished,
++	ConnectionAlreadyEstablished,
++	ConnectionNotEstablished,
+ 	AsgNotAllocatedSQLResult,
+ 	IncomprehensibleDBMSResponse,
+ 	DBMSFatalError,
+@@ -311,7 +311,8 @@ class __libutils Exception {
+ 		static constexpr unsigned ErrorCount=271;
+ 
+ 		//! \brief Constants used to access the error details
+-		static constexpr unsigned ErrorCodeId=0, ErrorMessage=1;
++		static constexpr unsigned ErrorCodeId=0;
++		static constexpr unsigned ErrorMessage=1;
+ 
+ 		/*! \brief Stores other exceptions before raise the 'this' exception.
+ 		 This structure can be used to simulate a stack trace to improve the debug */
+diff --git a/libs/libutils/src/globalattributes.h b/libs/libutils/src/globalattributes.h
+index 47e89fa97..f68d4a15d 100644
+--- a/libs/libutils/src/globalattributes.h
++++ b/libs/libutils/src/globalattributes.h
+@@ -53,23 +53,22 @@ class __libutils GlobalAttributes {
+ 		 PGMODELER_SE_PATH  --> Full path to pgmodeler-se executable
+ 		 PGMODELER_PATH     --> Full path to pgmodeler executable */
+ 
+-		static QString
+-		SchemasRootPath,
+-		LanguagesPath,
+-		PluginsPath,
+-		TemporaryPath,
+-		SamplesPath,
+-		TmplConfigurationPath,
+-		ConfigurationsPath,
+-		SQLHighlightConfPath,
+-		XMLHighlightConfPath,
+-		SchHighlightConfPath,
+-		PatternHighlightConfPath,
+-		PgModelerCHandlerPath,
+-		PgModelerCLIPath,
+-		PgModelerAppPath,
+-		PgModelerSchemaEditorPath,
+-		PgModelerBaseVersion;
++		static QString SchemasRootPath;
++		static QString LanguagesPath;
++		static QString PluginsPath;
++		static QString TemporaryPath;
++		static QString SamplesPath;
++		static QString TmplConfigurationPath;
++		static QString ConfigurationsPath;
++		static QString SQLHighlightConfPath;
++		static QString XMLHighlightConfPath;
++		static QString SchHighlightConfPath;
++		static QString PatternHighlightConfPath;
++		static QString PgModelerCHandlerPath;
++		static QString PgModelerCLIPath;
++		static QString PgModelerAppPath;
++		static QString PgModelerSchemaEditorPath;
++		static QString PgModelerBaseVersion;
+ 
+ 		//! \brief Stores the custom paths retrieved either from pgmpaths.conf or from environment variables
+ 		static attribs_map CustomPaths;
+@@ -137,92 +136,91 @@ class __libutils GlobalAttributes {
+ 		}
+ 
+ 	public:
+-		static const QString
+-		PgModelerVersion,
+-		PgModelerAppName,
+-		PgModelerOldAppName,
+-
+-		PgModelerURI,
+-		PgModelerBuildNumber,
+-		PgModelerSite,
+-		PgModelerSupport,
+-		PgModelerSourceURL,
+-		PgModelerDownloadURL,
+-		PgModelerDonateURL,
+-		PgModelerUpdateCheckURL,
+-
+-		EnvSchemasPath,
+-		EnvConfPath,
+-		EnvTmplConfPath,
+-		EnvLangPath,
+-		EnvPluginsPath,
+-		EnvTmpPath,
+-		EnvSamplesPath,
+-		EnvPgModelerChPath,
+-		EnvPgModelerCliPath,
+-		EnvPgModelerSePath,
+-		EnvPgModelerPath,
+-
+-		PgmPathsConfFile, //! \brief An ini-like (key=value) file that holds custom values for the pgModeler's enviroment variables
+-		BugReportEmail,
+-		BugReportFile,
+-		StacktraceFile,
+-		LastModelFile,
+-
+-		DbModelExt,
+-		DbModelBkpExt,
+-		ObjMetadataExt,
+-		DirSeparator,
+-		ResourcesDir,				 //! \brief Directory name which holds the pgModeler's plug-ins resources directory (res)
+-		ConfigurationsDir,	 //! \brief Default name for the configurations directory
+-		DefaultConfsDir,		 //! \brief Default name for the default configurations directory
+-		ConfsBackupsDir,		 //! \brief Directory name which holds the pgModeler configuration backups
+-		SchemasDir,					 //! \brief Default name for the schemas directory
+-		SQLSchemaDir,				 //! \brief Default name for the sql schemas directory
+-		XMLSchemaDir,				 //! \brief Default name for the xml schemas directory
+-		CatalogSchemasDir,	 //! \brief Default name for the catalog schemas directory
+-		DataDictSchemaDir,	 //! \brief Default name for the data dictionary schemas root directory
+-		DataDictHtmlDir,		 //! \brief Default name for the data dictionary schemas directory (HTML format)
+-		DataDictMdDir,			 //! \brief Default name for the dictionary schemas directory (Markdown format)
+-		AlterSchemaDir,			 //! \brief Default name for the alter schemas directory
+-		LanguagesDir,				 //! \brief Default name for the translation files directory
+-		SamplesDir,					 //! \brief Default name for the samples database models directory
+-		PluginsDir,					 //! \brief Default name for the plug-ins directory
+-		SchemaExt,					 //! \brief Default extension for schema files
+-		ObjectDTDDir,				 //! \brief Default directory for dtd files
+-		ObjectDTDExt,				 //! \brief Default extension for dtd files
+-		RootDTD,						 //! \brief Root DTD of model xml files
+-		MetadataDTD,				 //! \brief Root DTD of objects metadata xml files
+-		ConfigurationExt,		 //! \brief Default extension for configuration files
+-		HighlightFileSuffix, //! \brief Suffix of language highlight configuration files
+-		ThemesDir,					 //! \brief Default name for the ui style directory
+-
+-		CodeHighlightConf,		 //! \brief Default name for the language highlight dtd
+-		AppearanceConf,				 //! \brief Default name for the appearance configuration file
+-		GeneralConf,					 //! \brief Default name for the general pgModeler configuration
+-		ConnectionsConf,			 //! \brief Default name for the DBMS connection configuration file
+-		RelationshipsConf,		 //! \brief Default name for the relationships configuration file
+-		SnippetsConf,					 //! \brief Default name for the code snippets configuration file
+-		DiffPresetsConf,			 //! \brief Default name for the diff presets configuration file
+-
+-		SQLHighlightConf,			 //! \brief Configuration file for SQL language highlight
+-		XMLHighlightConf,			 //! \brief Configuration file for XML language highlight
+-		SchHighlightConf,			 //! \brief Configuration file for Schema micro-language highlight
+-		PatternHighlightConf,	 //! \brief Configuration file for name patterns highlight (relationship editing form)
+-		SQLHistoryConf,				 //! \brief Default name for the SQL commands history configuration file
+-
+-		ExampleModel,		 //! \brief Default name for the sample model loaded on appearence configuration form
+-		UiStyleConf,		 //! \brief Configuration file ui style
+-		IconsMediumConf, //! \brief Extra configuration file that defines medium icons size
+-		IconsSmallConf,	 //! \brief Extra configuration file that defines small icons size
+-		IconsBigConf,		 //! \brief Extra configuration file that defines big icons size
+-
+-		FileDialogConf, //! \brief Default name for the file used to save/restore QFileDialog last geometry
++		static const QString PgModelerVersion;
++		static const QString PgModelerAppName;
++		static const QString PgModelerOldAppName;
++
++		static const QString PgModelerURI;
++		static const QString PgModelerBuildNumber;
++		static const QString PgModelerSite;
++		static const QString PgModelerSupport;
++		static const QString PgModelerSourceURL;
++		static const QString PgModelerDownloadURL;
++		static const QString PgModelerDonateURL;
++		static const QString PgModelerUpdateCheckURL;
++
++		static const QString EnvSchemasPath;
++		static const QString EnvConfPath;
++		static const QString EnvTmplConfPath;
++		static const QString EnvLangPath;
++		static const QString EnvPluginsPath;
++		static const QString EnvTmpPath;
++		static const QString EnvSamplesPath;
++		static const QString EnvPgModelerChPath;
++		static const QString EnvPgModelerCliPath;
++		static const QString EnvPgModelerSePath;
++		static const QString EnvPgModelerPath;
++
++		static const QString PgmPathsConfFile;     //! \brief An ini-like (key=value) file that holds custom values for the pgModeler's enviroment variables
++		static const QString BugReportEmail;
++		static const QString BugReportFile;
++		static const QString StacktraceFile;
++		static const QString LastModelFile;
++
++		static const QString DbModelExt;
++		static const QString DbModelBkpExt;
++		static const QString ObjMetadataExt;
++		static const QString DirSeparator;
++		static const QString ResourcesDir;				 //! \brief Directory name which holds the pgModeler's plug-ins resources directory (res)
++		static const QString ConfigurationsDir;		 //! \brief Default name for the configurations directory
++		static const QString DefaultConfsDir;			 //! \brief Default name for the default configurations directory
++		static const QString ConfsBackupsDir;			 //! \brief Directory name which holds the pgModeler configuration backups
++		static const QString SchemasDir;					 //! \brief Default name for the schemas directory
++		static const QString SQLSchemaDir;				 //! \brief Default name for the sql schemas directory
++		static const QString XMLSchemaDir;				 //! \brief Default name for the xml schemas directory
++		static const QString CatalogSchemasDir;	   //! \brief Default name for the catalog schemas directory
++		static const QString DataDictSchemaDir;	   //! \brief Default name for the data dictionary schemas root directory
++		static const QString DataDictHtmlDir;		   //! \brief Default name for the data dictionary schemas directory (HTML format)
++		static const QString DataDictMdDir;			   //! \brief Default name for the dictionary schemas directory (Markdown format)
++		static const QString AlterSchemaDir;			 //! \brief Default name for the alter schemas directory
++		static const QString LanguagesDir;				 //! \brief Default name for the translation files directory
++		static const QString SamplesDir;					 //! \brief Default name for the samples database models directory
++		static const QString PluginsDir;					 //! \brief Default name for the plug-ins directory
++		static const QString SchemaExt;					   //! \brief Default extension for schema files
++		static const QString ObjectDTDDir;				 //! \brief Default directory for dtd files
++		static const QString ObjectDTDExt;				 //! \brief Default extension for dtd files
++		static const QString RootDTD;						   //! \brief Root DTD of model xml files
++		static const QString MetadataDTD;				   //! \brief Root DTD of objects metadata xml files
++		static const QString ConfigurationExt;		 //! \brief Default extension for configuration files
++		static const QString HighlightFileSuffix;  //! \brief Suffix of language highlight configuration files
++		static const QString ThemesDir;					   //! \brief Default name for the ui style directory
++
++		static const QString CodeHighlightConf;		 //! \brief Default name for the language highlight dtd
++		static const QString AppearanceConf;			 //! \brief Default name for the appearance configuration file
++		static const QString GeneralConf;					 //! \brief Default name for the general pgModeler configuration
++		static const QString ConnectionsConf;			 //! \brief Default name for the DBMS connection configuration file
++		static const QString RelationshipsConf;		 //! \brief Default name for the relationships configuration file
++		static const QString SnippetsConf;				 //! \brief Default name for the code snippets configuration file
++		static const QString DiffPresetsConf;			 //! \brief Default name for the diff presets configuration file
++
++		static const QString SQLHighlightConf;		 //! \brief Configuration file for SQL language highlight
++		static const QString XMLHighlightConf;		 //! \brief Configuration file for XML language highlight
++		static const QString SchHighlightConf;		 //! \brief Configuration file for Schema micro-language highlight
++		static const QString PatternHighlightConf; //! \brief Configuration file for name patterns highlight (relationship editing form)
++		static const QString SQLHistoryConf;			 //! \brief Default name for the SQL commands history configuration file
++
++		static const QString ExampleModel;		     //! \brief Default name for the sample model loaded on appearence configuration form
++		static const QString UiStyleConf;		 	     //! \brief Configuration file ui style
++		static const QString IconsMediumConf;      //! \brief Extra configuration file that defines medium icons size
++		static const QString IconsSmallConf;	     //! \brief Extra configuration file that defines small icons size
++		static const QString IconsBigConf;		     //! \brief Extra configuration file that defines big icons size
++
++		static const QString FileDialogConf;       //! \brief Default name for the file used to save/restore QFileDialog last geometry
+ 
+ 		/*! \brief Fusion is the default widget style for pgModeler. User can change this by calling
+ 		the executable using -style option. This same style is applied to crash handler. */
+-		DefaultQtStyle,
+-		UiStyleOption;
++		static const QString DefaultQtStyle;
++		static const QString UiStyleOption;
+ 
+ 		/*! \brief Performs the initialization of the global attributes by setting the
+ 		 * application's search path (and all assets/executable paths based upon search_path).
+diff --git a/pgmodeler.pri b/pgmodeler.pri
+index 5021a98ec..9c03e5bc4 100644
+--- a/pgmodeler.pri
++++ b/pgmodeler.pri
+@@ -9,10 +9,10 @@ OBJECTS_DIR = obj
+ UI_DIR = src
+ 
+ contains(CONFIG, debug):{
+-	DEFINES+=PGMODELER_DEBUG
++  DEFINES+=PGMODELER_DEBUG
+ 
+-	# Enabling ccache (https://ccache.dev) in debug mode to speed up recompilations
+-	isEqual(USE_CCACHE, true):CONFIG+=ccache
++  # Enabling ccache (https://ccache.dev) in debug mode to speed up recompilations
++  isEqual(USE_CCACHE, true):CONFIG+=ccache
+ }
+ 
+ # Disables all the APIs deprecated before Qt 6.4.0
+@@ -21,47 +21,63 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060400
+ 
+ # Forcing the compilation using Qt 6.4.x
+ !versionAtLeast(QT_VERSION, "6.4.0") {
+-	 error("Unsupported Qt version detected: $${QT_VERSION}! pgModeler must be compiled with at least Qt 6.4.0")
++  error("Unsupported Qt version detected: $${QT_VERSION}! pgModeler must be compiled with at least Qt 6.4.0")
+ }
+ 
+ # Store the absolute paths to library subprojects to be referenced in other .pro files
+ # *_ROOT -> the path to the root folder of the subproject
+-# *_LIB -> the libary flags (-L -l) (LIBS on qmake) passed to the compiler that points to the library generated from a subproject
++# *_LIB -> the library flags (-L -l) (LIBS on qmake) passed to the compiler that points to the library generated from a subproject
+ # *_INC -> the path to the source code folder (src), used by the flag -I (INCLUDEPATH on qmake) passed to the compiler
++
+ LIBCANVAS = libcanvas
+ LIBCANVAS_ROOT = $$absolute_path($$PWD/libs/$$LIBCANVAS)
+-LIBCANVAS_LIB = -L$$LIBCANVAS_ROOT -lcanvas
+-LIBCANVAS_INC = $$LIBCANVAS_ROOT/src
++LIBCANVAS_INC = $$LIBCANVAS_ROOT/src $$top_builddir/libs/$$LIBCANVAS/src
+ 
+ LIBCONNECTOR = libconnector
+ LIBCONNECTOR_ROOT = $$absolute_path($$PWD/libs/$$LIBCONNECTOR)
+-LIBCONNECTOR_LIB = -L$$LIBCONNECTOR_ROOT -lconnector
+-LIBCONNECTOR_INC = $$LIBCONNECTOR_ROOT/src
++LIBCONNECTOR_INC = $$LIBCONNECTOR_ROOT/src $$top_builddir/libs/$$LIBCONNECTOR/src
+ 
+ LIBCORE = libcore
+ LIBCORE_ROOT = $$absolute_path($$PWD/libs/$$LIBCORE)
+-LIBCORE_LIB = -L$$LIBCORE_ROOT -lcore
+-LIBCORE_INC = $$LIBCORE_ROOT/src
++LIBCORE_INC = $$LIBCORE_ROOT/src $$top_builddir/libs/$$LIBCORE/src
+ 
+ LIBPARSERS = libparsers
+ LIBPARSERS_ROOT = $$absolute_path($$PWD/libs/$$LIBPARSERS)
+-LIBPARSERS_LIB = -L$$LIBPARSERS_ROOT -lparsers
+-LIBPARSERS_INC = $$LIBPARSERS_ROOT/src
++LIBPARSERS_INC = $$LIBPARSERS_ROOT/src $$top_builddir/libs/$$LIBPARSERS/src
+ 
+ LIBGUI = libgui
+ LIBGUI_ROOT = $$absolute_path($$PWD/libs/$$LIBGUI)
+-LIBGUI_LIB = -L$$LIBGUI_ROOT -lgui
+-LIBGUI_INC = $$LIBGUI_ROOT/src
++LIBGUI_INC = $$LIBGUI_ROOT/src $$top_builddir/libs/$$LIBGUI/src
+ 
+ LIBUTILS = libutils
+ LIBUTILS_ROOT = $$absolute_path($$PWD/libs/$$LIBUTILS)
+-LIBUTILS_LIB = -L$$LIBUTILS_ROOT -lutils
+-LIBUTILS_INC = $$LIBUTILS_ROOT/src
++LIBUTILS_INC = $$LIBUTILS_ROOT/src $$top_builddir/libs/$$LIBUTILS/src
+ 
+ LIBCLI = libcli
+ LIBCLI_ROOT = $$absolute_path($$PWD/libs/$$LIBCLI)
+-LIBCLI_LIB = -L$$LIBCLI_ROOT -lcli
+-LIBCLI_INC = $$LIBCLI_ROOT/src
++LIBCLI_INC = $$LIBCLI_ROOT/src $$top_builddir/libs/$$LIBCLI
++
++macx|unix {
++	LIBCANVAS_LIB = -L$$LIBCANVAS_ROOT -lcanvas
++	LIBCONNECTOR_LIB = -L$$LIBCONNECTOR_ROOT -lconnector
++	LIBCORE_LIB = -L$$LIBCORE_ROOT -lcore
++	LIBPARSERS_LIB = -L$$LIBPARSERS_ROOT -lparsers
++	LIBGUI_LIB = -L$$LIBGUI_ROOT -lgui
++	LIBUTILS_LIB = -L$$LIBUTILS_ROOT -lutils
++	LIBCLI_LIB = -L$$LIBCLI_ROOT -lcli
++}
++windows {
++	CONFIG(release): c = release
++	CONFIG(debug, debug|release): c = debug
++
++	LIBCANVAS_LIB = -L$$top_builddir/libs/libcanvas/$$c -lcanvas
++	LIBCONNECTOR_LIB = -L$$top_builddir/libs/libconnector/$$c -lconnector
++	LIBCORE_LIB = -L$$top_builddir/libs/libcore/$$c -lcore
++	LIBPARSERS_LIB = -L$$top_builddir/libs/libparsers/$$c -lparsers
++	LIBGUI_LIB = -L$$top_builddir/libs/libgui/$$c -lgui
++	LIBUTILS_LIB = -L$$top_builddir/libs/libutils/$$c -lutils
++	LIBCLI_LIB = -L$$top_builddir/libs/libcli/$$c -lcli
++}
+ 
+ # Set the flag passed to compiler to indicate a snapshot build
+ isEqual(SNAPSHOT_BUILD, true): DEFINES+=SNAPSHOT_BUILD
+@@ -80,7 +96,7 @@ PLUGINS_FOLDER=plugins
+ isEqual(PRIVATE_PLUGINS, true) {
+   DEFINES+=PRIVATE_PLUGINS_SYMBOLS
+   PLUGINS_FOLDER=priv-plugins
+-	PRIV_RES_FOLDER=$$PWD/$$PLUGINS_FOLDER/res
++  PRIV_RES_FOLDER=$$PWD/$$PLUGINS_FOLDER/res
+ }
+ 
+ # Include the plugins subprojects only if exists
+@@ -125,36 +141,36 @@ linux {
+   # If the AppImage generation option is set
+   isEqual(APPIMAGE_BUILD, true):{
+ 
+-	# Set the flag passed to compiler to indicate a appimage build
+-	DEFINES+=APPIMAGE_BUILD
+-
+-	!defined(PREFIX, var): PREFIX = /usr/local/pgmodeler-appimage
+-	BINDIR = $$PREFIX
+-	PRIVATEBINDIR = $$PREFIX
+-	PRIVATELIBDIR = $$PREFIX/lib
+-	PLUGINSDIR = $$PREFIX/lib/pgmodeler/plugins
+-	SHAREDIR = $$PREFIX
+-	CONFDIR = $$SHAREDIR/conf
+-	DOCDIR = $$SHAREDIR
+-	LANGDIR = $$SHAREDIR/lang
+-	SAMPLESDIR = $$SHAREDIR/samples
+-	SCHEMASDIR = $$SHAREDIR/schemas
++  # Set the flag passed to compiler to indicate a appimage build
++  DEFINES+=APPIMAGE_BUILD
++
++  !defined(PREFIX, var): PREFIX = /usr/local/pgmodeler-appimage
++  BINDIR = $$PREFIX
++  PRIVATEBINDIR = $$PREFIX
++  PRIVATELIBDIR = $$PREFIX/lib
++  PLUGINSDIR = $$PREFIX/lib/pgmodeler/plugins
++  SHAREDIR = $$PREFIX
++  CONFDIR = $$SHAREDIR/conf
++  DOCDIR = $$SHAREDIR
++  LANGDIR = $$SHAREDIR/lang
++  SAMPLESDIR = $$SHAREDIR/samples
++  SCHEMASDIR = $$SHAREDIR/schemas
+   }
+ 
+   !isEqual(APPIMAGE_BUILD, true):{
+-	# Default configuration for package pgModeler.
+-	# The default prefix is /usr/local
+-	!defined(PREFIX, var):        PREFIX = /usr/local
+-	!defined(BINDIR, var):        BINDIR = $$PREFIX/bin
+-	!defined(PRIVATEBINDIR, var): PRIVATEBINDIR = $$PREFIX/bin
+-	!defined(PRIVATELIBDIR, var): PRIVATELIBDIR = $$PREFIX/lib/pgmodeler
+-	!defined(PLUGINSDIR, var):    PLUGINSDIR = $$PREFIX/lib/pgmodeler/plugins
+-	!defined(SHAREDIR, var):      SHAREDIR = $$PREFIX/share/pgmodeler
+-	!defined(CONFDIR, var):       CONFDIR = $$SHAREDIR/conf
+-	!defined(DOCDIR, var):        DOCDIR = $$SHAREDIR
+-	!defined(LANGDIR, var):       LANGDIR = $$SHAREDIR/lang
+-	!defined(SAMPLESDIR, var):    SAMPLESDIR = $$SHAREDIR/samples
+-	!defined(SCHEMASDIR, var):    SCHEMASDIR = $$SHAREDIR/schemas
++  # Default configuration for package pgModeler.
++  # The default prefix is /usr/local
++  !defined(PREFIX, var):        PREFIX = /usr/local
++  !defined(BINDIR, var):        BINDIR = $$PREFIX/bin
++  !defined(PRIVATEBINDIR, var): PRIVATEBINDIR = $$PREFIX/bin
++  !defined(PRIVATELIBDIR, var): PRIVATELIBDIR = $$PREFIX/lib/pgmodeler
++  !defined(PLUGINSDIR, var):    PLUGINSDIR = $$PREFIX/lib/pgmodeler/plugins
++  !defined(SHAREDIR, var):      SHAREDIR = $$PREFIX/share/pgmodeler
++  !defined(CONFDIR, var):       CONFDIR = $$SHAREDIR/conf
++  !defined(DOCDIR, var):        DOCDIR = $$SHAREDIR
++  !defined(LANGDIR, var):       LANGDIR = $$SHAREDIR/lang
++  !defined(SAMPLESDIR, var):    SAMPLESDIR = $$SHAREDIR/samples
++  !defined(SCHEMASDIR, var):    SCHEMASDIR = $$SHAREDIR/schemas
+  }
+ 
+   # Specifies where to find the libraries at runtime
+@@ -176,8 +192,8 @@ windows {
+   # (e.g. inline static class members). Maybe it's a bug in the code is wrong (more likely)
+   # or is a bug in the compiler? The fact is that reducing the executable/libs code
+   # optmization causes the tool to work as expected.
+-  QMAKE_CXXFLAGS_RELEASE -= -O2
+-  QMAKE_CXXFLAGS_RELEASE *= -O0
++  gcc:QMAKE_CXXFLAGS_RELEASE -= -O2
++  gcc:QMAKE_CXXFLAGS_RELEASE *= -O0
+ 
+   # The default prefix is ./build
+   !defined(PREFIX, var):        PREFIX = $$PWD/build
+@@ -225,7 +241,7 @@ DEFINES += BINDIR=\\\"$${BINDIR}\\\" \
+            DOCDIR=\\\"$${DOCDIR}\\\" \
+            LANGDIR=\\\"$${LANGDIR}\\\" \
+            SAMPLESDIR=\\\"$${SAMPLESDIR}\\\" \
+-		   SCHEMASDIR=\\\"$${SCHEMASDIR}\\\"
++           SCHEMASDIR=\\\"$${SCHEMASDIR}\\\"
+ 
+ 
+ # pgModeler depends on libpq and libxml2 this way to variables
+@@ -243,22 +259,22 @@ linux: {
+   dep_paths = "$$PGSQL_LIB" "$$XML_LIB" "$$PGSQL_INC" "$$XML_INC"
+   if(count(dep_paths, 4)):{
+     INCLUDEPATH += "$$PGSQL_INC" "$$XML_INC"
+-	has_dep_paths = true
++    has_dep_paths = true
+   }
+ 
+   # If not all of the PGSQL_??? and XML_??? vars are defined
+   # Then we default to use pkg-config for libpq and libxml-2.0
+   !defined(has_dep_paths,var): {
+     CONFIG += link_pkgconfig
+-	PKGCONFIG = libpq libxml-2.0
+-	PGSQL_LIB = -lpq
+-	XML_LIB = -lxml2
++    PKGCONFIG = libpq libxml-2.0
++    PGSQL_LIB = -lpq
++    XML_LIB = -lxml2
+   }
+ }
+ 
+ macx {
+-	!defined(PGSQL_LIB, var): PGSQL_LIB = /Library/PostgreSQL/15/lib/libpq.dylib
+-	!defined(PGSQL_INC, var): PGSQL_INC = /Library/PostgreSQL/15/include
++  !defined(PGSQL_LIB, var): PGSQL_LIB = /Library/PostgreSQL/15/lib/libpq.dylib
++  !defined(PGSQL_INC, var): PGSQL_INC = /Library/PostgreSQL/15/include
+   !defined(XML_INC, var): XML_INC = /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/libxml2
+   !defined(XML_LIB, var): XML_LIB = /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib/libxml2.tbd
+   INCLUDEPATH += "$$PGSQL_INC" "$$XML_INC"
+diff --git a/tests/src/schemafilessyntaxtest/schemafilessyntaxtest.cpp b/tests/src/schemafilessyntaxtest/schemafilessyntaxtest.cpp
+index 972d8aa48..bd71cd348 100644
+--- a/tests/src/schemafilessyntaxtest/schemafilessyntaxtest.cpp
++++ b/tests/src/schemafilessyntaxtest/schemafilessyntaxtest.cpp
+@@ -52,7 +52,7 @@ void SchemaFilesSyntaxTest::schemasDontGenerateSyntaxErrors()
+ 			for(auto &sch_file : sch_files)
+ 			{
+ 				schparser.ignoreEmptyAttributes(true);
+-				schparser.ignoreUnkownAttributes(true);
++				schparser.ignoreUnknownAttributes(true);
+ 				schparser.getSourceCode(path + GlobalAttributes::DirSeparator + sch_file, attrs);
+ 			}
+ 		}
