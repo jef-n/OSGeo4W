@@ -1,14 +1,5 @@
-From a97bee835be112039665c898d7f5c9c921e39b05 Mon Sep 17 00:00:00 2001
-From: "Juergen E. Fischer" <jef@norbit.de>
-Date: Fri, 25 Oct 2024 16:20:02 +0200
-Subject: [PATCH] ecw: fix min usage with MSVC (followup osgeo/gdal#10979)
-
----
- frmts/ecw/ecwdataset.cpp | 4 ++++
- 1 file changed, 4 insertions(+)
-
 diff --git a/frmts/ecw/ecwdataset.cpp b/frmts/ecw/ecwdataset.cpp
-index 3fe05508f6..9f7d7d67b7 100644
+index 5b4825e04a..7a956637e0 100644
 --- a/frmts/ecw/ecwdataset.cpp
 +++ b/frmts/ecw/ecwdataset.cpp
 @@ -73,6 +73,10 @@ ECWRasterBand::ECWRasterBand(ECWDataset *poDSIn, int nBandIn, int iOverviewIn,
@@ -22,6 +13,16 @@ index 3fe05508f6..9f7d7d67b7 100644
      if (poDSIn->bIsJPEG2000 && poDSIn->poFileView)
      {
          UINT32 nTileWidth = 0;
--- 
-2.43.0
-
+diff --git a/gcore/gdal_priv_templates.hpp b/gcore/gdal_priv_templates.hpp
+index 96840e1e56..896c733fec 100644
+--- a/gcore/gdal_priv_templates.hpp
++++ b/gcore/gdal_priv_templates.hpp
+@@ -31,7 +31,7 @@
+ #ifdef USE_NEON_OPTIMIZATIONS
+ #include "include_sse2neon.h"
+ #else
+-#include <emmintrin.h>
++#include <immintrin.h>
+ #endif
+ 
+ static inline void GDALCopyXMMToInt32(const __m128i xmm, void *pDest)
