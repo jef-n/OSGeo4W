@@ -39,7 +39,7 @@ ScanFindVisitor::visitFile(const std::string& basePath,
   // Build a new package called f.pkg
   _Builder.buildPackage (f.pkg);
 
-  // Set the version we are bulding
+  // Set the version we are building
   _Builder.buildPackageVersion (f.ver);
 
   // Add the file as a installable package
