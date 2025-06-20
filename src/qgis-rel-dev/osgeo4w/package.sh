@@ -359,7 +359,7 @@ sdesc: "$PKGDESC (metapackage with additional free dependencies)"
 ldesc: "$PKGDESC (metapackage with additional free dependencies)"
 maintainer: $MAINTAINER
 category: Desktop
-requires: $P proj python3-pyparsing python3-simplejson python3-shapely python3-matplotlib python3-pygments python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-pillow python3-geopandas python3-geographiclib grass python3-pyserial python3-autopep8 python3-openpyxl python3-remotior-sensus saga python3-psycopg python3-pyarrow qt5-tools gdal-sosi
+requires: $P proj python3-pyparsing python3-simplejson python3-shapely python3-matplotlib python3-pygments python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-pillow python3-geopandas python3-geographiclib grass python3-pyserial python3-autopep8 python3-openpyxl python3-remotior-sensus saga python3-psycopg python3-pyarrow qt5-tools gdal-sosi python3-pydantic
 external-source: $P
 EOF
 
