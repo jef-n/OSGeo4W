@@ -1,9 +1,9 @@
 export P=curl
-export V=8.13.0
+export V=8.14.1
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="openssl-devel zlib-devel"
-export PACKAGES="curl curl-ca-bundle curl-devel brotli-devel zstd-devel"
+export BUILDDEPENDS="openssl-devel zlib-devel brotli-devel zstd-devel"
+export PACKAGES="curl curl-ca-bundle curl-devel"
 
 export VC=15
 export VCARCH=x64
@@ -42,6 +42,11 @@ cmake -G Ninja \
 	-D CURL_USE_SCHANNEL=ON \
 	-D USE_WIN32_IDN=ON \
 	-D ENABLE_CURL_MANUAL=OFF \
+        -D ZSTD_LIBRARY=$(cygpath -am ../osgeo4w/lib/zstd.lib) \
+        -D ZSTD_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
+        -D BROTLIDEC_LIBRARY=$(cygpath -am ../osgeo4w/lib/brotlidec.lib) \
+        -D BROTLICOMMON_LIBRARY=$(cygpath -am ../osgeo4w/lib/brotlicommon.lib) \
+        -D BROTLI_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	../../$P-$V
 
 ninja
@@ -94,7 +99,6 @@ tar -cjf $R/$P-$V-$B.tar.bz2 \
 tar -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	-C install \
 	bin/curl-config \
-	bin/mk-ca-bundle.pl \
 	include \
 	lib
 

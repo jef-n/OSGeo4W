@@ -1,5 +1,5 @@
 export P=zstd
-export V=1.5.5
+export V=1.5.7
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none

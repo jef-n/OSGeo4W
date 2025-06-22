@@ -1,5 +1,5 @@
 export P=saga
-export V=9.7.1
+export V=9.8.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="wxwidgets-devel libharu-devel gdal-devel proj-devel libpq-devel curl-devel libpng-devel libtiff-devel libjpeg-turbo-devel zlib-devel expat-devel pdal-devel"
@@ -41,6 +41,8 @@ p=${P%$M}
 
 	cmake -G Ninja \
 		-D CMAKE_BUILD_TYPE=Release \
+		-D CMAKE_CXX_STANDARD=17 \
+		-D CMAKE_CXX_FLAGS_RELEASE="/MD /Z7 /MP /Od /D NDEBUG -D_HAS_STD_BYTE=0 /Zc:__cplusplus" \
 		-D CURL_LIBRARIES=$(cygpath -am ../osgeo4w/lib/libcurl_imp.lib) \
 		-D PDAL_UTIL_LIBRARY=$(cygpath -am ../osgeo4w/lib/pdalcpp.lib) \
 		-D wxWidgets_CONFIGURATION=mswu \

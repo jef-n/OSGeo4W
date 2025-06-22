@@ -1,6 +1,6 @@
-diff -ur saga-9.7.0/saga-gis/CMakeLists.txt ../saga-9.7.0/saga-gis/CMakeLists.txt
---- saga-9.7.0/saga-gis/CMakeLists.txt	2024-12-17 09:33:22.000000000 +0100
-+++ ../saga-9.7.0/saga-gis/CMakeLists.txt	2024-12-18 22:25:24.021082500 +0100
+diff -ur saga-9.8.1/saga-gis/CMakeLists.txt ../saga-9.8.1/saga-gis/CMakeLists.txt
+--- saga-9.8.1/saga-gis/CMakeLists.txt	2025-05-12 14:20:06.000000000 +0200
++++ ../saga-9.8.1/saga-gis/CMakeLists.txt	2025-06-21 20:04:08.742244600 +0200
 @@ -23,7 +23,7 @@
  
  
@@ -23,18 +23,21 @@ diff -ur saga-9.7.0/saga-gis/CMakeLists.txt ../saga-9.7.0/saga-gis/CMakeLists.tx
  
  	# default debug configuration to use: 'Program Database for Edit And Continue (/ZI)'
  	set(CMAKE_C_FLAGS_DEBUG             "/MDd /ZI /Ob0 /Od /RTC1"       CACHE STRING "" FORCE)
-diff -ur saga-9.7.0/saga-gis/src/accessories/CMakeLists.txt ../saga-9.7.0/saga-gis/src/accessories/CMakeLists.txt
---- saga-9.7.0/saga-gis/src/accessories/CMakeLists.txt	2024-12-17 09:33:22.000000000 +0100
-+++ ../saga-9.7.0/saga-gis/src/accessories/CMakeLists.txt	2024-12-18 22:23:45.317156800 +0100
-@@ -2,4 +2,3 @@
+diff -ur saga-9.8.1/saga-gis/src/accessories/CMakeLists.txt ../saga-9.8.1/saga-gis/src/accessories/CMakeLists.txt
+--- saga-9.8.1/saga-gis/src/accessories/CMakeLists.txt	2025-05-12 14:20:06.000000000 +0200
++++ ../saga-9.8.1/saga-gis/src/accessories/CMakeLists.txt	2025-06-21 20:04:08.752472400 +0200
+@@ -1,7 +1,5 @@
+ project(accessories)
  message(STATUS "folder: ${PROJECT_NAME}")
  
- #add_subdirectory(toolchains)
+-#add_subdirectory(toolchains)
 -install(DIRECTORY toolchains DESTINATION share/saga FILES_MATCHING PATTERN "*.xml")
-diff -ur saga-9.7.0/saga-gis/src/saga_core/saga_api/CMakeLists.txt ../saga-9.7.0/saga-gis/src/saga_core/saga_api/CMakeLists.txt
---- saga-9.7.0/saga-gis/src/saga_core/saga_api/CMakeLists.txt	2024-12-17 09:33:22.000000000 +0100
-+++ ../saga-9.7.0/saga-gis/src/saga_core/saga_api/CMakeLists.txt	2024-12-18 22:23:45.326191200 +0100
-@@ -198,36 +198,11 @@
+ #add_subdirectory(resources)
+ install(DIRECTORY resources/ DESTINATION share/saga)
+diff -ur saga-9.8.1/saga-gis/src/saga_core/saga_api/CMakeLists.txt ../saga-9.8.1/saga-gis/src/saga_core/saga_api/CMakeLists.txt
+--- saga-9.8.1/saga-gis/src/saga_core/saga_api/CMakeLists.txt	2025-05-12 14:20:06.000000000 +0200
++++ ../saga-9.8.1/saga-gis/src/saga_core/saga_api/CMakeLists.txt	2025-06-21 20:04:08.760617300 +0200
+@@ -200,36 +200,11 @@
  )
  
  # where to install the library
@@ -76,9 +79,9 @@ diff -ur saga-9.7.0/saga-gis/src/saga_core/saga_api/CMakeLists.txt ../saga-9.7.0
  
  #-#-#-#-#-# SWIG / Python #-#-#-#-#-#
  option(WITH_PYTHON "Uncheck to not try to Build the SAGA API for Python." ON)
-diff -ur saga-9.7.0/saga-gis/src/saga_core/saga_cmd/CMakeLists.txt ../saga-9.7.0/saga-gis/src/saga_core/saga_cmd/CMakeLists.txt
---- saga-9.7.0/saga-gis/src/saga_core/saga_cmd/CMakeLists.txt	2024-12-17 09:33:22.000000000 +0100
-+++ ../saga-9.7.0/saga-gis/src/saga_core/saga_cmd/CMakeLists.txt	2024-12-18 22:23:45.338638400 +0100
+diff -ur saga-9.8.1/saga-gis/src/saga_core/saga_cmd/CMakeLists.txt ../saga-9.8.1/saga-gis/src/saga_core/saga_cmd/CMakeLists.txt
+--- saga-9.8.1/saga-gis/src/saga_core/saga_cmd/CMakeLists.txt	2025-05-12 14:20:06.000000000 +0200
++++ ../saga-9.8.1/saga-gis/src/saga_core/saga_cmd/CMakeLists.txt	2025-06-21 20:04:08.777069000 +0200
 @@ -17,7 +17,7 @@
  # link saga_api
  target_link_libraries(saga_cmd saga_api)
@@ -98,9 +101,9 @@ diff -ur saga-9.7.0/saga-gis/src/saga_core/saga_cmd/CMakeLists.txt ../saga-9.7.0
 -# where to install the binary
 -install(TARGETS saga_cmd DESTINATION bin)
 +install(TARGETS saga_cmd DESTINATION .)
-diff -ur saga-9.7.0/saga-gis/src/saga_core/saga_gdi/CMakeLists.txt ../saga-9.7.0/saga-gis/src/saga_core/saga_gdi/CMakeLists.txt
---- saga-9.7.0/saga-gis/src/saga_core/saga_gdi/CMakeLists.txt	2024-12-17 09:33:22.000000000 +0100
-+++ ../saga-9.7.0/saga-gis/src/saga_core/saga_gdi/CMakeLists.txt	2024-12-18 22:23:45.348158900 +0100
+diff -ur saga-9.8.1/saga-gis/src/saga_core/saga_gdi/CMakeLists.txt ../saga-9.8.1/saga-gis/src/saga_core/saga_gdi/CMakeLists.txt
+--- saga-9.8.1/saga-gis/src/saga_core/saga_gdi/CMakeLists.txt	2025-05-12 14:20:06.000000000 +0200
++++ ../saga-9.8.1/saga-gis/src/saga_core/saga_gdi/CMakeLists.txt	2025-06-21 20:04:08.785273500 +0200
 @@ -67,23 +67,9 @@
  	SOVERSION ${SAGA_VERSION_MAJOR})
  
@@ -130,10 +133,10 @@ diff -ur saga-9.7.0/saga-gis/src/saga_core/saga_gdi/CMakeLists.txt ../saga-9.7.0
 -	)
 -endif()
 +install(FILES ${SAGA_GDI_PUBLIC_HEADERS} DESTINATION include/saga_gdi)
-diff -ur saga-9.7.0/saga-gis/src/saga_core/saga_gui/CMakeLists.txt ../saga-9.7.0/saga-gis/src/saga_core/saga_gui/CMakeLists.txt
---- saga-9.7.0/saga-gis/src/saga_core/saga_gui/CMakeLists.txt	2024-12-17 09:33:22.000000000 +0100
-+++ ../saga-9.7.0/saga-gis/src/saga_core/saga_gui/CMakeLists.txt	2024-12-18 22:28:19.611373100 +0100
-@@ -257,24 +257,7 @@
+diff -ur saga-9.8.1/saga-gis/src/saga_core/saga_gui/CMakeLists.txt ../saga-9.8.1/saga-gis/src/saga_core/saga_gui/CMakeLists.txt
+--- saga-9.8.1/saga-gis/src/saga_core/saga_gui/CMakeLists.txt	2025-05-12 14:20:10.000000000 +0200
++++ ../saga-9.8.1/saga-gis/src/saga_core/saga_gui/CMakeLists.txt	2025-06-21 20:04:08.797154900 +0200
+@@ -257,26 +257,7 @@
  add_subdirectory(res)
  
  # where to install the binary
@@ -155,15 +158,17 @@ diff -ur saga-9.7.0/saga-gis/src/saga_core/saga_gui/CMakeLists.txt ../saga-9.7.0
 -		COMMAND IF NOT EXIST "$(OutDir)tools" MKDIR "$(OutDir)tools"
 -		COMMAND IF EXIST "$(OutDir)tools\\toolchains" RMDIR /S/Q "$(OutDir)tools\\toolchains"
 -		COMMAND MKDIR    "$(OutDir)tools\\toolchains"
--		COMMAND XCOPY /C/Q/Y/H "${SOURCE_DIR}..\\..\\accessories\\toolchains\\*.xml" "$(OutDir)\\tools\\toolchains"
--	#	COMMAND COPY "${SOURCE_DIR}..\\..\\accessories\\toolchains\\*.xml" "$(OutDir)\\tools\\toolchains"
+-		COMMAND XCOPY /C/Q/Y/H "${SOURCE_DIR}..\\..\\accessories\\toolchains\\*.xml" "$(OutDir)tools\\toolchains"
+-		COMMAND IF EXIST "$(OutDir)resources" RMDIR /S/Q "$(OutDir)resources"
+-		COMMAND MKDIR    "$(OutDir)resources"
+-		COMMAND XCOPY /S/E/C/Q/Y/H "${SOURCE_DIR}..\\..\\accessories\\resources\\" "$(OutDir)resources"
 -	)
 -endif()
 +file(GLOB toolchain_files ../../accessories/toolchains/*.xml)
 +install(FILES ${toolchain_files} DESTINATION tools/toolchains)
-diff -ur saga-9.7.0/saga-gis/src/saga_core/saga_gui/res/CMakeLists.txt ../saga-9.7.0/saga-gis/src/saga_core/saga_gui/res/CMakeLists.txt
---- saga-9.7.0/saga-gis/src/saga_core/saga_gui/res/CMakeLists.txt	2024-12-17 09:33:22.000000000 +0100
-+++ ../saga-9.7.0/saga-gis/src/saga_core/saga_gui/res/CMakeLists.txt	2024-12-18 22:30:41.897220100 +0100
+diff -ur saga-9.8.1/saga-gis/src/saga_core/saga_gui/res/CMakeLists.txt ../saga-9.8.1/saga-gis/src/saga_core/saga_gui/res/CMakeLists.txt
+--- saga-9.8.1/saga-gis/src/saga_core/saga_gui/res/CMakeLists.txt	2025-05-12 14:20:06.000000000 +0200
++++ ../saga-9.8.1/saga-gis/src/saga_core/saga_gui/res/CMakeLists.txt	2025-06-21 20:04:08.808326000 +0200
 @@ -1,49 +1,11 @@
  message(STATUS "subfolder: ${PROJECT_NAME}/res")
  
@@ -222,9 +227,9 @@ diff -ur saga-9.7.0/saga-gis/src/saga_core/saga_gui/res/CMakeLists.txt ../saga-9
 +       saga.lng.txt
 +       saga.rus.txt
 +       DESTINATION .)
-diff -ur saga-9.7.0/saga-gis/src/tools/CMakePluginTemplate.cmake ../saga-9.7.0/saga-gis/src/tools/CMakePluginTemplate.cmake
---- saga-9.7.0/saga-gis/src/tools/CMakePluginTemplate.cmake	2024-12-17 09:33:22.000000000 +0100
-+++ ../saga-9.7.0/saga-gis/src/tools/CMakePluginTemplate.cmake	2024-12-18 22:23:45.402561700 +0100
+diff -ur saga-9.8.1/saga-gis/src/tools/CMakePluginTemplate.cmake ../saga-9.8.1/saga-gis/src/tools/CMakePluginTemplate.cmake
+--- saga-9.8.1/saga-gis/src/tools/CMakePluginTemplate.cmake	2025-05-12 14:20:06.000000000 +0200
++++ ../saga-9.8.1/saga-gis/src/tools/CMakePluginTemplate.cmake	2025-06-21 20:04:08.810321500 +0200
 @@ -40,7 +40,11 @@
  # link saga_api
  target_link_libraries(${PROJECT_NAME} saga_api)
@@ -238,9 +243,42 @@ diff -ur saga-9.7.0/saga-gis/src/tools/CMakePluginTemplate.cmake ../saga-9.7.0/s
  
  # reset variables
  set(SAGA_TOOL_CUSTOM_SOURCE_LIST)
-diff -ur saga-9.7.0/saga-gis/src/tools/io/io_pdal/CMakeLists.txt ../saga-9.7.0/saga-gis/src/tools/io/io_pdal/CMakeLists.txt
---- saga-9.7.0/saga-gis/src/tools/io/io_pdal/CMakeLists.txt	2024-12-17 09:33:30.000000000 +0100
-+++ ../saga-9.7.0/saga-gis/src/tools/io/io_pdal/CMakeLists.txt	2024-12-18 22:23:45.414102300 +0100
+diff -ur saga-9.8.1/saga-gis/src/tools/imagery/imagery_maxent/sgd.cpp ../saga-9.8.1/saga-gis/src/tools/imagery/imagery_maxent/sgd.cpp
+--- saga-9.8.1/saga-gis/src/tools/imagery/imagery_maxent/sgd.cpp	2025-05-12 14:20:06.000000000 +0200
++++ ../saga-9.8.1/saga-gis/src/tools/imagery/imagery_maxent/sgd.cpp	2025-06-21 20:12:45.110608700 +0200
+@@ -1,6 +1,10 @@
+ #include "maxent.h"
+ #include <cmath>
+ 
++#if __cplusplus > 201100L
++#include <random>
++#endif
++
+ using namespace std;
+ 
+ //const double SGD_ETA0 = 1;
+@@ -76,10 +80,15 @@
+   vector<int> last_updated(d, 0);
+   vector<double> sum_eta;
+   sum_eta.push_back(0);
+-
++  
+   for (int iter = 0; iter < SGD_ITER; iter++) {
+-
+-    random_shuffle(ri.begin(), ri.end());
++#if __cplusplus > 201100L
++    random_device rd;
++    mt19937 g(rd());
++    shuffle(ri.begin(), ri.end(), g);
++#else
++    std::random_shuffle(ri.begin(), ri.end());
++#endif
+ 
+     double logl = 0;
+     int ncorrect = 0, ntotal = 0;
+diff -ur saga-9.8.1/saga-gis/src/tools/io/io_pdal/CMakeLists.txt ../saga-9.8.1/saga-gis/src/tools/io/io_pdal/CMakeLists.txt
+--- saga-9.8.1/saga-gis/src/tools/io/io_pdal/CMakeLists.txt	2025-05-12 14:20:08.000000000 +0200
++++ ../saga-9.8.1/saga-gis/src/tools/io/io_pdal/CMakeLists.txt	2025-06-21 20:04:08.813334600 +0200
 @@ -26,5 +26,6 @@
  		include(../../CMakePluginTemplate.cmake)	# load common tool template
  		target_include_directories(${PROJECT_NAME} PUBLIC ${PDAL_INCLUDE_DIR})

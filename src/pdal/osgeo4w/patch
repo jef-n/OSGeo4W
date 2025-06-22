@@ -1,0 +1,29 @@
+diff -ur PDAL-2.9.0-src/cmake/zstd.cmake ../pdal-2.9.0/cmake/zstd.cmake
+--- PDAL-2.9.0-src/cmake/zstd.cmake	2025-06-19 20:48:31.000000000 +0200
++++ ../pdal-2.9.0/cmake/zstd.cmake	2025-06-22 10:31:28.998305600 +0200
+@@ -7,7 +7,7 @@
+     find_package(zstd CONFIG QUIET)
+     set_package_properties(ZSTD PROPERTIES TYPE
+         PURPOSE "General compression support")
+-    if (ZSTD_FOUND)
++    if (zstd_FOUND)
+         set(PDAL_HAVE_ZSTD 1)
+-    endif(ZSTD_FOUND)
++    endif(zstd_FOUND)
+ endif(WITH_ZSTD)
+diff -ur PDAL-2.9.0-src/CMakeLists.txt ../pdal-2.9.0/CMakeLists.txt
+--- PDAL-2.9.0-src/CMakeLists.txt	2025-06-19 20:48:31.000000000 +0200
++++ ../pdal-2.9.0/CMakeLists.txt	2025-06-22 10:41:49.465529700 +0200
+@@ -273,10 +273,10 @@
+         ${WINSOCK_LIBRARY}
+ )
+ 
+-if (ZSTD_FOUND)
++if (zstd_FOUND)
+     target_link_libraries(${PDAL_LIB_NAME}
+         PRIVATE
+-        zstd::libzstd)
++        zstd::libzstd_shared)
+ endif()
+ 
+ if (ZLIB_FOUND)

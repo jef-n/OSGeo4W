@@ -22,6 +22,7 @@ cd build
 export INCLUDE="$INCLUDE;$(cygpath -am ../osgeo4w/include)"
 export LIB="$LIB;$(cygpath -am ../osgeo4w/lib)"
 
+CXXFLAGS="/EHsc -DPDAL_EXPORT=__declspec(dllimport)" \
 cmake -Wno-dev -G Ninja \
 	-D CMAKE_BUILD_TYPE=Release \
 	-D CMAKE_INSTALL_PREFIX=../install \

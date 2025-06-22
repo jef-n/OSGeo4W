@@ -37,6 +37,7 @@ EOF
 export INCLUDE="$(cygpath -am osgeo4w/include);\$INCLUDE"
 export LIB="$(cygpath -am osgeo4w/lib);\$LIB"
 export CMAKE_PREFIX_PATH="$(cygpath -am osgeo4w/apps/$PYTHON/Lib/site-packages/pybind11)"
+export CXXFLAGS="-DPDAL_DLL=PDAL_EXPORT"
 
 cd ../pdalextension
 

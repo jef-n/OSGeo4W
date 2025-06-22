@@ -1,5 +1,5 @@
 export P=python3-pdal-plugins
-export V=1.6.2
+export V=1.6.5
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-pip python3-wheel python3-devel python3-numpy pdal-devel"
@@ -39,6 +39,7 @@ export LIB="$(cygpath -am osgeo4w/lib);\$LIB"
 
 cd ../pdal
 
+CXXFLAGS="-DPDAL_DLL=PDAL_EXPORT" \
 pip3 install .
 
 export R=$OSGEO4W_REP/x86_64/release/python3/$P
