@@ -48,7 +48,7 @@ public:
      the given URL.  It uses the network setup state in state.h.  If
      anything fails, either the return values is NULL or the returned
      object is !ok() */
-  static NetIO *open (char const *url, bool cachable);
+  static NetIO *open (char const *url, bool cacheable);
 
   /* If !ok() that means the transfer isn't happening. */
   virtual int ok () = 0;
