@@ -30,6 +30,7 @@ fi
 	export LIB="$(cygpath -aw ../osgeo4w/lib);$LIB"
 	export INCLUDE="$(cygpath -aw ../osgeo4w/include);$INCLUDE"
 
+	CXXFLAGS="-D_DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR" \
 	cmake -G Ninja \
 		-D CMAKE_BUILD_TYPE=Release \
 		-D CMAKE_INSTALL_PREFIX=../install \
