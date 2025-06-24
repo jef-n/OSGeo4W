@@ -24,6 +24,8 @@ fi
 	cmakeenv
 	ninjaenv
 
+	[ -n "$OSGEO4W_SKIP_CLEAN" ] || rm -rf build install
+
 	mkdir -p build install
 	cd build
 
