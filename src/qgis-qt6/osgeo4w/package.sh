@@ -99,6 +99,7 @@ nextbinary
 	export GRASS_VERSION=$(unset SHELL; cmd /c $GRASS --config version | sed -e "s/\r//")
 	export GRASS_PREFIX=$(unset SHELL; cmd /c $GRASS --config path | sed -e "s/\r//")
 
+	[ -n "$OSGEO4W_SKIP_CLEAN" ] || mkdir -p $BUILDDIR
 	cd $BUILDDIR
 
 	echo CMAKE: $(date)
@@ -163,11 +164,6 @@ nextbinary
 		-D DART_TESTING_TIMEOUT=60 \
 		-D PUSH_TO_CDASH=TRUE \
 		$(cygpath -m $SRCDIR)
-
-	if [ -z "$OSGEO4W_SKIP_CLEAN" ]; then
-		echo CLEAN: $(date)
-		cmake --build $(cygpath -am $BUILDDIR) --target clean --config $BUILDCONF
-	fi
 
 	mkdir -p $BUILDDIR/apps/$P/pdb
 
@@ -457,7 +453,7 @@ ldesc: "QGIS Desktop Full Free (meta package; Qt6)
 without proprietary extensions"
 maintainer: $MAINTAINER
 category: Desktop
-requires: $P proj $P-grass-plugin python3-pyparsing python3-simplejson python3-shapely python3-matplotlib python3-pygments python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-setuptools python3-pillow python3-geopandas python3-geographiclib python3-pyserial python3-pypdf2 python3-reportlab python3-openpyxl python3-remotior-sensus saga python3-psycopg python3-pyarrow qt6-tools gdal-sosi python3-pydantic
+requires: $P proj $P-grass-plugin python3-pyparsing python3-simplejson python3-shapely python3-matplotlib python3-pygments python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-setuptools python3-pillow python3-geopandas python3-geographiclib python3-pyserial python3-pypdf2 python3-reportlab python3-openpyxl python3-remotior-sensus saga python3-psycopg python3-pyarrow qt6-tools gdal-sosi python3-pydantic python3-duckdb
 external-source: $P
 EOF
 
