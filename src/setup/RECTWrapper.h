@@ -23,7 +23,7 @@
 Thin wrapper around GDI's RECT, mainly to allow what would otherwise have to
 be a ton of "OffsetRect(&rect, 1, 2);"-type calls to be more easily written.
 Also has a few gimmes like width() and height().  Note this is derived from
-GDI's RECT *struct*, so that they're interchangable, and is not a class proper.
+GDI's RECT *struct*, so that they're interchangeable, and is not a class proper.
 Not a general-purpose Rectangle class, not intended to be a general-purpose
 Rectangle class.
 DO NOT add virtual members or you'll wreck the RECT==RECTWrapper duality.

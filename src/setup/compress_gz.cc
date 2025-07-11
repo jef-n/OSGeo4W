@@ -534,7 +534,7 @@ gzclose (lst);
 /* ===========================================================================
  *  Read a byte from a gz_stream; update next_in and avail_in. Return EOF
  *  for end of file.
- *  IN assertion: the stream s has been sucessfully opened for reading.
+ *  IN assertion: the stream s has been successfully opened for reading.
  */
 int
 compress_gz::get_byte ()
@@ -564,7 +564,7 @@ compress_gz::get_byte ()
     mode to transparent if the gzip magic header is not present; set s->err
     to Z_DATA_ERROR if the magic header is present but the rest of the header
     is incorrect.
-    IN assertion: the stream s has already been created sucessfully;
+    IN assertion: the stream s has already been created successfully;
        s->stream.avail_in is zero for the first time, but may be non-zero
        for concatenated .gz files.
 */
