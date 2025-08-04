@@ -1,5 +1,5 @@
 export P=libosmium-devel
-export V=2.20.0
+export V=2.22.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="protozero-devel boost-devel bzip2-devel zlib-devel lz4-devel expat-devel gdal-devel proj-devel"

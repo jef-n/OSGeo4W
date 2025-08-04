@@ -265,33 +265,35 @@ vs2022env() {
 		VCSDK=10.0.22621.0
 	fi
 
-	local dhd="/cygdrive/c/Program Files (x86)/Windows Kits/10/Debuggers/x64/dbghelp.dll"
+	if [ -z "$OSGEO4W_SKIP_DBGHELP_CHECK" ]; then
+		local dhd="/cygdrive/c/Program Files (x86)/Windows Kits/10/Debuggers/x64/dbghelp.dll"
 
-	# make sure we have a dbghelp version, that works on Windows 8 using brute force
-	if ! [ -f "$dhd" ]; then
-		linkid=2120843
-		if ! [ -x $OSGEO4W_SCRIPTS/winsdksetup-$linkid.exe ]; then
-			curl -L -o $OSGEO4W_SCRIPTS/winsdksetup-$linkid.exe "https://go.microsoft.com/fwlink/?linkid=$linkid"
-			chmod a+rx $OSGEO4W_SCRIPTS/winsdksetup-$linkid.exe
+		# make sure we have a dbghelp version, that works on Windows 8 using brute force
+		if ! [ -f "$dhd" ]; then
+			linkid=2120843
+			if ! [ -x $OSGEO4W_SCRIPTS/winsdksetup-$linkid.exe ]; then
+				curl -L -o $OSGEO4W_SCRIPTS/winsdksetup-$linkid.exe "https://go.microsoft.com/fwlink/?linkid=$linkid"
+				chmod a+rx $OSGEO4W_SCRIPTS/winsdksetup-$linkid.exe
+			fi
+
+			$OSGEO4W_SCRIPTS/winsdksetup-$linkid.exe /features OptionId.WindowsDesktopDebuggers /q /norestart
+		else
+			v=$(fileversion "$dhd")
+
+			case $v in
+			10.0.19041.*)
+				;;
+			*)
+				log Replacing $dhd $v
+				curl -o /tmp/qgis.tar.bz2 http://download.osgeo.org/osgeo4w/v2/x86_64/release/qgis/qgis-ltr/qgis-ltr-3.34.5-1.tar.bz2
+				tar -C "${dhd%/*}" -xjvf /tmp/qgis.tar.bz2 --xform "s,.*/,," apps/qgis-ltr/dbghelp.dll apps/qgis-ltr/symsrv.dll
+				rm /tmp/qgis.tar.bz2
+				;;
+			esac
 		fi
 
-		$OSGEO4W_SCRIPTS/winsdksetup-$linkid.exe /features OptionId.WindowsDesktopDebuggers /q /norestart
-	else
-		v=$(fileversion "$dhd")
-
-		case $v in
-		10.0.19041.*)
-			;;
-		*)
-			log Replacing $dhd $v
-			curl -o /tmp/qgis.tar.bz2 http://download.osgeo.org/osgeo4w/v2/x86_64/release/qgis/qgis-ltr/qgis-ltr-3.34.5-1.tar.bz2
-			tar -C "${dhd%/*}" -xjvf /tmp/qgis.tar.bz2 --xform "s,.*/,," apps/qgis-ltr/dbghelp.dll apps/qgis-ltr/symsrv.dll
-			rm /tmp/qgis.tar.bz2
-			;;
-		esac
+		log "$dhd: $(fileversion "$dhd")"
 	fi
-
-	log "$dhd: $(fileversion "$dhd")"
 
 	export VSLANG=1033
 	export VS170COMNTOOLS=$(cygpath -aw "$vcdir")/Common7/Tools
