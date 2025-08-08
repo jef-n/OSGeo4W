@@ -7,7 +7,7 @@
 LIBOBJ		=	sqlite3.obj
 SQLITE3_DLL	=	sqlite3$(VERSION).dll
 
-CFLAGS = /nologo -I. $(OPTFLAGS) /DSQLITE_CUSTOM_INCLUDE=../always.h /DSQLITE_CORE=1 /DSQLITE_AMALGAMATION=1 /DSQLITE_PRIVATE=static /DSQLITE_API=__declspec(dllexport)
+CFLAGS = /nologo -I. $(OPTFLAGS) /DSQLITE_CUSTOM_INCLUDE=../always.h /DSQLITE_API=__declspec(dllexport)
 
 default: all
 
