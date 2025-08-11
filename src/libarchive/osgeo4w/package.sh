@@ -1,5 +1,5 @@
 export P=libarchive
-export V=3.7.8
+export V=3.8.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="zlib-devel bzip2-devel xz-devel lz4-devel zstd-devel"
