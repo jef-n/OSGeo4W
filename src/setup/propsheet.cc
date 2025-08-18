@@ -264,7 +264,7 @@ static LRESULT CALLBACK PropSheetWndProc (HWND hwnd, UINT uMsg,
 
                 /*
                    The pages are child windows, but don't have IDs.
-                   So change them by enumerating all childs and adjust all
+                   So change them by enumerating all children and adjust all
                    dialogs among them.
                  */
                 if (psd.gotPage)
@@ -275,7 +275,7 @@ static LRESULT CALLBACK PropSheetWndProc (HWND hwnd, UINT uMsg,
                 psd.clientRectValid = true;
               }
             /*
-               Store away the current size and use it as the minmal window size.
+               Store away the current size and use it as the minimal window size.
              */
             if (!psd.hasMinRect)
               {
