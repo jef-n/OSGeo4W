@@ -21,8 +21,8 @@
                 <Control Id="FolderLabel" Type="Text" X="20" Y="60" Width="290" Height="30" NoPrefix="yes" Text="!(loc.InstallDirDlgFolderLabel)" />
                 <Control Id="Folder" Type="PathEdit" X="20" Y="100" Width="320" Height="18" Property="WIXUI_INSTALLDIR" Indirect="yes" />
                 <Control Id="ChangeFolder" Type="PushButton" X="20" Y="120" Width="56" Height="17" Text="!(loc.InstallDirDlgChange)" />
-		<Control Id="CreateDesktopShortcuts" Type="CheckBox" X="20" Y="150" Width="290" Height="17" Property="INSTALLDESKTOPSHORTCUTS" CheckBoxValue="1" Text="Create a desktop shortcuts." />
-		<Control Id="CreateStartmenuShortcuts" Type="CheckBox" X="20" Y="170" Width="290" Height="17" Property="INSTALLMENUSHORTCUTS" CheckBoxValue="1" Text="Create a start menu shortcuts." />
+		<Control Id="CreateDesktopShortcuts" Type="CheckBox" X="20" Y="150" Width="290" Height="17" Property="INSTALLDESKTOPSHORTCUTS" CheckBoxValue="1" Text="Create desktop shortcuts." />
+		<Control Id="CreateStartmenuShortcuts" Type="CheckBox" X="20" Y="170" Width="290" Height="17" Property="INSTALLMENUSHORTCUTS" CheckBoxValue="1" Text="Create start menu shortcuts." />
             </Dialog>
         </UI>
     </Fragment>
