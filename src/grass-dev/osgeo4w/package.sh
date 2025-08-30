@@ -172,8 +172,8 @@ mv ../grass/mswindows/osgeo4w/package/$P-$major.$minor.$patch-1.tar.bz2 $R/$P-$V
 cp ../grass/COPYING $R/$P-$V-$B.txt
 
 cat <<EOF >$R/setup.hint
-sdesc: "GRASS GIS ${V%.*} nightly"
-ldesc: "Geographic Resources Analysis Support System (GRASS GIS ${V%.*} nightly)"
+sdesc: "GRASS ${V%.*} nightly"
+ldesc: "Geographic Resources Analysis Support System (GRASS ${V%.*} nightly)"
 category: Desktop
 requires: liblas $RUNTIMEDEPENDS avce00 gpsbabel proj python3-gdal python3-matplotlib libpng libtiff python3-wxpython python3-pillow python3-pip python3-ply python3-pyopengl python3-psycopg2 python3-six zstd python3-pywin32 gs netcdf wxwidgets
 maintainer: $MAINTAINER
