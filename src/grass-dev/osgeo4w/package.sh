@@ -2,7 +2,7 @@ export P=grass-dev
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="gdal-devel proj-devel geos-devel netcdf-devel libjpeg-turbo-devel libpq-devel libpng-devel libtiff-devel sqlite3-devel zstd-devel python3-ply python3-core python3-six python3-pywin32 python3-wxpython liblas-devel cairo-devel freetype-devel"
+export BUILDDEPENDS="gdal-devel proj-devel geos-devel netcdf-devel libjpeg-turbo-devel libpq-devel libpng-devel libtiff-devel sqlite3-devel zstd-devel python3-core python3-six python3-pywin32 python3-wxpython liblas-devel cairo-devel freetype-devel"
 export PACKAGES="grass-dev"
 
 REPO=https://github.com/OSGeo/grass
@@ -175,7 +175,7 @@ cat <<EOF >$R/setup.hint
 sdesc: "GRASS ${V%.*} nightly"
 ldesc: "Geographic Resources Analysis Support System (GRASS ${V%.*} nightly)"
 category: Desktop
-requires: liblas $RUNTIMEDEPENDS avce00 gpsbabel proj python3-gdal python3-matplotlib libpng libtiff python3-wxpython python3-pillow python3-pip python3-ply python3-pyopengl python3-psycopg2 python3-six zstd python3-pywin32 gs netcdf wxwidgets
+requires: liblas $RUNTIMEDEPENDS avce00 gpsbabel proj python3-gdal python3-matplotlib libpng libtiff python3-wxpython python3-pillow python3-pip python3-pyopengl python3-psycopg2 python3-six zstd python3-pywin32 gs netcdf wxwidgets
 maintainer: $MAINTAINER
 EOF
 
