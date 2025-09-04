@@ -50,7 +50,6 @@ is_elevated ()
   return tokenElevation.TokenIsElevated != 0;
 }
 
-
 static std::string osgeo4w_root;
 
 void
@@ -59,7 +58,7 @@ set_root_dir (const std::string val)
   if ( osgeo4w_root.empty() )
     msg( "Setting root to %s\n", val.c_str() );
   else if( val != osgeo4w_root )
-	msg( "Switching root from %s to %s\n", osgeo4w_root.c_str(), val.c_str() );
+    msg( "Switching root from %s to %s\n", osgeo4w_root.c_str(), val.c_str() );
   else
     return;
 
@@ -77,7 +76,32 @@ get_root_dir ()
 std::string
 cygpath (const std::string& thePath)
 {
-   std::string path = get_root_dir() + "/" + thePath;
-   // msg( "cygpath(%s) => %s\n", thePath.c_str(), path.c_str() );
-   return path;
+  std::string path = get_root_dir() + "/" + thePath;
+  // msg( "cygpath(%s) => %s\n", thePath.c_str(), path.c_str() );
+  return path;
 }
+
+const std::string
+get_default_root_dir (bool root)
+{
+  std::string r;
+
+  if( !root && getenv( "LOCALAPPDATA" ) )
+    {
+      r = getenv( "LOCALAPPDATA" );
+      r += "\\Programs\\OSGeo4W";
+    }
+
+  if ( r.empty() )
+    {
+      if ( getenv( "SYSTEMDRIVE" ) )
+        r = getenv( "SYSTEMDRIVE" );
+      else
+        r = "C:";
+
+      r += "\\OSGeo4W" ;
+    }
+
+  return r;
+}
+

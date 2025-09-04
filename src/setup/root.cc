@@ -77,7 +77,7 @@ static inline void
 SetDlgItemRect (HWND h, int item, LPRECT r)
 {
   MoveWindow (GetDlgItem (h, item), r->left, r->top,
-	      r->right - r->left, r->bottom - r->top, TRUE);
+    r->right - r->left, r->bottom - r->top, TRUE);
 }
 
 static bool loading = true;
@@ -179,16 +179,27 @@ directory_has_spaces ()
 bool
 RootPage::OnMessageCmd (int id, HWND hwndctl, UINT code)
 {
+  HWND h = GetHWND ();
+
   switch (id)
     {
-    case IDC_ROOT_DIR:
     case IDC_ROOT_SYSTEM:
     case IDC_ROOT_USER:
-      check_if_enable_next (GetHWND ());
+      {
+        int rs = rbget (h, su);
+        std::string rd = egetString (h, IDC_ROOT_DIR);
+        if( rd == get_default_root_dir( rs != IDC_ROOT_SYSTEM ) )
+          eset (h, IDC_ROOT_DIR, get_default_root_dir( rs == IDC_ROOT_SYSTEM ) );
+      }
+
+      /* fallthrough */
+
+    case IDC_ROOT_DIR:
+      check_if_enable_next (h);
       break;
 
     case IDC_ROOT_BROWSE:
-      browse (GetHWND ());
+      browse (h);
       break;
     default:
       return false;
@@ -230,7 +241,7 @@ RootPage::OnNext ()
 
   bool changed = root_dir != get_root_dir();
   if ( changed )
-  set_root_dir ( root_dir );
+    set_root_dir ( root_dir );
 
   if (!directory_is_absolute ())
     {

@@ -26,5 +26,6 @@ int is_elevated();
 std::string cygpath (const std::string& );
 void set_root_dir (const std::string);
 const std::string get_root_dir ();
+const std::string get_default_root_dir (bool root);
 
 #endif /* SETUP_MOUNT_H */

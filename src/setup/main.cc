@@ -301,16 +301,7 @@ WinMain (HINSTANCE h, HINSTANCE hPrevInstance, LPSTR cmdline, int cmd_show)
       root = getenv( "OSGEO4W_ROOT" );
 
     if( root.empty() )
-      {
-        // no explicit root - use a sane default for root,
-        // but keep logfiles here as the default might be changed later
-        if ( getenv( "SYSTEMDRIVE" ) )
-          root = getenv( "SYSTEMDRIVE" );
-        else
-	      root = "C:";
-
-        root += "\\OSGeo4W" ;
-      }
+      root = get_default_root_dir(is_elevated());
     else
       {
         // explicit root - also put log file there
