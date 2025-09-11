@@ -34,6 +34,7 @@ tar -cjf $R/$P-$V-$B.tar.bz2 \
 	--xform "s,^xxmklink.exe,bin/xxmklink.exe," \
 	--xform "s,^textreplace.exe,bin/textreplace.exe," \
 	--xform "s,^iswindows8orgreater.exe,bin/iswindows8orgreater.exe," \
+	--xform "s,^arpregistration.exe,bin/arpregistration.exe," \
 	--xform "s,^o4w_env.bat,bin/o4w_env.bat," \
 	--xform "s,^ini.bat,etc/ini/$P.bat," \
 	--xform "s,^postinstall.bat,etc/postinstall/$P.bat," \
@@ -46,6 +47,7 @@ tar -cjf $R/$P-$V-$B.tar.bz2 \
 	textreplace.exe \
 	xxmklink.exe \
 	iswindows8orgreater.exe \
+	arpregistration.exe \
 	ini.bat \
 	o4w_env.bat \
 	OSGeo4W.bat \

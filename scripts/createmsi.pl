@@ -342,7 +342,7 @@ unless(-d "unpacked" ) {
 		system "bash -c 'tar $taropt -C unpacked -xjvf packages/$p | gzip -c >unpacked/etc/setup/$pn.lst.gz && [ \${PIPESTATUS[0]} == 0 -a \${PIPESTATUS[1]} == 0 ]'";
 		die "unpacking of packages/$p failed" if $?;
 
-		system "sed -i -e 's/bgspawn.exe/elevate.exe/g' unpacked/etc/postinstall/setup.bat" if $pn eq "setup";
+		system "sed -i -e 's/bgspawn.exe/elevate.exe/g; /arpregistration/d;' unpacked/etc/postinstall/setup.bat" if $pn eq "setup";
 	}
 
 	close O;

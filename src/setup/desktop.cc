@@ -73,12 +73,18 @@ DesktopSetupPage::DesktopSetupPage ()
   sizeProcessor.AddControlInfo (DesktopControlsInfo);
 }
 
+bool
+get_issystem()
+{
+  return (root_scope == IDC_ROOT_SYSTEM) ? 1 : 0;
+}
+
 void
 get_startmenu(std::string &target)
 {
   char path[MAX_PATH];
   LPITEMIDLIST id;
-  int issystem = (root_scope == IDC_ROOT_SYSTEM) ? 1 : 0;
+  int issystem = get_issystem();
   SHGetSpecialFolderLocation (NULL,
 			      issystem ? CSIDL_COMMON_PROGRAMS :
 			      CSIDL_PROGRAMS, &id);
@@ -103,7 +109,7 @@ get_desktop(std::string &target)
   char path[MAX_PATH];
 
   LPITEMIDLIST id;
-  int issystem = (root_scope == IDC_ROOT_SYSTEM) ? 1 : 0;
+  int issystem = get_issystem();
   SHGetSpecialFolderLocation (NULL,
 			      issystem ? CSIDL_COMMON_DESKTOPDIRECTORY :
 			      CSIDL_DESKTOPDIRECTORY, &id);
@@ -238,7 +244,7 @@ check_startmenu (const std::string title, const std::string target)
 {
   char path[MAX_PATH];
   LPITEMIDLIST id;
-  int issystem = (root_scope == IDC_ROOT_SYSTEM) ? 1 : 0;
+  int issystem = get_issystem();
   SHGetSpecialFolderLocation (NULL,
 			      issystem ? CSIDL_COMMON_PROGRAMS :
 			      CSIDL_PROGRAMS, &id);

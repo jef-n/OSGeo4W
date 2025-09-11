@@ -57,12 +57,14 @@ cat <<EOF >install/etc/postinstall/$P.bat
 for /F "tokens=* USEBACKQ" %%F IN (\`getspecialfolder Documents\`) do set DOCUMENTS=%%F
 
 if not %OSGEO4W_MENU_LINKS%==0 if not exist "%OSGEO4W_STARTMENU%" mkdir "%OSGEO4W_STARTMENU%"
-if not %OSGEO4W_MENU_LINKS%==0 xxmklink "%OSGEO4W_STARTMENU%\Setup.lnk" "%OSGEO4W_ROOT%\bin\bgspawn.exe" "\"%OSGEO4W_ROOT%\bin\setup.bat\"" "%DOCUMENTS%" "" 1 "%OSGEO4W_ROOT%\osgeo4w.ico"
+if not %OSGEO4W_MENU_LINKS%==0 xxmklink "%OSGEO4W_STARTMENU%\\Setup.lnk" "%OSGEO4W_ROOT%\\bin\\bgspawn.exe" "\"%OSGEO4W_ROOT%\\bin\\setup.bat\"" "%DOCUMENTS%" "" 1 "%OSGEO4W_ROOT%\\osgeo4w.ico"
 
 if not %OSGEO4W_DESKTOP_LINKS%==0 if not exist "%OSGEO4W_DESKTOP%" mkdir "%OSGEO4W_DESKTOP%"
-if not %OSGEO4W_DESKTOP_LINKS%==0 xxmklink "%OSGEO4W_DESKTOP%\OSGeo4W Setup.lnk" "%OSGEO4W_ROOT%\bin\bgspawn.exe" "\"%OSGEO4W_ROOT%\bin\setup.bat\"" "%DOCUMENTS%" "" 1 "%OSGEO4W_ROOT%\osgeo4w.ico"
+if not %OSGEO4W_DESKTOP_LINKS%==0 xxmklink "%OSGEO4W_DESKTOP%\\OSGeo4W Setup.lnk" "%OSGEO4W_ROOT%\\bin\\bgspawn.exe" "\"%OSGEO4W_ROOT%\\bin\\setup.bat\"" "%DOCUMENTS%" "" 1 "%OSGEO4W_ROOT%\\osgeo4w.ico"
 
-textreplace -std -t bin\setup.bat
+textreplace -std -t bin\\setup.bat
+
+arpregistration
 EOF
 
 cat <<EOF >install/etc/preremove/$P.bat

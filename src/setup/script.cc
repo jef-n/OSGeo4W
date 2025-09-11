@@ -36,6 +36,7 @@ static const char *cmd = 0;
 void
 init_run_script ()
 {
+  extern bool get_issystem();  // FIXME
   extern void get_startmenu(std::string &target);  // FIXME
   extern void get_desktop(std::string &target);  // FIXME
 
@@ -63,6 +64,7 @@ init_run_script ()
 
   SetEnvironmentVariable ("PATH", backslash (cygpath ("/bin") + ";" + old_path).c_str());
   SetEnvironmentVariable ("OSGEO4W_ROOT", get_root_dir ().c_str());
+  SetEnvironmentVariable ("OSGEO4W_SYSTEM_INSTALL", get_issystem() ? "1" : "0");
 
   std::string startmenu;
   get_startmenu(startmenu);
