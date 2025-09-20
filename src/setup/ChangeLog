@@ -219,7 +219,7 @@
 
 2007-02-17  Brian Dessent  <brian@dessent.net>
 
-	* script.cc (Script::run): Check for existance of script file and
+	* script.cc (Script::run): Check for existence of script file and
 	return without doing anything if it does not exist.
 
 2006-12-26  Max Bowsher  <maxb1@ukf.net>
@@ -287,7 +287,7 @@
 2006-04-25  Brian Dessent  <brian@dessent.net>
 
 	* COPYING: New file (GPL).
-	* Makfile.am (EXTRA_DIST): Add COPYING.
+	* Makefile.am (EXTRA_DIST): Add COPYING.
 
 2006-04-17  Max Bowsher  <maxb1@ukf.net>
 
@@ -703,9 +703,9 @@
 	(IDD_SITE): Provide static text with an ID so that it can be resized
 	properly.  Move pushbutton slightly to right so that it doesn't crowd
 	edit box.
-	(IDD_SPLASH): Change copyright displayed on spash screen to be generic
+	(IDD_SPLASH): Change copyright displayed on splash screen to be generic
 	since the actual list of contributors is long.
-	(IDD_CHOOSE): Add checkbox.  Resize other controls to accomodate.
+	(IDD_CHOOSE): Add checkbox.  Resize other controls to accommodate.
 	(IDD_PREREQ): New dialog.
 	(SPIN): Delete duplicated bitmap resource.
 	(IDB_RTARROW): Remove unused bitmap resource.
@@ -785,7 +785,7 @@
 2005-05-07  Max Bowsher  <maxb@ukf.net>
 
 	* install.cc (md5_one): Make the MD5 checking done at install time
-	display a progess GUI, as the MD5 checking done at other times does.
+	display a progress GUI, as the MD5 checking done at other times does.
 
 2005-05-07  Max Bowsher  <maxb@ukf.net>
 
@@ -850,7 +850,7 @@
 2005-05-05  Brian Dessent  <brian@dessent.net>
 
 	* root.cc (dialog_cmd): Remove.  Use OnMessageCmd instead.
-	(RootPage::Create): Accomodate above change.
+	(RootPage::Create): Accommodate above change.
 
 	* root.h (class RootPage): Add prototype for OnMessageCmd.
 
@@ -1011,7 +1011,7 @@
 2005-05-05  Brian Dessent  <brian@dessent.net>
 
 	* res.rc: (IDC_CHOOSE): Widen 'view' button by 6px horizontally and
-	4px vertically.  Adjust other controls to accomodate.
+	4px vertically.  Adjust other controls to accommodate.
 	(CREATEPROCESS_MANIFEST_RESOURCE_ID): Define so that manifest is
 	included in the binary.
 
@@ -1343,7 +1343,7 @@
 
 	* proppage.cc (PropertyPage::DialogProc): Wrap in a TOPLEVEL_CATCH
 	block, since allowing exceptions to unwind into the guts of Windows is
-	quite disasterous.
+	quite disastrous.
 
 2004-11-19  Max Bowsher  <maxb@ukf.net>
 
@@ -1434,7 +1434,7 @@
 	* cistring.cc, cistring.h: Remove this now-redundant class.
 	* Makefile.am: Remove mention of the above removed files.
 	* res.rc, resource.h: Remove obsolete strings and IDs, both those
-	obseleted by and obselete before the above changes.
+	obsoleted by and obsolete before the above changes.
 	* res.rc: Merge the 2 adjacent STRINGTABLEs.
 
 2004-10-27  Max Bowsher  <maxb@ukf.net>
@@ -1500,7 +1500,7 @@
 	to a way that does not require hardcoding modified automake output back
 	into its input.
 
-	* Makefile.am (AM_CXXFLAGS, BASECXXFLAGS): Seperate out -Werror.
+	* Makefile.am (AM_CXXFLAGS, BASECXXFLAGS): Separate out -Werror.
 	(autoload.o): Drop this rule, -finline-functions is no longer required
 	and -Werror is acceptable here now we have __attribute__ ((used)).
 	(WARNONLY_CFLAGS, inilex.o): Drop these.
@@ -1669,7 +1669,7 @@
 	Used internally by resize logic.
 	(EnumPages): New. Used internally by resize logic: resizes the
 	property sheet's individual pages.
-	(PropSheetWndProc): New. Hook for the propery sheet window proc.
+	(PropSheetWndProc): New. Hook for the property sheet window proc.
 	(PropSheetProc): More style tweaks, add maximize box and thick border
 	as well. Hook into the property sheet's window proc.
 	(PropSheet::AdjustPageSize): New. Adjust the metrics of a single page
@@ -1726,7 +1726,7 @@
 	including that from splash.cc into new function...
 	(PropertyPage::setTitleFont): Create, using moved code. Change font
 	"MS Sans Serif" to "MS Shell Dlg" in line with recent res.rc change.
-	Set font for IDC_STATIC_WELCOME_TITLE here, to allow easy re-use of
+	Set font for IDC_STATIC_WELCOME_TITLE here, to allow easy reuse of
 	style for future "Finished" page.
 
 2003-08-02  Gary R. Van Sickle  <g.r.vansickle@worldnet.att.net>
@@ -1916,7 +1916,7 @@
 	(packagemeta::setDefaultCategories): set categories for packages
 	with none.
 	* package_meta.cc: Move visit_if out. Adjust users for
-	full paramterised operation.
+	full parameterised operation.
 	(packagemeta::hasNoCategories): Implement.
 	(packagemeta::setDefaultCategories): Implement.
 	* choose.cc (ChooserPage::fillMissingCategory): Use visit_if to
@@ -2149,7 +2149,7 @@
 	retype it.
 	* main.cc (main): Load and save all user settings.
 	* site.cc (SiteSetting::save): Migrate logic from save_site_url.
-	(SitePage::OnNext): Use ChosenSites.save() to remove uneeded
+	(SitePage::OnNext): Use ChosenSites.save() to remove unneeded
 	save_site_url call.
 	(save_site_url): Delete.
 	* site.h (save_site_url): Remove declaration.
@@ -2823,7 +2823,7 @@
 
 	* choose.cc (ChooserPage::OnNext): Remove extracted comment.
 	* package_version.cc (processOneDependency): Return once selecting
-	a package (bugfix to prevous rework).
+	a package (bugfix to previous rework).
 	Log if the default trust fails the package specification.
 
 2002-11-26  Robert Collins  <rbtcollins@hotmail.com>
@@ -3288,7 +3288,7 @@
 	out from process_src, as it now occurs at separate times.
 	(IniDBBuilderPackage::buildPackageRequirement): Remove.
 	(IniDBBuilderPackage::buildSourceName): Use renamed package
-	specifiation accessor for clarity.
+	specification accessor for clarity.
 	(IniDBBuilderPackage::buildSourceNameVersion): Ditto.
 	(IniDBBuilderPackage::add_correct_version): Use STL iterators rather
 	than custom code.
@@ -3480,8 +3480,8 @@
 	(IniDBBuilder::buildMaintainer): Who maintains the package?
 	(IniDBBuilder::buildArchitecture): What platform is it for?
 	(IniDBBuilder::buildInstallSize): How big is the binary download?
-	(IniDBBuilder::buildInstallMD5): Whats the MD5 on the binary?
-	(IniDBBuilder::buildSourceMD5): Whats the MD5 on the source package?
+	(IniDBBuilder::buildInstallMD5): What's the MD5 on the binary?
+	(IniDBBuilder::buildSourceMD5): What's the MD5 on the source package?
 	(IniDBBuilder::buildBeginRecommends): What other packages are
 	recommended with this one?
 	(IniDBBuilder::buildBeginSuggests): And suggested?
@@ -3503,12 +3503,12 @@
 	operator act on?
 	* IniDBBuilder.h: Declare all the IniDBBuilder.cc changes.
 	* IniDBBuilderPackage.cc: As for IniDBBuilder.cc.
-	(IniDBBuilderPackage::IniDBBuilderPackage): Iniitialize new members.
+	(IniDBBuilderPackage::IniDBBuilderPackage): Initialize new members.
 	(IniDBBuilderPackage::process_src): Streamline and split out
 	functionality.
 	(IniDBBuilderPackage::setSourceSize): From process_src.
 	* IniDBBuilderPackage.h: Declare the IniDBBuilderPackage.cc changes.
-	(IniDBBuilderPackage::currentSpec): Track the in-progress specifiation.
+	(IniDBBuilderPackage::currentSpec): Track the in-progress specification.
 	(IniDBBuilderPackage::currentOrList): Track the current Or list.
 	(IniDBBuilderPackage::currentAndList): Track the current And list.
 	* IniParseFeedback.cc (IniParseFeedback::progress): Provide completion
@@ -3537,7 +3537,7 @@
 	(cygpackage::getnextfile): Ditto.
 	* download.cc: Use LogSIngletion calls throughout.
 	(validateCachedPackage): A refactoring of the
-	check_for_cached code to eliminate duplciation.
+	check_for_cached code to eliminate duplication.
 	(check_for_cached): Use validateCachedPackage to check packages.
 	* ini.cc (GuiParseFeedback): Provide gui feedback on ini name and
 	parsing progress.
@@ -3546,7 +3546,7 @@
 	progress reporting.
 	* inilex.l: Identify new symbols - operators, and multi line plain text.
 	Releases files.
-	* inilintmain.cc (show_help): Provide basic infomation on inilint.
+	* inilintmain.cc (show_help): Provide basic information on inilint.
 	* iniparse.y: Adjust for the new builder syntax, and process debian
 	Release files.
 	* io_stream_file.cc: Always include mkdir.h.
@@ -3861,12 +3861,12 @@
 	* archive.cc: Remove unneeded includes.
 	* archive_tar.cc: Remove unneeded includes.
 	* archive_tar.h: Add required include.
-	* archive_tar_file.cc: Remove unneded includes.
+	* archive_tar_file.cc: Remove unneeded includes.
 	* choose.cc: Remove unneeded includes:
 
 2002-05-04 Robert Collins  <rbtcollins@hotmail.com>
 
-	* io_stream.cc: Use the new log interface thruout.
+	* io_stream.cc: Use the new log interface throughout.
 
 2002-05-04 Robert Collins  <rbtcollins@hotmail.com>
 
@@ -3883,12 +3883,12 @@
 	(setup_SOURCES): Add the new log interface and the concrete File
 	implementation.
 	* Makefile.in: Regenerate.
-	* archive.cc: Use the new log interface thruout.
+	* archive.cc: Use the new log interface throughout.
 	* archive_tar.cc: Ditto.
 	* main.cc: Ditto.
 	* dialog.cc (fatal): Use the new log interface.
 	* ini.cc (do_ini_thread): Use the log interface to exit.
-	* isntall.cc (do_install_thread): Ditto.
+	* install.cc (do_install_thread): Ditto.
 	* netio.cc (auth_cmd): Ditto.
 	* msg.cc (fatal): Ditto.
 	* localdir.cc (save_local_dir): Save to different files depending on
@@ -3905,13 +3905,13 @@
 	* Makefile.am (inilint_SOURCES): Add more requirements.
 	(setup_SOURCES): Add new Builder base and concrete classes.
 	* Makefile.in: Regenerate.
-	* String++.cc (String::String): Implement int contructor.
+	* String++.cc (String::String): Implement int constructor.
 	* String++.h (String): Declare int constructor.
 	* archive_tar.cc (archive_tar::next_file_name): Return String() when
 	no filename exists.
 	* archive_tar.h (archive_tar_file): Remove get_next_filename method,
 	it's not needed.
-	* ini.cc: Replace IniState wuth IniDBBuilderPacakge.
+	* ini.cc: Replace IniState with IniDBBuilderPacakge.
 	(find_routine): Use new IniDBBuilder to configure the parser.
 	(do_local_ini): Ditto.
 	(do_remote_ini): Ditto.
@@ -4039,7 +4039,7 @@
 	* iniparse.y: Allow calculation of MD5 sums, and allow src only
 	packages.
 	(process_src): New helper function.
-	* isntall.cc (install_one_source): Check MD5 sums when possible.
+	* install.cc (install_one_source): Check MD5 sums when possible.
 	Throw exceptions on errors.
 	(do_install_thread): Handle exceptions for installation calls.
 	* package_source.h: Store MD5 information.
@@ -4053,10 +4053,10 @@
 
 2002-04-29  Robert Collins  <rbtcollins@hotmail.com>
 
-	* Makefile.am: Remove dependecy rules that automake emits.
+	* Makefile.am: Remove dependency rules that automake emits.
 	Correct badly copied dependency info for manually compiled files.
 	(setup_SOURCES): Add all used headers.
-	(EXTRA_DIST): Include non compilate but required sources.
+	(EXTRA_DIST): Include non compile but required sources.
 	(setup_LDADD): Remove mingw32, it is autodetected.
 	* Makefile.in: Regenerate.
 	* String++.h: sys/types is a system header.
@@ -4083,7 +4083,7 @@
 	routine.
 	Use ExitThread.
 	(do_download_site-Info): Use Win32 threads.
-	* state.cc: Explicity declare variables to avoid header conflicts
+	* state.cc: Explicitly declare variables to avoid header conflicts
 	caused by '#define extern" on cygwin.
 	* win32.h: Include <alloca.h> if it exists.
 	(_MAX_PATH): Define as MAX_PATH when not defined by windows.h.
@@ -4223,7 +4223,7 @@
 	* mklink2.cc: Moved from mklink2.c to avoid 'not a prototype error'.
 	Make g++ compatible.
 	* mklink2.c: Remove.
-	* site.cc (site_list_type::init): Delete the correct memory addres.
+	* site.cc (site_list_type::init): Delete the correct memory address.
 	Thanks to Pavel Tsekov for tracking this down.
 
 2002-03-20  Robert Collins  <rbtcollins@hotmail.com>
@@ -4472,7 +4472,7 @@
 	* String++.h: New file, declares a reference counting string class.
 	* archive.cc: Include String++ instead of concat.
 	(archive::extract_file): Convert char * usage to Strings.
-	* archive.h: Inlude the String++ header.
+	* archive.h: Include the String++ header.
 	(archive::extract_file): Update prototype.
 	(archive::next_file_name): Convert to a String.
 	(archive::linktarget): Ditto.
@@ -4821,7 +4821,7 @@
 
 2002-01-22  Robert Collins  <rbtcollins@hotmail.com>
 
-	* log.cc (exit_setup): When saving to the download dir, explicity
+	* log.cc (exit_setup): When saving to the download dir, explicitly
 	specify the path.
 
 2002-01-22  Robert Collins  <rbtcollins@hotmail.com>
@@ -4904,13 +4904,13 @@
 	(view::clear_view): Ditto.
 	(view::views::operator++): Ditto.
 	(view::click): Ditto.
-	(default_trust): Adjust for moved statics.
+	(default_trust): Adjust for moved statistics.
 	(pick_pkg_line::paint): Moved to PickPackageLine.cc.
 	(pick_pkg_line::click): Ditto.
 	(pick_category_line::actiontext): Moved to PickCategoryLine.cc
 	(pick_category_line::paint): Ditto.
 	(pick_category_line::click): Ditto.
-	(set_view_mode): Adjust for moved statics.
+	(set_view_mode): Adjust for moved statistics.
 	(create_listview): Ditto.
 	* choose.h: Remove Category and packagemeta forward defines -
 	not needed.
@@ -5026,7 +5026,7 @@
 	(topbucket::empty): Rename to pick_category_line::empty.
 	(topbucket::~topbucket): Remove.
 	(paint): Use the new view::views class.
-	Don't paint 'all' as a category when showing package categoies.
+	Don't paint 'all' as a category when showing package categories.
 	(pick_category_line::actiontext): New method.
 	(pick_category_line::paint): Make showing the category optional, and
 	show the 'category action'.
@@ -5060,7 +5060,7 @@
 	(replace_one): Handle upgrades separate from removal or new installs.
 	(install_one_source): Handle in use files.
 	(install_one): Don't repeat upgrades.
-	(do_install_thread): Initialize new statics.
+	(do_install_thread): Initialize new statistics.
 	Order actions as uninstall, replace, install.
 	Warn about rebooting if needed.
 	* res.rc (IDS_REBOOT_REQUIRED): New string.
@@ -5133,7 +5133,7 @@
 	* Makefile.in (realclean): more clean.
 	(OBJS): Add script.o.
 	* postinstall.cc (run_script_in_etc_postinstall): New function.
-	(do_postinstall): Split off new funtion init_run_script ().
+	(do_postinstall): Split off new function init_run_script ().
 	(init_run_script):
 	(run):
 	(run_script): Move to script.cc.  Replace some deprecated remove
@@ -5592,7 +5592,7 @@
 	* desktop.cc (make_passwd_group): Use list syntax for package list.
 	* download.cc (do_download): Use list syntax for package list.
 	* fromcwd.cc (found_file): Use list syntax for package list.
-	* iniparse.y (pacakges): Use list syntax for package list.
+	* iniparse.y (packages): Use list syntax for package list.
 	* install.cc (uninstall_one): Use list syntax for package list.
 	(do_install): Use list syntax for package list.
 	* io_stream.h (io_stream): Prevent non-child direct creation of the
@@ -5664,8 +5664,8 @@
 	(load_dialog): Select all the user chosen sites by default.
 	(save_dialog): Adjust for multiple selection semantics.
 	(save_site_url): Save all user chosen sites.
-	(dialog_cmd): Don't save the dialog when the listbox recieves a message
-	- thats not needed.
+	(dialog_cmd): Don't save the dialog when the listbox receives a message
+	- that's not needed.
 	Remove obsolete other_url reference.
 	(dialog_proc): Use all_site_list instead of site_list.
 	(site_sort): Remove.
@@ -5733,7 +5733,7 @@
 	* io_stream_cygfile.h (io_stream_cygfile::get_size): Declare this.
 	* io_stream_file.cc (io_stream_file::get_size): Implement this.
 	* io_stream_file.h (io_stream_file::get_size): Declare this.
-	* io_stream_memory.h: Include errno as it's neded to parse the header.
+	* io_stream_memory.h: Include errno as it's needed to parse the header.
 	(io_stream_memory::get_size): Implement this.
 	(io_stream_memory::st_size): Delete this.
 	* list.h: Change getnth into the [] operator.
@@ -5935,7 +5935,7 @@
 2001-11-23  Robert Collins  <rbtcollins@hotmail.com>
 
 	* Makefile.in (OBJS): Add package_version.
-	* ategory.cc (Category::Category): Update constructors.
+	* category.cc (Category::Category): Update constructors.
 	* category_list.cc (CategoryList::register_category): Insert correctly.
 	* choose.cc: Include package_version.h, not package.h.
 	* cygpackage.cc: Ditto.
@@ -5953,7 +5953,7 @@
 	(uninstall_one): Use packagemeta->uninstall to perform the
 	uninstallation. Don't uninstall source packages.
 	(do_install): Just can uninstall_one once as we ignore source packages
-	now.  Don't copy the installed.old database accross, instead iterate
+	now.  Don't copy the installed.old database across, instead iterate
 	through the packagedb packages list and write the installed packages
 	out.
 	* package_db.cc: Include package_version.h, not package.h.
@@ -6400,7 +6400,7 @@
 2001-11-06  Robert Collins  <rbtcollins@hotmail.com>
 
 	* fromcwd: Fix compiler warnings for cvsid.
-	(canonicalize_version): Fix compilter warnings.
+	(canonicalize_version): Fix compiler warnings.
 	(do_fromcwd): Ditto.
 	* version.h: Fix compiler warnings for canonicalize_version.
 
@@ -6555,7 +6555,7 @@
 
 2001-10-12  Christopher Faylor  <cgf@redhat.com>
 
-	* Makefile.in: Accomodate changes to w32api_include macro.
+	* Makefile.in: Accommodate changes to w32api_include macro.
 
 2001-10-12  Christopher Faylor  <cgf@redhat.com>
 
@@ -6632,7 +6632,7 @@ Sat Jul  7 00:40:28 2001  Christopher Faylor <cgf@cygnus.com>
 
 Fri Jul  6 18:08:49 2001  Christopher Faylor <cgf@cygnus.com>
 
-	* choose.cc (isinstalled): Modify to properly accomodate special case
+	* choose.cc (isinstalled): Modify to properly accommodate special case
 	of "download only".
 	(set_action): Check downloaded components, not installed components if
 	"download only".
@@ -6787,7 +6787,7 @@ Sun Jun 17 12:06:14 2001  Christopher Faylor <cgf@cygnus.com>
 
 Sat Jun 16 11:33:51  2001  Michael A Chase <mchase@ix.netcom.com>
 
-	* choose.cc (_Info::_Info): Test _source paramenter for non-NULL rather
+	* choose.cc (_Info::_Info): Test _source parameter for non-NULL rather
 	than zeroed "source" element.
 
 Fri Jun 15 20:54:43 2001  Christopher Faylor <cgf@cygnus.com>
@@ -6812,7 +6812,7 @@ Fri Jun 15 00:01:51 2001  Christopher Faylor <cgf@cygnus.com>
 	(choose_caption): Display "Retrieve" rather than "Reinstall" when just
 	downloading.
 	(do_choose): Sort packages after all packages have been read.
-	Accomodate the fact that first element in trust array is empty so that
+	Accommodate the fact that first element in trust array is empty so that
 	log files don't report the wrong trust value.
 	* iniparse.y (new_package): Malloc space for package name or suffer
 	memory corruption.
@@ -6958,7 +6958,7 @@ Sun May 27 15:42:18 2001  Christopher Faylor <cgf@cygnus.com>
 	(read_mounts): Explicitly clear root_here to allow multiple uses of
 	this function.  Ensure that there is no garbage in the table when we've
 	exhausted all of the mounts in the registry.
-	(cygpath): Accomodate ./ in path.
+	(cygpath): Accommodate ./ in path.
 
 Sun May 27 02:59:07 2001  Christopher Faylor <cgf@cygnus.com>
 
@@ -7069,7 +7069,7 @@ Tue May  8 23:33:38 2001  Christopher Faylor <cgf@cygnus.com>
 Mon May  7 23:33:30 2001  Matt Hargett <matt@use.net>
 
 	* winsup/cinstall/res.rc: Added accelerators and improved focus order.
-	Removed WS_DISABLED from "OK" buttons to accomodate default focus
+	Removed WS_DISABLED from "OK" buttons to accommodate default focus
 	changes in net.cc and source.cc.
 	* winsup/cinstall/net.cc (dialog_proc): If no radio button is selected,
 	a default is selected.
@@ -7108,7 +7108,7 @@ Wed Apr 18 16:01:21 2001  Christopher Faylor <cgf@cygnus.com>
 	* filemanip.h: New file.
 	* choose.cc (find_tar_ext): New function.  Returns TRUE if .tar.gz or
 	.tar.bz2 found.
-	(scan2): Reorganize to use find_tar_ext, accomodating .bz2 extension.
+	(scan2): Reorganize to use find_tar_ext, accommodating .bz2 extension.
 	(read_installed_db): Ditto.
 	(do_choose): Ditto.
 	* fromcwd.cc (found_file): Ditto.
@@ -7353,7 +7353,7 @@ Sun Nov 5 12:51:42 2000  Jason Tishler  <jt@dothill.com>
 2000-10-02  Jason Tishler  <jt@dothill.com>
 
 	* root.cc (is_admin): New function.
-	(read_mount_table): Check for administrative priviledges and set
+	(read_mount_table): Check for administrative privileges and set
 	installation scope as appropriate.
 
 2000-09-28  DJ Delorie  <dj@redhat.com>
@@ -7477,7 +7477,7 @@ Mon Sep 11 19:35:24 2000  Christopher Faylor <cgf@cygnus.com>
 	* hash.cc, hash.h: new
 	* Makefile: add hash.o
 	* choose.cc: enable "uninstall" option
-	* download.cc: invert action test to accomodate uninstalling
+	* download.cc: invert action test to accommodate uninstalling
 	* ini.h: add ACTION_UNINSTALL
 	* install.cc: add uninstall functionality
 	* res.rc: make install tag changeable
@@ -7764,7 +7764,7 @@ Tue May  2 00:56:41 2000  Christopher Faylor <cgf@cygnus.com>
 	* setup.c (cleanup): Inverse order of deletion stands a better chance
 	of deleting cygpath.exe.  Still seems to suffer from occasional races,
 	though.
-	(cleanup_on_signal): Perform convoluted dance to accomodate win95 and
+	(cleanup_on_signal): Perform convoluted dance to accommodate win95 and
 	w2k.
 	(output_file): Defend against an unlikely handle leak.
 	(main): Don't set up signal handling until we have something special to
@@ -7825,7 +7825,7 @@ Sat Apr 29 23:27:14 2000  Christopher Faylor <cgf@cygnus.com>
 	(filematches): New function.  Tests if filename matches one of a list
 	of packages to install.
 	(recurse_dirs): Accept list of packages to install.  Generalize tar.gz
-	test to accomodate _tar.gz.
+	test to accommodate _tar.gz.
 	(prompt): Ensure that stdout is flushed prior to asking for input.
 	(findhref): Initialize variables to quiet a compiler warning.
 	(processdirlisting): Accept list of packages to install.  Special case
@@ -7923,7 +7923,7 @@ Sat Apr 22 16:37:03 2000  Christopher Faylor <cgf@cygnus.com>
 	downloaded.
 	(processdirlisting): Always download if file size does not
 	match.  Prompt when download fails for some reason.
-	(getdownloadsource): Accomodate findhref argument changes.
+	(getdownloadsource): Accommodate findhref argument changes.
 
 Sat Apr 22 15:13:42 2000  Christopher Faylor <cgf@cygnus.com>
 
@@ -7967,7 +7967,7 @@ Mon Apr 17 19:20:52 2000  Vadim Egorov <egorovv@mailandnews.com>
 
 	* setup.c (geturl): Use alternative method for finding filename part of
 	a URL.
-	(processdirlisting): Accomodate strange output from non-MS ftp proxy.
+	(processdirlisting): Accommodate strange output from non-MS ftp proxy.
 	(downloaddir): Unlink file containing dir listing.
 	(downloadfrom): Ditto.
 
@@ -8026,7 +8026,7 @@ Thu Apr 13 01:11:45 2000  Christopher Faylor <cgf@cygnus.com>
 	(main): Track elapsed install time.  Mount root.
 	* starry.h: Add index field to strarry for tracking of tarx's usage of
 	this structure.
-	* xsystem.c (xcreate_process): Return proces handle when not waiting.
+	* xsystem.c (xcreate_process): Return process handle when not waiting.
 
 Mon Apr 10 22:44:56 2000  Christopher Faylor <cgf@cygnus.com>
 
@@ -8046,7 +8046,7 @@ Mon Apr 10 22:44:56 2000  Christopher Faylor <cgf@cygnus.com>
 Mon Apr 10 20:33:40 2000  Christopher Faylor <cgf@cygnus.com>
 
 	* xsystem.c: New file.
-	* Makefile.in: Accomodate new file.
+	* Makefile.in: Accommodate new file.
 	* setup.c (xsystem): Move to new file.
 	(recurse_dirs): Accept handle to output log file.  Don't use ">"
 	redirection to trap tar output.  Use supplied handle instead.
