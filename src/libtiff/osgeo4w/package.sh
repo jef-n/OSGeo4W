@@ -1,5 +1,5 @@
 export P=libtiff
-export V=4.7.0
+export V=4.7.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="libjpeg-turbo-devel xz-devel zlib-devel zstd-devel libwebp-devel lerc-devel"
