@@ -73,6 +73,7 @@ del "%OSGEO4W_DESKTOP%\\Setup.lnk"
 EOF
 
 cat <<EOF >install/bin/setup.bat.tmpl
+call @osgeo4w@\\bin\\o4w_env.bat
 @start /B "Running Setup" "@osgeo4w@\\bin\\osgeo4w-setup.exe" -R "@osgeo4w@" %*
 EOF
 
