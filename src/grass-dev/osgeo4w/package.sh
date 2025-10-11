@@ -150,7 +150,6 @@ pacman --noconfirm -Syu --needed \
 	mingw-w64-x86_64-bzip2 \
 	mingw-w64-x86_64-gettext \
 	mingw-w64-x86_64-libsystre \
-	mingw-w64-x86_64-libtre-git \
 	mingw-w64-x86_64-libwinpthread-git \
 	mingw-w64-x86_64-pcre \
 	mingw-w64-x86_64-fftw \
@@ -165,7 +164,8 @@ PACKAGE_POSTFIX=-dev bash.exe $xtrace mswindows/osgeo4w/package.sh
 EOF
 
 	taskkill /im gpg-agent.exe /f || true
-	cygstart -w $(cygpath -aw msys64/usr/bin/bash.exe) $(cygpath -am build.sh) || { cat ../grass/mswindows/osgeo4w/package.log; exit 1; }
+	touch ../osgeo4w/this
+	cygstart -w $(cygpath -aw msys64/usr/bin/bash.exe) $(cygpath -am build.sh) || { [ ../grass/mswindows/osgeo4w/package.log -nt ../osgeo4w/this ] && cat ../grass/mswindows/osgeo4w/package.log; exit 1; }
 )
 
 mv ../grass/mswindows/osgeo4w/package/$P-$major.$minor.$patch-1.tar.bz2 $R/$P-$V-$B.tar.bz2

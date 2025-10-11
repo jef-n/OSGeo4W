@@ -96,7 +96,6 @@ pacman --noconfirm -Syu --needed \
 	mingw-w64-x86_64-bzip2 \
 	mingw-w64-x86_64-gettext \
 	mingw-w64-x86_64-libsystre \
-	mingw-w64-x86_64-libtre-git \
 	mingw-w64-x86_64-libwinpthread-git \
 	mingw-w64-x86_64-pcre \
 	mingw-w64-x86_64-fftw \
