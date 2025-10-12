@@ -86,8 +86,8 @@ for %%i in ("%OSGEO4W_ROOT%") do set O4W_ROOT=%%~fsi
 if not %OSGEO4W_MENU_LINKS%==0 if not exist "%OSGEO4W_STARTMENU%" mkdir "%OSGEO4W_STARTMENU%"
 if not %OSGEO4W_DESKTOP_LINKS%==0 if not exist "%OSGEO4W_DESKTOP%" mkdir "%OSGEO4W_DESKTOP%"
 
-if not %OSGEO4W_MENU_LINKS%==0 xxmklink "%OSGEO4W_STARTMENU%\\PostgreSQL Database Modeler.lnk" "%O4W_ROOT%\\bin\\bgspawn.exe" "%O4W_ROOT%\\bin\\$P.bat"
-if not %OSGEO4W_DESKTOP_LINKS%==0 xxmklink "%OSGEO4W_DESKTOP%\\PostgreSQL Database Modeler.lnk" "%O4W_ROOT%\\bin\\bgspawn.exe" "%O4W_ROOT%\\bin\\$P.bat"
+if not %OSGEO4W_MENU_LINKS%==0 xxmklink "%OSGEO4W_STARTMENU%\\PostgreSQL Database Modeler.lnk" "%O4W_ROOT%\\bin\\bgspawn.exe" "%O4W_ROOT%\\bin\\$P.bat" "" "" "" "%OSGEO4W_ROOT%\\apps\\$P\\pgmodeler.exe"
+if not %OSGEO4W_DESKTOP_LINKS%==0 xxmklink "%OSGEO4W_DESKTOP%\\PostgreSQL Database Modeler.lnk" "%O4W_ROOT%\\bin\\bgspawn.exe" "%O4W_ROOT%\\bin\\$P.bat" "" "" "" "%OSGEO4W_ROOT%\\apps\\$P\\pgmodeler.exe"
 EOF
 
 cat <<EOF >install/etc/preremove/$P.bat
