@@ -1,5 +1,5 @@
 export P=expat
-export V=2.6.4
+export V=2.7.3
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
