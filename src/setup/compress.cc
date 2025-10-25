@@ -21,7 +21,7 @@
 /* In case you are wondering why the file magic is not in one place:
  * It could be. But there is little (any?) benefit.
  * What is important is that the file magic required for any _task_ is centralised.
- * One such task is identifying compresss
+ * One such task is identifying compress
  *
  * to federate into each class one might add a magic parameter to the constructor, which
  * the class could test itself.
