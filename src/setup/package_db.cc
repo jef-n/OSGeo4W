@@ -302,7 +302,7 @@ ConnectedLoopFinder::visit(packagemeta *nodeToVisit)
 	  /* we found an installed ok package */
 	  /* visit it if needed */
 	  /* UGLY. Need to refactor. iterators in the outer would help as we could simply
-	   * vist the iterator
+	   * visit the iterator
 	   */
 	  const packagedb::packagecollection::iterator n = db.packages.find((*i)->packageName());
 
