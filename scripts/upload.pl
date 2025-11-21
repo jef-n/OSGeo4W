@@ -326,17 +326,36 @@ my $opt = $ENV{OSGEO4W_RSYNC_OPT} || "";
 
 my($host,$path) = $ENV{MASTER_SCP} =~ /^(.*):(.*)$/;
 
-open F, "| /usr/bin/rsync $opt -vtuO --chmod=D775,F664 --files-from=- '$ENV{OSGEO4W_REP}' '$ENV{MASTER_SCP}'";
-print F "acceptable.lst\n";
-for my $file (sort keys %files) {
-	print F "$file\n";
-}
-close F or die "Update of files failed: $!";
+my $N = 10;
 
-if( system("/usr/bin/rsync $opt -vtuO --chmod=D775,F664 -r '$tdir/' '$ENV{MASTER_SCP}/'") != 0 ) {
-	die "Update of hints failed: $!";
+my $i;
+for($i = 0; $i < $N; ++$i) {
+	open F, "| /usr/bin/rsync $opt -vtuO --chmod=D775,F664 --files-from=- '$ENV{OSGEO4W_REP}' '$ENV{MASTER_SCP}'";
+	print F "acceptable.lst\n";
+	for my $file (sort keys %files) {
+		print F "$file\n";
+	}
+	last if close F;
+	warn "Update of files failed: $!";
+	sleep($i**2);
 }
 
-system "/usr/bin/curl '$ENV{MASTER_REGEN_URI}'";
+die "Retries exhausted" if $i == $N;
+
+for($i = 0; $i < 10; ++$i) {
+	last if system("/usr/bin/rsync $opt -vtuO --chmod=D775,F664 -r '$tdir/' '$ENV{MASTER_SCP}/'") == 0;
+	warn "Update of hints failed: $!";
+	sleep($i**2);
+}
+
+die "Retries exhausted" if $i == $N;
+
+for($i = 0; $i < 10; ++$i) {
+	last if system("/usr/bin/curl '$ENV{MASTER_REGEN_URI}'" ) == 0;
+	warn "Update of setup.ini failed: $!";
+	sleep($i**2);
+}
+
+die "Retries exhausted" if $i == $N;
 
 unlink ".uploading";
