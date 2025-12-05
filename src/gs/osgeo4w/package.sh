@@ -11,13 +11,12 @@ startlog
 
 [ -f gs${V//./}w64.exe ] || wget https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/$P${V//./}/$P${V//./}w64.exe
 
-[ -d install ] || {
-	mkdir -p install
+rm -r install
+mkdir -p install
 
-	cd install
-	7z -y x ../$P${V//./}w64.exe
-	cd ..
-}
+cd install
+7z -y x ../$P${V//./}w64.exe
+cd ..
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R/$P
