@@ -1,5 +1,5 @@
 export P=saga
-export V=9.8.1
+export V=9.10.2
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="wxwidgets-devel libharu-devel gdal-devel proj-devel libpq-devel curl-devel libpng-devel libtiff-devel libjpeg-turbo-devel zlib-devel expat-devel pdal-devel"
@@ -12,7 +12,7 @@ startlog
 M=${V%%.*}
 p=${P%$M}
 
-[ -f $p-$V.zip ] || wget -O $p-$V.zip "https://sourceforge.net/projects/$p-gis/files/${p^^}%20-%20$M/${p^^}%20-%20$V/saga-${V}_src.zip/download"
+[ -f $p-$V.zip ] || wget -O $p-$V.zip "https://sourceforge.net/projects/$p-gis/files/${p^^}%20-%20$M/${p^^}%20-%20$V/$p-${V}_src.zip/download"
 [ -d ../$P-$V ] || {
 	unzip -q -d .. $P-$V.zip
 	rm -f ../$P-$V/patched
