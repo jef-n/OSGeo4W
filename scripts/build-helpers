@@ -260,6 +260,10 @@ vs2022env() {
 				--add Microsoft.VisualStudio.Component.Windows11SDK.22621 \
 				--add Microsoft.VisualStudio.Component.VC.ATL \
 				--addProductLang en-US
+		else
+			$OSGEO4W_SCRIPTS/vs_buildtools.exe --passive --norestart --nocache --wait \
+				--installPath $vcdir \
+				update
 		fi
 
 		VCSDK=10.0.22621.0
