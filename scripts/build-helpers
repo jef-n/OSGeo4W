@@ -256,14 +256,13 @@ vs2022env() {
 			$OSGEO4W_SCRIPTS/vs_buildtools.exe --passive --norestart --nocache --wait \
 				--installPath $vcdir \
 				--add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 \
-				--add Microsoft.VisualStudio.Component.VC.14.38.17.8.x86.x64 \
 				--add Microsoft.VisualStudio.Component.Windows11SDK.22621 \
 				--add Microsoft.VisualStudio.Component.VC.ATL \
 				--addProductLang en-US
 		else
-			$OSGEO4W_SCRIPTS/vs_buildtools.exe --passive --norestart --nocache --wait \
+			$OSGEO4W_SCRIPTS/vs_buildtools.exe --passive --norestart --nocache --wait --removeOos true \
 				--installPath $vcdir \
-				update
+				update || true
 		fi
 
 		VCSDK=10.0.22621.0
