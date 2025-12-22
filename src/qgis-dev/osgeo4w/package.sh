@@ -2,7 +2,7 @@ export P=qgis-dev
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="expat-devel fcgi-devel proj-devel gdal-dev-devel qt5-oci sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt5 python3-sip python3-pyqt-builder python3-devel python3-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-devel qscintilla-devel qt5-devel qwt-devel libspatialite-devel oci-devel qtkeychain-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel qtwebkit-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel pdal pdal-devel grass draco-devel libtiff-devel transifex-cli python3-oauthlib"
+export BUILDDEPENDS="expat-devel fcgi-devel proj-devel qt6-qml qt6-oci sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt6 python3-sip python3-pyqt-builder python3-devel python3-pyqt6-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-qt6-devel qscintilla-qt6-devel qt6-devel qwt-qt6-devel libspatialite-devel oci-devel qtkeychain-qt6-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel pdal pdal-devel grass draco-devel libtiff-devel transifex-cli python3-oauthlib gdal-dev-devel geographiclib-devel"
 export PACKAGES="qgis-dev qgis-dev-deps qgis-dev-full qgis-dev-full-free qgis-dev-pdb"
 
 : ${REPO:=https://github.com/qgis/QGIS.git}
@@ -115,6 +115,7 @@ nextbinary
 	cd $OSGEO4W_PWD
 
 	fetchenv osgeo4w/bin/o4w_env.bat
+	fetchenv osgeo4w/bin/qt6_env.bat
 	fetchenv osgeo4w/bin/gdal-dev-env.bat
 
 	vsenv
@@ -147,8 +148,8 @@ nextbinary
 	mkdir -p $BUILDDIR
 
 	unset PYTHONPATH
-	export INCLUDE="$(cygpath -aw $OSGEO4W_ROOT/apps/Qt5/include);$(cygpath -aw $OSGEO4W_ROOT/apps/gdal-dev/include);$(cygpath -aw $OSGEO4W_ROOT/include);$INCLUDE"
-	export LIB="$(cygpath -aw $OSGEO4W_ROOT/apps/Qt5/lib);$(cygpath -aw $OSGEO4W_ROOT/apps/gdal-dev/lib);$(cygpath -aw $OSGEO4W_ROOT/lib);$LIB"
+	export INCLUDE="$(cygpath -aw $OSGEO4W_ROOT/apps/Qt6/include);$(cygpath -aw $OSGEO4W_ROOT/apps/gdal-dev/include);$(cygpath -aw $OSGEO4W_ROOT/include);$INCLUDE"
+	export LIB="$(cygpath -aw $OSGEO4W_ROOT/apps/Qt6/lib);$(cygpath -aw $OSGEO4W_ROOT/apps/gdal-dev/lib);$(cygpath -aw $OSGEO4W_ROOT/lib);$LIB"
 
 	export GRASS=$(cygpath -aw $O4W_ROOT/bin/grass*.bat)
 	export GRASS_VERSION=$(unset SHELL; cmd /c $GRASS --config version | sed -e "s/\r//")
@@ -176,10 +177,8 @@ nextbinary
 		-D WITH_QSPATIALITE=TRUE \
 		-D WITH_SERVER=TRUE \
 		-D SERVER_SKIP_ECW=TRUE \
-		-D BUILD_WITH_QT6=FALSE \
-		-D WITH_QTWEBENGINE=FALSE \
-		-D BUILD_WITH_QT5=TRUE \
-		-D WITH_QTWEBKIT=TRUE \
+		-D WITH_QTWEBENGINE=TRUE \
+		-D USE_OPENCL=TRUE \
 		-D WITH_3D=TRUE \
 		-D WITH_PDAL=TRUE \
 		-D WITH_HANA=TRUE \
@@ -188,10 +187,9 @@ nextbinary
 		-D GRASS_PREFIX8="$(cygpath -m $GRASS_PREFIX)" \
 		-D WITH_ORACLE=TRUE \
 		-D WITH_CUSTOM_WIDGETS=TRUE \
+		-D WITH_GEOGRAPHICLIB=TRUE \
 		-D CMAKE_BUILD_TYPE=$BUILDCONF \
 		-D CMAKE_CONFIGURATION_TYPES="$BUILDCONF" \
-		-D HAS_KDE_QT5_SMALL_CAPS_FIX=TRUE \
-		-D HAS_KDE_QT5_FONT_STRETCH_FIX=TRUE \
 		-D SETUPAPI_LIBRARY="$(cygpath -am "/cygdrive/c/Program Files (x86)/Windows Kits/10/Lib/$UCRTVersion/um/x64/SetupAPI.Lib")" \
 		-D PROJ_INCLUDE_DIR=$(cygpath -am $O4W_ROOT/include) \
 		-D POSTGRES_INCLUDE_DIR=$(cygpath -am $O4W_ROOT/include) \
@@ -201,20 +199,20 @@ nextbinary
 		-D SPATIALINDEX_LIBRARY=$(cygpath -am $O4W_ROOT/lib/spatialindex-64.lib) \
 		-D Python_EXECUTABLE=$(cygpath -am $O4W_ROOT/bin/python3.exe) \
 		-D SIP_MODULE_EXECUTABLE=$(cygpath -am $PYTHONHOME/Scripts/sip-module.exe) \
-		-D PYUIC_PROGRAM=$(cygpath -am $PYTHONHOME/Scripts/pyuic5.exe) \
-		-D PYRCC_PROGRAM=$(cygpath -am $PYTHONHOME/Scripts/pyrcc5.exe) \
+		-D PYUIC_PROGRAM=$(cygpath -am $PYTHONHOME/Scripts/pyuic6.exe) \
+		-D PYRCC_PROGRAM=$(cygpath -am $PYTHONHOME/Scripts/pyrcc6.exe) \
 		-D PYTHON_INCLUDE_PATH=$(cygpath -am $PYTHONHOME/include) \
 		-D PYTHON_LIBRARY=$(cygpath -am $PYTHONHOME/libs/$(basename $PYTHONHOME).lib) \
 		-D QT_LIBRARY_DIR=$(cygpath -am $O4W_ROOT/lib) \
-		-D QT_HEADERS_DIR=$(cygpath -am $O4W_ROOT/apps/qt5/include) \
+		-D QT_HEADERS_DIR=$(cygpath -am $O4W_ROOT/apps/qt6/include) \
 		-D CMAKE_INSTALL_PREFIX=$(cygpath -am $INSTDIR/apps/$P) \
 		-D CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS=TRUE \
 		-D FCGI_INCLUDE_DIR=$(cygpath -am $O4W_ROOT/include) \
 		-D FCGI_LIBRARY=$(cygpath -am $O4W_ROOT/lib/libfcgi.lib) \
-		-D QCA_INCLUDE_DIR=$(cygpath -am $O4W_ROOT/apps/Qt5/include/QtCrypto) \
-		-D QCA_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt5/lib/qca-qt5.lib) \
-		-D QWT_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt5/lib/qwt.lib) \
-		-D QSCINTILLA_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt5/lib/qscintilla2.lib) \
+		-D QCA_INCLUDE_DIR=$(cygpath -am $O4W_ROOT/apps/Qt6/include/QtCrypto) \
+		-D QCA_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt6/lib/qca-qt6.lib) \
+		-D QWT_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt6/lib/qwt.lib) \
+		-D QSCINTILLA_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt6/lib/qscintilla2.lib) \
 		-D DART_TESTING_TIMEOUT=60 \
 		-D PUSH_TO_CDASH=$PUSH_TO_DASH \
 		$(cygpath -m $SRCDIR)
@@ -250,7 +248,7 @@ nextbinary
 		export GISBASE=$(cygpath -aw $GRASS_PREFIX)
 
 		export PATH=$(cygpath -au $BUILDDIR/output/bin):$(cygpath -au $BUILDDIR/output/plugins):$PATH
-		export QT_PLUGIN_PATH="$(cygpath -aw $BUILDDIR/output/plugins);$(cygpath -aw $O4W_ROOT/apps/qt5/plugins)"
+		export QT_PLUGIN_PATH="$(cygpath -aw $BUILDDIR/output/plugins);$(cygpath -aw $O4W_ROOT/apps/qt6/plugins)"
 
 		rm -f ../testfailure
 		if ! cmake --build $(cygpath -am $BUILDDIR) --target ${TARGET}Test --config $BUILDCONF; then
@@ -290,7 +288,7 @@ nextbinary
 		cp "/cygdrive/c/Program Files (x86)/Windows Kits/10/Debuggers/x64/"{dbghelp.dll,symsrv.dll} install/apps/$P
 
 		mkdir -p install/apps/$P/python
-		cp "$PYTHONHOME/Lib/site-packages/PyQt5/uic/widget-plugins/qgis_customwidgets.py" install/apps/$P/python
+		cp "$PYTHONHOME/Lib/site-packages/PyQt6/uic/widget-plugins/qgis_customwidgets.py" install/apps/$P/python
 
 		export R=$OSGEO4W_REP/x86_64/release/qgis/$P
 		mkdir -p $R/$P-{pdb,full-free,full,deps}
@@ -302,14 +300,14 @@ nextbinary
 			--exclude "*.pyc" \
 			--exclude "install/apps/$P/$SAP" \
 			--xform "s,^qgis.vars,bin/$P-bin.vars," \
-			--xform "s,^osgeo4w/apps/qt5/plugins/,apps/$P/qtplugins/," \
+			--xform "s,^osgeo4w/apps/qt6/plugins/,apps/$P/qtplugins/," \
 			--xform "s,^install/apps/$P/bin/qgis.exe,bin/$P-bin.exe," \
 			--xform "s,^install/,," \
 			--xform "s,^install$,.," \
 			qgis.vars \
-			osgeo4w/apps/qt5/plugins/sqldrivers/qsqlocispatial.dll \
-			osgeo4w/apps/qt5/plugins/sqldrivers/qsqlspatialite.dll \
-			osgeo4w/apps/qt5/plugins/designer/qgis_customwidgets.dll \
+			osgeo4w/apps/qt6/plugins/sqldrivers/qsqlocispatial.dll \
+			osgeo4w/apps/qt6/plugins/sqldrivers/qsqlspatialite.dll \
+			osgeo4w/apps/qt6/plugins/designer/qgis_customwidgets.dll \
 			install/
 
 		/bin/tar -C $BUILDDIR --remove-files -cjf $R/$P-pdb/$P-pdb-$V-$B.tar.bz2 \
@@ -329,7 +327,7 @@ sdesc: "$PKGDESC"
 ldesc: "$PKGDESC"
 maintainer: $MAINTAINER
 category: Desktop
-requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl gdal-dev libspatialite zlib libiconv fcgi libspatialindex oci qt5-libs qt5-qml qt5-tools qtwebkit-libs qca qwt-libs python3-sip python3-core python3-pyqt5 python3-psycopg2 python3-qscintilla python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-gdal-dev python3-requests python3-plotly python3-pyproj python3-owslib qtkeychain-libs libzip opencl exiv2 hdf5 pdal pdal-libs
+requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl gdal-dev libspatialite zlib libiconv fcgi libspatialindex oci qt6-libs qt6-qml qt6-tools qca-qt6 qwt-qt6-libs python3-sip python3-core python3-pyqt6 python3-psycopg2 python3-pyqt6-qscintilla python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-gdal-dev python3-requests python3-plotly python3-pyproj python3-owslib qtkeychain-qt6-libs libzip opencl exiv2 hdf5 pdal pdal-libs
 EOF
 
 		appendversions $R/setup.hint
@@ -350,7 +348,7 @@ sdesc: "$PKGDESC (metapackage with additional free dependencies)"
 ldesc: "$PKGDESC (metapackage with additional free dependencies)"
 maintainer: $MAINTAINER
 category: Desktop
-requires: $P proj python3-pyparsing python3-simplejson python3-shapely python3-matplotlib python3-pygments python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-pillow python3-geopandas python3-geographiclib grass python3-pyserial python3-autopep8 python3-openpyxl python3-remotior-sensus saga python3-psycopg python3-pyarrow qt5-tools gdal-dev-sosi python3-pydantic python3-duckdb
+requires: $P proj python3-pyparsing python3-simplejson python3-shapely python3-matplotlib python3-pygments python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-pillow python3-geopandas python3-geographiclib grass python3-pyserial python3-autopep8 python3-openpyxl python3-remotior-sensus saga python3-psycopg python3-pyarrow qt6-tools gdal-dev-sosi python3-pydantic python3-duckdb
 external-source: $P
 EOF
 
@@ -361,7 +359,7 @@ sdesc: "$PKGDESC (metapackage with additional dependencies including proprietary
 ldesc: "$PKGDESC (metapackage with additional dependencies including proprietary)"
 maintainer: $MAINTAINER
 category: Desktop
-requires: $P-full-free gdal-dev-hdf5 gdal-dev-ecw gdal-dev-mrsid gdal-dev-oracle
+requires: $P-full-free gdal-dev-hdf5 gdal-dev-mss gdal-dev-ecw gdal-dev-mrsid gdal-dev-oracle
 external-source: $P
 EOF
 
