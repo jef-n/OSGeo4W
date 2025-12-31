@@ -41,7 +41,7 @@ mkdir -p $R/$P-{devel,tools}
 cat <<EOF >$R/setup.hint
 sdesc: "C++ library to solve some geodesic problems (runtime)."
 ldesc: "C++ library to solve some geodesic problems (runtime)."
-category: Libs Commandline_Utilities
+category: Libs
 requires: msvcrt2019
 maintainer: $MAINTAINER
 EOF
@@ -49,7 +49,7 @@ EOF
 cat <<EOF >$R/$P-tools/setup.hint
 sdesc: "C++ library to solve some geodesic problems (tools)."
 ldesc: "C++ library to solve some geodesic problems (tools)."
-category: Libs
+category: Commandline_Utilities
 requires: $P
 maintainer: $MAINTAINER
 external-source: $P
@@ -59,7 +59,7 @@ cat <<EOF >$R/$P-devel/setup.hint
 sdesc: "C++ library to solve some geodesic problems (development)."
 ldesc: "C++ library to solve some geodesic problems (development)."
 category: Libs
-requires: $P
+requires: $P $P-tools
 maintainer: $MAINTAINER
 external-source: $P
 EOF
@@ -69,13 +69,13 @@ appendversions $R/$P-tools/setup.hint
 appendversions $R/$P-devel/setup.hint
 
 cp ../$P-$V/LICENSE.txt $R/$P-$V-$B.txt
-cp ../$P-$V/LICENSE.txt $R/$P-tools/$P-devel-$V-$B.txt
+cp ../$P-$V/LICENSE.txt $R/$P-tools/$P-tools-$V-$B.txt
 cp ../$P-$V/LICENSE.txt $R/$P-devel/$P-devel-$V-$B.txt
 
 tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
 	bin/GeographicLib.dll
 
-tar -C install -cjf $R/$P-tools/$P-$V-tools-$B.tar.bz2 \
+tar -C install -cjf $R/$P-tools/$P-tools-$V-$B.tar.bz2 \
 	--exclude "*.exe" \
 	bin
 
