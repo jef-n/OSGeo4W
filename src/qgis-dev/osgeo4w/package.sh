@@ -215,6 +215,7 @@ nextbinary
 		-D QSCINTILLA_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt6/lib/qscintilla2.lib) \
 		-D DART_TESTING_TIMEOUT=60 \
 		-D PUSH_TO_CDASH=$PUSH_TO_DASH \
+		-D ENABLE_UNITY_BUILDS=ON \
 		$(cygpath -m $SRCDIR)
 
 	mkdir -p $BUILDDIR/apps/$P/pdb
