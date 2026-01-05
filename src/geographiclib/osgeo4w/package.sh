@@ -76,7 +76,7 @@ tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
 	bin/GeographicLib.dll
 
 tar -C install -cjf $R/$P-tools/$P-tools-$V-$B.tar.bz2 \
-	--exclude "*.exe" \
+	--exclude "*.dll" \
 	bin
 
 tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
