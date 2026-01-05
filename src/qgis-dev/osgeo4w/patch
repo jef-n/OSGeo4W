@@ -1,0 +1,26 @@
+From 541f48bfb6164d624b184de1466db3e9a6d52974 Mon Sep 17 00:00:00 2001
+From: "Juergen E. Fischer" <jef@norbit.de>
+Date: Sun, 4 Jan 2026 16:42:29 +0100
+Subject: [PATCH] disable unity build for server on msvc
+
+---
+ src/server/CMakeLists.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/server/CMakeLists.txt b/src/server/CMakeLists.txt
+index be80477d1f0..c6d40a67945 100644
+--- a/src/server/CMakeLists.txt
++++ b/src/server/CMakeLists.txt
+@@ -100,7 +100,9 @@ if (USE_PRECOMPILED_HEADERS)
+   target_precompile_headers(qgis_server PRIVATE $<$<COMPILE_LANGUAGE:CXX>:${CMAKE_SOURCE_DIR}/src/core/qgis.h>)
+ endif()
+ 
++if(NOT MSVC)
+ set_target_properties(qgis_server PROPERTIES UNITY_BUILD ${ENABLE_UNITY_BUILDS})
++endif(NOT MSVC)
+ 
+ target_include_directories(qgis_server SYSTEM PUBLIC
+   ${CMAKE_SOURCE_DIR}/external/inja
+-- 
+2.45.1
+
