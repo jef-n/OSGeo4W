@@ -13,7 +13,7 @@ startlog
 
 fetchenv osgeo4w/bin/o4w_env.bat
 python3 -m ensurepip
-python3 -m pip install --upgrade pip
+python3 -m pip install --upgrade "pip>=24.0"
 python3 -m pip install wheel
 
 cat >pip.bat <<EOF
