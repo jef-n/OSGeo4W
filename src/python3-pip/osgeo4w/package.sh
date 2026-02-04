@@ -2,7 +2,7 @@ export P=python3-pip
 export V=pip
 export B=pip
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-core"
+export BUILDDEPENDS="python3-core python3-setuptools"
 export PACKAGES="python3-pip"
 
 # initial python3-pip is built from python3
@@ -13,7 +13,7 @@ startlog
 
 fetchenv osgeo4w/bin/o4w_env.bat
 python3 -m ensurepip
-python3 -m pip install --upgrade "pip>=24.0"
+python3 -m pip install --upgrade pip
 python3 -m pip install wheel
 
 cat >pip.bat <<EOF
