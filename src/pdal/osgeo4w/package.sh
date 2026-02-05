@@ -1,5 +1,5 @@
 export P=pdal
-export V=2.9.3
+export V=2.10.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="gdal-devel libgeotiff-devel libtiff-devel zlib-devel curl-devel libxml2-devel hdf5-devel openssl-devel zstd-devel laszip-devel proj-devel draco-devel sqlite3-devel arrow-cpp-devel xz-devel"
@@ -33,7 +33,6 @@ fi
 	export LIB="$(cygpath -aw ../osgeo4w/lib);$LIB"
 	export INCLUDE="$(cygpath -aw ../osgeo4w/include);$INCLUDE"
 
-	CXXFLAGS="-D_DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR" \
 	cmake -G Ninja \
 		-D CMAKE_BUILD_TYPE=Release \
 		-D CMAKE_INSTALL_PREFIX=../install \

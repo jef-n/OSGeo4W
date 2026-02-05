@@ -1,5 +1,5 @@
 export P=hdf5
-export V=1.14.3
+export V=1.14.6
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="libjpeg-turbo-devel szip-devel zlib-devel"
@@ -9,8 +9,8 @@ source ../../../scripts/build-helpers
 
 startlog
 
-[ -f $P-$V.tar.bz2 ] || wget https://support.hdfgroup.org/ftp/${P^^}/releases/$P-${V%.*}/$P-$V/src/$P-$V.tar.bz2
-[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xjf $P-$V.tar.bz2
+[ -f $P-$V.tar.gz ] || wget https://support.hdfgroup.org/releases/hdf5/v1_14/v1_14_6/downloads/$P-$V.tar.gz
+[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz
 
 vsenv
 cmakeenv

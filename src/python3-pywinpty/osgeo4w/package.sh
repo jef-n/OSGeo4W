@@ -9,7 +9,6 @@ source ../../../scripts/build-helpers
 
 startlog
 
-# no rust compiler
-packagewheel --only-binary pywinpty
+OSGEO4W_PY_INCLUDE_BINARY=1 packagewheel
 
 endlog

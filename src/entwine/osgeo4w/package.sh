@@ -22,14 +22,14 @@ cd build
 export INCLUDE="$INCLUDE;$(cygpath -am ../osgeo4w/include)"
 export LIB="$LIB;$(cygpath -am ../osgeo4w/lib)"
 
-CXXFLAGS="/EHsc -DPDAL_EXPORT=__declspec(dllimport)" \
+CXXFLAGS="/EHsc -DPDAL_EXPORT=__declspec(dllimport) $CXXFLAGS" \
 cmake -Wno-dev -G Ninja \
 	-D CMAKE_BUILD_TYPE=Release \
 	-D CMAKE_INSTALL_PREFIX=../install \
 	-D CMAKE_PREFIX_PATH=$(cygpath -am ../osgeo4w/lib/cmake/PDAL) \
 	-D BUILD_SHARED_LIBS=ON \
 	-D PYTHON_EXECUTABLE=$(cygpath -am ../osgeo4w/bin/python3.exe) \
-	-D CMAKE_CXX_FLAGS=/D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING \
+	-D CMAKE_CXX_FLAGS="/D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING $CXXFLAGS" \
 	-D WITH_TESTS=OFF \
 	../../$P-$V
 cmake --build .

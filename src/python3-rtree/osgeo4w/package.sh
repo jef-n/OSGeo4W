@@ -12,6 +12,6 @@ startlog
 export INCLUDE="$(cygpath -aw osgeo4w/include);$INCLUDE"
 export LIB="$(cygpath -aw osgeo4w/lib);$LIB"
 
-adddepends="libspatialindex" packagewheel
+OSGEO4W_PY_INCLUDE_BINARY=1 PIP_NO_BINARY=rtree adddepends="libspatialindex" packagewheel
 
 endlog

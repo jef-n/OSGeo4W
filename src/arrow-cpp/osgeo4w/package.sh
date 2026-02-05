@@ -1,5 +1,5 @@
 export P=arrow-cpp
-export V=23.0.0
+export V=23.0.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="boost-devel openssl-devel thrift-devel zstd-devel bzip2-devel zlib-devel lz4-devel brotli-devel snappy-devel protobuf-devel utf8proc python3-devel python3-pip python3-setuptools python3-wheel python3-numpy"
@@ -8,9 +8,6 @@ export PACKAGES="arrow-cpp arrow-cpp-devel python3-pyarrow"
 source ../../../scripts/build-helpers
 
 startlog
-
-# FIXME show be fixed in thrift package
-sed -i -e 's#$ENV{OSGEO4W_ROOT}/\$ENV{OSGEO4W_ROOT}#$ENV{OSGEO4W_ROOT}#' osgeo4w/cmake/thrift/ThriftConfig.cmake
 
 [ -f apache-arrow-$V.tar.gz ] || wget https://dist.apache.org/repos/dist/release/arrow/arrow-$V/apache-arrow-$V.tar.gz
 sha512sum -c apache-arrow-$V.tar.gz.sha512
@@ -94,7 +91,7 @@ sha512sum -c apache-arrow-$V.tar.gz.sha512
 		SETUPTOOLS_SCM_PRETEND_VERSION_FOR_PYARROW=$V \
 		python3 setup.py build_ext --inplace bdist_wheel
 
-        wheel=$(cygpath -aw dist/*.whl) adddepends=$P externalsource=$P P=python3-pyarrow packagewheel --only-binary :all: --force-reinstall
+        OSGEO4W_PY_INCLUDE_BINARY=1 wheel=$(cygpath -aw dist/*.whl) adddepends=$P externalsource=$P P=python3-pyarrow packagewheel --only-binary :all: --force-reinstall
 )
 
 export R=$OSGEO4W_REP/x86_64/release/$P

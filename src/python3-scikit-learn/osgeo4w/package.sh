@@ -9,7 +9,6 @@ source ../../../scripts/build-helpers
 
 startlog
 
-# no fortran compiler
-packagewheel --only-binary scikit-learn
+OSGEO4W_PY_INCLUDE_BINARY=1 packagewheel
 
 endlog

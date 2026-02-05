@@ -39,7 +39,7 @@ export LIB="$(cygpath -am osgeo4w/lib);\$LIB"
 
 cd ../pdal
 
-CXXFLAGS="-DPDAL_DLL=PDAL_EXPORT" \
+CXXFLAGS="-DPDAL_DLL=PDAL_EXPORT $CXXFLAGS" \
 pip3 install .
 
 export R=$OSGEO4W_REP/x86_64/release/python3/$P

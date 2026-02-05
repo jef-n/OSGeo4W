@@ -42,9 +42,13 @@ if [ "$OSGEO4W_BUILD_RDEPS" = "0" ]; then OSGEO4W_BUILD_RDEPS=; fi
 if [ "$OSGEO4W_CONTINUE_BUILD" = "0" ]; then OSGEO4W_CONTINUE_BUILD=; fi
 if [ "$OSGEO4W_SKIP_MASTER_REPO" = "0" ]; then OSGEO4W_SKIP_MASTER_REPO=; fi
 
-PKGS="$@"
+# build in order
+PKGS=$(perl scripts/build-inorder.pl "$@" | paste -d" " -s)
 
-[ -z "$OSGEO4W_BUILD_RDEPS" ] || PKGS=$(perl scripts/build-inorder.pl $PKGS | paste -d" " -s)
+if [ -z "$OSGEO4W_BUILD_RDEPS" ]; then
+	# but only requested packages
+	echo $PKGS | fgrep -x <(echo "$@" | tr ' ' '\n')
+fi
 
 echo $(date): REPOSITORY: $OSGEO4W_REP
 echo $(date): BUILDING: $PKGS

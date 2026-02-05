@@ -305,6 +305,29 @@ vs2022env() {
 	export CC=cl.exe
 	export CXX=cl.exe
 	type -a $CC $CXX
+
+	(
+		cd /tmp
+
+		echo "#include <mutex>" >m.cpp
+		cl /nologo /P /C m.cpp
+		h=$(cygpath -a "$(sed -ne '2 s/#line 1 "\(.*\)".*$/\1/p' m.i)")
+		rm m.cpp m.i
+
+		cd "$(dirname "$h")"
+		while read h; do
+			if ! head -1 "$h" | grep -q "#ifndef _DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR"; then
+				rm -f /tmp/h
+
+				sed -e "1i \
+#ifndef _DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR\r\n\
+#define _DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR\r\n\
+#endif\r\n\r\
+" "$h" >/tmp/h
+				cat /tmp/h >"$h"
+			fi
+		done < <(grep -Rl _DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR .)
+	)
 }
 declare -x vs2022env
 
@@ -416,6 +439,8 @@ declare -x ccacheenv
 
 regen() {
 	(
+		! [ -f /tmp/setup-master.ini ] || exec 2> >(egrep -v "^warning: package [^ ]* requires an unknown package '($(sed -ne "s/^@ //p" /tmp/setup-master.ini| paste -d"|" -s))'$" >&2)
+
 		# update local package repository
 		cd $OSGEO4W_REP
 		[ -d x86_64/release ] || mkdir -p x86_64/release
@@ -423,7 +448,14 @@ regen() {
 		perl $OSGEO4W_SCRIPTS/genini --arch=x86_64 --output=x86_64/setup.ini.tmp --recursive x86_64/release
 		mv x86_64/setup.ini.tmp x86_64/setup.ini
 		bzip2 -c x86_64/setup.ini >|x86_64/setup.ini.bz2
-		perl $OSGEO4W_SCRIPTS/genini --alllicenses --arch=x86_64 --output=x86_64/setup-lic.ini.tmp --recursive x86_64/release
+		perl $OSGEO4W_SCRIPTS/genini \
+			--okmissing=install \
+			--okmissing=source \
+			--alllicenses \
+			--arch=x86_64 \
+			--output=x86_64/setup-lic.ini.tmp \
+			--recursive \
+			x86_64/release
 		mv x86_64/setup-lic.ini.tmp x86_64/setup-lic.ini
 		bzip2 -c x86_64/setup-lic.ini >|x86_64/setup-lic.ini.bz2
 	)
@@ -646,6 +678,7 @@ packagewheel() {
 	fi
 
 	(
+		set -e
 		cd $OSGEO4W_PWD
 
 		availablepackageversions $P
@@ -687,19 +720,46 @@ packagewheel() {
 
 		# export PIP_NO_DEPENDENCIES=1
 		#export PIP_FORCE_REINSTALL=1
-		export PIP_NO_BINARY=:all:
 		export PIP_NO_COMPILE=1
 		export PIP_UPGRADE=0
 		export PIP_NO_BUILD_ISOLATION=1
 		export PIP_NO_CLEAN=1
+		export PIP_NO_CACHE_DIR=1
 
 		! [ -f pip.env ] || source pip.env
 
 		set | grep "^PIP_"
 
-		OSGEO4W_REP=$(cygpath -m "$OSGEO4W_REP") \
-		OSGEO4W_ROOT=$(cygpath -aw "$OSGEO4W_ROOT") \
-		python3 $(cygpath -am $OSGEO4W_SCRIPTS/pippkg.py) "$@"
+		if [ -z "$OSGEO4W_PY_PINNED_RE" ]; then
+			export OSGEO4W_PY_PINNED_RE=$(
+				echo -ne "^Package\s+.*\\n|^-.*\\n|^\\.\\n"
+				for i in $OSGEO4W_PWD/../../python3-*/osgeo4w/package.sh
+				do
+					P=
+					V=
+					eval $(head -2 $i)
+					[ -n "$P" -a -n "$V" ] || { echo "$i: P or V not found"; exit 1; }
+
+					[ "$V" != pip ] || continue
+					p=${P#python3-}
+					p=${p//-/[_-]}
+					echo -ne "|^$p\s+${V//./\\.}\s+.*\\n"
+				done
+			)
+		fi
+
+		echo "PINNED: $OSGEO4W_PY_PINNED_RE"
+
+		if OSGEO4W_REP=$(cygpath -m "$OSGEO4W_REP") \
+			OSGEO4W_ROOT=$(cygpath -aw "$OSGEO4W_ROOT") \
+			python3 $(cygpath -am $OSGEO4W_SCRIPTS/pippkg.py) "$@"; then
+			:
+		else
+			r=$?
+			if [ $r -ne 2 ]; then
+				exit $r
+			fi
+		fi
 	)
 
 	! [ -f $OSGEO4W_PWD/pipped.env ] || source <(sed -e 's/\r$//' $OSGEO4W_PWD/pipped.env)

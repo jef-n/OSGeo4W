@@ -51,12 +51,13 @@ requires: msvcrt2019
 maintainer: $MAINTAINER
 EOF
 
-cat <<EOF >$R/setup.hint
+cat <<EOF >$R/$P-tools/setup.hint
 sdesc: "$P (executables)"
 ldesc: "$P (executables)"
 category: Commandline_Utilities
 requires: $P
 maintainer: $MAINTAINER
+external-source: $P
 EOF
 
 cat <<EOF >$R/$P-devel/setup.hint

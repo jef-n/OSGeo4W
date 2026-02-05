@@ -2,7 +2,7 @@ export P=python3-referencing
 export V=pip
 export B=pip
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-pip python3-wheel python3-setuptools python3-attrs python3-rpds-py"
+export BUILDDEPENDS="python3-pip python3-wheel python3-setuptools python3-attrs python3-rpds-py python3-typing-extensions"
 export PACKAGES="python3-referencing"
 
 source ../../../scripts/build-helpers

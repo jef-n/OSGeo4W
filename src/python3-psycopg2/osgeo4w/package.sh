@@ -18,7 +18,7 @@ export LIB="$(cygpath -am osgeo4w/lib);\$LIB"
 export INCLUDE="$(cygpath -am osgeo4w/include);\$INCLUDE"
 EOF
 
-PACKAGES=$P adddepends="libpq" packagewheel
+OSGEO4W_PY_INCLUDE_BINARY=1 PIP_NO_BINARY=psycopg2 PACKAGES=$P adddepends="libpq" packagewheel
 
 export R=$OSGEO4W_REP/x86_64/release/python3/$P-binary
 mkdir -p $R

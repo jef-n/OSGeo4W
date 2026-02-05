@@ -11,6 +11,6 @@ startlog
 
 sed -i -e "s#C:/src/osgeo4w/src/qtwebkit/osgeo4w/install#\$\$(OSGEO4W_ROOT)#g" osgeo4w/apps/qt5/mkspecs/modules/*.pri
 
-adddepends="qt5-libs qtwebkit-libs" packagewheel -C --confirm-license= -C --concatenate=10 -C --disable=QtNfc -C --verbose=
+OSGEO4W_PY_INCLUDE_BINARY=1 PIP_NO_BINARY=pyqt5 adddepends="qt5-libs qtwebkit-libs" packagewheel -C --confirm-license= -C --concatenate=10 -C --disable=QtNfc -C --verbose=
 
 endlog

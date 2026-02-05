@@ -9,8 +9,6 @@ source ../../../scripts/build-helpers
 
 startlog
 
-echo unset PIP_NO_BINARY >pip.env
-
 packagewheel
 
 endlog

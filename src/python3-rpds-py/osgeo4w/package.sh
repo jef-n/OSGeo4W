@@ -9,7 +9,6 @@ source ../../../scripts/build-helpers
 
 startlog
 
-echo unset PIP_NO_BINARY >pip.env
-packagewheel
+OSGEO4W_PY_INCLUDE_BINARY=1 packagewheel
 
 endlog

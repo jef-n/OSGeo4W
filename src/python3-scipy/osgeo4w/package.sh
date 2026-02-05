@@ -9,6 +9,6 @@ source ../../../scripts/build-helpers
 
 startlog
 
-packagewheel --only-binary scipy
+OSGEO4W_PY_INCLUDE_BINARY=1 packagewheel
 
 endlog

@@ -1,5 +1,5 @@
 export P=openssl
-export V=3.0.18
+export V=3.0.19
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none

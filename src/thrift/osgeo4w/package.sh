@@ -2,7 +2,7 @@ export P=thrift
 export V=0.21.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="boost-devel openssl-devel zlib-devel qt5-devel node"
+export BUILDDEPENDS="boost-devel openssl-devel zlib-devel node"
 export PACKAGES="thrift thrift-devel thrift-node"
 
 source ../../../scripts/build-helpers
@@ -32,6 +32,7 @@ cd ../osgeo4w
 		-D CMAKE_BUILD_TYPE=Release \
 		-D CMAKE_INSTALL_PREFIX=../install \
 		-D BUILD_TESTING=OFF \
+		-D WITH_QT5=OFF \
 		-D PKGCONFIG_INSTALL_DIR=$(cygpath -am ../install/share/pkgconfig) \
 		-D CMAKE_INSTALL_DIR=$(cygpath -am ../install/cmake) \
 		-D NODEJS_INSTALL_DIR=$(cygpath -am ../install/apps/node/node_modules/npm/node_modules) \
@@ -40,10 +41,12 @@ cd ../osgeo4w
 	cmake --build .
 	cmake --install .
 	cmakefix ../install
+
+	sed -i -e 's#$ENV{OSGEO4W_ROOT}/\$ENV{OSGEO4W_ROOT}#$ENV{OSGEO4W_ROOT}#' ../install/cmake/thrift/ThriftConfig.cmake
 )
 
 export R=$OSGEO4W_REP/x86_64/release/$P
-mkdir -p $R/$P-{devel,node,qt5}
+mkdir -p $R/$P-{devel,node}
 
 cat <<EOF >$R/setup.hint
 sdesc: "Apache thrift library (runtime)"
@@ -57,18 +60,6 @@ cp ../$P-$V/LICENSE $R/$P-$V-$B.txt
 tar -C install -cjf $R/$P-$V-$B.tar.bz2 \
 	bin/thriftmd.dll \
 	bin/thriftzmd.dll
-
-cat <<EOF >$R/$P-qt5/setup.hint
-sdesc: "Apache thrift library (qt5; runtime)"
-ldesc: "performant communication and data serialization across languages"
-category: Libs
-requires: $P qt5-libs
-maintainer: $MAINTAINER
-EOF
-
-cp ../$P-$V/LICENSE $R/$P-qt5/$P-qt5-$V-$B.txt
-tar -C install -cjf $R/$P-qt5/$P-qt5-$V-$B.tar.bz2 \
-	bin/thriftqt5md.dll
 
 cat <<EOF >$R/$P-devel/setup.hint
 sdesc: "Apache thrift library (development)"

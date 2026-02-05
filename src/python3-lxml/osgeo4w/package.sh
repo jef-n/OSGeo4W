@@ -18,6 +18,6 @@ EOF
 
 cp osgeo4w/lib/libxml2.lib osgeo4w/lib/xml2.lib
 
-adddepends="libxml2 libxslt" packagewheel --only-binary Cython
+OSGEO4W_PY_INCLUDE_BINARY=1 adddepends="libxml2 libxslt" packagewheel
 
 endlog

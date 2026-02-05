@@ -177,7 +177,6 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 
 	cmake --version
 
-	CXXFLAGS="/D_DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR" \
 	cmake \
 		-G Ninja \
 		-D                      CMAKE_BUILD_TYPE=RelWithDebInfo \

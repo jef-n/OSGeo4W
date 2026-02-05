@@ -14,8 +14,6 @@ fetchenv osgeo4w/bin/o4w_env.bat
 export GEOS_INCLUDE_PATH=$(cygpath -am osgeo4w/include)
 export GEOS_LIBRARY_PATH=$(cygpath -am osgeo4w/lib)
 
-pip3 install shapely --no-binary shapely
-
-adddepends=geos packagewheel
+OSGEO4W_PY_INCLUDE_BINARY=1 PIP_NO_BINARY=shapely adddepends=geos packagewheel
 
 endlog

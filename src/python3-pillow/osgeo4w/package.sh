@@ -12,6 +12,6 @@ startlog
 export INCLUDE="$(cygpath -aw osgeo4w/include);$INCLUDE"
 export LIB="$(cygpath -aw osgeo4w/lib);$LIB"
 
-adddepends="zlib libjpeg-turbo libtiff freetype" packagewheel
+OSGEO4W_PY_INCLUDE_BINARY=1 PIP_NO_BINARY=pillow adddepends="zlib libjpeg-turbo libtiff freetype" packagewheel
 
 endlog

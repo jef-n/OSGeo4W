@@ -2,7 +2,7 @@ export P=python3-pytest-cov
 export V=pip
 export B=pip
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-pip python3-wheel python3-setuptools python3-coverage python3-pytest"
+export BUILDDEPENDS="python3-pip python3-wheel python3-setuptools python3-coverage python3-pytest python3-pluggy"
 export PACKAGES="python3-pytest-cov"
 
 source ../../../scripts/build-helpers

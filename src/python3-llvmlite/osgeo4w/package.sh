@@ -1,5 +1,5 @@
 export P=python3-llvmlite
-export V=0.42.0
+export V=0.46.0
 export B=pip
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-pip python3-wheel python3-setuptools"
@@ -9,6 +9,6 @@ source ../../../scripts/build-helpers
 
 startlog
 
-packagewheel --only-binary llvmlite
+OSGEO4W_PY_INCLUDE_BINARY=1 packagewheel
 
 endlog

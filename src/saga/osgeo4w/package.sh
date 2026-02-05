@@ -1,5 +1,5 @@
 export P=saga
-export V=9.10.2
+export V=9.11.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="wxwidgets-devel libharu-devel gdal-devel proj-devel libpq-devel curl-devel libpng-devel libtiff-devel libjpeg-turbo-devel zlib-devel expat-devel pdal-devel"
@@ -40,6 +40,7 @@ p=${P%$M}
 	cd build
 
 	cmake -G Ninja \
+		-D wxWidgets_USE_REL_AND_DBG=OFF \
 		-D CMAKE_BUILD_TYPE=Release \
 		-D CMAKE_CXX_STANDARD=17 \
 		-D CMAKE_CXX_FLAGS_RELEASE="/MD /Z7 /MP /Od /D NDEBUG -D_HAS_STD_BYTE=0 /Zc:__cplusplus" \

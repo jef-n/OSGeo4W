@@ -9,6 +9,7 @@ source ../../../scripts/build-helpers
 
 startlog
 
+echo PIP_NO_BINARY=segregation >pip.env
 packagewheel
 
 endlog

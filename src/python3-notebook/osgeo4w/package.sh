@@ -9,10 +9,6 @@ source ../../../scripts/build-helpers
 
 startlog
 
-fetchenv osgeo4w/bin/o4w_env.bat
-
-pip3 install notebook
-
 packagewheel
 
 endlog

@@ -9,6 +9,6 @@ source ../../../scripts/build-helpers
 
 startlog
 
-packagewheel --only-binary :all:
+packagewheel
 
 endlog

@@ -23,7 +23,7 @@ cmakeenv
 ninjaenv
 
 cd ../$s/libfcgi
-nmake /f libfcgi.mak CFLAGS="-DDLLAPI=__declspec(dllexport)" CXXFLAGS="-DDLLAPI=__declspec(dllexport)"
+nmake /f libfcgi.mak CFLAGS="-DDLLAPI=__declspec(dllexport)" CXXFLAGS="-DDLLAPI=__declspec(dllexport) $CXXFLAGS"
 
 cd ../../osgeo4w
 

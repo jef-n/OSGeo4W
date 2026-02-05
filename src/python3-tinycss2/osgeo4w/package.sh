@@ -1,5 +1,5 @@
 export P=python3-tinycss2
-export V=pip
+export V=1.4.0
 export B=pip
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-pip python3-wheel python3-setuptools python3-webencodings"

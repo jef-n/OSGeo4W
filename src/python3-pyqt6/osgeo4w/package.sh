@@ -19,6 +19,6 @@ ninjaenv
 set | grep "^O4W_QT_" >pip.env
 echo "PATH=\"$PATH\"" >>pip.env
 
-adddepends=qt6-libs packagewheel -C --confirm-license= -C --concatenate=10 -C --verbose=
+OSGEO4W_PY_INCLUDE_BINARY=1 PIP_NO_BINARY=pyqt6 adddepends=qt6-libs packagewheel -C --confirm-license= -C --concatenate=10 -C --verbose=
 
 endlog

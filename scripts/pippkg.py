@@ -63,7 +63,7 @@ prefix = re.compile("^" + re.escape(o4wroot), re.IGNORECASE)
 
 mainpkg = os.environ["P"]
 if not mainpkg.startswith("python3-"):
-    print(f"{pkg}: python3- prefix missing", file=sys.stderr)
+    print("python3- prefix missing", file=sys.stderr)
     sys.exit(1)
 
 pkgs = [p for p in os.environ['PACKAGES'].split(' ') if p.startswith("python3-")]
@@ -79,7 +79,7 @@ else:
 
 print(f"Packaging {pkgv}", file=sys.stderr)
 
-argv = ['python3', '-m', 'pip', '-v', 'install']
+argv = ['python3', '-m', 'pip', '-v', 'install', '-U']
 argv.extend(sys.argv[1:])
 argv.append(pkgv)
 print(f"PIP:{' '.join(argv)}", file=sys.stderr)
@@ -88,7 +88,7 @@ if not proc:
     print("{pkgv}: could not install.", file=sys.stderr)
     sys.exit(1)
 
-ipkgs=[]
+ipkgs = []
 while True:
     line = proc.stdout.readline()
     if not line:
@@ -185,9 +185,13 @@ for pkg in pkgs:
         os.makedirs(d)
 
     if props['Version'] == os.getenv("version_curr"):
-        b=int(os.getenv("binary_curr")) + 1
+        if os.environ.get("OSGEO4W_PY_REBUILD", "0") != "1":
+            print(f"{pkg}: Version {props['Version']} already exists", file=sys.stderr)
+            sys.exit(2)
+
+        b = int(os.getenv("binary_curr")) + 1
     else:
-        b=1
+        b = 1
 
     while True:
         tn = join(d, f"{pname}-{props['Version']}-{b}.tar.bz2")
@@ -195,11 +199,33 @@ for pkg in pkgs:
             break
         b += 1
 
+    if props['Requires']:
+        if "psycopg2-binary" in props['Requires']:
+            props['Requires'].remove("psycopg2-binary")
+            props['Requires'].append("psycopg2")
+        props['Requires'] = sorted('python3-{}'.format(p.replace('_', '-')) for p in props['Requires'])
+
+        s = set(props['Requires']) - set(builddepends) - set(pkgs)
+        if s:
+            print(f"{pkg}: Required packages missing in BUILDDEPENDS: {' '.join(s)}", file=sys.stderr)
+            sys.exit(1)
+
+        s = [p for p in [join('..', '..', p) for p in set(props['Requires']) - set(pkgs)] if not isdir(p)]
+        if s:
+            print(f"{pkg}: Required package directories missing: {' '.join(s)}", file=sys.stderr)
+            sys.exit(1)
+
+        props['Requires'] = " " + " ".join(props['Requires'])
+    else:
+        props['Requires'] = ""
+
     tf = tarfile.open(tn, "w:bz2", format=tarfile.GNU_FORMAT)
 
     postinstall = None
     preremove = None
     haspy = False
+    hasbinary = False
+    needsbase = False
 
     scriptspath = abspath(join(props['Location'], '..\\..\\Scripts')).replace(os.sep, '/') + "/"
 
@@ -213,6 +239,11 @@ for pkg in pkgs:
 
         if f.endswith(".py"):
             haspy = True
+
+        if os.environ.get("OSGEO4W_PY_INCLUDE_BINARY", "0") != "1" and (f.lower().endswith(".dll") or f.lower().endswith(".pyd")):
+            print(f"{pkg}: ERROR: Binary file {f} included w/o OSGEO4W_PY_INCLUDE_BINARY set", file=sys.stderr)
+            hasbinary = True
+            continue
 
         isscript = f.startswith(scriptspath)
 
@@ -246,12 +277,18 @@ for pkg in pkgs:
                 exe.write(data2)
                 exe.close()
 
+                needsbase = True
+
         fr = prefix.sub('', f)
         if f == fr:
             print("{}: ERROR: Prefix {} missing from file {}".format(pkg, prefix.pattern, f), file=sys.stderr)
             raise BaseException("File {} for package {} missing".format(f, pkg))
 
         tf.add(f, fr)
+
+    if hasbinary:
+        print("{}: ERROR: Binary files in package without OSGEO4W_PY_INCLUDE_BINARY".format(pkg))
+        raise BaseException("Binary files in package without OSGEO4W_PY_INCLUDE_BINARY")
 
     if postinstall:
         postinstall.close()
@@ -269,26 +306,6 @@ for pkg in pkgs:
 
     tf.close()
 
-    if props['Requires']:
-        if "psycopg2-binary" in props['Requires']:
-            props['Requires'].remove("psycopg2-binary")
-            props['Requires'].append("psycopg2")
-        props['Requires'] = sorted('python3-{}'.format(p.replace('_', '-')) for p in props['Requires'])
-
-        s = set(props['Requires']) - set(builddepends) - set(pkgs)
-        if s:
-            print(f"{pkg}: Required packages missing in BUILDDEPENDS: {' '.join(s)}", file=sys.stderr)
-            sys.exit(1)
-
-        s = [p for p in [join('..', '..', p) for p in set(props['Requires']) - set(pkgs)] if not isdir(p)]
-        if s:
-            print(f"{pkg}: Required package directories missing: {' '.join(s)}", file=sys.stderr)
-            sys.exit(1)
-
-        props['Requires'] = " " + " ".join(props['Requires'])
-    else:
-        props['Requires'] = ""
-
     if 'externalsource' in os.environ:
         externalsource = os.environ['externalsource']
     elif pkg == mainpkg:
@@ -305,11 +322,12 @@ sdesc: "{0}"
 ldesc: "{0}"
 maintainer: {1}
 category: Libs
-requires: python3-core{2}{3}{4}
+requires: python3-core{2}{3}{4}{5}
 """ .format(
         props['Summary'],
         os.environ['MAINTAINER'],
         props['Requires'],
+        " base" if needsbase else '',
         (" " + os.environ['adddepends']) if 'adddepends' in os.environ else '',
         f"\nexternal-source: {externalsource}" if externalsource is not None else ''
     ).encode("utf-8"))
@@ -318,3 +336,15 @@ requires: python3-core{2}{3}{4}
     f = open("pipped.env", "a")
     f.write("P={}\nV={}\nB={}\n".format(pname, props['Version'], b))
     f.close()
+
+if os.environ.get("OSGEO4W_PY_SKIP_VCHECK", "0") == "0":
+    proc = subprocess.Popen(['python3', '-m', 'pip', 'list', '--outdated'], stdout=subprocess.PIPE, encoding="utf-8")
+    if not proc:
+        print("Could not check outdated packages.", file=sys.stderr)
+    else:
+        outdated = proc.stdout.read()
+        if "OSGEO4W_PY_PINNED_RE" in os.environ:
+            outdated = re.sub(os.environ["OSGEO4W_PY_PINNED_RE"], '', outdated, flags=re.MULTILINE)
+        if outdated:
+            print(f"Outdated packages found\n{outdated}.", file=sys.stderr)
+            sys.exit(1)

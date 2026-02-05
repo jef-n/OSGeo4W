@@ -2,7 +2,7 @@ export P=python3-urllib3
 export V=pip
 export B=pip
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-pip python3-wheel python3-setuptools"
+export BUILDDEPENDS="base python3-pip python3-wheel python3-setuptools"
 export PACKAGES="python3-urllib3"
 
 source ../../../scripts/build-helpers

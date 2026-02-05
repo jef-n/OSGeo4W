@@ -9,6 +9,8 @@ source ../../../scripts/build-helpers
 
 startlog
 
+echo export PIP_NO_BINARY=quantecon >pip.env
+
 packagewheel
 
 endlog

@@ -9,6 +9,6 @@ source ../../../scripts/build-helpers
 
 startlog
 
-adddepends="$RUNTIMEDEPENDS" packagewheel --only-binary Cython
+OSGEO4W_PY_INCLUDE_BINARY=1 PIP_NO_BINARY=pyproj adddepends="$RUNTIMEDEPENDS" packagewheel
 
 endlog

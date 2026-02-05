@@ -29,6 +29,6 @@ fetchenv osgeo4w/bin/o4w_env.bat
 
 pip3 install ../$p-$V
 
-adddepends="$RUNTIMEDEPENDS" packagewheel
+OSGEO4W_PY_INCLUDE_BINARY=1 PIP_NO_BINARY=fiona adddepends="$RUNTIMEDEPENDS" packagewheel
 
 endlog

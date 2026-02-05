@@ -1,5 +1,5 @@
 export P=gdal
-export V=3.12.1
+export V=3.12.2
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel hdf5-tools ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-turbo-devel python3-setuptools opencl-devel libtiff-devel arrow-cpp-devel lz4-devel openssl-devel lerc-devel kealib-devel odbc-cpp-wrapper-devel libjxl-devel libxml2-devel c-blosc-devel libarchive-devel"
@@ -123,7 +123,6 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 
 	cmake --version
 
-	CXXFLAGS="/D_DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR" \
 	cmake \
 		-G Ninja \
 		-D                      CMAKE_BUILD_TYPE=RelWithDebInfo \

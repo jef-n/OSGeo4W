@@ -1,5 +1,5 @@
 export P=python3-rasterio
-export V=1.4.3
+export V=1.5.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-pip python3-wheel python3-devel python3-setuptools python3-affine python3-attrs python3-click python3-cligj python3-numpy python3-snuggs python3-click-plugins gdal-devel python3-certifi python3-pyparsing"
@@ -29,6 +29,6 @@ fetchenv osgeo4w/bin/o4w_env.bat
 
 pip3 install ../$p-$V
 
-adddepends="$RUNTIMEDEPENDS" packagewheel
+OSGEO4W_PY_INCLUDE_BINARY=1 PIP_NO_BINARY=rasterio adddepends="$RUNTIMEDEPENDS" packagewheel
 
 endlog

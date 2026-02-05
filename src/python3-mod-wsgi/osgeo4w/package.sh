@@ -11,6 +11,6 @@ startlog
 
 export MOD_WSGI_APACHE_ROOTDIR=$(cygpath -am osgeo4w/apps/apache)
 
-packagewheel
+OSGEO4W_PY_INCLUDE_BINARY=1 PIP_NO_BINARY=mod_wsgi packagewheel
 
 endlog

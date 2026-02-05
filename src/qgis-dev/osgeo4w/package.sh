@@ -173,7 +173,7 @@ nextbinary
 		-D CMAKE_LINKER=link.exe \
 		-D SUBMIT_URL="https://cdash.orfeo-toolbox.org/submit.php?project=QGIS" \
 		-D CMAKE_PREFIX_PATH="$CMAKE_PREFIX_PATH;$(cygpath -m ../osgeo4w/apps/gdal-dev/lib/cmake/gdal);$(cygpath -m ../osgeo4w/apps/pdal-dev/lib/cmake/PDAL)" \
-		-D CMAKE_CXX_FLAGS_${BUILDCONF^^}="/MD /Z7 /MP /Od /D NDEBUG /D _DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR /permissive-" \
+		-D CMAKE_CXX_FLAGS_${BUILDCONF^^}="/MD /Z7 /MP /Od /D NDEBUG /permissive-" \
 		-D CMAKE_SHARED_LINKER_FLAGS_${BUILDCONF^^}="/INCREMENTAL:NO /DEBUG /OPT:REF /OPT:ICF" \
 		-D CMAKE_MODULE_LINKER_FLAGS_${BUILDCONF^^}="/INCREMENTAL:NO /DEBUG /OPT:REF /OPT:ICF" \
 		-D CMAKE_PDB_OUTPUT_DIRECTORY_${BUILDCONF^^}=$(cygpath -am $BUILDDIR/apps/$P/pdb) \

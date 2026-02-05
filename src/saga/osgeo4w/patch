@@ -1,28 +1,17 @@
-diff -ur orig/saga-9.10.2/saga-gis/CMakeLists.txt saga-9.10.2/saga-gis/CMakeLists.txt
---- orig/saga-9.10.2/saga-gis/CMakeLists.txt	2025-12-01 09:35:38.000000000 +0100
-+++ saga-9.10.2/saga-gis/CMakeLists.txt	2025-12-13 19:12:54.179260700 +0100
-@@ -23,7 +23,7 @@
- 
- 
- # Platform independent compiler requirements
--set(CMAKE_CXX_STANDARD		 		14		CACHE STRING "C++ standard to be used")
-+set(CMAKE_CXX_STANDARD		 	14		CACHE STRING "C++ standard to be used")
- set(CMAKE_CXX_STANDARD_REQUIRED		ON 		CACHE STRING "The C++ standard is required")
- 
- # Platform dependent compiler requirements
-@@ -34,10 +34,10 @@
- 
- 	option(PARALLEL_BUILD "Multi-processor compilation (/MP)" ON)
- 	if(PARALLEL_BUILD)
--		add_definitions(/MP)
-+		add_compile_options(/MP)
- 	endif()
- 
--	add_definitions(/utf-8)
-+	add_compile_options(/utf-8)
- 
- 	# default debug configuration to use: 'Program Database for Edit And Continue (/ZI)'
- 	set(CMAKE_C_FLAGS_DEBUG             "/MDd /ZI /Ob0 /Od /RTC1"       CACHE STRING "" FORCE)
+--- orig/saga-9.11.1/saga-gis/CMakeLists.txt	2026-01-15 09:39:38.000000000 +0100
++++ saga-9.11.1/saga-gis/CMakeLists.txt	2026-02-21 10:07:45.313102100 +0100
+@@ -32,9 +32,9 @@
+ 	option(DEPS_FROM_ENVARS "Library locations from environment" ON)
+ 	option(PARALLEL_BUILD "Multi-processor compilation (/MP)" ON)
+ 	if(PARALLEL_BUILD)
+-		add_definitions(/MP)
++		add_compile_options(/MP)
+ 	endif()
+-	add_definitions(/utf-8)
++	add_compile_options(/utf-8)
+ 
+ 	# default debug configuration to use: 'Program Database for Edit And Continue (/ZI)'
+ 	set(CMAKE_C_FLAGS_DEBUG             "/MDd /ZI /Ob0 /Od /RTC1"              CACHE STRING "" FORCE)
 diff -ur orig/saga-9.10.2/saga-gis/src/accessories/CMakeLists.txt saga-9.10.2/saga-gis/src/accessories/CMakeLists.txt
 --- orig/saga-9.10.2/saga-gis/src/accessories/CMakeLists.txt	2025-12-01 09:35:34.000000000 +0100
 +++ saga-9.10.2/saga-gis/src/accessories/CMakeLists.txt	2025-12-13 19:12:54.182274800 +0100

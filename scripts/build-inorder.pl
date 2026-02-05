@@ -69,6 +69,9 @@ delete $rdep{"python3-pip"}{"python3-pip"};
 delete $fdep{"python3-pip"}{"python3-setuptools"};
 delete $rdep{"python3-setuptools"}{"python3-pip"};
 
+delete $fdep{"python3-wheel"}{"python3-packaging"};
+delete $rdep{"python3-packaging"}{"python3-wheel"};
+
 $fdep{"python3-setuptools"}{"python3"} = 1;
 $rdep{"python3"}{"python3-setuptools"} = 1;
 
@@ -133,6 +136,6 @@ while(keys %todo) {
 	}
 }
 
-die "Remaining packages: " . join(" ", sort keys %todo) if %todo;
+die "Still remaining packages: " . join(" ", sort keys %todo) if %todo;
 
 print join("\n", @inorder), "\n";

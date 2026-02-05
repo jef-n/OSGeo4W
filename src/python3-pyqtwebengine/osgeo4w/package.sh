@@ -9,10 +9,6 @@ source ../../../scripts/build-helpers
 
 startlog
 
-cat <<EOF >pip.env
-export PIP_NO_DEPENDENCIES=0
-EOF
-
-adddepends="qt5-libs qt5-devel" packagewheel
+OSGEO4W_PY_INCLUDE_BINARY=1 PIP_NO_BINARY=PyQtWebEngine,PyQtWebEngine-Qt5 adddepends="qt5-libs qt5-devel" packagewheel
 
 endlog
