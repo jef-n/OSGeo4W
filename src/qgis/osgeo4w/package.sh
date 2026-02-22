@@ -2,7 +2,7 @@ export P=qgis
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="expat-devel fcgi-devel proj-devel qt6-qml qt6-oci sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt6 python3-sip python3-pyqt-builder python3-devel python3-pyqt6-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-qt6-devel qscintilla-qt6-devel qt6-devel qwt-qt6-devel libspatialite-devel oci-devel qtkeychain-qt6-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel pdal pdal-devel grass draco-devel libtiff-devel python3-oauthlib gdal-devel geographiclib-devel"
+export BUILDDEPENDS="expat-devel fcgi-devel proj-devel qt6-qml qt6-oci sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt6 python3-sip python3-pyqt-builder python3-devel python3-pyqt6-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-qt6-devel qscintilla-qt6-devel qt6-devel qwt-qt6-devel libspatialite-devel oci-devel qtkeychain-qt6-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel pdal pdal-devel grass draco-devel libtiff-devel python3-oauthlib gdal-devel geographiclib-devel sfcgal-devel"
 export PACKAGES="qgis qgis-common qgis-deps qgis-devel qgis-full qgis-full-free qgis-grass-plugin qgis-oracle-provider qgis-pdb qgis-server"
 
 : ${REPO:=https://github.com/qgis/QGIS.git}
@@ -131,6 +131,7 @@ nextbinary
 		-D WITH_HANA=TRUE \
 		-D WITH_GRASS=TRUE \
 		-D WITH_GRASS8=TRUE \
+		-D WITH_SFCGAL=TRUE \
 		-D GRASS_PREFIX8="$(cygpath -m $GRASS_PREFIX)" \
 		-D WITH_ORACLE=TRUE \
 		-D WITH_CUSTOM_WIDGETS=TRUE \
@@ -258,7 +259,7 @@ sdesc: "QGIS (common)"
 ldesc: "QGIS (common)"
 maintainer: $MAINTAINER
 category: Libs
-requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl libspatialite zlib libiconv libspatialindex qt6-libs qt6-qml qt6-tools qca-qt6 qwt-qt6-libs python3-sip python3-core python3-pyqt6 python3-psycopg2 python3-pyqt6-qscintilla python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-requests python3-plotly python3-pyproj python3-owslib python3-pywin32 qtkeychain-qt6-libs libzip opencl exiv2 hdf5 geographiclib pdal pdal-libs gdal python3-gdal
+requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl libspatialite zlib libiconv libspatialindex qt6-libs qt6-qml qt6-tools qca-qt6 qwt-qt6-libs python3-sip python3-core python3-pyqt6 python3-psycopg2 python3-pyqt6-qscintilla python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-requests python3-plotly python3-pyproj python3-owslib python3-pywin32 qtkeychain-qt6-libs libzip opencl exiv2 hdf5 geographiclib pdal pdal-libs gdal python3-gdal sfcgal
 external-source: $P
 EOF
 
