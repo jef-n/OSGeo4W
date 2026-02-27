@@ -2,7 +2,7 @@ export P=pdal-dev
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="gdal-dev-devel libgeotiff-devel libtiff-devel zlib-devel curl-devel libxml2-devel hdf5-devel openssl-devel zstd-devel laszip-devel proj-devel draco-devel sqlite3-devel arrow-cpp-devel xz-devel"
+export BUILDDEPENDS="gdal-dev-devel libgeotiff-devel libtiff-devel zlib-devel curl-devel libxml2-devel hdf5-devel openssl-devel zstd-devel laszip-devel proj-devel draco-devel sqlite3-devel arrow-cpp-devel xz-devel brotli-devel"
 export PACKAGES="pdal-dev pdal-dev-devel pdal-dev-libs"
 
 REPO=https://github.com/PDAL/PDAL
@@ -104,6 +104,9 @@ export abi=$(printf "%d%02d" $major $minor)
 		-D BUILD_PLUGIN_ARROW=ON \
 		-D BUILD_PLUGIN_DRACO=ON \
 		-D BUILD_PLUGIN_HDF=ON \
+		-D BROTLIDEC_LIBRARY=$(cygpath -am ../osgeo4w/lib/brotlidec.lib) \
+		-D BROTLICOMMON_LIBRARY=$(cygpath -am ../osgeo4w/lib/brotlicommon.lib) \
+		-D BROTLI_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 		-D SQLite3_LIBRARY=$(cygpath -am ../osgeo4w/lib/sqlite3_i.lib) \
 		../../pdal
 	cmake --build .
@@ -145,7 +148,7 @@ cat <<EOF >$R/$P-libs/setup.hint
 sdesc: "PDAL: Point Data Abstraction Library (Runtime; $extradesc)"
 ldesc: "PDAL is a library for manipulating and translating point cloud data"
 category: Libs
-requires: $RUNTIMEDEPENDS libgeotiff zlib curl libxml2 hdf5 openssl zstd laszip sqlite3 arrow-cpp
+requires: $RUNTIMEDEPENDS libgeotiff zlib curl libxml2 hdf5 openssl zstd laszip sqlite3 arrow-cpp brotli
 maintainer: $MAINTAINER
 external-source: $P
 EOF
