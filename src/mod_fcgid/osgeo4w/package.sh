@@ -9,8 +9,8 @@ source ../../../scripts/build-helpers
 
 startlog
 
-[ -f "$P-$V-win64-VC17.zip" ] || curl -LO https://www.apachelounge.com/download/VS17/modules/$P-$V-win64-VS17.zip
-unzip -o $P-$V-win64-VS17.zip $P-$V/LICENSE-FCGID $P.so
+[ -f "$P-$V-win64-VC18.zip" ] || curl -LO https://www.apachelounge.com/download/VS18/modules/$P-$V-win64-VS18.zip
+unzip -o $P-$V-win64-VS18.zip $P-$V/LICENSE-FCGID $P.so
 
 export R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R

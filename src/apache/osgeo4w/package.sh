@@ -1,5 +1,5 @@
 export P=apache
-export V=2.4.63
+export V=2.4.66
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
@@ -13,9 +13,9 @@ startlog
 
 v=${V%.*}
 v=${v/./}
-z=httpd-$V-250207-win64-VS17.zip
+z=httpd-$V-260223-win64-VS18.zip
 
-[ -f $z ] || curl -L -A Mozilla/5.0 -O https://www.apachelounge.com/download/VS17/binaries/$z
+[ -f $z ] || curl -L -A Mozilla/5.0 -O https://www.apachelounge.com/download/VS18/binaries/$z
 unzip -o $z "Apache$v/*"
 
 export R=$OSGEO4W_REP/x86_64/release/$P
@@ -116,9 +116,11 @@ EOF
 
 
 sed \
-	-e 's#^Listen 80#Listen ${SRVPORT}\nServerName ${SRVHOST}#' \
-	-e 's#^Define SRVROOT "c:/Apache'$v'"#Define SRVROOT "@o4wroot@/apps/apache"\nDefine SRVPORT @apache_port_number@\nDefine SRVHOST "@apache_hostname@"\n#' \
-	-e '$a\\n# parse OSGeo4W apache conf files\nIncludeOptional "@o4wroot@/httpd.d/httpd_*.conf"' \
+	-e 's#^Listen 80#Listen ${SRVPORT}\r\nServerName ${SRVHOST}#' \
+	-e 's#^Define SRVROOT "C:/Apache'$v'"#Define SRVROOT "@o4wroot@/apps/apache"\r\nDefine SRVPORT @apache_port_number@\r\nDefine SRVHOST "@apache_hostname@"\r\n#' \
+	-e 's#error_log#error.log#' \
+	-e 's#access.log#access.log#' \
+	-e '$a\\r\n# parse OSGeo4W apache conf files\r\nIncludeOptional "@o4wroot@/httpd.d/httpd_*.conf"\r\n' \
 	Apache$v/conf/httpd.conf >httpd.conf.tmpl
 
 cp Apache$v/LICENSE.txt $R/$P-$V-$B.txt
