@@ -1,5 +1,5 @@
 export P=libgeotiff
-export V=1.7.3
+export V=1.7.4
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="proj-devel libtiff-devel"

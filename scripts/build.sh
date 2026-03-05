@@ -47,11 +47,12 @@ PKGS=$(perl scripts/build-inorder.pl "$@" | paste -d" " -s)
 
 if [ -z "$OSGEO4W_BUILD_RDEPS" ]; then
 	# but only requested packages
-	echo $PKGS | fgrep -x <(echo "$@" | tr ' ' '\n')
+	PKGS=$(fgrep -xf <(tr ' ' '\n' <<<"$@") <(tr ' ' '\n' <<<"$PKGS"))
 fi
 
 echo $(date): REPOSITORY: $OSGEO4W_REP
 echo $(date): BUILDING: $PKGS
+
 [ -z "$OSGEO4W_SKIP_UPLOAD" ] || echo $(date): NOT UPLOADING
 [ -n "$OSGEO4W_BUILD_RDEPS" ] || echo $(date): NOT BUILDING REVERSE DEPENDENCIES
 [ -z "$OSGEO4W_SKIP_CLEAN" ] || echo $(date): SKIPPING CLEANS
