@@ -1,5 +1,5 @@
 export P=python3
-export V=3.12.12
+export V=3.12.13
 export B="next $P-core"
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="openssl-devel bzip2-devel xz-devel zlib-devel sqlite3-devel"
@@ -170,9 +170,8 @@ if 'OSGEO4W_ROOT' not in os.environ:
     os.environ['OSGEO4W_ROOT'] = o4w
     for p in [
         "bin",
-        "apps\\\\qt5\\\\bin",
-        f"apps\\\\Python$MM",
-        f"apps\\\\Python$MM\\\\Scripts"
+        "apps\\\\Python$MM",
+        "apps\\\\Python$MM\\\\Scripts"
     ]:
         p = os.path.join(o4w, p)
         if os.path.exists(p):

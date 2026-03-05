@@ -1,8 +1,8 @@
 export P=proj
-export V=9.7.1
+export V=9.8.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="sqlite3-devel libtiff-devel curl-devel openssl-devel zlib-devel"
+export BUILDDEPENDS="sqlite3-devel libtiff-devel curl-devel openssl-devel zlib-devel brotli-devel zstd-devel"
 export PACKAGES="proj proj-devel proj-runtime-data proj71-runtime proj72-runtime proj80-runtime proj81-runtime proj82-runtime proj90-runtime proj91-runtime proj92-runtime proj93-runtime proj94-runtime proj9-runtime"
 
 source ../../../scripts/build-helpers
@@ -43,6 +43,10 @@ cmake -G Ninja \
 	-D TIFF_INCLUDE_DIR=$(cygpath -aw ../osgeo4w/include) \
 	-D CURL_LIBRARY=$(cygpath -aw ../osgeo4w/lib/libcurl_imp.lib) \
 	-D CURL_INCLUDE_DIR=$(cygpath -aw ../osgeo4w/include) \
+	-D BROTLI_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
+	-D BROTLI_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
+	-D ZSTD_LIBRARY=$(cygpath -am ../osgeo4w/lib/zstd.lib) \
+	-D ZSTD_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D BUILD_TESTING=OFF \
 	-D BUILD_SHARED_LIBS=ON \
 	../../$P-${V%RC*}
@@ -73,7 +77,7 @@ cat <<EOF >$R/$P$abi-runtime/setup.hint
 sdesc: "The PROJ library and commands for coordinate system transformations (Runtime)."
 ldesc: "The PROJ library and commands for coordinate system transformations (Runtime)."
 category: Libs
-requires: msvcrt2019 sqlite3 libtiff curl proj-runtime-data proj-data openssl zlib
+requires: msvcrt2019 sqlite3 libtiff curl proj-runtime-data proj-data openssl zlib zstd brotli
 maintainer: $MAINTAINER
 external-source: $P
 EOF
