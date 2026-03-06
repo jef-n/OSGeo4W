@@ -154,7 +154,7 @@ nextbinary
 
 	unset PYTHONPATH
 	export INCLUDE="$(cygpath -aw $OSGEO4W_ROOT/apps/Qt6/include);$(cygpath -aw $OSGEO4W_ROOT/include);$INCLUDE"
-	export LIB="$(cygpath -aw $OSGEO4W_ROOT/apps/Qt6/lib);(cygpath -aw $OSGEO4W_ROOT/lib);$LIB"
+	export LIB="$(cygpath -aw $OSGEO4W_ROOT/apps/Qt6/lib);$(cygpath -aw $OSGEO4W_ROOT/lib);$LIB"
 
 	export GRASS=$(cygpath -aw $O4W_ROOT/bin/grass*.bat)
 	export GRASS_VERSION=$(unset SHELL; cmd /c $GRASS --config version | sed -e "s/\r//")
@@ -333,7 +333,7 @@ sdesc: "$PKGDESC"
 ldesc: "$PKGDESC"
 maintainer: $MAINTAINER
 category: Desktop
-requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl gdal-dev libspatialite zlib libiconv fcgi libspatialindex oci qt6-libs qt6-qml qt6-tools qca-qt6 qwt-qt6-libs python3-sip python3-core python3-pyqt6 python3-psycopg2 python3-pyqt6-qscintilla python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-gdal-dev python3-requests python3-plotly python3-pyproj python3-owslib qtkeychain-qt6-libs libzip opencl exiv2 hdf5 pdal-dev geographiclib
+requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl libspatialite zlib libiconv libspatialindex qt6-libs qt6-qml qt6-tools qca-qt6 qwt-qt6-libs python3-sip python3-core python3-pyqt6 python3-psycopg2 python3-pyqt6-qscintilla python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-requests python3-plotly python3-pyproj python3-owslib qtkeychain-qt6-libs libzip opencl exiv2 hdf5 geographiclib pdal-dev gdal-dev fcgi oci python3-gdal-dev
 EOF
 
 		appendversions $R/setup.hint
