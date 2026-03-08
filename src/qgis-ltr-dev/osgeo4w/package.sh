@@ -345,7 +345,7 @@ sdesc: "$PKGDESC"
 ldesc: "$PKGDESC"
 maintainer: $MAINTAINER
 category: Desktop
-requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl gdal libspatialite zlib libiconv fcgi libspatialindex oci qt5-libs qt5-qml qt5-tools qtwebkit-libs qca qwt-libs python3-sip python3-core python3-pyqt5 python3-psycopg2 python3-qscintilla python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-gdal python3-requests python3-plotly python3-pyproj python3-owslib qtkeychain-libs libzip opencl exiv2 hdf5 pdal pdal-libs
+requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl gdal libspatialite zlib libiconv fcgi libspatialindex oci qt5-libs qt5-qml qt5-tools qtwebkit-libs qca qwt-libs python3-sip python3-core python3-pyqt5 python3-psycopg2 python3-qscintilla python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-gdal python3-requests python3-plotly python3-pyproj python3-owslib python3-pywin32 qtkeychain-libs libzip opencl exiv2 hdf5 pdal pdal-libs
 EOF
 
 		appendversions $R/setup.hint
@@ -366,7 +366,7 @@ sdesc: "$PKGDESC (metapackage with additional free dependencies)"
 ldesc: "$PKGDESC (metapackage with additional free dependencies)"
 maintainer: $MAINTAINER
 category: Desktop
-requires: $P proj python3-pyparsing python3-simplejson python3-shapely python3-matplotlib python3-pygments python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-pypiwin32 python3-future python3-pip python3-pillow python3-geopandas python3-geographiclib grass python3-pyserial python3-autopep8 python3-openpyxl python3-remotior-sensus saga python3-psycopg python3-pyarrow qt5-tools gdal-sosi python3-pydantic python3-duckdb
+requires: $P proj python3-pyparsing python3-simplejson python3-shapely python3-matplotlib python3-pygments python3-networkx python3-scipy python3-pyodbc python3-xlrd python3-xlwt setup python3-exifread python3-lxml python3-jinja2 python3-markupsafe python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pip python3-pillow python3-geopandas python3-geographiclib grass python3-pyserial python3-autopep8 python3-openpyxl python3-remotior-sensus saga python3-psycopg python3-pyarrow qt5-tools gdal-sosi python3-pydantic python3-duckdb
 external-source: $P
 EOF
 
