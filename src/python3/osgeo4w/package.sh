@@ -178,7 +178,7 @@ if 'OSGEO4W_ROOT' not in os.environ:
             paths.insert(0, p)
 
 for p in paths:
-    if os.path.exists(p):
+    if p != '.' and os.path.exists(p):
         os.add_dll_directory(p)
 EOF
 
