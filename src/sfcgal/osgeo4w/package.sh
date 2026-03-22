@@ -97,4 +97,6 @@ tar -C install \
 
 cp ../$pv/LICENSE $R/$P-devel/$P-devel-$V-$B.txt
 
+tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
+
 endlog
