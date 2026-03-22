@@ -286,28 +286,32 @@ foreach my $p (sort keys %packages) {
 		push @v, "t:$test" if defined $test;
 		print STDERR "updated hint: $tdir/$d/$p/setup.hint [" . join(" ", @v) . "]\n";
 
-		if( $remote{$p}{curr}->{version} ne $curr ) {
-			my $ov = $remote{$p}{curr}->{version};
-			my $nv = $curr;
-			my ($ouv, $opv) = split /-/, $ov;
-			my ($nuv, $npv) = split /-/, $nv;
-			my @ov = split /\./, $ouv;
-			my @nv = split /\./, $nuv;
+		if( exists $remote{$p}{curr}->{version} ) {
+			if( $remote{$p}{curr}->{version} ne $curr ) {
+				my $ov = $remote{$p}{curr}->{version};
+				my $nv = $curr;
+				my ($ouv, $opv) = split /-/, $ov;
+				my ($nuv, $npv) = split /-/, $nv;
+				my @ov = split /\./, $ouv;
+				my @nv = split /\./, $nuv;
 
-			if($ouv eq $nuv) {
-				print D "$p:$ov:$nv:REBUILD\n";
-			} else {
-
-				if(@ov == 3 && @nv == 3) {
-					if($ov[0] == $nv[0] && $ov[1] == $nv[1] && $ov[2] ne $nv[2]) {
-						print D "$p:$ov:$nv:PATCH\n";
-					} else {
-						print D "$p:$ov:$nv:UPDATE\n";
-					}
+				if($ouv eq $nuv) {
+					print D "$p:$ov:$nv:REBUILD\n";
 				} else {
-					print D "$p:$ov:$nv:UPDATEM\n";
+
+					if(@ov == 3 && @nv == 3) {
+						if($ov[0] == $nv[0] && $ov[1] == $nv[1] && $ov[2] ne $nv[2]) {
+							print D "$p:$ov:$nv:PATCH\n";
+						} else {
+							print D "$p:$ov:$nv:UPDATE\n";
+						}
+					} else {
+						print D "$p:$ov:$nv:UPDATEM\n";
+					}
 				}
 			}
+		} else {
+			print D "$p\:\:$curr:NEW\n";
 		}
 	} else {
 		unlink "$tdir/$d/$p/setup.hint";
@@ -315,6 +319,8 @@ foreach my $p (sort keys %packages) {
 }
 
 close D;
+
+system "cp $tdir/diff /tmp/";
 
 unless(keys %files) {
 	print STDERR "No files to update\n";

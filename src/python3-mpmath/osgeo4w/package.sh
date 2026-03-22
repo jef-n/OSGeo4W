@@ -1,5 +1,5 @@
 export P=python3-mpmath
-export V=pip
+export V=1.3.0
 export B=pip
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-pip python3-wheel python3-setuptools"

@@ -1,9 +1,9 @@
-export P=python3-chardet
+export P=python3-dukpy
 export V=pip
 export B=pip
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-pip python3-wheel python3-setuptools"
-export PACKAGES="python3-chardet"
+export PACKAGES="python3-dukpy"
 
 source ../../../scripts/build-helpers
 

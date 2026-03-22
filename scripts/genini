@@ -33,6 +33,8 @@ if( open F, "md5sums" ) {
 
 
 my @okmissing = qw'message ldesc build-depends';
+my @okprevmissing = qw'message ldesc build-depends install license src';
+my @oktestmissing = @okprevmissing;
 my ($outfile, $help, $recursive);
 my $arch = 'x86_64';
 my $release;
@@ -40,6 +42,8 @@ my $date;
 my $startts;
 my $alllicenses = 0;
 GetOptions('okmissing=s'=>\@okmissing,
+           'okprevmissing=s' => @okprevmissing,
+           'oktestmissing=s' => @oktestmissing,
            'output=s'=>\$outfile,
            'help'=>\$help,
            'release=s'=>\$release,
@@ -314,7 +318,7 @@ sub parsedir {
         my $x = $pkg{$pname}{$what};
         next unless $x->{'version'};
         $explicit = 1;
-        addfiles($pname, $x, $d);
+        addfiles($pname, $x, $d, $what);
     }
 
     return if $explicit;
@@ -353,7 +357,7 @@ sub parsedir {
         my $x = $pkg{$pname}{$what};
         my $p;
         ($p, $x->{'version'}) = getver($f);
-        addfiles($p, $x, $d);
+        addfiles($p, $x, $d, $what);
     }
 }
 
@@ -361,8 +365,10 @@ sub addfiles {
     my $pname = shift;
     my $x = shift;
     my $d = shift;
+    my $stage = shift;
+
     my $install = tarball($d, $pname, $x->{'version'});
-    filer($x, 'install', $install);
+    filer($x, 'install', $install, $stage);
 
     my $t = license($d, ".txt", $pname, $x->{'version'});
     my $p = license($d, ".pdf", $pname, $x->{'version'});
@@ -374,9 +380,9 @@ sub addfiles {
         system "umask 0111; catdoc -dus-ascii '$r' >'$t'";
     }
 
-    print STDERR "$pname: no license [$t]\n" unless -e $t || $pname =~ /^(proj-data|python3-.*)/;
+    # print STDERR "$pname: no license [$t]\n" unless -e $t || $pname =~ /^(proj-data|python3-.*)/;
 
-    filer($x, 'license', $t) if -e $t;
+    filer($x, 'license', $t, $stage) if -e $t;
 
     if ($pkg{$pname}{''}{'external-source'}) {
         $pname = $pkg{$pname}{''}{'external-source'};
@@ -384,7 +390,7 @@ sub addfiles {
     }
 
     my $source  = tarball($d, $pname, $x->{'version'}, 'src');
-    filer($x, 'source', $source);
+    filer($x, 'source', $source, $stage);
 }
 
 sub getver {
@@ -397,9 +403,16 @@ sub filer {
     my $x = shift;
     my $what = shift;
     my $f = shift;
+    my $stage = shift;
 
     unless( -r $f ) {
-        myerror "can't open $f - $!" unless $main::okmissing{$what};
+        if($stage eq "") {
+            myerror "can't open $f - $!" unless $main::okmissing{$what};
+        } elsif($stage eq "prev") {
+            myerror "can't open $f - $!" unless $main::okprevmissing{$what};
+        } elsif($stage eq "test") {
+            myerror "can't open $f - $!" unless $main::oktestmissing{$what};
+        }
         return undef;
     }
 

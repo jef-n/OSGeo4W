@@ -210,6 +210,11 @@ for pkg in pkgs:
             print(f"{pkg}: Required packages missing in BUILDDEPENDS: {' '.join(s)}", file=sys.stderr)
             sys.exit(1)
 
+        s = set(builddepends) - set(props['Requires'])
+        if s:
+            print(f"{pkg}: Not required packages in BUILDDEPENDS: {' '.join(s)}", file=sys.stderr)
+            sys.exit(1)
+
         s = [p for p in [join('..', '..', p) for p in set(props['Requires']) - set(pkgs)] if not isdir(p)]
         if s:
             print(f"{pkg}: Required package directories missing: {' '.join(s)}", file=sys.stderr)
@@ -314,7 +319,7 @@ for pkg in pkgs:
             sys.exit(1)
         externalsource = None
     else:
-        externalsource = 'python3-{}'.format(pkg.replace('_', '-'))
+        externalsource = 'python3-{}'.format(mainpkg.replace('_', '-'))
 
     sf = open(join(d, "setup.hint"), "wb")
     sf.write("""\

@@ -31,6 +31,7 @@ log() {
 declare -x log
 
 startlog() {
+	log_failed=0
 	echo "Local package repository: $OSGEO4W_REP"
 	echo "Logging to $OSGEO4W_PWD/package.log"
 	savelog package.log
@@ -114,12 +115,16 @@ faillog() {
 	if [ -f "$OSGEO4W_SCRIPTS/fail" ]; then
 		bash "$OSGEO4W_SCRIPTS/fail"
 	fi
+	log_failed=1
 	finishlog
 	return 1
 }
 declare -x faillog
 
 finishlog() {
+	if (( log_failed == 0 )) && [ -f "$OSGEO4W_SCRIPTS/success" ]; then
+		bash "$OSGEO4W_SCRIPTS/success"
+	fi
 	if [ -f "$OSGEO4W_SCRIPTS/finish" ]; then
 		bash "$OSGEO4W_SCRIPTS/finish"
 	fi
@@ -147,8 +152,9 @@ fetchenv() {
 
 	! [ -f $d/log ] || cat $d/log
 
+	# locked while it's running
 	while [ -f $d/log ]; do
-		rm $d/log || sleep 2
+		rm $d/log 2>/dev/null || sleep 2
 	done
 
 	cat <<EOF >|$d/envdiff
@@ -668,6 +674,25 @@ nextbinary() {
 }
 declare -x nextbinary
 
+pinnedpypkgs() {
+	local i
+
+	echo -ne "^Package\s+.*\\n|^-.*\\n|^\\.\\n"
+	for i in $OSGEO4W_SCRIPTS/../src/python3-*/osgeo4w/package.sh
+	do
+		P=
+		V=
+		eval $(head -2 $i)
+		[ -n "$P" -a -n "$V" ] || { echo "$i: P or V not found"; exit 1; }
+
+		[ "$V" != pip ] || continue
+		p=${P#python3-}
+		p=${p//-/[_-]}
+		echo -ne "|^$p\s+${V//./\\.}\s+.*\\n"
+	done
+}
+declare -x pinnedpypkg
+
 packagewheel() {
 	log "Packaging $P==$V with pip"
 
@@ -730,23 +755,8 @@ packagewheel() {
 
 		set | grep "^PIP_"
 
-		if [ -z "$OSGEO4W_PY_PINNED_RE" ]; then
-			export OSGEO4W_PY_PINNED_RE=$(
-				echo -ne "^Package\s+.*\\n|^-.*\\n|^\\.\\n"
-				for i in $OSGEO4W_PWD/../../python3-*/osgeo4w/package.sh
-				do
-					P=
-					V=
-					eval $(head -2 $i)
-					[ -n "$P" -a -n "$V" ] || { echo "$i: P or V not found"; exit 1; }
-
-					[ "$V" != pip ] || continue
-					p=${P#python3-}
-					p=${p//-/[_-]}
-					echo -ne "|^$p\s+${V//./\\.}\s+.*\\n"
-				done
-			)
-		fi
+		export OSGEO4W_PY_PINNED_RE
+		[ -n "$OSGEO4W_PY_PINNED_RE" ] || OSGEO4W_PY_PINNED_RE=$(pinnedpypkgs)
 
 		echo "PINNED: $OSGEO4W_PY_PINNED_RE"
 
