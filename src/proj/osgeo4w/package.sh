@@ -77,7 +77,7 @@ cat <<EOF >$R/$P$abi-runtime/setup.hint
 sdesc: "The PROJ library and commands for coordinate system transformations (Runtime)."
 ldesc: "The PROJ library and commands for coordinate system transformations (Runtime)."
 category: Libs
-requires: msvcrt2019 sqlite3 libtiff curl proj-runtime-data proj-data openssl zlib zstd brotli
+requires: msvcrt2019 sqlite3 libtiff curl proj-runtime-data openssl zlib zstd brotli
 maintainer: $MAINTAINER
 external-source: $P
 EOF

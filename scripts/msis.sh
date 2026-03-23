@@ -20,12 +20,6 @@ for i in ${PKGS:-qgis qgis-ltr}; do
 		o="$o -arpicon=$PWD/src/$i/osgeo4w/qgis.ico"
 	fi
 
-	case "$i" in
-	*qt6*)
-		o="$o -packagename='QGISQT6'"
-		;;
-	esac
-
 	[ -z "$CI" ] || echo "::group::Creating MSI for $i"
 
 	eval perl scripts/createmsi.pl \
@@ -35,6 +29,15 @@ for i in ${PKGS:-qgis qgis-ltr}; do
 		-shortname="$i" \
 		-mirror=$mirror \
 		$i-full
+
+	eval perl scripts/createmsi.pl \
+		$sign \
+		$o \
+		-verbose \
+		-packagename="QGIS-grids" \
+		-shortname="$i-grids" \
+		-mirror=$mirror \
+		$i-full-grids
 
 	[ -z "$CI" ] || echo "::endgroup::"
 done
