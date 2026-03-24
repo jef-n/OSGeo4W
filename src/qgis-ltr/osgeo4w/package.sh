@@ -501,6 +501,7 @@ EOF
 	appendversions $R/$P-server/setup.hint
 	appendversions $R/$P-full-free/setup.hint
 	appendversions $R/$P-full/setup.hint
+	appendversions $R/$P-full-grids/setup.hint
 	appendversions $R/$P-grass-plugin/setup.hint
 	appendversions $R/$P-oracle-provider/setup.hint
 	appendversions $R/$P-devel/setup.hint

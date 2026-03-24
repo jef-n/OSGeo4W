@@ -381,7 +381,7 @@ requires: $P-full proj-data
 external-source: $P
 EOF
 
-		appendversions $R/$P-full/setup.hint
+		appendversions $R/$P-full-grids/setup.hint
 
 		cat <<EOF >$R/$P-deps/setup.hint
 sdesc: "$PKGDESC (meta package of build dependencies)"
