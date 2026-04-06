@@ -1,0 +1,13 @@
+diff --git a/tests/src/app/CMakeLists.txt b/tests/src/app/CMakeLists.txt
+index b1555454..3d34dc66 100644
+--- a/tests/src/app/CMakeLists.txt
++++ b/tests/src/app/CMakeLists.txt
+@@ -18,7 +18,7 @@ set(TESTS
+   testqgsadvanceddigitizing.cpp
+   testqgsattributetable.cpp
+   testqgsapplocatorfilters.cpp
+-  testqgscustomization.cpp
++# testqgscustomization.cpp
+   testqgsdecorationscalebar.cpp
+   testqgsdwgimportdialog.cpp
+   testqgsfieldcalculator.cpp

@@ -3,7 +3,7 @@ export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="expat-devel fcgi-devel proj-devel qt5-oci sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt5 python3-sip python3-pyqt-builder python3-devel python3-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-devel qscintilla-devel qt5-devel qwt-devel libspatialite-devel oci-devel qtkeychain-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel qtwebkit-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel pdal pdal-devel grass draco-devel libtiff-devel transifex-cli python3-oauthlib gdal-devel"
-export PACKAGES="qgis-ltr-dev qgis-ltr-dev-deps qgis-ltr-dev-full qgis-ltr-dev-full-free qgis-ltr-dev-pdb"
+export PACKAGES="qgis-ltr-dev qgis-ltr-dev-deps qgis-ltr-dev-full qgis-ltr-dev-full-free qgis-ltr-dev-full-grids qgis-ltr-dev-pdb"
 
 : ${REPO:=https://github.com/qgis/QGIS.git}
 : ${SITE:=qgis.org}
@@ -309,7 +309,7 @@ nextbinary
 		cp "$PYTHONHOME/Lib/site-packages/PyQt5/uic/widget-plugins/qgis_customwidgets.py" install/apps/$P/python
 
 		export R=$OSGEO4W_REP/x86_64/release/qgis/$P
-		mkdir -p $R/$P-{pdb,full-free,full,deps}
+		mkdir -p $R/$P-{pdb,full-free,full,full-grids,deps}
 
 		touch exclude
 		cp ../qgis/COPYING $R/$P-$V-$B.txt
@@ -336,6 +336,8 @@ nextbinary
 		/bin/tar -C $d -cjf $R/$P-full-free/$P-full-free-$V-$B.tar.bz2 .
 		cp ../qgis/COPYING $R/$P-full/$P-full-$V-$B.txt
 		/bin/tar -C $d -cjf $R/$P-full/$P-full-$V-$B.tar.bz2 .
+		cp ../qgis/COPYING $R/$P-full-grids/$P-full-grids-$V-$B.txt
+		/bin/tar -C $d -cjf $R/$P-full-grids/$P-full-grids-$V-$B.tar.bz2 .
 		cp ../qgis/COPYING $R/$P-deps/$P-deps-$V-$B.txt
 		/bin/tar -C $d -cjf $R/$P-deps/$P-deps-$V-$B.tar.bz2 .
 		rmdir $d
@@ -382,6 +384,17 @@ external-source: $P
 EOF
 
 		appendversions $R/$P-full/setup.hint
+
+		cat <<EOF >$R/$P-full-grids/setup.hint
+sdesc: "$PKGDESC (metapackage with additional dependencies including proprietary and proj grids)"
+ldesc: "$PKGDESC (metapackage with additional dependencies including proprietary and proj grids)"
+maintainer: $MAINTAINER
+category: Desktop
+requires: $P-full proj-data
+external-source: $P
+EOF
+
+		appendversions $R/$P-full-grids/setup.hint
 
 		cat <<EOF >$R/$P-deps/setup.hint
 sdesc: "$PKGDESC (meta package of build dependencies)"

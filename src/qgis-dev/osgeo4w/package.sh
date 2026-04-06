@@ -325,8 +325,8 @@ nextbinary
 		/bin/tar -C $d -cjf $R/$P-full-free/$P-full-free-$V-$B.tar.bz2 .
 		cp ../qgis/COPYING $R/$P-full/$P-full-$V-$B.txt
 		/bin/tar -C $d -cjf $R/$P-full/$P-full-$V-$B.tar.bz2 .
-		cp ../qgis/COPYING $R/$P-full-grids/$P-full-$V-$B.txt
-		/bin/tar -C $d -cjf $R/$P-full-grids/$P-full-$V-$B.tar.bz2 .
+		cp ../qgis/COPYING $R/$P-full-grids/$P-full-grids-$V-$B.txt
+		/bin/tar -C $d -cjf $R/$P-full-grids/$P-full-grids-$V-$B.tar.bz2 .
 		cp ../qgis/COPYING $R/$P-deps/$P-deps-$V-$B.txt
 		/bin/tar -C $d -cjf $R/$P-deps/$P-deps-$V-$B.tar.bz2 .
 		rmdir $d
@@ -371,6 +371,8 @@ category: Desktop
 requires: $P-full-free gdal-dev-hdf5 gdal-dev-mss gdal-dev-ecw gdal-dev-mrsid gdal-dev-oracle
 external-source: $P
 EOF
+
+		appendversions $R/$P-full/setup.hint
 
 		cat <<EOF >$R/$P-full-grids/setup.hint
 sdesc: "$PKGDESC (metapackage with additional dependencies including proprietary and proj grids)"

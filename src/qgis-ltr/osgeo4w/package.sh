@@ -247,7 +247,7 @@ nextbinary
 	mv osgeo4w/apps/Python*/Lib/site-packages/PyQt5/uic/widget-plugins/qgis_customwidgets.py install/apps/$P/python/PyQt5/uic/widget-plugins
 
 	export R=$OSGEO4W_REP/x86_64/release/qgis/$P
-	mkdir -p $R/$P-{pdb,full-free,full,deps,common,server,grass-plugin,oracle-provider,devel}
+	mkdir -p $R/$P-{pdb,full-free,full,full-grids,deps,common,server,grass-plugin,oracle-provider,devel}
 
 	touch exclude
 
