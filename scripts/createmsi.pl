@@ -29,12 +29,14 @@ my $keep = 0;
 my $verbose = 0;
 
 my $packagename = "QGIS";
+my $installername;
 my $releasename;
 my $shortname = "qgis";
 my $version;
 my $binary;
 my $root = "http://download.osgeo.org/osgeo4w/v2";
 my $ininame = "setup.ini";
+my $smctl_kpa;
 my $signwith;
 my $signpass;
 my $help;
@@ -50,11 +52,13 @@ chomp $BASEDIR;
 my $result = GetOptions(
 		"verbose+" => \$verbose,
 		"keep" => \$keep,
+		"smctl-keypair-alias=s" => \$smctl_kpa,
 		"signwith=s" => \$signwith,
 		"signpass=s" => \$signpass,
 		"releasename=s" => \$releasename,
 		"version=s" => \$version,
 		"binary=i" => \$binary,
+		"installername=s" => \$installername,
 		"packagename=s" => \$packagename,
 		"manufacturer=s" => \$manufacturer,
 		"shortname=s" => \$shortname,
@@ -66,10 +70,13 @@ my $result = GetOptions(
 		"help" => \$help
 	);
 
+die "signwith and smctl-keypair-alias cannot be used simultaniously" if defined $signwith && defined $smctl_kpa;
+die "smctl not found" if defined $smctl_kpa && ! -x "$ENV{SMCTL}";
 die "certificate not found" if defined $signwith && ! -f $signwith;
 
 my $ereleasename;
 my $codepage = "1252";
+$installername = $packagename unless defined $installername;
 
 if(defined $releasename) {
 	my $r = decode_utf8($releasename);
@@ -357,8 +364,8 @@ unless(-d "unpacked" ) {
 }
 
 unless( defined $binary ) {
-	if( -f ".$shortname.$version.binary" ) {
-		open P, ".$shortname.$version.binary";
+	if( -f ".$installername.$version.binary" ) {
+		open P, ".$installername.$version.binary";
 		$binary = <P>;
 		close P;
 		$binary++;
@@ -551,7 +558,7 @@ close O;
 system "cp $license unpacked/apps/$shortname/doc/LICENSE" if -f "unpacked/apps/$shortname/doc/LICENSE";
 system "cp packages/license.temp packages/license.rtf";
 
-my $installer = "$packagename-OSGeo4W-$version-$binary";
+my $installer = "$installername-OSGeo4W-$version-$binary";
 
 my $run = $^O eq "cygwin" ? "" : "wine";
 
@@ -861,9 +868,14 @@ sub sign {
 	rename("$base-signed.msi", "$base.msi") or die "rename failed: $!";
 }
 
-sign "$installer" if $signwith;
+if($signwith) {
+	sign "$installer";
+} elsif(defined $smctl_kpa) {
+	system "smctl sign --simple --keypair-alias $smctl_kpa --input $installer.msi" if defined $smctl_kpa;
+	die "signing failed [$cmd]" if $?;
+}
 
-open P, ">../.$shortname.$version.binary";
+open P, ">../.$installername.$version.binary";
 print P $binary;
 close P;
 
@@ -891,6 +903,7 @@ createmsi.pl [options] [packages...]
     -binary=b		binary version of package
     -ininame=filename	name of the setup.ini (defaults to setup.ini)
     -packagename=s	name of package (defaults to 'QGIS')
+    -installername=s	name of installer (defaults to packagename)
     -manufacturer=s     name of manufacturer (defaults to 'QGIS.org')
     -shortname=s	shortname used for batch file (defaults to 'qgis')
     -mirror=s		default mirror (defaults to 'http://download.osgeo.org/osgeo4w')

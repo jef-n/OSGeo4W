@@ -9,6 +9,8 @@ sign=
 if [ -r "$cert.p12" -a -r "$cert.pass" ]; then
 	[ -z "$CI" ] || echo "::add-mask::$(<$cert.pass)"
 	sign="-signwith=$cert.p12 -signpass=$(<$cert.pass)"
+elif [ -n "$SMCTL" -a -n "$SMCTL_KPA" ]; then
+	sign="-smctl-keypair-alias=$SMCTL_KPA"
 fi
 
 for i in ${PKGS:-qgis qgis-ltr}; do
@@ -34,8 +36,8 @@ for i in ${PKGS:-qgis qgis-ltr}; do
 		$sign \
 		$o \
 		-verbose \
-		-packagename="QGIS-grids" \
-		-shortname="$i-grids" \
+		-shortname="$i" \
+		-installername="QGIS-Grids" \
 		-mirror=$mirror \
 		$i-full-grids
 
