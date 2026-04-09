@@ -1,5 +1,5 @@
 export P=gs
-export V=10.06.0
+export V=10.07.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
@@ -11,7 +11,7 @@ startlog
 
 [ -f gs${V//./}w64.exe ] || wget https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/$P${V//./}/$P${V//./}w64.exe
 
-rm -r install
+rm -rf install
 mkdir -p install
 
 cd install
