@@ -211,6 +211,7 @@ for pkg in pkgs:
             sys.exit(1)
 
         s = set(builddepends) - set(props['Requires'])
+        s = [i for i in s if i.startswith("python3-") and i not in ['python3-pip', 'python3-wheel', 'python3-setuptools']]
         if s:
             print(f"{pkg}: Not required packages in BUILDDEPENDS: {' '.join(s)}", file=sys.stderr)
             sys.exit(1)
