@@ -1,5 +1,5 @@
 export P=libjxl
-export V=0.11.0
+export V=0.11.2
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="zlib-devel libpng-devel brotli-devel libjpeg-turbo-devel"
