@@ -1,5 +1,5 @@
 export P=libpng
-export V=1.6.43
+export V=1.6.57
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=zlib-devel
