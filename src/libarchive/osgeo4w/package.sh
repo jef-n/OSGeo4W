@@ -1,5 +1,5 @@
 export P=libarchive
-export V=3.8.1
+export V=3.8.6
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="zlib-devel bzip2-devel xz-devel lz4-devel zstd-devel"
@@ -9,8 +9,8 @@ source ../../../scripts/build-helpers
 
 startlog
 
-[ -f $P-$V.tar.xz ] || wget https://libarchive.org/downloads/$P-$V.tar.xz
-[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xJf $P-$V.tar.xz
+[ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://github.com/libarchive/libarchive/archive/refs/tags/v$V.tar.gz
+[ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz
 
 vsenv
 cmakeenv
