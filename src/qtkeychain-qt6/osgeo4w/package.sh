@@ -1,5 +1,5 @@
 export P=qtkeychain-qt6
-export V=0.14.2
+export V=0.15.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="qt6-devel"

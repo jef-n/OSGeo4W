@@ -1,8 +1,8 @@
 export P=qt6
-export V=6.8.1
+export V=6.11.0
 export B="next qt6-libs"
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-core python3-pip openssl-devel sqlite3-devel zlib-devel libjpeg-turbo-devel libtiff-devel libpng-devel oci-devel libwebp-devel libmysql-devel zstd-devel libpq-devel icu-devel freetype-devel node"
+export BUILDDEPENDS="python3-core python3-pip python3-spdx-tools openssl-devel sqlite3-devel zlib-devel libjpeg-turbo-devel libtiff-devel libpng-devel oci-devel libwebp-devel libmysql-devel zstd-devel libpq-devel freetype-devel node protobuf-devel"
 export PACKAGES="qt6-devel qt6-docs qt6-libs-symbols qt6-oci qt6-qml qt6-tools"
 
 source ../../../scripts/build-helpers
@@ -81,8 +81,10 @@ mkdir -p build/s
 			CMAKE_LIBRARY_PATH=$(cygpath -am $OSGEO4W_PWD/osgeo4w/lib) \
 			cmd /c ..\\s\\configure.bat \
 				-prefix $(cygpath -aw ../i) \
+				-release \
 				-force-debug-info \
 				-skip qtopcua \
+				-skip qtwayland \
 				-system-sqlite \
 				-system-tiff \
 				-system-webp \
@@ -218,13 +220,16 @@ while read f; do
 
 		./resources/icudtl.dat|\
 		./resources/qtwebengine*|\
+		./resources/v8_context_snapshot.bin|\
 		./translations/qtwebengine_locales/*|\
 		./translations/catalogs.json|\
-		./resources/v8_context_snapshot.bin|\
-		./sbom/*.spdx)
+		./share/qt6/json_schema/*|\
+		./share/qt6/webchannel/*|\
+		./sbom/*.spdx*)
 			p=libs
 			;;
 
+		./bin/qt_cyclonedx_generator.py|\
 		./bin/android_emulator_launcher.sh|\
 		./bin/ensure_pro_file.cmake|\
 		./bin/qt-cmake-create.bat|\
@@ -240,6 +245,7 @@ while read f; do
 		./bin/sanitizer-testrunner.py|\
 		./metatypes/*_metatypes.json|\
 		./modules/*.json|\
+		./share/qt6/wayland/*|\
 		./lib/*.obj)
 			p=devel
 			;;
@@ -300,7 +306,7 @@ sdesc: "${P^} runtime libraries"
 ldesc: "${P^} runtime libraries"
 maintainer: $MAINTAINER
 category: Libs
-requires: base msvcrt2019 openssl sqlite3 zlib libjpeg-turbo libtiff libpng libwebp libmysql zstd libpq icu freetype
+requires: base msvcrt2019 openssl sqlite3 zlib libjpeg-turbo libtiff libpng libwebp libmysql zstd libpq freetype
 external-source: $P
 EOF
 

@@ -24,9 +24,29 @@ diff -ur qca-2.3.8/plugins/qca-botan/CMakeLists.txt ../qca-2.3.8/plugins/qca-bot
    endif()
  endif()
  
-diff -ur qca-2.3.8/plugins/qca-nss/CMakeLists.txt ../qca-2.3.8/plugins/qca-nss/CMakeLists.txt
---- qca-2.3.8/plugins/qca-nss/CMakeLists.txt	2024-01-09 12:12:58.000000000 +0100
-+++ ../qca-2.3.8/plugins/qca-nss/CMakeLists.txt	2024-03-14 05:01:25.871900300 +0100
+diff -ur qca-2.3.10/plugins/qca-gcrypt/CMakeLists.txt ../qca-2.3.10/plugins/qca-gcrypt/CMakeLists.txt
+--- qca-2.3.10/plugins/qca-gcrypt/CMakeLists.txt	2025-03-09 13:09:03.000000000 +0100
++++ ../qca-2.3.10/plugins/qca-gcrypt/CMakeLists.txt	2026-03-29 11:10:05.135534900 +0200
+@@ -1,9 +1,11 @@
+-find_package(PkgConfig REQUIRED)
++find_package(PkgConfig)
+ 
+-if(WITH_gcrypt_PLUGIN STREQUAL "yes")
+-  pkg_check_modules(LIBGCRYPT REQUIRED IMPORTED_TARGET libgcrypt)
+-else()
+-  pkg_check_modules(LIBGCRYPT IMPORTED_TARGET libgcrypt)
++if(PKG_CONFIG_FOUND)
++  if(WITH_gcrypt_PLUGIN STREQUAL "yes")
++    pkg_check_modules(LIBGCRYPT REQUIRED IMPORTED_TARGET libgcrypt)
++  else()
++    pkg_check_modules(LIBGCRYPT IMPORTED_TARGET libgcrypt)
++  endif()
+ endif()
+ 
+ if(LIBGCRYPT_FOUND)
+diff -ur qca-2.3.10/plugins/qca-nss/CMakeLists.txt ../qca-2.3.10/plugins/qca-nss/CMakeLists.txt
+--- qca-2.3.10/plugins/qca-nss/CMakeLists.txt	2025-03-09 13:09:03.000000000 +0100
++++ ../qca-2.3.10/plugins/qca-nss/CMakeLists.txt	2026-03-29 10:59:19.039158800 +0200
 @@ -1,8 +1,11 @@
 -find_package(PkgConfig REQUIRED)
 -if(WITH_nss_PLUGIN STREQUAL "yes")
@@ -44,9 +64,9 @@ diff -ur qca-2.3.8/plugins/qca-nss/CMakeLists.txt ../qca-2.3.8/plugins/qca-nss/C
  endif()
  
  if(NSS_FOUND)
-diff -ur qca-2.3.8/src/qca_plugin.cpp ../qca-2.3.8/src/qca_plugin.cpp
---- qca-2.3.8/src/qca_plugin.cpp	2024-01-09 12:12:58.000000000 +0100
-+++ ../qca-2.3.8/src/qca_plugin.cpp	2024-03-14 05:09:44.894396600 +0100
+diff -ur qca-2.3.10/src/qca_plugin.cpp ../qca-2.3.10/src/qca_plugin.cpp
+--- qca-2.3.10/src/qca_plugin.cpp	2025-03-09 13:09:03.000000000 +0100
++++ ../qca-2.3.10/src/qca_plugin.cpp	2026-03-29 10:59:19.073759200 +0200
 @@ -492,7 +492,10 @@
      while (!providerItemList.isEmpty()) {
          ProviderItem *i    = providerItemList.first();

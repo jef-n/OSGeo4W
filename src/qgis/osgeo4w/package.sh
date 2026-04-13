@@ -259,7 +259,7 @@ sdesc: "QGIS (common)"
 ldesc: "QGIS (common)"
 maintainer: $MAINTAINER
 category: Libs
-requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl libspatialite zlib libiconv libspatialindex qt6-libs qt6-qml qt6-tools qca-qt6 qwt-qt6-libs python3-sip python3-core python3-pyqt6 python3-psycopg2 python3-pyqt6-qscintilla python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-requests python3-plotly python3-pyproj python3-owslib python3-pywin32 qtkeychain-qt6-libs libzip opencl exiv2 hdf5 geographiclib pdal pdal-libs gdal python3-gdal sfcgal
+requires: msvcrt2019 $RUNTIMEDEPENDS libpq geos zstd gsl libspatialite zlib libiconv libspatialindex qt6-libs qt6-qml qt6-tools qca-qt6 qwt-qt6-libs python3-sip python3-core python3-pyqt6 python3-psycopg2 python3-pyqt6-qscintilla python3-pyqt6-webengine python3-jinja2 python3-markupsafe python3-pygments python3-python-dateutil python3-pytz python3-nose2 python3-mock python3-httplib2 python3-future python3-pyyaml python3-requests python3-plotly python3-pyproj python3-owslib python3-pywin32 qtkeychain-qt6-libs libzip opencl exiv2 hdf5 geographiclib pdal pdal-libs gdal python3-gdal sfcgal
 external-source: $P
 EOF
 

@@ -1,5 +1,5 @@
 export P=qca-qt6
-export V=2.3.8
+export V=2.3.10
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="qt6-devel openssl-devel"

@@ -82,7 +82,7 @@ for i in $PKGS; do
 	else
 		r=$?
 		echo $(date): $d FAILED WITH $r
-		[ "$OSGEO4W_CONTINUE_BUILD" ] || exit 1
+		[ "$OSGEO4W_CONTINUE_BUILD" ] || { touch $P/tmp/$i.fail; exit 1; }
 		ok=0
 	fi
 

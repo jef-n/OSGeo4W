@@ -31,7 +31,6 @@ if( open F, "md5sums" ) {
     close F;
 }
 
-
 my @okmissing = qw'message ldesc build-depends';
 my @okprevmissing = qw'message ldesc build-depends install license src';
 my @oktestmissing = @okprevmissing;
@@ -42,8 +41,8 @@ my $date;
 my $startts;
 my $alllicenses = 0;
 GetOptions('okmissing=s'=>\@okmissing,
-           'okprevmissing=s' => @okprevmissing,
-           'oktestmissing=s' => @oktestmissing,
+           'okprevmissing=s' => \@okprevmissing,
+           'oktestmissing=s' => \@oktestmissing,
            'output=s'=>\$outfile,
            'help'=>\$help,
            'release=s'=>\$release,

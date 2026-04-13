@@ -258,20 +258,23 @@ vs2022env() {
 
 			mkdir -p $vcdir
 			vcdir=$(cygpath -aw "$vcdir")
-
-			$OSGEO4W_SCRIPTS/vs_buildtools.exe --passive --norestart --nocache --wait \
-				--installPath $vcdir \
-				--add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 \
-				--add Microsoft.VisualStudio.Component.Windows11SDK.22621 \
-				--add Microsoft.VisualStudio.Component.VC.ATL \
-				--addProductLang en-US
+			o=
 		else
-			$OSGEO4W_SCRIPTS/vs_buildtools.exe --passive --norestart --nocache --wait --removeOos true \
-				--installPath $vcdir \
-				update || true
+			o=update
 		fi
 
-		VCSDK=10.0.22621.0
+		sdk=26100
+
+		$OSGEO4W_SCRIPTS/vs_buildtools.exe --passive --norestart --nocache --wait \
+			--installPath $vcdir \
+			--add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 \
+			--add Microsoft.VisualStudio.Component.Windows11SDK.$sdk \
+			--add Microsoft.VisualStudio.Component.VC.ATL \
+			--removeOos true \
+			--addProductLang en-US \
+			$o || true
+
+		VCSDK=10.0.$sdk.0
 	fi
 
 	if [ -z "$OSGEO4W_SKIP_DBGHELP_CHECK" ]; then

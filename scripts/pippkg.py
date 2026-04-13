@@ -172,7 +172,7 @@ for pkg in pkgs:
 
     name = props['Name'].lower()
     if name != pkg:
-        if name.replace('_', '-') == pkg:
+        if name.replace('_', '-').replace('.', '-') == pkg:
             name = pkg
         else:
             print(f"{pkg}: expected {pkg} instead of {name}", file=sys.stderr)
@@ -203,7 +203,7 @@ for pkg in pkgs:
         if "psycopg2-binary" in props['Requires']:
             props['Requires'].remove("psycopg2-binary")
             props['Requires'].append("psycopg2")
-        props['Requires'] = sorted('python3-{}'.format(p.replace('_', '-')) for p in props['Requires'])
+        props['Requires'] = sorted('python3-{}'.format(p.replace('_', '-').replace('.', '-')) for p in props['Requires'])
 
         s = set(props['Requires']) - set(builddepends) - set(pkgs)
         if s:
@@ -211,7 +211,7 @@ for pkg in pkgs:
             sys.exit(1)
 
         s = set(builddepends) - set(props['Requires'])
-        s = [i for i in s if i.startswith("python3-") and i not in ['python3-pip', 'python3-wheel', 'python3-setuptools']]
+        s = [i for i in s if i.startswith("python3-") and i not in ['python3-pip', 'python3-wheel', 'python3-setuptools', 'python3-devel', 'python3-core', 'python3-packaging', 'python3-sip', 'python3-pyqt-builder', 'python3-toml']]
         if s:
             print(f"{pkg}: Not required packages in BUILDDEPENDS: {' '.join(s)}", file=sys.stderr)
             sys.exit(1)
@@ -320,7 +320,7 @@ for pkg in pkgs:
             sys.exit(1)
         externalsource = None
     else:
-        externalsource = 'python3-{}'.format(mainpkg.replace('_', '-'))
+        externalsource = 'python3-{}'.format(mainpkg.replace('_', '-').replace('.', '-'))
 
     sf = open(join(d, "setup.hint"), "wb")
     sf.write("""\

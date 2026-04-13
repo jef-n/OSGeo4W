@@ -2,7 +2,7 @@ export P=python3-pyqt6
 export V=pip
 export B=pip
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-core python3-pip python3-setuptools python3-wheel python3-devel python3-sip python3-packaging python3-pyqt6-sip python3-pyqt-builder qt6-devel"
+export BUILDDEPENDS="python3-core python3-pip python3-setuptools python3-wheel python3-devel python3-packaging python3-pyqt6-sip qt6-devel"
 export PACKAGES="python3-pyqt6"
 
 source ../../../scripts/build-helpers
