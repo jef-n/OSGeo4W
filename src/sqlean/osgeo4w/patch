@@ -1,0 +1,137 @@
+diff -ur sqlean-0.28.2/src/ipaddr/ipaddr_extension.c ../sqlean-0.28.2/src/ipaddr/ipaddr_extension.c
+--- sqlean-0.28.2/src/ipaddr/ipaddr_extension.c	2026-03-30 23:01:01.000000000 +0200
++++ ../sqlean-0.28.2/src/ipaddr/ipaddr_extension.c	2026-04-12 22:08:52.553357500 +0200
+@@ -3,7 +3,7 @@
+ 
+ // IP address manipulation in SQLite.
+ 
+-#ifdef __MINGW32__
++#ifdef _WIN32
+ #include <ws2tcpip.h>
+ #else
+ #include <arpa/inet.h>
+diff -ur sqlean-0.28.2/src/time/duration.c ../sqlean-0.28.2/src/time/duration.c
+--- sqlean-0.28.2/src/time/duration.c	2026-03-30 23:01:01.000000000 +0200
++++ ../sqlean-0.28.2/src/time/duration.c	2026-04-12 21:20:24.288353300 +0200
+@@ -12,12 +12,21 @@
+ #include "time/timex.h"
+ 
+ // Common durations.
+-const Duration Nanosecond = 1;
+-const Duration Microsecond = 1000 * Nanosecond;
+-const Duration Millisecond = 1000 * Microsecond;
+-const Duration Second = 1000 * Millisecond;
+-const Duration Minute = 60 * Second;
+-const Duration Hour = 60 * Minute;
++Duration Nanosecond;
++Duration Microsecond;
++Duration Millisecond;
++Duration Second;
++Duration Minute;
++Duration Hour;
++
++void init_duration() {
++    Nanosecond = 1;
++    Microsecond = 1000 * Nanosecond;
++    Millisecond = 1000 * Microsecond;
++    Second = 1000 * Millisecond;
++    Minute = 60 * Second;
++    Hour = 60 * Minute;
++}
+ 
+ #pragma region Conversion
+ 
+diff -ur sqlean-0.28.2/src/time/time.c ../sqlean-0.28.2/src/time/time.c
+--- sqlean-0.28.2/src/time/time.c	2026-03-30 23:01:01.000000000 +0200
++++ ../sqlean-0.28.2/src/time/time.c	2026-04-12 22:47:56.359721200 +0200
+@@ -23,27 +23,42 @@
+ 
+ #pragma region Private
+ 
+-static const int64_t seconds_per_minute = 60;
+-static const int64_t seconds_per_hour = 60 * seconds_per_minute;
+-static const int64_t seconds_per_day = 24 * seconds_per_hour;
+-static const int64_t seconds_per_week = 7 * seconds_per_day;
+-static const int64_t days_per_400_years = 365 * 400 + 97;
+-static const int64_t days_per_100_years = 365 * 100 + 24;
+-static const int64_t days_per_4_years = 365 * 4 + 1;
++static int64_t seconds_per_minute;
++static int64_t seconds_per_hour;
++static int64_t seconds_per_day;
++static int64_t seconds_per_week;
++static int64_t days_per_400_years;
++static int64_t days_per_100_years;
++static int64_t days_per_4_years;
+ 
+ // The unsigned zero year for internal calculations.
+ // Must be 1 mod 400, and times before it will not compute correctly,
+ // but otherwise can be changed at will.
+-static const int64_t absolute_zero_year = -292277022399LL;
++static int64_t absolute_zero_year;
+ 
+ // Offsets to convert between internal and absolute or Unix times.
+ // = (absoluteZeroYear - internalYear) * 365.2425 * secondsPerDay
+-static const int64_t absolute_to_internal = -9223371966579724800LL;
+-static const int64_t internal_to_absolute = -absolute_to_internal;
++static int64_t absolute_to_internal;
++static int64_t internal_to_absolute;
+ 
+-static const int64_t unix_to_internal =
+-    (1969 * 365 + 1969 / 4 - 1969 / 100 + 1969 / 400) * seconds_per_day;
+-static const int64_t internal_to_unix = -unix_to_internal;
++static int64_t unix_to_internal;
++static int64_t internal_to_unix;
++
++void init_time()
++{
++    seconds_per_minute = 60;
++    seconds_per_hour = 60 * seconds_per_minute;
++    seconds_per_day = 24 * seconds_per_hour;
++    seconds_per_week = 7 * seconds_per_day;
++    days_per_400_years = 365 * 400 + 97;
++    days_per_100_years = 365 * 100 + 24;
++    days_per_4_years = 365 * 4 + 1;
++    absolute_zero_year = -292277022399LL;
++    absolute_to_internal = -9223371966579724800LL;
++    internal_to_absolute = -absolute_to_internal;
++    unix_to_internal = (1969 * 365 + 1969 / 4 - 1969 / 100 + 1969 / 400) * seconds_per_day;
++    internal_to_unix = -unix_to_internal;
++}
+ 
+ // days_before[m] counts the number of days in a non-leap year
+ // before month m begins. There is an entry for m=12, counting
+diff -ur sqlean-0.28.2/src/time/time_extension.c ../sqlean-0.28.2/src/time/time_extension.c
+--- sqlean-0.28.2/src/time/time_extension.c	2026-03-30 23:01:01.000000000 +0200
++++ ../sqlean-0.28.2/src/time/time_extension.c	2026-04-12 21:46:43.816681600 +0200
+@@ -713,6 +713,9 @@
+ int time_init(sqlite3* db) {
+     static const int flags = SQLITE_UTF8 | SQLITE_INNOCUOUS | SQLITE_DETERMINISTIC;
+     static const int flags_nd = SQLITE_UTF8 | SQLITE_INNOCUOUS;
++    
++    init_time();
++    init_duration();
+ 
+     // constructors
+     sqlite3_create_function(db, "time_now", 0, flags_nd, 0, fn_now, 0, 0);
+diff -ur sqlean-0.28.2/src/time/timex.h ../sqlean-0.28.2/src/time/timex.h
+--- sqlean-0.28.2/src/time/timex.h	2026-03-30 23:01:01.000000000 +0200
++++ ../sqlean-0.28.2/src/time/timex.h	2026-04-12 21:17:13.975739800 +0200
+@@ -232,12 +232,12 @@
+ 
+ // Common durations. There is no definition for units of Day or larger
+ // to avoid confusion across daylight savings time zone transitions.
+-extern const Duration Nanosecond;
+-extern const Duration Microsecond;
+-extern const Duration Millisecond;
+-extern const Duration Second;
+-extern const Duration Minute;
+-extern const Duration Hour;
++extern Duration Nanosecond;
++extern Duration Microsecond;
++extern Duration Millisecond;
++extern Duration Second;
++extern Duration Minute;
++extern Duration Hour;
+ 
+ // Conversion.
+ 
