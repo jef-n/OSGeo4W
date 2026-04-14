@@ -535,7 +535,7 @@ fetchdeps() {
 	done
 
 	log "OSGEO4W:$cmd"
-	if ! $cmd; then
+	if ! OSGEO4W_SKIP_ARP_REGISTRATION=1 $cmd; then
 		log "OSGeo4W failed"
 		for i in osgeo4w/setup.log osgeo4w/setup.log.full osgeo4w/var/log/setup.log osgeo4w/var/log/setup.log.full; do
 			[ -f $i ] && cat $i
