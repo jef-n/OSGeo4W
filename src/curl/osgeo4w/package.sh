@@ -103,7 +103,7 @@ tar -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	lib
 
 cat <<EOF >$P-ca-bundle.bat
-set CURL_CA_BUNDLE=%OSGEO4W_ROOT%\\bin\\curl-ca-bundle.bat
+set CURL_CA_BUNDLE=%OSGEO4W_ROOT%\\bin\\curl-ca-bundle.crt
 EOF
 
 tar -cjf $R/$P-ca-bundle/$P-ca-bundle-$V-$B.tar.bz2 \
