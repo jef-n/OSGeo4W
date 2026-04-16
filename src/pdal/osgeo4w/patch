@@ -42,7 +42,8 @@ diff -ur PDAL-2.10.0-src/vendor/arbiter/arbiter.cpp ../pdal-2.10.0/vendor/arbite
 @@ -4467,6 +4467,7 @@
          "ARBITER_VERIFY_PEER"
      };
-     Keys caPathKeys{ "CURL_CA_PATH", "CURL_CA_BUNDLE", "ARBITER_CA_PATH" };
+-    Keys caPathKeys{ "CURL_CA_PATH", "CURL_CA_BUNDLE", "ARBITER_CA_PATH" };
++    Keys caPathKeys{ "CURL_CA_PATH", "ARBITER_CA_PATH" };
 +    Keys caBundleKeys{ "CURL_CA_BUNDLE", "ARBITER_CA_BUNDLE" };
      Keys caInfoKeys{ "CURL_CAINFO", "CURL_CA_INFO", "ARBITER_CA_INFO" };
      Keys ProxyKeys{ "CURL_PROXY", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "ARBITER_PROXY"};

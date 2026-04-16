@@ -102,8 +102,14 @@ tar -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	include \
 	lib
 
+cat <<EOF >$P-ca-bundle.bat
+set CURL_CA_BUNDLE=%OSGEO4W_ROOT%\\bin\\curl-ca-bundle.bat
+EOF
+
 tar -cjf $R/$P-ca-bundle/$P-ca-bundle-$V-$B.tar.bz2 \
-	--xform "s,curl-ca-bundle.crt,bin/curl-ca-bundle.crt," \
+	--xform "s,curl-ca-bundle.crt,bin/$P-ca-bundle.crt," \
+	--xform "s,$P-ca-bundle.bat,etc/ini/$P-ca-bundle.bat," \
+	$P-ca-bundle.bat \
 	curl-ca-bundle.crt
 
 cp ../$P-$V/COPYING $R/$P-$V-$B.txt
