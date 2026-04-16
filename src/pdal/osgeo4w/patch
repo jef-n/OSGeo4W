@@ -1,6 +1,6 @@
-diff -ur PDAL-2.9.0-src/cmake/zstd.cmake ../pdal-2.9.0/cmake/zstd.cmake
---- PDAL-2.9.0-src/cmake/zstd.cmake	2025-06-19 20:48:31.000000000 +0200
-+++ ../pdal-2.9.0/cmake/zstd.cmake	2025-06-22 10:31:28.998305600 +0200
+diff -ur PDAL-2.10.0-src/cmake/zstd.cmake ../pdal-2.10.0/cmake/zstd.cmake
+--- PDAL-2.10.0-src/cmake/zstd.cmake	2026-02-13 17:37:52.000000000 +0100
++++ ../pdal-2.10.0/cmake/zstd.cmake	2026-02-16 21:00:19.508773900 +0100
 @@ -7,7 +7,7 @@
      find_package(zstd CONFIG QUIET)
      set_package_properties(ZSTD PROPERTIES TYPE
@@ -11,10 +11,10 @@ diff -ur PDAL-2.9.0-src/cmake/zstd.cmake ../pdal-2.9.0/cmake/zstd.cmake
 -    endif(ZSTD_FOUND)
 +    endif(zstd_FOUND)
  endif(WITH_ZSTD)
-diff -ur PDAL-2.9.0-src/CMakeLists.txt ../pdal-2.9.0/CMakeLists.txt
---- PDAL-2.9.0-src/CMakeLists.txt	2025-06-19 20:48:31.000000000 +0200
-+++ ../pdal-2.9.0/CMakeLists.txt	2025-06-22 10:41:49.465529700 +0200
-@@ -273,10 +273,10 @@
+diff -ur PDAL-2.10.0-src/CMakeLists.txt ../pdal-2.10.0/CMakeLists.txt
+--- PDAL-2.10.0-src/CMakeLists.txt	2026-02-13 17:37:52.000000000 +0100
++++ ../pdal-2.10.0/CMakeLists.txt	2026-02-16 21:00:19.519760100 +0100
+@@ -270,10 +270,10 @@
          ${WINSOCK_LIBRARY}
  )
  
@@ -27,3 +27,60 @@ diff -ur PDAL-2.9.0-src/CMakeLists.txt ../pdal-2.9.0/CMakeLists.txt
  endif()
  
  if (ZLIB_FOUND)
+diff -ur PDAL-2.10.0-src/vendor/arbiter/arbiter.cpp ../pdal-2.10.0/vendor/arbiter/arbiter.cpp
+--- PDAL-2.10.0-src/vendor/arbiter/arbiter.cpp	2026-02-13 17:37:53.000000000 +0100
++++ ../pdal-2.10.0/vendor/arbiter/arbiter.cpp	2026-04-16 22:10:27.052313100 +0200
+@@ -4429,7 +4429,7 @@
+ 
+             if (h.count("caBundle"))
+             {
+-                m_caPath = mk(h["caBundle"].get<std::string>());
++                m_caBundle = mk(h["caBundle"].get<std::string>());
+             }
+             else if (h.count("caPath"))
+             {
+@@ -4467,6 +4467,7 @@
+         "ARBITER_VERIFY_PEER"
+     };
+     Keys caPathKeys{ "CURL_CA_PATH", "CURL_CA_BUNDLE", "ARBITER_CA_PATH" };
++    Keys caBundleKeys{ "CURL_CA_BUNDLE", "ARBITER_CA_BUNDLE" };
+     Keys caInfoKeys{ "CURL_CAINFO", "CURL_CA_INFO", "ARBITER_CA_INFO" };
+     Keys ProxyKeys{ "CURL_PROXY", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "ARBITER_PROXY"};
+ 
+@@ -4475,6 +4476,7 @@
+     if (auto v = find(redirKeys)) m_followRedirect = !!std::stol(*v);
+     if (auto v = find(verifyKeys)) m_verifyPeer = !!std::stol(*v);
+     if (auto v = find(caPathKeys)) m_caPath = mk(*v);
++    if (auto v = find(caBundleKeys)) m_caBundle = mk(*v);
+     if (auto v = find(caInfoKeys)) m_caInfo = mk(*v);
+     if (auto v = find(ProxyKeys)) m_proxy = mk(*v);
+ 
+@@ -4486,7 +4488,8 @@
+             "\n\ttimeout: " << m_timeout << "s" <<
+             "\n\tfollowRedirect: " << m_followRedirect <<
+             "\n\tverifyPeer: " << m_verifyPeer <<
+-            "\n\tcaBundle: " << (m_caPath ? *m_caPath : "(default)") <<
++            "\n\tcaPath: " << (m_caPath ? *m_caPath : "(default)") <<
++            "\n\tcaBundle: " << (m_caBundle ? *m_caBundle : "(default)") <<
+             "\n\tcaInfo: " << (m_caInfo ? *m_caInfo : "(default)") <<
+             "\n\tProxy: " << (m_proxy ? *m_proxy : "(default)") <<
+             std::endl;
+@@ -4549,6 +4552,7 @@
+     curl_easy_setopt(m_curl, CURLOPT_FOLLOWLOCATION, toLong(m_followRedirect));
+     curl_easy_setopt(m_curl, CURLOPT_SSL_VERIFYPEER, toLong(m_verifyPeer));
+     if (m_caPath) curl_easy_setopt(m_curl, CURLOPT_CAPATH, m_caPath->c_str());
++    if (m_caBundle) curl_easy_setopt(m_curl, CURLOPT_CAINFO, m_caBundle->c_str());
+     if (m_caInfo) curl_easy_setopt(m_curl, CURLOPT_CAINFO, m_caInfo->c_str());
+     if (m_proxy) curl_easy_setopt(m_curl, CURLOPT_PROXY, m_proxy->c_str());
+ 
+diff -ur PDAL-2.10.0-src/vendor/arbiter/arbiter.hpp ../pdal-2.10.0/vendor/arbiter/arbiter.hpp
+--- PDAL-2.10.0-src/vendor/arbiter/arbiter.hpp	2026-02-13 17:37:53.000000000 +0100
++++ ../pdal-2.10.0/vendor/arbiter/arbiter.hpp	2026-04-16 22:10:44.683196600 +0200
+@@ -3016,6 +3016,7 @@
+     bool m_followRedirect = true;
+     bool m_verifyPeer = true;
+     std::unique_ptr<std::string> m_caPath;
++    std::unique_ptr<std::string> m_caBundle;
+     std::unique_ptr<std::string> m_caInfo;
+     std::unique_ptr<std::string> m_proxy;
+ 
