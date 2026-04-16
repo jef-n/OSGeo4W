@@ -268,3 +268,40 @@ diff -ur Python-3.12.3/Tools/msi/lib/lib_files.wxs ../Python-3.12.3/Tools/msi/li
              <Component Id="venvlauncher_d.exe" Directory="Lib_venv_scripts_nt__d" Guid="*">
                  <File Name="python_d.exe" Source="venvlauncher_d.exe" KeyPath="yes" />
              </Component>
+diff --git a/Modules/_bz2module.c b/Modules/_bz2module.c
+index 97bd44b4ac9694..a732e89d554448 100644
+--- a/Modules/_bz2module.c
++++ b/Modules/_bz2module.c
+@@ -587,6 +587,7 @@ decompress(BZ2Decompressor *d, char *data, size_t len, Py_ssize_t max_length)
+     return result;
+ 
+ error:
++    bzs->next_in = NULL;
+     Py_XDECREF(result);
+     return NULL;
+ }
+diff --git a/Modules/_lzmamodule.c b/Modules/_lzmamodule.c
+index 7bbd6569aa2e44..103a6ef86c0d38 100644
+--- a/Modules/_lzmamodule.c
++++ b/Modules/_lzmamodule.c
+@@ -1114,6 +1114,7 @@ decompress(Decompressor *d, uint8_t *data, size_t len, Py_ssize_t max_length)
+     return result;
+ 
+ error:
++    lzs->next_in = NULL;
+     Py_XDECREF(result);
+     return NULL;
+ }
+diff --git a/Modules/zlibmodule.c b/Modules/zlibmodule.c
+index f94c57e4c89c4f..9759593b6acff4 100644
+--- a/Modules/zlibmodule.c
++++ b/Modules/zlibmodule.c
+@@ -1645,6 +1645,7 @@ decompress(ZlibDecompressor *self, uint8_t *data,
+     return result;
+ 
+ error:
++    self->zst.next_in = NULL;
+     Py_XDECREF(result);
+     return NULL;
+ }
+
