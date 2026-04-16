@@ -9,6 +9,6 @@ source ../../../scripts/build-helpers
 
 startlog
 
-OSGEO4W_PY_INCLUDE_BINARY=1 packagewheel
+OSGEO4W_PY_INCLUDE_BINARY=1 PIP_NO_BINARY=numpy packagewheel -Csetup-args=-Dcpu-baseline="none"
 
 endlog
