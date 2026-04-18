@@ -1,0 +1,92 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f6531904a..54c3ae199 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -270,10 +270,10 @@ target_link_libraries(${PDAL_LIB_NAME}
+         ${WINSOCK_LIBRARY}
+ )
+ 
+-if (ZSTD_FOUND)
++if (zstd_FOUND)
+     target_link_libraries(${PDAL_LIB_NAME}
+         PRIVATE
+-        zstd::libzstd)
++        zstd::libzstd_shared)
+ endif()
+ 
+ if (ZLIB_FOUND)
+diff --git a/cmake/zstd.cmake b/cmake/zstd.cmake
+index 8ae6cdff1..e557c49d5 100644
+--- a/cmake/zstd.cmake
++++ b/cmake/zstd.cmake
+@@ -7,7 +7,7 @@ if (WITH_ZSTD)
+     find_package(zstd CONFIG QUIET)
+     set_package_properties(ZSTD PROPERTIES TYPE
+         PURPOSE "General compression support")
+-    if (ZSTD_FOUND)
++    if (zstd_FOUND)
+         set(PDAL_HAVE_ZSTD 1)
+-    endif(ZSTD_FOUND)
++    endif(zstd_FOUND)
+ endif(WITH_ZSTD)
+diff --git a/vendor/arbiter/arbiter.cpp b/vendor/arbiter/arbiter.cpp
+index 2265ccd69..f5e4617ee 100644
+--- a/vendor/arbiter/arbiter.cpp
++++ b/vendor/arbiter/arbiter.cpp
+@@ -4429,7 +4429,7 @@ Curl::Curl(const std::string s)
+ 
+             if (h.count("caBundle"))
+             {
+-                m_caPath = mk(h["caBundle"].get<std::string>());
++                m_caBundle = mk(h["caBundle"].get<std::string>());
+             }
+             else if (h.count("caPath"))
+             {
+@@ -4466,7 +4466,8 @@ Curl::Curl(const std::string s)
+         "CURL_VERIFY_PEER",
+         "ARBITER_VERIFY_PEER"
+     };
+-    Keys caPathKeys{ "CURL_CA_PATH", "CURL_CA_BUNDLE", "ARBITER_CA_PATH" };
++    Keys caPathKeys{ "CURL_CA_PATH", "ARBITER_CA_PATH" };
++    Keys caBundleKeys{ "CURL_CA_BUNDLE", "ARBITER_CA_BUNDLE" };
+     Keys caInfoKeys{ "CURL_CAINFO", "CURL_CA_INFO", "ARBITER_CA_INFO" };
+     Keys ProxyKeys{ "CURL_PROXY", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "ARBITER_PROXY"};
+ 
+@@ -4475,6 +4476,7 @@ Curl::Curl(const std::string s)
+     if (auto v = find(redirKeys)) m_followRedirect = !!std::stol(*v);
+     if (auto v = find(verifyKeys)) m_verifyPeer = !!std::stol(*v);
+     if (auto v = find(caPathKeys)) m_caPath = mk(*v);
++    if (auto v = find(caBundleKeys)) m_caBundle = mk(*v);
+     if (auto v = find(caInfoKeys)) m_caInfo = mk(*v);
+     if (auto v = find(ProxyKeys)) m_proxy = mk(*v);
+ 
+@@ -4486,7 +4488,8 @@ Curl::Curl(const std::string s)
+             "\n\ttimeout: " << m_timeout << "s" <<
+             "\n\tfollowRedirect: " << m_followRedirect <<
+             "\n\tverifyPeer: " << m_verifyPeer <<
+-            "\n\tcaBundle: " << (m_caPath ? *m_caPath : "(default)") <<
++            "\n\tcaPath: " << (m_caPath ? *m_caPath : "(default)") <<
++            "\n\tcaBundle: " << (m_caBundle ? *m_caBundle : "(default)") <<
+             "\n\tcaInfo: " << (m_caInfo ? *m_caInfo : "(default)") <<
+             "\n\tProxy: " << (m_proxy ? *m_proxy : "(default)") <<
+             std::endl;
+@@ -4549,6 +4552,7 @@ void Curl::init(
+     curl_easy_setopt(m_curl, CURLOPT_FOLLOWLOCATION, toLong(m_followRedirect));
+     curl_easy_setopt(m_curl, CURLOPT_SSL_VERIFYPEER, toLong(m_verifyPeer));
+     if (m_caPath) curl_easy_setopt(m_curl, CURLOPT_CAPATH, m_caPath->c_str());
++    if (m_caBundle) curl_easy_setopt(m_curl, CURLOPT_CAINFO, m_caBundle->c_str());
+     if (m_caInfo) curl_easy_setopt(m_curl, CURLOPT_CAINFO, m_caInfo->c_str());
+     if (m_proxy) curl_easy_setopt(m_curl, CURLOPT_PROXY, m_proxy->c_str());
+ 
+diff --git a/vendor/arbiter/arbiter.hpp b/vendor/arbiter/arbiter.hpp
+index 0b4a664c5..e447c8614 100644
+--- a/vendor/arbiter/arbiter.hpp
++++ b/vendor/arbiter/arbiter.hpp
+@@ -3016,6 +3016,7 @@ private:
+     bool m_followRedirect = true;
+     bool m_verifyPeer = true;
+     std::unique_ptr<std::string> m_caPath;
++    std::unique_ptr<std::string> m_caBundle;
+     std::unique_ptr<std::string> m_caInfo;
+     std::unique_ptr<std::string> m_proxy;
+ 
