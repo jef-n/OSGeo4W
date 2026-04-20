@@ -64,7 +64,9 @@ if not %OSGEO4W_DESKTOP_LINKS%==0 xxmklink "%OSGEO4W_DESKTOP%\\OSGeo4W Setup.lnk
 
 textreplace -std -t bin\\setup.bat
 
-if not %OSGEO4W_SKIP_ARP_REGISTRATION%==1 arpregistration
+if "%OSGEO4W_SKIP_ARP_REGISTRATION%"=="1" goto skiparp
+arpregistration
+:skiparp
 EOF
 
 cat <<EOF >install/etc/preremove/$P.bat
