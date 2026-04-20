@@ -100,7 +100,7 @@ BEGIN
 		    IDC_ROOT_USER,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,13,130,130,8
     LTEXT           "OSGeo4W will be available to all users of the system.  ",
                     IDC_ALLUSERS_TEXT,25,101,125,28
-    LTEXT           "OSGeo4W will only be available to the current user.  Only select this if you lack Admin. privileges or you have specific needs.",
+    LTEXT           "OSGeo4W will only be available to the current user.  Only select this if you lack Admin privileges or you have specific needs.",
 		    IDC_JUSTME_TEXT,25,140,125,32
     CONTROL         "Create icon on &Desktop",
 		    IDC_ROOT_DESKTOP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,170,110,150,8
