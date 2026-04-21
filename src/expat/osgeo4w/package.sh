@@ -1,5 +1,5 @@
 export P=expat
-export V=2.7.6
+export V=2.7.5
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
@@ -11,6 +11,10 @@ startlog
 
 [ -f $P-$V.tar.bz2 ] || wget https://github.com/libexpat/libexpat/releases/download/R_${V//./_}/expat-$V.tar.bz2
 [ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xjf  $P-$V.tar.bz2
+[ -f ../$P-$V/patched ] || {
+	patch -p1 -d ../$P-$V --dry-run <patch
+	patch -p1 -d ../$P-$V <patch >../$P-$V/patched
+}
 
 vsenv
 cmakeenv
