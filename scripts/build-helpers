@@ -85,7 +85,9 @@ endlog() {
 
 		(
 			cd $OSGEO4W_REP
-			diff -u x86_64/setup.ini.prev x86_64/setup.ini || true
+			diff -u \
+				<(grep -v ^setup-timestamp: x86_64/setup.ini.prev) \
+				<(grep -v ^setup-timestamp: x86_64/setup.ini) || true
 		)
 
 		if [ -z "$OSGEO4W_SKIP_UPLOAD" ]; then
@@ -458,8 +460,8 @@ regen() {
 		mv x86_64/setup.ini.tmp x86_64/setup.ini
 		bzip2 -c x86_64/setup.ini >|x86_64/setup.ini.bz2
 		perl $OSGEO4W_SCRIPTS/genini \
-			--okmissing=install \
-			--okmissing=source \
+			--okmissing=prev \
+			--okmissing=test \
 			--alllicenses \
 			--arch=x86_64 \
 			--output=x86_64/setup-lic.ini.tmp \
