@@ -12,8 +12,8 @@ startlog
 [ -f $P-$V.tar.bz2 ] || wget https://github.com/libexpat/libexpat/releases/download/R_${V//./_}/expat-$V.tar.bz2
 [ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xjf  $P-$V.tar.bz2
 [ -f ../$P-$V/patched ] || {
-	patch -p1 -d ../$P-$V --dry-run <patch
-	patch -p1 -d ../$P-$V <patch >../$P-$V/patched
+	patch -p2 -d ../$P-$V --dry-run <patch
+	patch -p2 -d ../$P-$V <patch >../$P-$V/patched
 }
 
 vsenv
