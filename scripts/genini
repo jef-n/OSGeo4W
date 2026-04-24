@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 # Copyright (C) 2005, 2006, 2007 Christopher Faylor
+# Copyright (C) 2011-2025 Jürgen E. Fischer
 #
 # This software is a copyrighted work licensed under the terms of the
 # GNU General Public License.  See http://www.gnu.org/copyleft/gpl.html
@@ -9,6 +10,10 @@ use File::Basename;
 use Digest::MD5;
 use Getopt::Long;
 use POSIX;
+use JSON::PP;
+use Data::UUID;
+use Data::Dumper;
+use Carp qw/croak cluck confess/;
 
 use strict;
 
@@ -34,23 +39,25 @@ if( open F, "md5sums" ) {
 my @okmissing = qw'message ldesc build-depends';
 my @okprevmissing = qw'message ldesc build-depends install license src';
 my @oktestmissing = @okprevmissing;
-my ($outfile, $help, $recursive);
+my ($outfile, $help, $recursive, $sbomprefix);
 my $arch = 'x86_64';
 my $release;
 my $date;
 my $startts;
 my $alllicenses = 0;
+my $ignoremissingdeps = 0;
 GetOptions('okmissing=s'=>\@okmissing,
            'okprevmissing=s' => \@okprevmissing,
            'oktestmissing=s' => \@oktestmissing,
            'output=s'=>\$outfile,
+           'sbomprefix=s'=>\$sbomprefix,
            'help'=>\$help,
            'release=s'=>\$release,
            'arch=s'=>\&arch_handler,
            'recursive'=>\$recursive,
+           'ignoremissingdeps'=>\$ignoremissingdeps,
            'date=s'=>\$date,
            'alllicenses'=>\$alllicenses) or usage;
-
 
 my %licfile;
 my %licmap;
@@ -60,7 +67,7 @@ unless($alllicenses) {
     if( open F, "license.map" ) {
         while(<F>) {
             chomp;
-            my($first,$second,$comment) = split / /;
+            my($first,$second,$comment) = split /\s+/;
             $licmap{$second} = $first;
         }
     } else {
@@ -70,8 +77,8 @@ unless($alllicenses) {
     if( open F, "acceptable.lst" ) {
         while(<F>) {
             chomp;
-            my($id,$comment) = split / /;
-            $acceptable{$id} = 1;
+            my($id,$comment) = split /\s+/;
+            $acceptable{$id} = $comment;
         }
     } else {
         warn "acceptable.lst not found";
@@ -133,7 +140,7 @@ for my $p (sort keys %pkg) {
             if ($key eq 'requires') {
                 for my $p1 (split(' ', $val)) {
                     mywarn "package $p requires an unknown package '$p1'"
-                      unless exists $pkg{$p1};
+                      if !exists $pkg{$p1} && !$ignoremissingdeps;
                 }
             } elsif ($key eq 'build-depends') {
                 for my $p1 (split(' ', $val)) {
@@ -157,6 +164,198 @@ for my $p (sort keys %pkg) {
             print "$key: ", $val, "\n";
         }
     }
+}
+
+if (defined $sbomprefix) {
+    my $now = POSIX::strftime("%Y-%m-%dT%H:%M:%SZ", gmtime($ts));
+    my $snapshot = POSIX::strftime("%Y%m%d-%H%M%S", gmtime($ts));
+
+    my %cyclonedx = (
+        bomFormat => "CycloneDX",
+        '$schema' => "http://cyclonedx.org/schema/bom-1.6.schema.json",
+        specVersion => "1.6",
+        "serialNumber" => "urn:uuid:" . lc Data::UUID->new()->create_str(),
+        version => 1,
+        metadata => {
+            timestamp => $now,
+            component => {
+                type => "library",
+                name => "osgeo4w:repository",
+                "bom-ref" => "osgeo4w:repository",
+            },
+            properties => [
+                {
+                    name => "osgeo4w:mirror",
+                    value => "https://download.osgeo.org/osgeo4w/v2/snapshots/$snapshot"
+                },
+                {
+                     name => "osgeo4w:purl-strategy",
+                     value => "max-findings",
+                },
+                {
+                     name => "osgeo4w:snapshot",
+                     value => $snapshot
+                }
+            ]
+        },
+        components => [],
+        dependencies => [],
+    );
+
+    # TODO: move to recipe (purl in generated setup.hints)
+    my %purlmap = (
+        'cairo' => 'deb/debian/cairo',
+        'curl' => 'deb/debian/curl',
+        'expat' => 'deb/debian/expat',
+        'freetype' => 'deb/debian/freetype',
+        'freexl' => 'deb/debian/freexl',
+        'gs' => 'deb/debian/ghostscript',
+        'gsl' => 'deb/debian/gsl',
+        'hdf5' => 'deb/debian/hdf5',
+        'icu' => 'deb/debian/icu',
+        'libarchive' => 'deb/debian/libarchive',
+        'libjpeg-turbo' => 'deb/debian/libjpeg-turbo',
+        'libmysql' => 'deb/debian/mysql',
+        'libpng' => 'deb/debian/libpng',
+        'libpq' => 'deb/debian/postgresql',
+        'libtiff' => 'deb/debian/tiff',
+        'libxml2' => 'deb/debian/libxml2',
+        'libxslt' => 'deb/debian/libxslt',
+        'libzip' => 'deb/debian/libzip',
+        'lz4' => 'deb/debian/lz4',
+        'netcdf' => 'deb/debian/netcdf',
+        'openssl' => 'deb/debian/openssl',
+        'poppler' => 'deb/debian/poppler',
+        'sqlite3' => 'deb/debian/sqlite3',
+        'thrift' => 'deb/debian/thrift',
+        'xerces-c' => 'deb/debian/xerces-c',
+        'zlib' => 'deb/debian/zlib',
+        'zstd' => 'generic/zstd',
+        'qtkeychain' => 'generic/qtkeychain',
+        'qca-qt6' => 'generic/qca',
+
+        'qgis-ltr' => 'generic/qgis',
+        'qgis-rel-dev' => 'generic/qgis',
+        'qgis-ltr-dev' => 'generic/qgis',
+        'qgis-dev' => 'generic/qgis',
+        'gdal-dev' => 'generic/gdal',
+        'pdal-dev' => 'generic/pdal',
+        'grass-dev' => 'generic/grass',
+
+        'minizip-ng-devel' => 'generic/minizip-ng',
+        'uriparser-devel' => 'generic/uriparser',
+        'libosmium-devel' => 'generic/libosmium',
+        'zxing-cpp-devel' => 'generic/zxing-cpp',
+        'openfyba-devel' => 'generic/openfyba',
+        'libkml-devel' => 'generic/libkml',
+        'protobuf-devel' => 'generic/protobuf',
+        'spdlog-devel' => 'generic/spdlog',
+        'bzip2-devel' => 'generic/bzip2',
+        'snappy-devel' => 'generic/snappy',
+        'protozero-devel'  => 'generic/protozero',
+        'wingetopt-devel' => 'generic/wingetopt',
+        'poly2tri-devel' => 'generic/poly2tri',
+        'podofo-devel' => 'generic/podofo',
+
+        'gdal-dev305-runtime' => 'generic/gdal',
+
+        'curl-ca-bundle' => 'generic/curl-ca-bundle',
+
+        'alkis-import-gid7' => 'generic/alkis-import',
+        'alkis-import-gid7i' => 'generic/alkis-import',
+
+        'python3-pyarrow' => 'generic/arrow-cpp',
+    );
+
+    sub purl {
+        my ($p) = @_;
+        my $what = $pkg{$p}{''};
+        die "$p: not found" unless defined $what;
+        my($u, $b) = $what->{version} =~ /^(.+)-(\d+)$/;
+        die "$p: no upstream version" unless defined $u;
+        die "$p: no revision" unless defined $b;
+
+        if(defined $what->{purl}) {
+                return "pkg:" . $what->{purl} . "\@$u";
+        } elsif( exists $purlmap{$p} ) {
+                return "pkg:" . $purlmap{$p} . "\@$u";
+        } else {
+                return "pkg:generic/python\@$u" if $p =~ /^python3-(core|devel|help|tcltk|test|tools)$/;
+
+                return "pkg:pypi/$1\@$u" if $p =~ /^python3-(.*)$/;
+
+                die "$p: no source" unless exists $what->{source};
+
+                my ($s) = split /\s+/, $what->{source};
+                my ($sn, $sv) = getver($s);
+
+#               warn "$p: purl from source $sn\n";
+                $p = $sn;
+
+                warn "$p: development package?" if $p =~ /-devel$/;
+
+                return "pkg:generic/osgeo4w/$p\@$u";
+        }
+    }
+
+    my @pkgs;
+
+    for my $p (sort keys %pkg) {
+        my $what = $pkg{$p}{''};
+        next unless defined $what;
+
+        next if $what->{category} =~ /\b_obsolete\b/;
+
+        push @pkgs, $p;
+
+        my ($file, $size, $md5) = split /\s+/, $what->{install};
+        die "$p: file undefined" unless defined $file;
+
+        my($u, $b) = $what->{version} =~ /^(.+)-(\d+)$/;
+
+        my $purl = purl($p);
+
+        push @{ $cyclonedx{components} }, {
+            type => "library",
+            name => $p,
+            version => $u,
+            "bom-ref" => $p,
+            purl => $purl,
+#           supplier => {
+#               name => "OSGeo"
+#           },
+#           licenses => [
+#               {
+#                  expression => "UNKNOWN"
+#               }
+#           ],
+#           hashes => [
+#               {
+#                   alg => "MD5",
+#                   content => $md5
+#               }
+#           ],
+            properties => [
+                 { name => "osgeo4w:version", value => $what->{version} },
+                 { name => "osgeo4w:upstream", value => $u },
+                 { name => "osgeo4w:revision", value => $b }
+            ]
+        };
+
+        push @{ $cyclonedx{dependencies} }, {
+            ref => $p,
+            dependsOn => [ split(/\s+/, $what->{requires}) ]
+        } if $what->{requires};
+    }
+
+    push @{ $cyclonedx{dependencies} }, {
+        "ref" => "osgeo4w:repository",
+        dependsOn => [ @pkgs ]
+    };
+
+    open(F, '>', "$sbomprefix.cyclonedx.json") or die "$0: can't open file - $!\n";
+    print F JSON::PP->new->canonical(1)->pretty->encode(\%cyclonedx);
+    close F;
 }
 
 open F, ">md5sums";
@@ -379,16 +578,19 @@ sub addfiles {
         system "umask 0111; catdoc -dus-ascii '$r' >'$t'";
     }
 
-    # print STDERR "$pname: no license [$t]\n" unless -e $t || $pname =~ /^(proj-data|python3-.*)/;
+    #print STDERR "$pname: no license [$t]\n" unless -e $t || $pname =~ /^(proj-data|python3-.*)/;
 
     filer($x, 'license', $t, $stage) if -e $t;
 
+    my $v = $x->{'version'};
     if ($pkg{$pname}{''}{'external-source'}) {
-        $pname = $pkg{$pname}{''}{'external-source'};
+        my $ev;
+        ($pname, $ev) = split /\s+/, $pkg{$pname}{''}{'external-source'};
+        $v = $ev if defined $ev;
         $d = finddir($d, $pname) or return;
     }
 
-    my $source  = tarball($d, $pname, $x->{'version'}, 'src');
+    my $source  = tarball($d, $pname, $v, 'src');
     filer($x, 'source', $source, $stage);
 }
 
@@ -438,7 +640,7 @@ sub filer {
                 $f = $licfile{$digest};
         }
 
-        return if exists $acceptable{$digest};
+        $what = "freelicense" if exists $acceptable{$digest};
     }
 
     $x->{$what} = join(' ', $f, -s $f, $digest);
@@ -482,18 +684,21 @@ sub usage() {
 Usage: genini [--okmissing=key ...] [--recursive] [--output=file] [--help] [--date=yyyy-mm-dd] [setup.ini] [dir ...]
 Create OSGeo4W setup.ini from setup.ini, setup.hint and tar ball information.
 
-    --okmissing=key    Don't warn if key is missing from setup.ini or setup.hint
-                       or if some expected `source' or `install' tarballs are
-                       missing. Option may be repeated. --okmissing=install is
-                       useful if hint files contain `prev' or `test' entries for
-                       missing tarballs. --okmissing=source is useful for
-                       LOCAL-ONLY srcless install media.
-    --recursive        Recurse all subdirectories of specified dirs
-    --arch=x86|x86_64  Must be either x86 or x86_64. Defaults to x86.
-    --date=yyyy-mm-dd  Generate ini for an older state (all newer files will be ignored)
-    --release=string   Optional repository id: release, staging, etc.
-    --output=file      output setup.ini info to file
-    --help             display this message
+    --okmissing=key     Don't warn if key is missing from setup.ini or setup.hint
+                        or if some expected `source' or `install' tarballs are
+                        missing. Option may be repeated. --okmissing=install is
+                        useful if hint files contain `prev' or `test' entries for
+                        missing tarballs. --okmissing=source is useful for
+                        LOCAL-ONLY srcless install media.
+    --oktestmissing=key same as okmissing just for test stage only
+    --okprevmissing=key same as okmissing just for test stage only
+    --recursive         Recurse all subdirectories of specified dirs
+    --arch=x86|x86_64   Must be either x86 or x86_64. Defaults to x86.
+    --date=yyyy-mm-dd   Generate ini for an older state (all newer files will be ignored)
+    --release=string    Optional repository id: release, staging, etc.
+    --output=file       output setup.ini info to file
+    --sbomprefix=prefix output sbom to prefix.cyclonedx.json
+    --help              display this message
 
 Report bugs to osgeo4w mailing list.
 EOF
@@ -509,6 +714,9 @@ BEGIN {
 
     my @archs = qw'x86 x86_64';
     @main::valid_arch{map {lc $_} @archs} = @archs;
+
+    $SIG{__WARN__} = sub { cluck @_; };
+    $SIG{__DIE__} = sub { confess @_; };
 }
 
 # vim: set et ts=4 sw=4 :

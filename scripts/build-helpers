@@ -456,7 +456,11 @@ regen() {
 		cd $OSGEO4W_REP
 		[ -d x86_64/release ] || mkdir -p x86_64/release
 		! [ -f x86_64/setup.ini ] || cp x86_64/setup.ini x86_64/setup.ini.prev
-		perl $OSGEO4W_SCRIPTS/genini --arch=x86_64 --output=x86_64/setup.ini.tmp --recursive x86_64/release
+		perl $OSGEO4W_SCRIPTS/genini \
+			--arch=x86_64 \
+			--output=x86_64/setup.ini.tmp \
+			--ignoremissingdeps \
+			--recursive x86_64/release
 		mv x86_64/setup.ini.tmp x86_64/setup.ini
 		bzip2 -c x86_64/setup.ini >|x86_64/setup.ini.bz2
 		perl $OSGEO4W_SCRIPTS/genini \
@@ -464,6 +468,7 @@ regen() {
 			--okmissing=test \
 			--alllicenses \
 			--arch=x86_64 \
+			--ignoremissingdeps \
 			--output=x86_64/setup-lic.ini.tmp \
 			--recursive \
 			x86_64/release
