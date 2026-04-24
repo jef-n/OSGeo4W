@@ -16,7 +16,7 @@ mkdir -p $R
 
 cat <<EOF >$R/setup.hint
 sdesc: "Microsoft Visual C++ redistributables 2015-2019 (runtime)"
-sdesc: "Microsoft Visual C++ redistributables 2015-2019 (runtime)"
+ldesc: "Microsoft Visual C++ redistributables 2015-2019 (runtime)"
 category: Libs
 requires: 
 maintainer: $MAINTAINER

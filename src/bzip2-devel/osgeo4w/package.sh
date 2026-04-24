@@ -30,7 +30,7 @@ tar -cjf $R/$P-$V-$B.tar.bz2 \
 
 cat <<EOF >$R/setup.hint
 sdesc: "The bzip2 compression and decompression library (development)"
-sdesc: "The bzip2 compression and decompression library (development)"
+ldesc: "The bzip2 compression and decompression library (development)"
 category: Libs
 requires: $P
 maintainer: $MAINTAINER

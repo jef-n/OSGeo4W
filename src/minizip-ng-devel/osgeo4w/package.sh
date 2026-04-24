@@ -41,6 +41,7 @@ mkdir -p $R
 
 cat <<EOF >$R/setup.hint
 sdesc: "zip manipulation library (development)"
+ldesc: "zip manipulation library (development)"
 category: Libs
 requires: zlib xz
 maintainer: $MAINTAINER
