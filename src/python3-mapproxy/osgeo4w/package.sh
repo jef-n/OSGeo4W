@@ -9,6 +9,6 @@ source ../../../scripts/build-helpers
 
 startlog
 
-adddepends=python3-pyproj packagewheel
+packagewheel
 
 endlog
