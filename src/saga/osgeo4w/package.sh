@@ -106,7 +106,7 @@ ldesc: "SAGA (System for Automated Geographical Analyses; transitional package)"
 category: _obsolete
 requires: saga
 maintainer: $MAINTAINER
-external-source: saga
+external-source: saga $V-$B
 EOF
 
 d=$(mktemp -d)

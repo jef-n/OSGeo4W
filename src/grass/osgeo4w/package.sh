@@ -138,7 +138,7 @@ ldesc: "Geographic Resources Analysis Support System (transitional package)"
 category: _obsolete
 requires: grass
 maintainer: $MAINTAINER
-external-source: grass
+external-source: grass $V-$B
 EOF
 
 cat <<EOF >$OSGEO4W_REP/x86_64/release/grass8/setup.hint
@@ -147,7 +147,7 @@ ldesc: "Geographic Resources Analysis Support System (transitional package)"
 category: _obsolete
 requires: grass
 maintainer: $MAINTAINER
-external-source: grass
+external-source: grass $V-$B
 EOF
 
 appendversions $R/setup.hint

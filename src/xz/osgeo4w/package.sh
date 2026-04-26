@@ -61,6 +61,7 @@ ldesc: "XZ-format compression library - development files"
 maintainer: $MAINTAINER
 requires: $P
 category: Libs
+external-source: $P
 EOF
 
 cp ../xz/COPYING $R/$P-devel/$P-devel-$V-$B.txt
