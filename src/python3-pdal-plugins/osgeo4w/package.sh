@@ -1,5 +1,5 @@
 export P=python3-pdal-plugins
-export V=1.6.5
+export V=1.6.6
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-pip python3-wheel python3-devel python3-numpy pdal-devel"
