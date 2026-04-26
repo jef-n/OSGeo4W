@@ -1,5 +1,5 @@
 export P=python3-wxpython
-export V=4.2.4
+export V=4.2.5
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="base python3-core python3-setuptools python3-wheel python3-devel python3-pip python3-attrdict3 wxwidgets-devel python3-numpy python3-pillow python3-six"
@@ -9,7 +9,7 @@ source ../../../scripts/build-helpers
 
 startlog
 
-[ -f wxpython-$V.tar.gz ] || wget https://files.pythonhosted.org/packages/80/6e/b70e6dbdd7cb4f154b7ca424b4c7799f7b067f7a9f4204b8d16d6464648f/wxpython-$V.tar.gz
+[ -f wxpython-$V.tar.gz ] || wget https://files.pythonhosted.org/packages/22/43/81657a6b126ffc19163500a8184d683cec08eb4e1d06905cd0c371c702d0/wxpython-$V.tar.gz
 [ -f ../wxpython-$V/setup.py ] || {
 	tar -C .. -xzf wxpython-$V.tar.gz
 	rm -f patched

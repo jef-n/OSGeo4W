@@ -1,5 +1,5 @@
 export P=python3-pyqt6-webengine
-export V=6.10.0
+export V=6.11.0
 export B=pip
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-pip python3-setuptools python3-devel python3-pyqt6-sip python3-pyqt6 qt6-devel"
@@ -9,7 +9,7 @@ source ../../../scripts/build-helpers
 
 startlog
 
-[ -f pyqt6_webengine-$V.tar.gz ] || wget https://files.pythonhosted.org/packages/5f/5d/355dfe41246c611e861a1e88b43173b57c1b56a550bea12cfeaafbc7e6b6/pyqt6_webengine-$V.tar.gz
+[ -f pyqt6_webengine-$V.tar.gz ] || wget https://files.pythonhosted.org/packages/9a/c6/b4f777c46ff42a759180dc65ad49a207748ea2e83ac4df21e89eaf4834c3/pyqt6_webengine-$V.tar.gz
 [ -d ../pyqt6_webengine-$V ] || tar -C .. -xzf pyqt6_webengine-$V.tar.gz
 
 (
