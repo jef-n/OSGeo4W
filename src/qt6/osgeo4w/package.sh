@@ -288,6 +288,8 @@ set O4W_QT_LIBRARIES=%OSGEO4W_ROOT:\\=/%/apps/${P^}/lib
 set O4W_QT_TRANSLATIONS=%OSGEO4W_ROOT:\\=/%/apps/${P^}/translations
 set O4W_QT_HEADERS=%OSGEO4W_ROOT:\\=/%/apps/${P^}/include
 set O4W_QT_DOC=%OSGEO4W_ROOT:\\=/%/apps/${P^}/doc
+
+set QTWEBENGINE_RESOURCES_PATH=%OSGEO4W_ROOT%\\apps\\${P^}\\resources
 EOF
 
 cat <<EOF >../$P.conf
