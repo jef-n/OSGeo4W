@@ -1,5 +1,5 @@
 export P=thrift
-export V=0.21.0
+export V=0.23.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="boost-devel openssl-devel zlib-devel node"
@@ -9,7 +9,7 @@ source ../../../scripts/build-helpers
 
 startlog
 
-[ -f $P-$V.tar.gz ] || wget -c "https://dlcdn.apache.org/$P/$V/$P-$V.tar.gz"
+[ -f $P-$V.tar.gz ] || wget -c "https://archive.apache.org/dist/thrift/$V/$P-$V.tar.gz"
 [ -d ../$P-$V ] || tar -C .. -xzf $P-$V.tar.gz
 
 cd ../osgeo4w
