@@ -3,7 +3,7 @@ export V=1.9.4
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
-export PACKAGES="lz4 lz4-devel"
+export PACKAGES="lz4 lz4-tools lz4-devel"
 
 source ../../../scripts/build-helpers
 
