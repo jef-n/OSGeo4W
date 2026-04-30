@@ -1,5 +1,5 @@
 export P=libwebp
-export V=1.4.0
+export V=1.6.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="libpng-devel libjpeg-turbo-devel zlib-devel"

@@ -2,7 +2,7 @@ export P=hdf5
 export V=1.14.6
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="libjpeg-turbo-devel szip-devel zlib-devel"
+export BUILDDEPENDS="libjpeg-turbo-devel libaec-devel zlib-devel"
 export PACKAGES="hdf5 hdf5-devel hdf5-tools"
 
 source ../../../scripts/build-helpers
@@ -38,7 +38,7 @@ cmake -G Ninja \
 	-D SZIP_LIBRARIES=$(cygpath -aw ../osgeo4w/lib/szip.lib) \
 	-D SZIP_INCLUDE_DIR=$(cygpath -aw ../osgeo4w/include) \
 	-D SZIP_DIR=$(cygpath -aw ../osgeo4w) \
-	-D ZLIB_LIBRARY=$(cygpath -aw ../osgeo4w/lib/zlib.lib) \
+	-D ZLIB_LIBRARIES=$(cygpath -aw ../osgeo4w/lib/zlib.lib) \
 	-D ZLIB_INCLUDE_DIR=$(cygpath -aw ../osgeo4w/include) \
 	-D HDF5_INSTALL_DATA_DIR=. \
 	-D HDF5_INSTALL_CMAKE_DIR=share/cmake \
@@ -56,7 +56,7 @@ cat <<EOF >$R/setup.hint
 sdesc: "The HDF5 library for reading and writing HDF5 format (Runtime)"
 ldesc: "The HDF5 library for reading and writing HDF5 format (Runtime)"
 category: Libs
-requires: msvcrt2019 libjpeg-turbo szip zlib
+requires: msvcrt2019 libjpeg-turbo libaec zlib
 maintainer: $MAINTAINER
 EOF
 

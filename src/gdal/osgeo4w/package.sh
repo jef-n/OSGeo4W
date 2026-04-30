@@ -1,8 +1,8 @@
 export P=gdal
-export V=3.12.4
+export V=3.13.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel szip-devel hdf4-devel hdf5-devel hdf5-tools ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-turbo-devel python3-setuptools opencl-devel libtiff-devel arrow-cpp-devel lz4-devel openssl-devel lerc-devel kealib-devel odbc-cpp-wrapper-devel libjxl-devel libxml2-devel c-blosc-devel libarchive-devel"
+export BUILDDEPENDS="python3-core swig zlib-devel proj-devel libpng-devel curl-devel geos-devel libmysql-devel sqlite3-devel netcdf-devel libpq-devel expat-devel xerces-c-devel libaec-devel hdf4-devel hdf5-devel hdf5-tools ogdi-devel libiconv-devel openjpeg-devel libspatialite-devel freexl-devel libkml-devel xz-devel zstd-devel msodbcsql-devel poppler-devel libwebp-devel oci-devel openfyba-devel freetype-devel python3-devel python3-numpy libjpeg-turbo-devel python3-setuptools opencl-devel libtiff-devel arrow-cpp-devel lz4-devel openssl-devel lerc-devel kealib-devel odbc-cpp-wrapper-devel libjxl-devel libxml2-devel c-blosc-devel libarchive-devel"
 export PACKAGES="gdal gdal-devel gdal-ecw gdal-filegdb gdal-hana gdal-hdf5 gdal-kea gdal-mrsid gdal-mss gdal-oracle gdal-sosi gdal301-runtime gdal302-runtime gdal303-runtime gdal304-runtime gdal305-runtime gdal306-runtime gdal307-runtime gdal308-runtime gdal309-runtime python3-gdal"
 
 source ../../../scripts/build-helpers
@@ -123,6 +123,8 @@ export MRSID_SDK=$(cygpath -am gdaldeps/$MRSID_SDK)
 
 	cmake --version
 
+	# netcdf 4.10 needs forward slashes
+	OSGEO4W_ROOT=$(cygpath -am "$OSGEO4W_ROOT") \
 	cmake \
 		-G Ninja \
 		-D                      CMAKE_BUILD_TYPE=RelWithDebInfo \

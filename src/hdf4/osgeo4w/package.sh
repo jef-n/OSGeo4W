@@ -1,8 +1,8 @@
 export P=hdf4
-export V=4.3.0
+export V=4.3.1
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="libjpeg-turbo-devel zlib-devel szip-devel"
+export BUILDDEPENDS="libjpeg-turbo-devel zlib-devel libaec-devel"
 export PACKAGES="hdf4 hdf4-devel hdf4-tools"
 
 source ../../../scripts/build-helpers
@@ -26,15 +26,12 @@ cmake -G Ninja \
 	-D CMAKE_INSTALL_PREFIX=../install \
 	-D HDF4_ENABLE_SZIP_SUPPORT=ON \
 	-D HDF4_BUILD_FORTRAN=OFF \
-	-D JPEG_LIBRARY=$(cygpath -aw ../osgeo4w/lib/jpeg.lib) \
+	-D JPEG_LIBRARIES=$(cygpath -aw ../osgeo4w/lib/jpeg.lib) \
 	-D JPEG_INCLUDE_DIR=$(cygpath -aw ../osgeo4w/include) \
-	-D JPEG_DIR=$(cygpath -aw ../osgeo4w) \
 	-D ZLIB_LIBRARIES=$(cygpath -aw ../osgeo4w/lib/zlib.lib) \
 	-D ZLIB_INCLUDE_DIR=$(cygpath -aw ../osgeo4w/include) \
-	-D ZLIB_DIR=$(cygpath -aw ../osgeo4w) \
-	-D SZIP_LIBRARIES=$(cygpath -aw ../osgeo4w/lib/libszip.lib) \
+	-D SZIP_LIBRARIES=$(cygpath -aw ../osgeo4w/lib/szip.lib) \
 	-D SZIP_INCLUDE_DIR=$(cygpath -aw ../osgeo4w/include) \
-	-D SZIP_DIR=$(cygpath -aw ../osgeo4w) \
 	../../$P-$p$V
 cmake --build .
 cmake --install . || cmake --install .
@@ -49,7 +46,7 @@ cat <<EOF >$R/setup.hint
 sdesc: "The HDF4 library for reading and writing HDF4 format (Runtime)"
 ldesc: "The HDF4 library for reading and writing HDF4 format (Runtime)"
 category: Libs
-requires: msvcrt2019 szip libjpeg-turbo zlib
+requires: msvcrt2019 libaec libjpeg-turbo zlib
 maintainer: $MAINTAINER
 EOF
 

@@ -1,8 +1,8 @@
 export P=netcdf
-export V=4.9.2
+export V=4.10.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="hdf4-devel hdf5-devel curl-devel zlib-devel hdf5-tools szip-devel bzip2-devel zstd-devel libxml2-devel"
+export BUILDDEPENDS="hdf4-devel hdf5-devel curl-devel zlib-devel hdf5-tools libaec-devel zstd-devel libxml2-devel c-blosc-devel libjpeg-turbo-devel"
 export PACKAGES="netcdf netcdf-devel netcdf-tools"
 
 source ../../../scripts/build-helpers
@@ -11,34 +11,6 @@ startlog
 
 [ -f $P-c-$V.tar.gz ] || wget https://downloads.unidata.ucar.edu/$P-c/$V/$P-c-$V.tar.gz
 [ -f ../$P-c-$V/CMakeLists.txt ] || tar -C .. -xzf $P-c-$V.tar.gz
-
-if ! [ -f ../$P-c-$V/patched ]; then
-	patch -d ../$P-c-$V -p0 <<EOF
---- ../CMakeLists.txt	2016-11-21 19:27:08.000000000 +0100
-+++ CMakeLists.txt	2017-05-21 18:55:29.046949000 +0200
-@@ -110,7 +110,7 @@
- 
- # Enable 'dist and distcheck'.
- # File adapted from http://ensc.de/cmake/FindMakeDist.cmake
--FIND_PACKAGE(MakeDist)
-+# FIND_PACKAGE(MakeDist)
- # End 'enable dist and distcheck'
- 
- # Set the build type.
-@@ -1661,8 +1661,8 @@
- print_conf_summary()
- 
- # Enable Makedist files.
--ADD_MAKEDIST()
--ENABLE_MAKEDIST(README.md COPYRIGHT RELEASE_NOTES.md INSTALL INSTALL.cmake test_prog.c lib_flags.am cmake CMakeLists.txt COMPILE.cmake.txt config.h.cmake.in cmake_uninstall.cmake.in netcdf-config-version.cmake.in netcdf-config.cmake.in FixBundle.cmake.in nc-config.cmake.in configure configure.ac install-sh config.h.in config.sub CTestConfig.cmake.in)
-+# ADD_MAKEDIST()
-+# ENABLE_MAKEDIST(README.md COPYRIGHT RELEASE_NOTES.md INSTALL INSTALL.cmake test_prog.c lib_flags.am cmake CMakeLists.txt COMPILE.cmake.txt config.h.cmake.in cmake_uninstall.cmake.in netcdf-config-version.cmake.in netcdf-config.cmake.in FixBundle.cmake.in nc-config.cmake.in configure configure.ac install-sh config.h.in config.sub CTestConfig.cmake.in)
- 
- #####
- # Configure and print the libnetcdf.settings file.
-EOF
-	touch ../$P-c-$V/patched
-fi
 
 vsenv
 cmakeenv
@@ -50,23 +22,23 @@ cd build
 cmake -G Ninja \
 	-D CMAKE_BUILD_TYPE=Release \
 	-D CMAKE_INSTALL_PREFIX=$(cygpath -aw ../install) \
-	-D CMAKE_MODULE_PATH='${CMAKE_ROOT}/cmake/modules/;${CMAKE_SOURCE_DIR}/cmake/modules/;${CMAKE_SOURCE_DIR}/cmake/modules/windows' \
+	-D CMAKE_INCLUDE_PATH=$(cygpath -aw ../osgeo4w/include) \
+	-D HDF4_ROOT_DIR_HINT=$(cygpath -am ../osgeo4w/share/cmake) \
 	-D HDF5_DIR=$(cygpath -am ../osgeo4w/share/cmake) \
 	-D HDF5_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D CURL_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D CURL_LIBRARY=$(cygpath -am ../osgeo4w/lib/libcurl_imp.lib) \
-	-D ZLIB_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
-	-D ZLIB_LIBRARY=$(cygpath -am ../osgeo4w/lib/zlib.lib) \
-	-D Zstd_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
-	-D Zstd_LIBRARIES=$(cygpath -am ../osgeo4w/lib/zstd.lib) \
-	-D BZip2_LIBRARIES=$(cygpath -am ../osgeo4w/lib/libbz2.lib) \
-	-D BZip2_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
-	-D Szip_LIBRARIES=$(cygpath -am ../osgeo4w/lib/szip.lib) \
-	-D Szip_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
+	-D ZSTD_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
+	-D ZSTD_LIBRARY=$(cygpath -am ../osgeo4w/lib/zstd.lib) \
 	-D LIBXML2_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/libxml2) \
 	-D LIBXML2_LIBRARY=$(cygpath -am ../osgeo4w/lib/libxml2.lib) \
+	-D ZLIB_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
+	-D Szip_ROOT=$(cygpath -am ../osgeo4w) \
+	-D Blosc_ROOT=$(cygpath -am ../osgeo4w) \
+	-D ENABLE_HDF4=ON \
+	-D HDF4_ROOT=$(cygpath -am ../osgeo4w) \
 	-D ENABLE_MMAP=OFF \
-	-D BUILD_EXAMPLES=OFF \
+	-D ENABLE_EXAMPLES=OFF \
 	-D PACKAGE_PREFIX_DIR=$(cygpath -am ../osgeo4w/cmake) \
 	../../$P-c-$V
 cmake --build .
@@ -82,7 +54,7 @@ cat <<EOF >$R/setup.hint
 sdesc: "The NetCDF library and commands for reading and writing NetCDF format (Runtime)"
 ldesc: "The NetCDF library and commands for reading and writing NetCDF format (Runtime)"
 category: Libs
-requires: base hdf4 hdf5 curl zlib szip
+requires: base hdf4 hdf5 curl zlib libaec c-blosc libjpeg-turbo
 maintainer: $MAINTAINER
 EOF
 

@@ -9,6 +9,7 @@ source ../../../scripts/build-helpers
 
 startlog
 
-OSGEO4W_PY_INCLUDE_BINARY=1 packagewheel
+# skip version check: torch requires setuptools<82
+OSGEO4W_PY_SKIP_VCHECK=1 OSGEO4W_PY_INCLUDE_BINARY=1 packagewheel
 
 endlog

@@ -1,5 +1,5 @@
 export P=lz4
-export V=1.9.4
+export V=1.10.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none

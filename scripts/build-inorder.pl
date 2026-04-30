@@ -52,8 +52,9 @@ while(<F>) {
 	$deps =~ s/^"(.*)"$/$1/;
 	$deps =~ s/^'(.*)'$/$1/;
 
-	foreach my $d (map { $src{$_}; } split (/\s+/, $deps)) {
-		next unless defined $d;
+	foreach my $p (split (/\s+/, $deps)) {
+		my $d = $src{$p};
+		die "$pkg: source package for dependency $p not found" unless defined $d;
 		$rdep{$d}{$pkg} = 1;
 		$fdep{$pkg}{$d} = 1;
 	}

@@ -1,5 +1,5 @@
 export P=qt6
-export V=6.11.0
+export V=6.11.1
 export B="next qt6-libs"
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-core python3-pip python3-spdx-tools openssl-devel sqlite3-devel zlib-devel libjpeg-turbo-devel libtiff-devel libpng-devel oci-devel libwebp-devel libmysql-devel zstd-devel libpq-devel freetype-devel node protobuf-devel"
