@@ -2,7 +2,7 @@ export P=qt6
 export V=6.11.0
 export B="next qt6-libs"
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-core python3-pip python3-spdx-tools openssl-devel sqlite3-devel zlib-devel libjpeg-turbo-devel libtiff-devel libpng-devel oci-devel libwebp-devel libmysql-devel zstd-devel libpq-devel freetype-devel node protobuf-devel"
+export BUILDDEPENDS="base python3-core python3-pip python3-spdx-tools openssl-devel sqlite3-devel zlib-devel libjpeg-turbo-devel libtiff-devel libpng-devel oci-devel libwebp-devel libmysql-devel zstd-devel libpq-devel freetype-devel node protobuf-devel"
 export PACKAGES="qt6-devel qt6-docs qt6-libs-symbols qt6-oci qt6-qml qt6-tools"
 
 source ../../../scripts/build-helpers
@@ -401,7 +401,7 @@ sdesc: "${P^} documentation (Development)"
 ldesc: "${P^} documentation (Development)"
 maintainer: $MAINTAINER
 category: Libs
-requires: 
+requires:
 external-source: $P
 EOF
 

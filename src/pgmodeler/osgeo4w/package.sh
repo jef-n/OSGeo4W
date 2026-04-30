@@ -2,7 +2,7 @@ export P=pgmodeler
 export V=1.2.1
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="qt6-devel libxml2-devel libpq-devel"
+export BUILDDEPENDS="base qt6-devel libxml2-devel libpq-devel"
 export PACKAGES=pgmodeler
 
 source ../../../scripts/build-helpers

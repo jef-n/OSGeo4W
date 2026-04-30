@@ -2,7 +2,7 @@ export P=qtwebkit
 export V=5.212.0-alpha4
 export B="next qtwebkit-libs"
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="qt5-devel icu-devel python3-core sqlite3-devel libjpeg-turbo-devel libpng-devel zlib-devel libxml2-devel libwebp-devel libiconv-devel"
+export BUILDDEPENDS="base qt5-devel icu-devel python3-core sqlite3-devel libjpeg-turbo-devel libpng-devel zlib-devel libxml2-devel libwebp-devel libiconv-devel"
 export PACKAGES="qtwebkit-devel qtwebkit-libs qtwebkit-symbols"
 
 source ../../../scripts/build-helpers

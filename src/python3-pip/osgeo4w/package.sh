@@ -2,7 +2,7 @@ export P=python3-pip
 export V=pip
 export B=pip
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-core"
+export BUILDDEPENDS="base python3-core"
 export PACKAGES="python3-pip"
 
 # initial python3-pip is built from python3

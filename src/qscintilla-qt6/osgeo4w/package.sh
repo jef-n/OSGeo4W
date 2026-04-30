@@ -2,7 +2,7 @@ export P=qscintilla-qt6
 export V=2.14.1
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="qt6-devel python3-devel python3-setuptools python3-pip python3-pyqt6 python3-pyqt-builder python3-pyqt6-sip"
+export BUILDDEPENDS="base qt6-devel python3-devel python3-setuptools python3-pip python3-pyqt6 python3-pyqt-builder python3-pyqt6-sip"
 export PACKAGES="python3-pyqt6-qscintilla qscintilla-qt6 qscintilla-qt6-devel"
 
 source ../../../scripts/build-helpers

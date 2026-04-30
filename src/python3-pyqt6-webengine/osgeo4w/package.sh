@@ -2,7 +2,7 @@ export P=python3-pyqt6-webengine
 export V=6.11.0
 export B=pip
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-pip python3-setuptools python3-devel python3-pyqt6-sip python3-pyqt6 qt6-devel"
+export BUILDDEPENDS="base python3-pip python3-setuptools python3-devel python3-pyqt6-sip python3-pyqt6 qt6-devel"
 export PACKAGES="python3-pyqt6-webengine"
 
 source ../../../scripts/build-helpers

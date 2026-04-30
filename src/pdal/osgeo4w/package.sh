@@ -2,7 +2,7 @@ export P=pdal
 export V=2.10.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="gdal-devel libgeotiff-devel libtiff-devel zlib-devel curl-devel libxml2-devel hdf5-devel openssl-devel zstd-devel laszip-devel proj-devel draco-devel sqlite3-devel arrow-cpp-devel xz-devel brotli-devel"
+export BUILDDEPENDS="base gdal-devel libgeotiff-devel libtiff-devel zlib-devel curl-devel libxml2-devel hdf5-devel openssl-devel zstd-devel laszip-devel proj-devel draco-devel sqlite3-devel arrow-cpp-devel xz-devel brotli-devel"
 export PACKAGES="pdal pdal-devel pdal-libs"
 
 source ../../../scripts/build-helpers

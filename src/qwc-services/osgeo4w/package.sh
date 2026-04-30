@@ -2,7 +2,7 @@ export P=qwc-services
 export V=1.3.4
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-core python3-virtualenv"
+export BUILDDEPENDS="base python3-core python3-virtualenv"
 export PACKAGES="qwc-services"
 export SERVICENAME="Apache OSGeo4W Web server"
 

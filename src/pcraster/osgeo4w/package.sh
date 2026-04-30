@@ -2,7 +2,7 @@ export P=pcraster
 export V=4.4.1
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="gdal gdal-devel python3-core python3-devel python3-numpy python3-pybind11 xerces-c-devel qt5-devel qt5-oci boost-devel"
+export BUILDDEPENDS="base gdal gdal-devel python3-core python3-devel python3-numpy python3-pybind11 xerces-c-devel qt5-devel qt5-oci boost-devel"
 export PACKAGES="pcraster"
 
 source ../../../scripts/build-helpers

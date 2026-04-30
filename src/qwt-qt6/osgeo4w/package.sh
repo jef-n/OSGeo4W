@@ -2,7 +2,7 @@ export P=qwt-qt6
 export V=6.3.0
 export B="next qwt-libs"
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS=qt6-devel
+export BUILDDEPENDS="base qt6-devel"
 export PACKAGES="qwt-qt6-devel qwt-qt6-doc qwt-qt6-libs"
 
 source ../../../scripts/build-helpers

@@ -2,7 +2,7 @@ export P=python3
 export V=3.12.13
 export B="next $P-core"
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="openssl-devel bzip2-devel xz-devel zlib-devel sqlite3-devel"
+export BUILDDEPENDS="base openssl-devel bzip2-devel xz-devel zlib-devel sqlite3-devel"
 export PACKAGES="python3-core python3-devel python3-help python3-tcltk python3-test python3-tools"
 
 source ../../../scripts/build-helpers

@@ -2,7 +2,7 @@ export P=python3-h5py
 export V=3.15.1
 export B=pip
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-pip python3-wheel python3-setuptools python3-devel python3-numpy python3-six hdf5-devel zlib-devel"
+export BUILDDEPENDS="base python3-pip python3-wheel python3-setuptools python3-devel python3-numpy python3-six hdf5-devel zlib-devel"
 export PACKAGES="python3-h5py"
 
 source ../../../scripts/build-helpers

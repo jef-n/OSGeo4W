@@ -2,7 +2,7 @@ export P=osmium
 export V=1.18.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="libosmium-devel protozero-devel boost-devel bzip2-devel zlib-devel lz4-devel expat-devel gdal-devel"
+export BUILDDEPENDS="base libosmium-devel protozero-devel boost-devel bzip2-devel zlib-devel lz4-devel expat-devel gdal-devel"
 export PACKAGES="osmium"
 
 source ../../../scripts/build-helpers

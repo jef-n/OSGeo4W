@@ -2,7 +2,7 @@ export P=python3-remotior-sensus
 export V=pip
 export B=pip
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-pip python3-wheel python3-setuptools python3-numpy python3-gdal python3-scipy python3-matplotlib"
+export BUILDDEPENDS="base python3-pip python3-wheel python3-setuptools python3-numpy python3-gdal python3-scipy python3-matplotlib"
 export PACKAGES="python3-remotior-sensus"
 
 source ../../../scripts/build-helpers

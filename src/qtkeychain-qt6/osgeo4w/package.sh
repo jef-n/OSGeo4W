@@ -2,7 +2,7 @@ export P=qtkeychain-qt6
 export V=0.15.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="qt6-devel"
+export BUILDDEPENDS="base qt6-devel"
 export PACKAGES="qtkeychain-qt6-devel qtkeychain-qt6-libs"
 
 source ../../../scripts/build-helpers

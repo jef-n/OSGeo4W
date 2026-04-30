@@ -2,7 +2,7 @@ export P=arrow-cpp
 export V=24.0.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="boost-devel openssl-devel thrift-devel zstd-devel bzip2-devel zlib-devel lz4-devel brotli-devel snappy-devel protobuf-devel utf8proc python3-devel python3-pip python3-setuptools python3-wheel python3-numpy"
+export BUILDDEPENDS="base boost-devel openssl-devel thrift-devel zstd-devel bzip2-devel zlib-devel lz4-devel brotli-devel snappy-devel protobuf-devel utf8proc python3-devel python3-pip python3-setuptools python3-wheel python3-numpy"
 export PACKAGES="arrow-cpp arrow-cpp-devel python3-pyarrow"
 
 source ../../../scripts/build-helpers

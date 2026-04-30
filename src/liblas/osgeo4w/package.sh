@@ -2,7 +2,7 @@ export P=liblas
 export V=1.8.1
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="gdal-devel boost-devel libjpeg-turbo-devel libtiff-devel libgeotiff-devel zlib-devel"
+export BUILDDEPENDS="base gdal-devel boost-devel libjpeg-turbo-devel libtiff-devel libgeotiff-devel zlib-devel"
 export PACKAGES="liblas liblas-devel"
 
 source ../../../scripts/build-helpers

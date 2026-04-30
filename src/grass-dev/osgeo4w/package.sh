@@ -2,7 +2,7 @@ export P=grass-dev
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="gdal-devel proj-devel geos-devel netcdf-devel libjpeg-turbo-devel libpq-devel libpng-devel libtiff-devel sqlite3-devel zstd-devel python3-core python3-six python3-pywin32 python3-wxpython liblas-devel cairo-devel freetype-devel"
+export BUILDDEPENDS="base gdal-devel proj-devel geos-devel netcdf-devel libjpeg-turbo-devel libpq-devel libpng-devel libtiff-devel sqlite3-devel zstd-devel python3-core python3-six python3-pywin32 python3-wxpython liblas-devel cairo-devel freetype-devel"
 export PACKAGES="grass-dev"
 
 REPO=https://github.com/OSGeo/grass

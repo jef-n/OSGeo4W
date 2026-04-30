@@ -2,7 +2,7 @@ export P=gpsbabel
 export V=1.9.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="qt5-devel zlib-devel expat-devel gdal-devel"
+export BUILDDEPENDS="base qt5-devel zlib-devel expat-devel gdal-devel"
 export PACKAGES="gpsbabel gpsbabel-gui"
 
 source ../../../scripts/build-helpers

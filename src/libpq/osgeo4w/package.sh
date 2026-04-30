@@ -2,7 +2,7 @@ export P=libpq
 export V=17.3
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="openssl-devel zlib-devel lz4-devel zstd-devel libiconv-devel python3-core python3-pip"
+export BUILDDEPENDS="base openssl-devel zlib-devel lz4-devel zstd-devel libiconv-devel python3-core python3-pip"
 export PACKAGES="libpq libpq-devel"
 
 source ../../../scripts/build-helpers

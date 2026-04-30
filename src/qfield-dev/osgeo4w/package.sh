@@ -2,7 +2,7 @@ export P=qfield-dev
 export V=99
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="qt6-devel qt6-tools qt6-oci qt6-qml qca-qt6-devel gdal-dev-devel proj-devel qgis-dev qtkeychain-qt6-devel libpq-devel protobuf-devel exiv2-devel draco-devel expat-devel libzip-devel libzip-tools libspatialindex-devel sqlite3-devel poly2tri-devel zxing-cpp-devel"
+export BUILDDEPENDS="base qt6-devel qt6-tools qt6-oci qt6-qml qca-qt6-devel gdal-dev-devel proj-devel qgis-dev qtkeychain-qt6-devel libpq-devel protobuf-devel exiv2-devel draco-devel expat-devel libzip-devel libzip-tools libspatialindex-devel sqlite3-devel poly2tri-devel zxing-cpp-devel"
 export PACKAGES=qfield-dev
 
 : ${REPO:=https://github.com/opengisch/QField.git}
