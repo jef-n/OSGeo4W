@@ -25,11 +25,11 @@ cmake -G Ninja \
 	-D CMAKE_BUILD_TYPE=Release \
 	-D CMAKE_INSTALL_PREFIX=../install \
 	-D HDF4_ENABLE_SZIP_SUPPORT=ON \
-       	-D HDF4_BUILD_FORTRAN=OFF \
+	-D HDF4_BUILD_FORTRAN=OFF \
 	-D JPEG_LIBRARY=$(cygpath -aw ../osgeo4w/lib/jpeg.lib) \
 	-D JPEG_INCLUDE_DIR=$(cygpath -aw ../osgeo4w/include) \
 	-D JPEG_DIR=$(cygpath -aw ../osgeo4w) \
-	-D ZLIB_LIBRARY=$(cygpath -aw ../osgeo4w/lib/zlib.lib) \
+	-D ZLIB_LIBRARIES=$(cygpath -aw ../osgeo4w/lib/zlib.lib) \
 	-D ZLIB_INCLUDE_DIR=$(cygpath -aw ../osgeo4w/include) \
 	-D ZLIB_DIR=$(cygpath -aw ../osgeo4w) \
 	-D SZIP_LIBRARIES=$(cygpath -aw ../osgeo4w/lib/libszip.lib) \
