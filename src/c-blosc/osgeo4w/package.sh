@@ -3,7 +3,7 @@ export V=1.21.6
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="lz4-devel zstd-devel zlib-devel"
-export PACKAGES="c-blosc c-blocs-devel"
+export PACKAGES="c-blosc c-blosc-devel"
 
 source ../../../scripts/build-helpers
 
