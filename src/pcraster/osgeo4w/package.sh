@@ -1,5 +1,5 @@
 export P=pcraster
-export V=4.4.1
+export V=4.4.2
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="gdal gdal-devel python3-core python3-devel python3-numpy python3-pybind11 xerces-c-devel qt5-devel qt5-oci boost-devel"
@@ -30,6 +30,7 @@ startlog
 	cd build
 
 	export INCLUDE="$(cygpath -aw ../osgeo4w/apps/$PYTHON/Lib/site-packages/numpy/core/include);$INCLUDE"
+	export INCLUDE="$(cygpath -aw ../osgeo4w/apps/$PYTHON/Lib/site-packages/numpy/_core/include);$INCLUDE"
 	export LIB="$(cygpath -aw ../osgeo4w/apps/$PYTHON/Lib/site-packages/numpy/core/lib);$LIB"
 
 	export INCLUDE="$(cygpath -aw ../osgeo4w/apps/$PYTHON/Lib/site-packages/pybind11/include);$INCLUDE"

@@ -1,24 +1,40 @@
-diff -ur pcraster-4.4.1/environment/cmake/PCRasterConfiguration.cmake ../pcraster-4.4.1/environment/cmake/PCRasterConfiguration.cmake
---- pcraster-4.4.1/environment/cmake/PCRasterConfiguration.cmake	2023-08-31 16:21:59.000000000 +0200
-+++ ../pcraster-4.4.1/environment/cmake/PCRasterConfiguration.cmake	2023-09-03 19:37:18.089779300 +0200
-@@ -181,7 +181,9 @@
- find_program(GDAL_TRANSLATE gdal_translate
-     HINTS ${GDAL_INCLUDE_DIRS}/../bin
- )
--if(EXISTS "${GDAL_INCLUDE_DIRS}/../../share/gdal")
-+if(EXISTS $ENV{GDAL_DATA})
-+    set(GDAL_DATA $ENV{GDAL_DATA})
-+elseif(EXISTS "${GDAL_INCLUDE_DIRS}/../../share/gdal")
-     set(GDAL_DATA "${GDAL_INCLUDE_DIRS}/../../share/gdal")
- elseif(EXISTS "${GDAL_INCLUDE_DIRS}/../share/gdal")
-     set(GDAL_DATA "${GDAL_INCLUDE_DIRS}/../share/gdal")
-diff -ur pcraster-4.4.1/source/pcraster_python/__init__.py.in ../pcraster-4.4.1/source/pcraster_python/__init__.py.in
---- pcraster-4.4.1/source/pcraster_python/__init__.py.in	2023-08-31 16:21:39.000000000 +0200
-+++ ../pcraster-4.4.1/source/pcraster_python/__init__.py.in	2023-11-30 11:14:12.700977000 +0100
-@@ -13,7 +13,7 @@
- if sys.platform == "win32":
-     pcraster_app_path = shutil.which("pcrcalc.exe")
-     if pcraster_app_path:
--        pcraster_bin_pathname = pathlib.Path(pcraster_app_path).parent
-+        pcraster_bin_pathname = pathlib.Path(pcraster_app_path).parent.absolute()
-         os.add_dll_directory(pcraster_bin_pathname)
+diff -ur pcraster-4.4.2/source/pcraster_aguila/ag_Map2DView.cc ../pcraster-4.4.2/source/pcraster_aguila/ag_Map2DView.cc
+--- pcraster-4.4.2/source/pcraster_aguila/ag_Map2DView.cc	2024-05-28 08:59:47.000000000 +0200
++++ ../pcraster-4.4.2/source/pcraster_aguila/ag_Map2DView.cc	2026-05-19 10:35:00.744175000 +0200
+@@ -747,9 +747,9 @@
+   dataObject().map2DMoveBy(movement, false);
+ 
+   // Zoom into the zoom rectangle.
+-  double scale = MIN(
+-       ABS(static_cast<double>(width()) / rectangle.width()),
+-       ABS(static_cast<double>(height()) / rectangle.height()));
++  double scale = std::min(
++       std::abs(static_cast<double>(width()) / rectangle.width()),
++       std::abs(static_cast<double>(height()) / rectangle.height()));
+   dataObject().map2DZoomBy(scale, false);
+ 
+   dataObject().notify();
+diff -ur pcraster-4.4.2/source/pcraster_dal/dal_GDALRasterDriver.cc ../pcraster-4.4.2/source/pcraster_dal/dal_GDALRasterDriver.cc
+--- pcraster-4.4.2/source/pcraster_dal/dal_GDALRasterDriver.cc	2025-05-21 08:55:33.000000000 +0200
++++ ../pcraster-4.4.2/source/pcraster_dal/dal_GDALRasterDriver.cc	2026-05-19 10:34:29.332258900 +0200
+@@ -702,7 +702,7 @@
+          DAL_DRIVER_GENERAL);
+   properties |= Reader;
+ 
+-  char** metadata = d_driver->GetMetadata();
++  auto metadata = d_driver->GetMetadata();
+ 
+   if(CSLFetchBoolean(metadata, GDAL_DCAP_CREATECOPY, FALSE)) {
+     properties |= Writer;
+diff -ur pcraster-4.4.2/source/pcraster_dal/dal_OgrFeatureDriver.cc ../pcraster-4.4.2/source/pcraster_dal/dal_OgrFeatureDriver.cc
+--- pcraster-4.4.2/source/pcraster_dal/dal_OgrFeatureDriver.cc	2025-05-21 08:55:33.000000000 +0200
++++ ../pcraster-4.4.2/source/pcraster_dal/dal_OgrFeatureDriver.cc	2026-05-19 10:34:43.008109500 +0200
+@@ -450,7 +450,7 @@
+          DAL_DRIVER_GENERAL);
+   properties |= Reader;
+ 
+-  char** metadata = _driver->GetMetadata();
++  auto metadata = _driver->GetMetadata();
+ 
+   // GDAL_DCAP_CREATECOPY?
+   if(CSLFetchBoolean(metadata, ODrCCreateDataSource, FALSE)) {

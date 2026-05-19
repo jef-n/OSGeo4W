@@ -53,6 +53,7 @@ ldesc: "LZ4 compression (tools)"
 category: Libs
 requires: msvcrt2019 $P
 maintainer: $MAINTAINER
+external-source: $P
 EOF
 
 cp ../$P-$V/LICENSE $R/$P-tools/$P-tools-$V-$B.txt

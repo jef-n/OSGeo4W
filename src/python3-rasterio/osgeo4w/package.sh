@@ -2,7 +2,7 @@ export P=python3-rasterio
 export V=1.5.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-pip python3-wheel python3-devel python3-setuptools python3-affine python3-attrs python3-click python3-cligj python3-numpy python3-snuggs python3-click-plugins gdal-devel python3-certifi python3-pyparsing"
+export BUILDDEPENDS="python3-pip python3-wheel python3-devel python3-setuptools python3-affine python3-attrs python3-click python3-cligj python3-numpy gdal-devel python3-certifi python3-pyparsing"
 export PACKAGES="python3-rasterio"
 
 source ../../../scripts/build-helpers

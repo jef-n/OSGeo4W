@@ -2,7 +2,7 @@ export P=python3-fiona
 export V=1.10.1
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="python3-pip python3-wheel python3-devel python3-setuptools python3-attrs python3-click python3-cligj python3-click-plugins python3-six python3-munch gdal-devel python3-importlib-metadata python3-certifi"
+export BUILDDEPENDS="python3-pip python3-wheel python3-devel python3-setuptools python3-attrs python3-click python3-cligj python3-click-plugins gdal-devel python3-certifi"
 export PACKAGES="python3-fiona"
 
 source ../../../scripts/build-helpers

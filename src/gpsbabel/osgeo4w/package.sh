@@ -42,7 +42,7 @@ sdesc: "GPS file conversion plus transfer to/from GPS units"
 ldesc: "GPS file conversion plus transfer to/from GPS units"
 maintainer: $MAINTAINER
 category: Commandline_Utilities
-requires: msvcrt2019 expat zlib $RUNTIME_DEPENDS
+requires: msvcrt2019 expat zlib $RUNTIMEDEPENDS
 EOF
 
 cat <<EOF >$R/$P-gui/setup.hint

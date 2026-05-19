@@ -22,7 +22,7 @@ ldesc: "A pure-python PDF library capable of splitting, merging, cropping, and t
 category: _obsolete
 requires: $P
 maintainer: $MAINTAINER
-external-source: $P
+external-source: $P $V-$B
 EOF
 
 d=$(mktemp -d)

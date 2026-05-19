@@ -84,7 +84,7 @@ EOF
 
 d=$(mktemp -d)
 tar -C $d -cjf $OSGEO4W_REP/x86_64/release/szip/szip-99-1.tar.bz2 .
-tar -C $d -cjf $OSGEO4W_REP/x86_64/release/szip/szip-devel/szip-99-1.tar.bz2 .
+tar -C $d -cjf $OSGEO4W_REP/x86_64/release/szip/szip-devel/szip-devel-99-1.tar.bz2 .
 rmdir $d
 
 endlog
