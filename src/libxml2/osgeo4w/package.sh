@@ -1,5 +1,5 @@
 export P=libxml2
-export V=2.12.5
+export V=2.12.10
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="zlib-devel libiconv-devel xz-devel"
@@ -11,6 +11,10 @@ startlog
 
 [ -f $P-$V.tar.xz ] || wget -c https://download.gnome.org/sources/$P/${V%.*}/$P-$V.tar.xz
 [ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xJf $P-$V.tar.xz
+[ -f ../$P-$V/patched ] || (
+	patch -d ../$P-$V/ -p1 --dry-run <patch
+	patch -d ../$P-$V/ -p1 <patch >../$P-$V/patched
+)
 
 vsenv
 cmakeenv
@@ -28,7 +32,6 @@ cmake -G Ninja \
 	-D CMAKE_INSTALL_PREFIX=../install \
 	-D ZLIB_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D ZLIB_LIBRARY=$(cygpath -am ../osgeo4w/lib/zlib.lib) \
-	-D LZMA_LIBRARY=$(cygpath -am ../osgeo4w/lib/liblzma.lib) \
 	-D Iconv_LIBRARY=$(cygpath -am ../osgeo4w/lib/iconv.dll.lib) \
 	-D LIBLZMA_LIBRARY_DEBUG=none \
 	-D LIBXML2_WITH_PYTHON=OFF \
@@ -68,7 +71,7 @@ tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	include lib
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 \
-	osgeo4w/package.sh
+	osgeo4w/package.sh osgeo4w/patch
 
 cp ../$P-$V/Copyright $R/$P-$V-$B.txt
 cp ../$P-$V/Copyright $R/$P-devel/$P-devel-$V-$B.txt
