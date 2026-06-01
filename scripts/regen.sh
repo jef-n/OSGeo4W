@@ -15,5 +15,5 @@ regen
 
 (
 	cd $OSGEO4W_REP
-	diff -u x86_64/setup.ini.prev x86_64/setup.ini || true
+	diff -u <(grep -v "^setup-timestamp:" x86_64/setup.ini.prev) <(grep -v "^setup-timestamp:" x86_64/setup.ini) || true
 )

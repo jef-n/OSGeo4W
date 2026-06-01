@@ -1,20 +1,13 @@
 067e9870bba57e1ce20695c4d5672f30 libzip
 d8a9d2078f35e61cf1122ccd440687cf libzip
-0952e17969fab12227096b5228f23149 GDAL2
 c50ab31669698143abc7d61e9404b940 GDAL3
-0a56cae5c79901bad91e1d583f6ee9b8 PyQt4 (GPL 2)
 0cd9a07afbeb24026c9b03aecfeba458 xslt
 0e92e1a36cc384b60f5b31dde0bdd39e libspatialite
-11153176f46cc0f3b5b5500fc5bcf81a python
 07fc4b9a9c0c0e48050ed38a5e72552b python 3.9.18
 11c08ad23a11ff8cab66b8b5b33b2ccc PDAL
-1342bb7b607df235462af5e41641295e zlib copyright
 17c864f08a4445fe9c41226785e9ed10 netcdf
-17e3ee10f678b8903ff95af5cda9023a python shapely
-1b71f681713d1256e1c23b0890920874 expat
 7b3b078238d0901d3b339289117cb7fb expat
 f4fedd6116da0e171f7cb4d2923d7ac2 expat
-1c92f58b414789214b804e296facf959 netcdf
 1e5cffe65fc786f83a11a4b225495c0b bzip2
 1ebbd3e34237af26da5dc08a4e440464 GPL 3
 1f2a1ce4e63ae39765bf02c2d9dfb298 haru
@@ -23,18 +16,8 @@ fec7ecfe714722b2bb0aaff7d200c701 libxml2
 206cab2b8179d5b89e14b7d63ca61ab7 libjpeg
 2a8e0d8226a102f07ab63ed7fd6ce155 libjpeg-turbo
 2badff2388880cc27e58977d8bc1d494 libjpeg-turbo
-2268c8c55e905a3e286b05272dfc81cc PyQwt
-28c0b6e7f42e6bbe4ca3d90ca20e3f61 python PIL copyright statement
-2919588cd602f2c92fba38e3ceb172f2 netcdf
-296d17c294f867024163b25e2b19969e pyspatialite
-2c38926f611bfbd5a3be0f817c8d2dad OpenSceneGraph Public License, Version 0.0
-2c9872d13fa571e7ba6de95055da1fe2 psycop2 (LGPL)
-2d9031eee7d79f9896ec92779338684c libkml (google)
-2dbe422d4db5022c9717746da7535405 GPL 2
 2e9fb35867314fe31c6a4977ef7dd531 curl
-966ef924a84fe2693b805dd46aab8bd3 curl
 db8448a1e43eb2125f7740fc397db1f6 curl
-85ac45a9ee9afdd4c4e7bd78fad6ec57 curl
 eed2e5088e1ac619c9a1c747da291d75 curl
 425f6fdc767cc067518eef9bbdf4ab7b curl
 72f4e9890e99e68d77b7e40703d789b8 curl
@@ -42,36 +25,24 @@ eed2e5088e1ac619c9a1c747da291d75 curl
 34da3db46fab7501992f9615d7e158cf libtiff
 a3e32d664d6db1386b4689c8121531c3 libtiff
 4ab490c3088a0acff254eb2f8c577547 libtiff
-35e5f53336fec095a8a3f229568e151b pyopengl
-36590a87c7bf6c7de9b089c0d5fd3c4b OTB
 36964f044224efeedd694983c34e716f minizip
 37b5762e07f0af8c74ce80a8bda4266b protobuf (google)
 39bba7d2cf0ba1036f2a6e2be52fe3f0 zstd (GPL)
-3a9bfcba046f8a1b36d9b60bae75b9f5 netcdf
 3b83ef96387f14655fc854ddc3c6bd57 Apache License 2.0
 57c4c10122d7b5a36ffb6416de10bab0 Apache License 2.0 (odbc-cpp-wrapper)
-1ff2fe6a6b2065339ce7993e6c89e527 node
-3d568845cafc3b6c70c6a03dd4e7cdf4 node
 bc2c5aa3a71a7a913843a8cf521adcbb node
 4741693cd088043dcb1922dedb25fd85 python 3.9
-47c086cccdb96f577e1dc61bde8f7f25 wxWindows Library License, 3.1
-4ad878f669af233d3b861433c71857e4 HDF5
 6eacfbd8c95e81bdd19bfb0f0f6e390b HDF5
 9ba0f3d878ab6c2403c86e9b0362d998 HDF5
 4af6221506f202774ef74f64932878a1 freetype
 4fbd65380cdd255951079008b364516c geos
-55f304f11bff1450cd0407f6f880475b python win32
 58a180e1cf84c756c29f782b3a485c29 LGPL (qtwebkit)
-5c262c13b60ebefe3060aed37d334ab6 qtkeychain BSD
 ebece3896618ecf0b60c4fade17f026f qtkeychain
-5d47798af29b2fe81b2d3fad2e060df4 GRASS
 2ad5ea97a10ddec5c5ec6a851d21c509 GRASS
 f99c45741f388137849b7e38b0a9fa94 GRASS \ GIS
-6047399bd24af8d0aecf1c15daf79f0b OpenCV
 625f055f41728f84a8d7938acc35bdc2 GPL 2
 627e6ecababe008a45c70e318ae7014e zlib
 66e4e749bb11d80fc7ba510a9ce99534 zlib
-63fea2ed4889ba7ae7166b1ed520e55f matplotlib
 65b35c879d7e99557086d68a48c385ea GDAL2
 698403c963b048f30801fb862036f868 arrow-cpp (Apache License)
 8031a2c33230c952ed3f3ccff1d3fa89 arrow-cpp (Apache License)
@@ -80,29 +51,18 @@ f99c45741f388137849b7e38b0a9fa94 GRASS \ GIS
 4e951f342bcd258558cd2ef3abc96f0e arrow-cpp (Apache License)
 6d1d8588f77968671ae8efda2c8cc584 avce00
 6e8dee932c26f2dab503abf70c96d8bb webp (google)
-706d3e64d41296000418082ec809645d RIVERBANK COMPUTING LIMITED LICENSE AGREEMENT FOR SIP
-7229e37128466da5717b07f36cea56fa HDF4
 00becdf146f41b175cf78ff97cf58f8d HDF4
 276d8195fe69d9e647ef0bf04b3bc411 HDF4
-7330c66af0fadfe6e8c17069e8e726f2 muparserx
 73f1eb20517c55bf9493b7dd6e480788 GNU AFFERO GENERAL PUBLIC LICENSE (ghostscript)
 74d9aaec5fa0cd734341e8c4dc91b608 proj
 751419260aa954499f7abaabaa882bbe poppler
-76a590f3859ae2be053ae432f61778a3 geotiff
 f80854a7049ee9433d1f93336fe22f10 geotiff
-787d3b37867445c1cdd6f6167bd0e347 ICU LICENSE
-7b1d9dcd17d9bc3d99861ab5e25dae80 pygments
 7d35a060870a8e5db7fbefdf2e182f3a python3-affine
-8211fde12cc8a4e2477602f5953f5b71 LGPL (qtwebengine)
 82ae42c1d0e6bc5c1609e97e2a2e8b24 Python License
 fcf6b249c2641540219a727f35d8d2c2 Python License
-87da2b84884860b71f5f24ab37e7da78 PostgreSQL
 d5dd73e90ee1a572679460ee67233fcc PostgreSQL
 88e2b9117e6be406b5ed6ee4ca99a705 GPL Qt
-89c0b58a3e01ce3d8254c9f59e78adfb freeglut
-8d0ba0e313c67ff32d30e6d9a766c115 glext
 90db08e4c32c6d6ca9efc338329badc6 sqlite copyright statement
-92a9c8f80b75e6d5fcf0416c1ad9e667 GFDL 1.3
 93b3b0606bedcc7aba487f574586c4e9 Entwine license (LGPL2)
 941ee9cd1609382f946352712a319b4b brotli
 94536d1723a5201c95af04533ec8a472 MOZILLA PUBLIC LICENSE 1.1
@@ -112,85 +72,43 @@ d5dd73e90ee1a572679460ee67233fcc PostgreSQL
 96d5a3ba306e0f24fb289427af484408 utf8proc
 97d554a32881fee0aa283d96e47cb24a XZ utils
 981f50a934828620b08f44d75db557c6 wxWindows Library License, 3.1
-9a2847d09a11bc26052add15c4b07834 PDCurses
 9afb19b302b259045f25e9bb91dd34d6 yarnpkg
-9b6db2e7770a6681e13dce6ca8795f3b orfeo ice
-9e4cade1b568820cfcf1f3c22d62eeff geotiff
 a3808a5b70071b07f87ff2205e4d75a0 ICU LICENSE
-a68b060a4d6058ef13acff902bb234d9 libxdr
-a7d16a9a8201040f6a3782cb7d05b351 openjpeg copyright statement
 a846a2e5eaa357e317fdee761e9606e4 ogdi copyright statement
-ab55a5887d3f8ba77d0fd7db787e4bab PostgreSQL
-adcfd4b44a2edc8a512a4f5663a01686 GRASS
 b0085051bf265bac2bfc38bc89f50000 libpng
-6a42d0002ce5c11e4a529c29f78d13dd libpng
 0fdbfbe10fc294a6fca24dc76134222a libpng
-f9acafc1325f8f8da80aeee94dbc1bda libpng
 9dc350edbbbee660c7d9af79487168f2 libpng
 b234ee4d69f5fce4486a80fdaf4a4263 librttopo
-b5ea6b94cf070ecb0840967e3b56a133 ogdi copyright statement
-b9bd75ae5af7ff87ab259be0121c4106 GDAL
-bdd77008f8f4b57cbe0e4b2509c8ef10 RIVERBANK COMPUTING LIMITED LICENSE AGREEMENT FOR SIP
-c017ff17fc6f0794adf93db5559ccd56 freetype
 843b6efc16f6b1652ec97f89d5a516c0 freetype
-c1f4a0507827f55adedf15b8da72c76e Python License
 c2d403e578f979ec4fafe6ffd5e5d845 liblas
 c40a383cb3f747e0c7abbf1482f194f0 thrift (Apache License)
 bdfca4cb0874071cc3e42d2ae3b05a77 thrift (Apache License)
-c475b6c7dca236740ace4bba553e8e1c XZ utils
 c5c6ae0c9dd10977ab0ed75052428a2d apache
-c6338d7abd321c0b50a2a547e441c52e python simplejson (MIT / AFL 2.1)
 c648878b4840d7babaade1303e7f108c openjpeg (BSD)
-c7f0b161edbe52f5f345a3d1311d0b32 zstd (BSD)
-ca01a48559239e7e85415617ce63bc0b muparser
-cd010da4cf5b82714dbc32f3e05df760 OpenSSL (BSD)
-d0e66c3f74a1ff5f0aeb737ca137ba6f QScintilla
 d273d63619c9aeaf15cdaf76422c4f87 mod_fcgid
 d32239bcb673463ab874e80d47fae504 GPL 3
 d343e62fc9c833710bbbed25f27364c8 OpenSSL (BSD)
 c75985e733726beaba57bc5253e96d04 OpenSSL
-d3eeb0ea1d4e537b7c355aceb70f61f2 python
-d4605e317dfd4436b5752a0107ae53b4 libsvm
 d57c0d21cb917fb4e0af2454aa48b956 lz4 (BSD-4 / GPLv2)
 c5cc3cd6f9274b4d32988096df9c3ec3 lz4 (BSD-4 / GPLv2)
-d8211b93302fef15ae42785b298be317 PyQt4 (GPL 2)
-d97115754eff81109a03f80a7d561565 python 3.7.6
 dac2743472b0462ff3cfb4af42051c88 qwt5
-dae3c1b8e894ed6a87dd12c8e33cfd07 The OpenGL Extension Wrangler Library and more
-dcefc90f4c3c689ec0c2489064e7273b Khronos opencl
 df00847fc6f95e2484e2e50f5bcb5e77 libkml (google)
-df5843c7d361e3ffe87ef6401be2f8d7 sip
-e06243e2637f1211d319d6fcd9dcbb91 libjpeg
 e3aacac3a647af6e7e31f181cda0a06a fcgi
 e4224ccaecb14d942c71d31bef20d78c boost
-e4fcd0d2d9063745f559ea4809e0484c QJson
 e6a600fd5e1d9cbde2d983680233ad02 LGPL 3
 e73e999e0c72b5ac9012424fa157ad77 CAIRO
 e7807a6282784a7dde4c846626b08fc6 SWIG (GPL 3)
-e95985caf102c793b05c1aa1516392dd SAGA (GPL except LGPL for the API)
 592c66677c3519f4b246d5e3cd42dff8 SAGA
 fd639a58a9f56850427ff108f03d867d SAGA
 e99dbe0cce55f0471235200ae75c772e geotiff
-e9f29527a4784ca559ce021f10e01038 PyQt (GPL)
-ec88315ae06938d6c6f830327981d0f1 networkx copyright (BSD)
-f14599a2f089f6ff8c97e2baa4e3d575 LGPL 2.1
 f27445198ba1500f508fce2b183ce0ff proj 8
 f358dd54868d739e9ea41e7ff4377088 sqlite copyright statement
-f543d41f3829a608a406b713e4e72731 GLFW
 f62f3080324a97b3159a7a7e61812d0c snappy (Google)
-f87832d854acbade6e9f5c601c8b30b1 python numpy
-f8c3f4ca4240d6f9848bc319790fda2b pyodbc
-f8f366f3370dda889f60faa7db162cf4 tinyxml
-f9a8f968107345e0b75aa8c2ecaa7ec8 OpenSSL (BSD)
-fb46329938e6bc829b256e37d5c1e31a pyparsing
 fbc093901857fcd118f065f900982c24 qca
 fbfd7d9d8e3ab1b72cd49bc41b8867bc libspatialite (MIT)
-fc4dac631f29e18135018033b030f821 orfeo monteverdi
 06209abe95b90904e809b2e6f3ba4ea7 LERC
-bd5cc7fa6ff5ee46fc1047f0f0c895b7 MIT (spdlog)
 9573510928429ad0cbe5ba4de77546e9 MIT (spdlog)
 4c30f1e79c4e3e031a0c984881dce9b5 KEA (BSD)
-a75feaa2de6d8942f50d412241fca1f1 jpeg (triple)
 c20c7c1f7f8b534db590d536aa2d188c tiledb (MIT)
 f7649e9ba282c52e57d3d98521c64842 GDAL
 9b8f40e78dc1853542c310f7a4638272 mssqlodbc
@@ -211,7 +129,6 @@ c31f662bb2bfb3b4187fe9a53e0ffe7c libpq
 89afbb2d7716371015101c2b2cb4297a libpq 16.2
 6a905a337cc228a1f68f0b5416f52a7f libjxl
 0f4fd4e8ed0e5c4d26044ac175a3eff8 draco
-d4378ea9d5d1fc9ab0ae10d7948827d9 xz
 c8ea84ebe7b93cce676b54355dc6b2c0 xz
 3a845787f8b36ddaefd8d253ba1dafcc python3-pdal-plugins
 db979804f025cf55aabec7129cb671ed podofo
@@ -228,3 +145,9 @@ f5b357dc44b882abdfc42c470d1f624b GPL (saga)
 2a626f155f0a604febb7d0fc6b0611af SFCGAL (LGPL)
 729960cf40d42f3621a297ca3b717850 sqlean (MIT)
 128305912d075b470880a190ed3e8c53 libaec (MIT)
+c111c47e301c2ffe8776729b40b44477 lz4 (BSD-4 / GPLv2)
+adebb1ecf1b3b80c13359e18ef67301e hdf5
+cbb22cd5ded182bbd11d88ea19479b58 netcdf
+aa183cff17957256fa1df6caf4fcc23e qtwebdav (LGPL 2.1)
+2dbe422d4db5022c9717746da7535405 geos (LGPL 2.1)
+f14599a2f089f6ff8c97e2baa4e3d575 qca (LGPL 2.1)

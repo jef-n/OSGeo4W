@@ -1,5 +1,5 @@
 export P=python3-docutils
-export V=pip
+export V=0.22.4
 export B=pip
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-pip python3-wheel python3-setuptools"

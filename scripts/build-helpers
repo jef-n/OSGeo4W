@@ -450,7 +450,7 @@ declare -x ccacheenv
 
 regen() {
 	(
-		! [ -f /tmp/setup-master.ini ] || exec 2> >(egrep -v "^warning: package [^ ]* requires an unknown package '($(sed -ne "s/^@ //p" /tmp/setup-master.ini| paste -d"|" -s))'$" >&2)
+		! [ -f /tmp/setup-master.ini ] || exec 2> >(egrep -v "^warning: package [^ ]* requires an unknown package '($(sed -ne "s/^@ //p" /tmp/setup-master.ini | paste -d"|" -s))'$" >&2)
 
 		# update local package repository
 		cd $OSGEO4W_REP
@@ -464,8 +464,6 @@ regen() {
 		mv x86_64/setup.ini.tmp x86_64/setup.ini
 		bzip2 -c x86_64/setup.ini >|x86_64/setup.ini.bz2
 		perl $OSGEO4W_SCRIPTS/genini \
-			--okmissing=prev \
-			--okmissing=test \
 			--alllicenses \
 			--arch=x86_64 \
 			--ignoremissingdeps \
