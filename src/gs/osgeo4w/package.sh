@@ -1,5 +1,5 @@
 export P=gs
-export V=10.07.0
+export V=10.07.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
