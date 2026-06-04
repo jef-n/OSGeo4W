@@ -1,0 +1,30 @@
+diff -ur cairo-1.18.4/meson.build ../cairo-1.18.4/meson.build
+--- cairo-1.18.4/meson.build	2025-03-08 13:35:35.000000000 +0100
++++ ../cairo-1.18.4/meson.build	2026-06-04 18:41:39.191836500 +0200
+@@ -6,7 +6,7 @@
+                     'warning_level=2'],
+ )
+ 
+-freetype_required_version = '>= 23.0.17' # Release version 2.10
++freetype_required_version = '>= 2.10.0' # Release version 2.10
+ freetype_colrv1_required_version = '>= 25.0.19' # Release version 2.13
+ fontconfig_required_version = '>= 2.13.0'
+ libpng_required_version = '>= 1.4.0'
+@@ -235,7 +235,7 @@
+   conf.set('HAVE_ZLIB', 1)
+ endif
+ 
+-png_dep = dependency('libpng',
++png_dep = dependency('libpng', 'png',
+   required: get_option('png'),
+   version: libpng_required_version,
+   fallback: ['libpng', 'libpng_dep']
+@@ -304,7 +304,7 @@
+ freetype_required = host_machine.system() not in ['windows', 'darwin']
+ freetype_option = freetype_option.disable_auto_if(not freetype_required)
+ 
+-freetype_dep = dependency('freetype2',
++freetype_dep = dependency('freetype2', 'freetype',
+   required: freetype_option,
+   version: freetype_required_version,
+   fallback: ['freetype2', 'freetype_dep'],

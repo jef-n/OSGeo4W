@@ -1,5 +1,5 @@
 export P=poppler
-export V=26.04.0
+export V=26.06.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="freetype-devel libjpeg-turbo-devel zlib-devel libpng-devel libtiff-devel curl-devel boost-devel cairo-devel libiconv-devel openjpeg-devel openjpeg-tools"
@@ -74,7 +74,7 @@ cmake -G Ninja \
 	-D CURL_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D CURL_LIBRARY=$(cygpath -am ../osgeo4w/lib/libcurl_imp.lib) \
 	-D Boost_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/boost-1_87) \
-	-D CAIRO_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
+	-D CAIRO_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include/cairo) \
 	-D CAIRO_LIBRARY=$(cygpath -am ../osgeo4w/lib/cairo.lib) \
 	-D ICONV_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D ICONV_LIBRARIES=$(cygpath -am ../osgeo4w/lib/iconv.dll.lib) \
