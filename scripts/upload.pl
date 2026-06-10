@@ -102,61 +102,55 @@ sub parseini {
 }
 
 sub getver {
-    my $f = basename($_[0]);
-    my @a = ($f =~ /^(.*?)-(\d.*)\.tar/);
-    return wantarray ? @a : $a[1];
+	my $f = basename($_[0]);
+	my @a = ($f =~ /^(.*?)-(\d.*)\.tar/);
+	return wantarray ? @a : $a[1];
 }
 
 sub compare_versions {
-        my($a, $b) = @_;
+	my($a, $b) = @_;
 
-        my @a = split /\./, $a;
-        my @b = split /\./, $b;
+	return 0 if $a eq $b;
 
-        while( @a && @b ) {
-                my $a = shift @a;
-                my $b = shift @b;
-                next if $a eq $b;
+	my($r, $ai, $bi);
+	while($a ne "" && $b ne "") {
+		($ai, $r) = $a =~ /^(\d*)(.*)$/;
+		$a = $r;
+		($bi, $r) = $b =~ /^(\d*)(.*)$/;
+		$b = $r;
 
-		# a
-		# 1
-		# 1a
-		# 1rc1
-		while($a && $b) {
-			# print "a:$a b:$b\n";
-			my ($an) = $a =~ /^(\d+)/;
-			my ($bn) = $b =~ /^(\d+)/;
+		my $isnum = $ai ne "";
 
-			if(defined $an && defined $bn) {
-				# print "N: $an <=> $bn\n";
-				return $an <=> $bn unless $an == $bn;
-				$a =~ s/^\d+//;
-				$b =~ s/^\d+//;
-			} elsif($an || $bn) {
-				warn "Invalid version compare: $a vs $b";
-				return undef;
-			}
+		unless($isnum) {
+			($ai, $r) = $a =~ /^(\D*)(.*)/;
+			$a = $r;
+			($bi, $r) = $b =~ /^(\D*)(.*)/;
+			$b = $r;
+		}
 
-			($an) = $a =~ /^(\D+)/;
-			($bn) = $b =~ /^(\D+)/;
+		return $isnum ? 1 : -1 if $bi eq "";
 
-			if($an && $bn) {
-				# print "L: $an <=> $bn\n";
-				return $an cmp $bn unless $an eq $bn;
-				$a =~ s/^\D+//;
-				$b =~ s/^\D+//;
-			} elsif($an || $bn) {
-				return -1 if defined $an && $an =~ /^-?rc$/i;	# rc* < ""
-				return 1 if defined $bn && $bn =~ /^-?rc$/i;	# "" > rc*
-				return $an ? 1 : -1;				# a > ""  | "" < a
+		if($isnum) {
+			$ai =~ s/^0+//;
+			$bi =~ s/^0+//;
+
+			if(length($ai) > length($bi)) {
+				return 1;
+			} elsif(length($ai) < length($bi)) {
+				return -1;
 			}
 		}
 
-		return 1 if $a;
-		return -1 if $b;
-        }
+		my $r = $ai cmp $bi;
+		return $r unless $r == 0;
+		return $a =~ /^rc/i ? -1 : 1 if $isnum && $a =~ /^rc/i != $b =~ /^rc/i;
+	}
 
-        return @a ? 1 : @b ? -1 : 0;
+	if($a eq "" && $b eq "") {
+		return 0;
+	} else {
+		return $a eq "" ? -1 : 1;
+	}
 }
 
 system("/usr/bin/rsync $ENV{'MASTER_SCP'}/x86_64/setup.ini /tmp/setup-master.ini") == 0 or die "Could not download setup.ini";
