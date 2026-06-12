@@ -1,5 +1,5 @@
 export P=grass
-export V=8.4.2
+export V=8.5.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="gdal-devel proj-devel geos-devel netcdf-devel libjpeg-turbo-devel libpq-devel libpng-devel libtiff-devel sqlite3-devel zstd-devel python3-ply python3-core python3-six python3-pywin32 python3-wxpython liblas-devel cairo-devel freetype-devel"
@@ -99,7 +99,7 @@ pacman --noconfirm -Syu --needed \
 	mingw-w64-x86_64-libwinpthread-git \
 	mingw-w64-x86_64-pcre \
 	mingw-w64-x86_64-fftw \
-	mingw-w64-x86_64-lapack \
+	mingw-w64-x86_64-openblas \
 	mingw-w64-x86_64-readline
 
 cd ../$p
@@ -141,21 +141,7 @@ maintainer: $MAINTAINER
 external-source: grass $V-$B
 EOF
 
-cat <<EOF >$OSGEO4W_REP/x86_64/release/grass8/setup.hint
-sdesc: "GRASS GIS (transitional package)"
-ldesc: "Geographic Resources Analysis Support System (transitional package)"
-category: _obsolete
-requires: grass
-maintainer: $MAINTAINER
-external-source: grass $V-$B
-EOF
-
 appendversions $R/setup.hint
-
-d=$(mktemp -d)
-tar -C $d -cjf $OSGEO4W_REP/x86_64/release/grass8/grass8-99-1.tar.bz2 .
-tar -C $d -cjf $OSGEO4W_REP/x86_64/release/grass7/grass7-99-1.tar.bz2 .
-rmdir $d
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/patch
 
