@@ -292,7 +292,7 @@ vs2022env() {
 
 			$OSGEO4W_SCRIPTS/winsdksetup-$linkid.exe /features OptionId.WindowsDesktopDebuggers /q /norestart
 		else
-			v=$(fileversion "$dhd")
+			local v=$(fileversion "$dhd")
 
 			case $v in
 			10.0.19041.*)

@@ -1,5 +1,5 @@
 export P=libtiff
-export V=4.7.1
+export V=4.7.2rc4
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="libjpeg-turbo-devel xz-devel zlib-devel zstd-devel libwebp-devel lerc-devel"
@@ -10,19 +10,20 @@ source ../../../scripts/build-helpers
 startlog
 
 p=${P#lib}
+v=${V%rc*}
 [ -f $p-$V.tar.gz ] || wget http://download.osgeo.org/$P/$p-$V.tar.gz
-[ -f ../$p-$V/CMakeLists.txt ] || tar -C .. -xzf $p-$V.tar.gz
-[ -f ../$p-$V/patched ] || {
-	patch -d ../$p-$V -p1 --dry-run <patch
-	patch -d ../$p-$V -p1 <patch >../$p-$V/patched
+[ -f ../$p-$v/CMakeLists.txt ] || tar -C .. -xzf $p-$V.tar.gz
+[ -f ../$p-$v/patched ] || {
+	patch -d ../$p-$v -p1 --dry-run <patch
+	patch -d ../$p-$v -p1 <patch >../$p-$v/patched
 }
 
 vsenv
 cmakeenv
 ninjaenv
 
-mkdir -p build
-cd build
+mkdir -p build-$v
+cd build-$v
 
 cmake -G Ninja \
 	-D CMAKE_BUILD_TYPE=Release \
@@ -41,7 +42,7 @@ cmake -G Ninja \
 	-D lzma=ON \
 	-D LIBLZMA_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D     LIBLZMA_LIBRARY=$(cygpath -am ../osgeo4w/lib/liblzma.lib) \
-	../../$p-$V
+	../../$p-$v
 cmake --build .
 cmake --install . || cmake --install .
 cmakefix ../install
@@ -89,9 +90,9 @@ tar -C install -cjf $R/$P-tools/$P-tools-$V-$B.tar.bz2 \
 	--exclude bin/tiff.dll \
 	bin
 
-cp ../tiff-$V/LICENSE.md $R/$P-$V-$B.txt
-cp ../tiff-$V/LICENSE.md $R/$P-devel/$P-devel-$V-$B.txt
-cp ../tiff-$V/LICENSE.md $R/$P-tools/$P-tools-$V-$B.txt
+cp ../tiff-$v/LICENSE.md $R/$P-$V-$B.txt
+cp ../tiff-$v/LICENSE.md $R/$P-devel/$P-devel-$V-$B.txt
+cp ../tiff-$v/LICENSE.md $R/$P-tools/$P-tools-$V-$B.txt
 
 tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/patch
 
