@@ -32,7 +32,7 @@ MMM=${V//./}
 
 	# fetch externals - but skip some
 	mkdir -p externals/{bzip2-1.0.8,sqlite-3.45.3.0,xz-5.2.5,zlib-1.3.1,openssl-3.0.13,openssl-bin-3.0.15}
-	export LANG=C LC_ALL=C PATH=$(cygpath --sysdir)/WindowsPowerShell/v1.0:$PATH
+	export LANG=C LC_ALL=C PATH=$(cygpath --sysdir)/WindowsPowerShell/v1.0:$PATH NUGET_URL=https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
 	cmd /c Tools\\msi\\get_externals.bat
 
 	export PATH=$(cygpath -au externals/pythonx86/tools/Scripts):$(cygpath -au externals/pythonx86/tools):$PATH
@@ -190,6 +190,7 @@ cat <<EOF >ini.bat
 SET PYTHONHOME=%OSGEO4W_ROOT%\\apps\\Python$MM
 SET PYTHONPATH=
 SET PYTHONUTF8=1
+SET PYTHONEXECUTABLE=%OSGEO4W_ROOT%\\bin\\python3.exe
 PATH %OSGEO4W_ROOT%\\apps\\Python$MM\Scripts;%PATH%
 EOF
 
