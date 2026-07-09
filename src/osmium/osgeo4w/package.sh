@@ -2,7 +2,7 @@ export P=osmium
 export V=1.18.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="libosmium-devel protozero-devel boost-devel bzip2-devel zlib-devel lz4-devel expat-devel gdal-devel"
+export BUILDDEPENDS="libosmium-devel protozero-devel boost-devel bzip2-devel zlib-devel lz4-devel expat-devel gdal-devel nlohmann-json-devel"
 export PACKAGES="osmium"
 
 source ../../../scripts/build-helpers
@@ -13,10 +13,6 @@ p=$P-tool
 
 [ -f $p-$V.tar.gz ] || wget -O $p-$V.tar.gz https://github.com/osmcode/$p/archive/refs/tags/v$V.tar.gz
 [ -f ../$p-$V/CMakeLists.txt ] || tar -C .. -xzf $p-$V.tar.gz
-[ -f include/nlohmann/json.hpp ] || {
-	mkdir -p include/nlohmann
-	curl -JL --output include/nlohmann/json.hpp https://github.com/nlohmann/json/releases/download/v3.11.3/json.hpp
-}
 
 (
 	fetchenv osgeo4w/bin/o4w_env.bat

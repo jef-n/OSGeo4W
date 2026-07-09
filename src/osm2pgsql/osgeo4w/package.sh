@@ -2,7 +2,7 @@ export P=osm2pgsql
 export V=2.2.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="expat-devel proj-devel bzip2-devel zlib-devel boost-devel libpq-devel wingetopt-devel lua-devel"
+export BUILDDEPENDS="expat-devel proj-devel bzip2-devel zlib-devel boost-devel libpq-devel wingetopt-devel lua-devel nlohmann-json-devel"
 export PACKAGES="osm2pgsql"
 
 source ../../../scripts/build-helpers
@@ -11,10 +11,6 @@ startlog
 
 [ -f $P-$V.tar.gz ] || wget -O $P-$V.tar.gz https://github.com/openstreetmap/$P/archive/refs/tags/$V.tar.gz
 [ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz
-[ -f include/nlohmann/json.hpp ] || {
-	mkdir -p include/nlohmann
-	curl -JL --output include/nlohmann/json.hpp https://github.com/nlohmann/json/releases/download/v3.11.3/json.hpp
-}
 
 (
 	vsenv

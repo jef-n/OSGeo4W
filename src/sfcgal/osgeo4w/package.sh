@@ -1,8 +1,8 @@
 export P=sfcgal
-export V=2.2.0
+export V=2.3.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="base boost-devel"
+export BUILDDEPENDS="base boost-devel nlohmann-json-devel"
 export PACKAGES="sfcgal sfcgal-devel"
 
 source ../../../scripts/build-helpers

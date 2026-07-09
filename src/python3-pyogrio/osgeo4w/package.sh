@@ -9,17 +9,13 @@ source ../../../scripts/build-helpers
 
 startlog
 
+sed -i -e 's/\r$//' osgeo4w/include/gdal_version.h
+
 major=$(sed -ne "s/# *define *GDAL_VERSION_MAJOR *//p" osgeo4w/include/gdal_version.h)
 minor=$(sed -ne "s/# *define *GDAL_VERSION_MINOR *//p" osgeo4w/include/gdal_version.h)
-rev=$(sed -ne "s/# *define *GDAL_VERSION_REV *//p" osgeo4w/include/gdal_version.h)
-major=${major%
-}
-minor=${minor%
-}
-rev=${rev%
-}
+point=$(sed -ne "s/# *define *GDAL_VERSION_REV *//p" osgeo4w/include/gdal_version.h)
 
-export GDAL_VERSION=$major.$minor.$rev
+export GDAL_VERSION=$major.$minor.$point
 export GDAL_INCLUDE_PATH="$(cygpath -am osgeo4w/include)"
 export GDAL_LIBRARY_PATH="$(cygpath -am osgeo4w/lib)"
 

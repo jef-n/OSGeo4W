@@ -1,9 +1,9 @@
-export P=python3-giturlparse
-export V=0.14.0
+export P=python3-mdurl
+export V=pip
 export B=pip
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-pip python3-wheel python3-setuptools"
-export PACKAGES="python3-giturlparse"
+export PACKAGES="python3-mdurl"
 
 source ../../../scripts/build-helpers
 
