@@ -1,5 +1,5 @@
 export P=pcraster
-export V=4.4.2
+export V=4.4.3
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="gdal gdal-devel python3-core python3-devel python3-numpy python3-pybind11 xerces-c-devel qt5-devel qt5-oci boost-devel"
@@ -29,9 +29,8 @@ startlog
 
 	cd build
 
-	export INCLUDE="$(cygpath -aw ../osgeo4w/apps/$PYTHON/Lib/site-packages/numpy/core/include);$INCLUDE"
 	export INCLUDE="$(cygpath -aw ../osgeo4w/apps/$PYTHON/Lib/site-packages/numpy/_core/include);$INCLUDE"
-	export LIB="$(cygpath -aw ../osgeo4w/apps/$PYTHON/Lib/site-packages/numpy/core/lib);$LIB"
+	export LIB="$(cygpath -aw ../osgeo4w/apps/$PYTHON/Lib/site-packages/numpy/_core/lib);$LIB"
 
 	export INCLUDE="$(cygpath -aw ../osgeo4w/apps/$PYTHON/Lib/site-packages/pybind11/include);$INCLUDE"
 	export LIB="$(cygpath -aw ../osgeo4w/apps/$PYTHON/Lib/site-packages/pybind11/lib);$LIB"
@@ -61,7 +60,7 @@ startlog
 		-D Python3_EXECUTABLE=$(cygpath -am ../osgeo4w/bin/python.exe) \
 		-D pybind11_DIR=$(cygpath -am ../osgeo4w/apps/$PYTHON/Lib/site-packages/pybind11/share/cmake/pybind11) \
 		-D PYBIND11_SYSTEM_INCLUDE=$(cygpath -aw ../osgeo4w/apps/$PYTHON/Lib/site-packages/pybind11/include) \
-		-D Python3_NumPy_INCLUDE_DIR=$(cygpath -am ../osgeo4w/apps/$PYTHON/Lib/site-packages/numpy/core/include) \
+		-D Python3_NumPy_INCLUDE_DIR=$(cygpath -am ../osgeo4w/apps/$PYTHON/Lib/site-packages/numpy/_core/include) \
 		-D Qt5_DIR=$(cygpath -am ../osgeo4w/apps/Qt5) \
 		-D PCRASTER_BUILD_TEST=OFF \
 		../../$P-$V
