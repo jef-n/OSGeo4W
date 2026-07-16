@@ -1,5 +1,5 @@
 export P=netcdf
-export V=4.10.0
+export V=4.10.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="hdf4-devel hdf5-devel curl-devel zlib-devel hdf5-tools libaec-devel zstd-devel libxml2-devel c-blosc-devel libjpeg-turbo-devel"
@@ -35,10 +35,10 @@ cmake -G Ninja \
 	-D ZLIB_INCLUDE_DIR=$(cygpath -am ../osgeo4w/include) \
 	-D Szip_ROOT=$(cygpath -am ../osgeo4w) \
 	-D Blosc_ROOT=$(cygpath -am ../osgeo4w) \
-	-D ENABLE_HDF4=ON \
+	-D NETCDF_ENABLE_HDF4=ON \
 	-D HDF4_ROOT=$(cygpath -am ../osgeo4w) \
-	-D ENABLE_MMAP=OFF \
-	-D ENABLE_EXAMPLES=OFF \
+	-D NETCDF_ENABLE_MMAP=OFF \
+	-D NETCDF_ENABLE_EXAMPLES=OFF \
 	-D PACKAGE_PREFIX_DIR=$(cygpath -am ../osgeo4w/cmake) \
 	../../$P-c-$V
 cmake --build .

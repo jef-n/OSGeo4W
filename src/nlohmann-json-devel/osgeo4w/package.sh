@@ -39,7 +39,7 @@ mkdir -p $R
 cat <<EOF >$R/setup.hint
 sdesc: "JSON for modern C++ (development)"
 ldesc: "JSON for modern C++ (development)"
-category: Library
+category: Libraries
 requires: msvcrt2019
 maintainer: $MAINTAINER
 requires:
