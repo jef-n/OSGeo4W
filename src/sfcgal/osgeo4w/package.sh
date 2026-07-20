@@ -1,5 +1,5 @@
 export P=sfcgal
-export V=2.2.0
+export V=2.3.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="base boost-devel"
@@ -64,7 +64,7 @@ sdesc: "SFCGAL library"
 ldesc: "The SFCGAL library (including mpfr & gmp)"
 maintainer: $MAINTAINER
 category: Libs
-requires: 
+requires:
 EOF
 
 tar -C install \
