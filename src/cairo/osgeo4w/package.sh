@@ -39,7 +39,8 @@ startlog
 		-Dfreetype=enabled \
 		-Dpng=enabled \
 		-Dzlib=enabled \
-		--prefix=$(cygpath -am ../osgeo4w/install)
+		--prefix=$(cygpath -am ../osgeo4w/install) \
+		--buildtype release
 
 	ninja -C ../osgeo4w/build
 	ninja -C ../osgeo4w/build install
