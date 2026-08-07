@@ -1,6 +1,6 @@
 diff -ur sqlite-amalgamation-3530400/sqlite3.c ../sqlite-amalgamation-3530400/sqlite3.c
 --- sqlite-amalgamation-3530400/sqlite3.c	2026-07-24 21:28:52.000000000 +0200
-+++ ../sqlite-amalgamation-3530400/sqlite3.c	2026-08-07 10:48:06.203016700 +0200
++++ ../sqlite-amalgamation-3530400/sqlite3.c	2026-08-07 17:25:48.456964400 +0200
 @@ -234100,7 +234100,9 @@
  ** bytes read.
  */
@@ -12,3 +12,12 @@ diff -ur sqlite-amalgamation-3530400/sqlite3.c ../sqlite-amalgamation-3530400/sq
  }
  
  /*
+@@ -234115,7 +234117,7 @@
+     memcpy(aCopy, aBuf, nBuf);
+     aRead = aCopy;
+   }
+-  return getVarint32(aRead, *piVal);
++  return sessionVarintGet(aRead, piVal);
+ }
+ 
+ /* Load an unaligned and unsigned 32-bit integer */
