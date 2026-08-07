@@ -1,0 +1,14 @@
+diff -ur sqlite-amalgamation-3530400/sqlite3.c ../sqlite-amalgamation-3530400/sqlite3.c
+--- sqlite-amalgamation-3530400/sqlite3.c	2026-07-24 21:28:52.000000000 +0200
++++ ../sqlite-amalgamation-3530400/sqlite3.c	2026-08-07 10:48:06.203016700 +0200
+@@ -234100,7 +234100,9 @@
+ ** bytes read.
+ */
+ static int sessionVarintGet(const u8 *aBuf, int *piVal){
+-  return getVarint32(aBuf, *piVal);
++  int ret = getVarint32(aBuf, *piVal);
++  *piVal = (*piVal & 0x7FFFFFFF);
++  return ret;
+ }
+ 
+ /*

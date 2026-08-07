@@ -15,11 +15,16 @@ source ../../../scripts/build-helpers
 startlog
 
 [ -f $BASE.zip ] || wget $URL
-if ! [ -d ../$BASE ]; then
+[ -d ../$BASE ] || {
 	cd ..
 	unzip osgeo4w/$BASE.zip
 	cd osgeo4w
-fi
+}
+
+[ -f ../$BASE/patched ] || {
+	patch -p1 --dry-run -d ../$BASE <patch
+	patch -p1 -d ../$BASE <patch >../$BASE/patched
+}
 
 R=$OSGEO4W_REP/x86_64/release/$P
 mkdir -p $R/$P-devel
@@ -83,6 +88,6 @@ tar -C install -cjf $R/$P-$V-$B.tar.bz2 bin
 
 tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 include lib
 
-tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/makefile.vc osgeo4w/nmake.opt osgeo4w/always.h
+tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/makefile.vc osgeo4w/nmake.opt osgeo4w/always.h osgeo4w/patch
 
 endlog
