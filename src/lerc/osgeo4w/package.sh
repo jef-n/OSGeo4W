@@ -1,5 +1,5 @@
 export P=lerc
-export V=4.0.0
+export V=4.2.0
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
