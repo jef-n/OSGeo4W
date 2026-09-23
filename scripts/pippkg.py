@@ -296,9 +296,11 @@ for pkg in pkgs:
         print("{}: ERROR: Binary files in package without OSGEO4W_PY_INCLUDE_BINARY".format(pkg))
         raise BaseException("Binary files in package without OSGEO4W_PY_INCLUDE_BINARY")
 
-    for f in os.environ.get("addfiles", '').split(' '):
-        src, dst = f.split("=")
-        tf.add(src, dst)
+    addfiles = os.environ.get("addfiles", '').split(' ')
+    if len(addfiles) >= 2:
+        for f in addfiles:
+            src, dst = f.split("=")
+            tf.add(src, dst)
 
     if postinstall:
         postinstall.close()

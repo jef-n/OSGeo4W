@@ -2,6 +2,24 @@
 
 set -e
 
+while getopts "hr:c" arg; do
+	case $arg in
+	h)
+		echo "usage: $0 {-h|-r repository|c}"
+		exit 0
+		;;
+	r)
+		echo OSGEO4W_REP=$(cygpath -a $OPTARG)
+		;;
+	c)
+		echo Cleaning
+		[ -f .outdated.dir ] && rm -r $(<.outdated.dir)
+		rm -f .outdated.* tmp/python3-*.done
+		exit
+		;;
+	esac
+done
+
 if [ -z "$OSGEO4W_REP" ]; then
 	if [ -d "x86_64" ]; then
 		export OSGEO4W_REP=$PWD
@@ -10,6 +28,7 @@ if [ -z "$OSGEO4W_REP" ]; then
 		exit 1
 	fi
 fi
+
 
 source scripts/build-helpers
 
@@ -28,6 +47,7 @@ all=$(
 )
 
 echo "$(date): CHECKING $all IN $o4w"
+echo "$(date): PINNED: $pinned"
 
 # repeat until there are no outdated packages left
 export i
@@ -35,6 +55,8 @@ export i
 while :; do
 	echo ITERATION:$(( ++i ))
 	echo $i >.outdated.i
+
+	set -x
 
 	# install all python packages
 	$OSGEO4W_SCRIPTS/osgeo4w-setup.exe \
@@ -52,15 +74,16 @@ while :; do
 		-P $all \
 		>$o4w/setup.log.$i 2>&1 || { tail -20 setup.log.$i; exit 1; }
 
-	(
-		fetchenv $o4w/bin/o4w_env.bat >$o4w/o4w_env.0.log 2>&1
-		pip check || exit 1
-	)
-
 	# produce list of (still) outdated packages
 	(
 		fetchenv $o4w/bin/o4w_env.bat >$o4w/o4w_env.1.log 2>&1
-		pip list --outdated | egrep -v "$pinned" >$o4w/outdated.$i || true
+		pip list --outdated | tee $o4w/outdated.$i | egrep -v "$pinned" >$o4w/outdated-not-pinned.$i || true
+		fgrep -xvf $o4w/outdated-not-pinned.$i $o4w/outdated.$i >$o4w/outdated-pinned.log.$i || true
+		if [ -s $o4w/outdated-pinned.log.$i ]; then
+			echo "WARNING: OUTDATED BUT PINNED"
+			cat $o4w/outdated-pinned.log.$i
+			error=1
+		fi
 	)
 
 	# generate osgeo4w package list for outdated packages
@@ -100,6 +123,14 @@ while :; do
 	opkgs=$pkgs
 done
 
+(
+	fetchenv $o4w/bin/o4w_env.bat >$o4w/o4w_env.$i.log 2>&1
+	if ! pip check; then
+		echo ERROR: BROKEN PACKAGES DETECTED
+		exit 1
+	fi
+)
+
 # error out if there are outdated packages not built from pip
 if fgrep -qxf <(grep -L "export V=pip" src/python3-*/osgeo4w/package.sh | cut -d/ -f2) $o4w/outdated-packages.$i; then
 	echo "Outdated packages not built from pip:"
@@ -108,4 +139,4 @@ if fgrep -qxf <(grep -L "export V=pip" src/python3-*/osgeo4w/package.sh | cut -d
 	exit 1
 fi
 
-rm -r $o4w .outdated.dir .outdated.i tmp/python3-*.done
+rm -rf $o4w .outdated.dir .outdated.i tmp/python3-*.done

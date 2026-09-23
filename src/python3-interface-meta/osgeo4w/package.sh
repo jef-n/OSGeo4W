@@ -1,15 +1,14 @@
-export P=python3-jupyterlab-widgets
+export P=python3-interface-meta
 export V=pip
 export B=pip
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-pip python3-wheel python3-setuptools"
-export PACKAGES="python3-jupyterlab-widgets"
+export PACKAGES="python3-interface-meta"
 
 source ../../../scripts/build-helpers
 
 startlog
 
-# pin 3.0.15 as file names are too long otherwise
 packagewheel
 
 endlog

@@ -1,15 +1,14 @@
-export P=python3-jupyterlab-widgets
+export P=python3-wrapt
 export V=pip
 export B=pip
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-pip python3-wheel python3-setuptools"
-export PACKAGES="python3-jupyterlab-widgets"
+export PACKAGES="python3-wrapt"
 
 source ../../../scripts/build-helpers
 
 startlog
 
-# pin 3.0.15 as file names are too long otherwise
-packagewheel
+OSGEO4W_PY_INCLUDE_BINARY=1 packagewheel
 
 endlog
