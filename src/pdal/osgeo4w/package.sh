@@ -59,8 +59,6 @@ sdesc: "PDAL: Point Data Abstraction Library (Executable)"
 ldesc: "PDAL is a library for manipulating and translating point cloud data"
 category: Commandline_Utilities
 requires: $P-libs
-category: Libs
-requires: msvcrt2019
 maintainer: $MAINTAINER
 EOF
 

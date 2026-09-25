@@ -319,6 +319,13 @@ if( -f "packages/files.wxs") {
 
 my $taropt = "v" x $verbose;
 
+my $productuuid     = getuuid(".$shortname.$version.product");
+my $upgradeuuid     = getuuid(".$shortname.$version.upgrade");
+my $postinstalluuid = getuuid(".$shortname.$version.postinstall");
+my $preremoveuuid   = getuuid(".$shortname.$version.preremove");
+my $linkfolders     = getuuid(".$shortname.$version.linkfolders");
+my $varloguuid      = getuuid(".$shortname.$version.varlog");
+
 unless(-d "unpacked" ) {
 	mkdir "unpacked", 0755;
 	mkdir "unpacked/bin", 0755;
@@ -361,6 +368,39 @@ unless(-d "unpacked" ) {
 		die "copying of addons failed" if $?;
 		chdir "..";
 	}
+
+	if(defined $smctl_kpa) {
+		open O, ">osgeo4w.cdf";
+		print O <<EOF;
+[CatalogHeader]\r
+Name=etc\\$productuuid.cat\r
+ResultDir=.\\\r
+CatalogVersion=2\r
+EncodingType=0\r
+HashAlgorithms=SHA256\r
+\r
+[CatalogFiles]\r
+EOF
+		close O;
+
+		my $cmd = "cd unpacked && find . \\( -iname '*.exe' -o -iname '*.dll' -o -iname '*.pyd' \\) -printf '<HASH>%f=%p\\r\\n' | sed -e 's#=\\./#=#; s#/#\\\\#g;' >>../osgeo4w.cdf && makecat ..\\\\osgeo4w.cdf";
+		system $cmd;
+		die "catalog creation failed [$cmd]" if $?;
+
+		$cmd = "smctl sign --keypair-alias $smctl_kpa --input unpacked/etc/$productuuid.cat";
+		system $cmd;
+		die "signing of catalog failed [$cmd]" if $?;
+
+		system 'cp "$(type -p signtool.exe)" unpacked/bin';
+		die "catalog creation failed [$cmd]" if $?;
+	}
+}
+
+my $catdb_add = "";
+my $catdb_del = "";
+if(-f "unpacked/etc/$productuuid.cat") {
+	$catdb_add = "\"%OSGEO4W_ROOT%\\bin\\signtool\" /d \"%OSGEO4W_ROOT%\\etc\\$productuuid.cat\"";
+	$catdb_del = "\"%OSGEO4W_ROOT%\\bin\\signtool\" /d /r $productuuid.cat";
 }
 
 unless( defined $binary ) {
@@ -404,7 +444,7 @@ if not %OSGEO4W_MENU_LINKS%==0 if not exist "%OSGEO4W_STARTMENU%" mkdir "%OSGEO4
 
 set OSGEO4W_ROOT_MSYS=%OSGEO4W_ROOT:\\=/%
 if "%OSGEO4W_ROOT_MSYS:~1,1%"==":" set OSGEO4W_ROOT_MSYS=/%OSGEO4W_ROOT_MSYS:~0,1%/%OSGEO4W_ROOT_MSYS:~3%
-
+$catdb_add
 if exist $b del $b
 echo set OSGEO4W_ROOT=%OSGEO4W_ROOT%$c
 echo set OSGEO4W_ROOT_MSYS=%OSGEO4W_ROOT_MSYS%$c
@@ -412,7 +452,6 @@ echo set OSGEO4W_STARTMENU=%OSGEO4W_STARTMENU%$c
 echo set OSGEO4W_DESKTOP=%OSGEO4W_DESKTOP%$c
 echo set OSGEO4W_MENU_LINKS=^%OSGEO4W_MENU_LINKS%$c
 echo set OSGEO4W_DESKTOP_LINKS=^%OSGEO4W_DESKTOP_LINKS%$c
-
 \@echo.
 \@echo %DATE% %TIME%: Running postinstall
 \@echo --------------------------------------------------------------------------------
@@ -434,6 +473,7 @@ for my $p (<etc/postinstall/*.bat>) {
 %COMSPEC% /c "%OSGEO4W_ROOT%\\$p"
 set e=%errorlevel%
 ren "%OSGEO4W_ROOT%\\$p" $file.done
+$catdb_del
 \@echo --------------------------------------------------------------------------------
 \@echo %DATE% %TIME%: Done postinstall $file [%e%].
 \@echo.
@@ -561,13 +601,6 @@ system "cp packages/license.temp packages/license.rtf";
 my $installer = "$installername-OSGeo4W-$version-$binary";
 
 my $run = $^O eq "cygwin" ? "" : "wine";
-
-my $productuuid     = getuuid(".$shortname.$version.product");
-my $upgradeuuid     = getuuid(".$shortname.$version.upgrade");
-my $postinstalluuid = getuuid(".$shortname.$version.postinstall");
-my $preremoveuuid   = getuuid(".$shortname.$version.preremove");
-my $linkfolders     = getuuid(".$shortname.$version.linkfolders");
-my $varloguuid      = getuuid(".$shortname.$version.varlog");
 
 my $fn = 0;
 unless($keep && -f "packages/files1.wxs") {
@@ -871,7 +904,8 @@ sub sign {
 if($signwith) {
 	sign "$installer";
 } elsif(defined $smctl_kpa) {
-	system "smctl sign --simple --keypair-alias $smctl_kpa --input $installer.msi" if defined $smctl_kpa;
+	my $cmd = "smctl sign --simple --keypair-alias $smctl_kpa --input $installer.msi";
+	system $cmd;
 	die "signing failed [$cmd]" if $?;
 }
 

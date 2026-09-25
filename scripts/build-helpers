@@ -267,6 +267,7 @@ vs2022env() {
 
 		sdk=26100
 
+		[ -z "$o" -o -n "$OSGEO4W_SKIP_VS_UPDATE" ] ||
 		$OSGEO4W_SCRIPTS/vs_buildtools.exe --passive --norestart --nocache --wait \
 			--installPath $vcdir \
 			--add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 \
@@ -317,6 +318,7 @@ vs2022env() {
 	export CXX=cl.exe
 	type -a $CC $CXX
 
+	if [ -z "$OSGEO4W_SKIP_MUTEX_HACK" ]; then
 	(
 		cd /tmp
 
@@ -339,6 +341,7 @@ vs2022env() {
 			fi
 		done < <(grep -Rl _DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR .)
 	)
+	fi
 }
 declare -x vs2022env
 

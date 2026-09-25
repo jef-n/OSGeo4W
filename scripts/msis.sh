@@ -11,6 +11,9 @@ if [ -r "$cert.p12" -a -r "$cert.pass" ]; then
 	sign="-signwith=$cert.p12 -signpass=$(<$cert.pass)"
 elif [ -n "$SMCTL" -a -n "$SMCTL_KPA" ]; then
 	sign="-smctl-keypair-alias=$SMCTL_KPA"
+
+	. scripts/build-helpers
+	vsenv # for makecat and signtool
 fi
 
 for i in ${PKGS:-qgis qgis-ltr}; do
