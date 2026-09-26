@@ -225,6 +225,14 @@ for pkg in pkgs:
     else:
         props['Requires'] = ""
 
+    if os.path.exists("patch"):
+        if system(f"patch -p1 -d osgeo4w --dry-run <patch && patch -p1 -d osgeo4w <patch") != 0:
+            print(f"{pkg}: Patch failed", file=sys.stderr)
+            sys.exit(1)
+        print(f"{pkg}: Patch applied")
+    else:
+        patch = ""
+
     tf = tarfile.open(tn, "w:bz2", format=tarfile.GNU_FORMAT)
 
     postinstall = None
@@ -322,7 +330,10 @@ for pkg in pkgs:
         externalsource = os.environ['externalsource']
     elif pkg == mainpkg:
         tn = join(d, "{0}-{1}-{2}-src.tar.bz2".format(pname, props['Version'], b))
-        if system("tar -C .. -cjf {0} osgeo4w/package.sh {1}".format(tn, os.environ.get("addsrcfiles", ''))) != 0:
+        if system("tar -C .. -cjf {0} osgeo4w/package.sh {1} {2}".format(
+            tn, os.environ.get("addsrcfiles", ''),
+            "osgeo4w/patch" if os.path.exists("patch") else ''
+        )) != 0:
             sys.exit(1)
         externalsource = None
     else:

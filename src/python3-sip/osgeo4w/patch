@@ -1,0 +1,12 @@
+diff -ur a/apps/Python312/Lib/site-packages/sipbuild/generator/parser/parser_manager.py b/apps/Python312/Lib/site-packages/sipbuild/generator/parser/parser_manager.py
+--- a/apps/Python312/Lib/site-packages/sipbuild/generator/parser/parser_manager.py	2026-09-05 19:51:17.000000000 +0200
++++ b/apps/Python312/Lib/site-packages/sipbuild/generator/parser/parser_manager.py	2026-09-26 13:34:24.401514660 +0200
+@@ -1938,6 +1938,8 @@
+                 # We have no minimum version information from which to derive a
+                 # major version so use the default.
+                 major = DEFAULT_ABI_MAJOR
++        elif major <= 13 and not minimums:
++            pass
+         else:
+             # Check that this major version is supported and that any minor
+             # version meets the minimum requirements.
