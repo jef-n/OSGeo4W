@@ -6,8 +6,7 @@ index f6531904a..54c3ae199 100644
          ${WINSOCK_LIBRARY}
  )
  
--if (ZSTD_FOUND)
-+if (zstd_FOUND)
+ if (PDAL_HAVE_ZSTD)
      target_link_libraries(${PDAL_LIB_NAME}
          PRIVATE
 -        zstd::libzstd)
@@ -23,9 +22,8 @@ index 8ae6cdff1..e557c49d5 100644
      find_package(zstd CONFIG QUIET)
      set_package_properties(ZSTD PROPERTIES TYPE
          PURPOSE "General compression support")
--    if (ZSTD_FOUND)
-+    if (zstd_FOUND)
+-    if (zstd_FOUND AND TARGET zstd::libzstd)
++    if (zstd_FOUND AND TARGET zstd::libzstd_shared)
          set(PDAL_HAVE_ZSTD 1)
--    endif(ZSTD_FOUND)
-+    endif(zstd_FOUND)
+     endif()
  endif(WITH_ZSTD)
