@@ -105,6 +105,7 @@ cat <<EOF >tcltk.lst
 install/${PREFIX}DLLs/_tkinter.pyd
 install/${PREFIX}DLLs/tcl86t.dll
 install/${PREFIX}DLLs/tk86t.dll
+install/${PREFIX}DLLs/zlib1.dll
 install/${PREFIX}Lib/idlelib
 install/${PREFIX}tcl
 EOF
@@ -205,8 +206,8 @@ tar -cjf $R/$P-core/$P-core-$V-$B.tar.bz2 \
 	--xform "s,core-preremove.bat,etc/preremove/$P-core.bat," \
 	--xform "s,ini.bat,etc/ini/$P.bat," \
 	--xform "s,^install/,," \
-	--exclude "install/apps/$PYTHON/DLLs/libcrypto-3.dll" \
-	--exclude "install/apps/$PYTHON/DLLs/libssl-3.dll" \
+	--exclude "install/apps/$PYTHON/DLLs/libcrypto-3-x64.dll" \
+	--exclude "install/apps/$PYTHON/DLLs/libssl-3-x64.dll" \
 	--exclude "install/apps/$PYTHON/DLLs/vcruntime140.dll" \
 	--exclude "install/apps/$PYTHON/DLLs/vcruntime140_1.dll" \
 	--exclude __pycache__ \
@@ -388,8 +389,8 @@ if egrep -v \
 	/tmp/$P-installed.lst |
 	egrep -v "_d\.(pyd|dll)$" |
 	fgrep -v -x -f <(cat <<EOF
-${PREFIX}DLLs/libcrypto-3.dll
-${PREFIX}DLLs/libssl-3.dll
+${PREFIX}DLLs/libcrypto-3-x64.dll
+${PREFIX}DLLs/libssl-3-x64.dll
 ${PREFIX}DLLs/sqlite3.dll
 ${PREFIX}DLLs/vcruntime140.dll
 ${PREFIX}DLLs/vcruntime140_1.dll
