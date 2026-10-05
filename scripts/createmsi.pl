@@ -399,8 +399,8 @@ EOF
 my $catdb_add = "";
 my $catdb_del = "";
 if(-f "unpacked/etc/$productuuid.cat") {
-	$catdb_add = "\"%OSGEO4W_ROOT%\\bin\\signtool\" /d \"%OSGEO4W_ROOT%\\etc\\$productuuid.cat\"";
-	$catdb_del = "\"%OSGEO4W_ROOT%\\bin\\signtool\" /d /r $productuuid.cat";
+	$catdb_add = "\"%OSGEO4W_ROOT%\\bin\\signtool\" catdb /d \"%OSGEO4W_ROOT%\\etc\\$productuuid.cat\"";
+	$catdb_del = "\"%OSGEO4W_ROOT%\\bin\\signtool\" catdb /d /r $productuuid.cat\r\ndel \"%OSGEO4W_ROOT%\\bin\\signtool.exe\"";
 }
 
 unless( defined $binary ) {
@@ -424,41 +424,41 @@ my $b = "\"%OSGEO4W_ROOT%\\etc\\preremove-conf.bat\"";
 my $c = ">>$b";
 
 print F <<EOF;
-echo on
-set OSGEO4W_ROOT=%~dp0
-set OSGEO4W_ROOT=%OSGEO4W_ROOT:~0,-4%
-set OSGEO4W_STARTMENU=%~1
-set OSGEO4W_DESKTOP=%~2
-set OSGEO4W_DESKTOP_LINKS=%~3
-if not defined OSGEO4W_DESKTOP_LINKS set OSGEO4W_DESKTOP_LINKS=0
-set OSGEO4W_MENU_LINKS=%~4
-if not defined OSGEO4W_MENU_LINKS set OSGEO4W_MENU_LINKS=0
-
-for %%i in ("%OSGEO4W_ROOT%") do set OSGEO4W_ROOT=%%~fsi
-if "%OSGEO4W_ROOT:~-1%"=="\\" set OSGEO4W_ROOT=%OSGEO4W_ROOT:~0,-1%
-if "%OSGEO4W_STARTMENU:~-1%"=="\\" set OSGEO4W_STARTMENU=%OSGEO4W_STARTMENU:~0,-1%
-if "%OSGEO4W_DESKTOP:~-1%"=="\\" set OSGEO4W_DESKTOP=%OSGEO4W_DESKTOP:~0,-1%
-
-if not %OSGEO4W_DESKTOP_LINKS%==0 if not exist "%OSGEO4W_DESKTOP%" mkdir "%OSGEO4W_DESKTOP%"
-if not %OSGEO4W_MENU_LINKS%==0 if not exist "%OSGEO4W_STARTMENU%" mkdir "%OSGEO4W_STARTMENU%"
-
-set OSGEO4W_ROOT_MSYS=%OSGEO4W_ROOT:\\=/%
-if "%OSGEO4W_ROOT_MSYS:~1,1%"==":" set OSGEO4W_ROOT_MSYS=/%OSGEO4W_ROOT_MSYS:~0,1%/%OSGEO4W_ROOT_MSYS:~3%
-$catdb_add
-if exist $b del $b
-echo set OSGEO4W_ROOT=%OSGEO4W_ROOT%$c
-echo set OSGEO4W_ROOT_MSYS=%OSGEO4W_ROOT_MSYS%$c
-echo set OSGEO4W_STARTMENU=%OSGEO4W_STARTMENU%$c
-echo set OSGEO4W_DESKTOP=%OSGEO4W_DESKTOP%$c
-echo set OSGEO4W_MENU_LINKS=^%OSGEO4W_MENU_LINKS%$c
-echo set OSGEO4W_DESKTOP_LINKS=^%OSGEO4W_DESKTOP_LINKS%$c
-\@echo.
-\@echo %DATE% %TIME%: Running postinstall
-\@echo --------------------------------------------------------------------------------
-type $b
-
-PATH %OSGEO4W_ROOT%\\bin;%PATH%
-cd /d %OSGEO4W_ROOT%
+echo on\r
+set OSGEO4W_ROOT=%~dp0\r
+set OSGEO4W_ROOT=%OSGEO4W_ROOT:~0,-4%\r
+set OSGEO4W_STARTMENU=%~1\r
+set OSGEO4W_DESKTOP=%~2\r
+set OSGEO4W_DESKTOP_LINKS=%~3\r
+if not defined OSGEO4W_DESKTOP_LINKS set OSGEO4W_DESKTOP_LINKS=0\r
+set OSGEO4W_MENU_LINKS=%~4\r
+if not defined OSGEO4W_MENU_LINKS set OSGEO4W_MENU_LINKS=0\r
+\r
+for %%i in ("%OSGEO4W_ROOT%") do set OSGEO4W_ROOT=%%~fsi\r
+if "%OSGEO4W_ROOT:~-1%"=="\\" set OSGEO4W_ROOT=%OSGEO4W_ROOT:~0,-1%\r
+if "%OSGEO4W_STARTMENU:~-1%"=="\\" set OSGEO4W_STARTMENU=%OSGEO4W_STARTMENU:~0,-1%\r
+if "%OSGEO4W_DESKTOP:~-1%"=="\\" set OSGEO4W_DESKTOP=%OSGEO4W_DESKTOP:~0,-1%\r
+\r
+if not %OSGEO4W_DESKTOP_LINKS%==0 if not exist "%OSGEO4W_DESKTOP%" mkdir "%OSGEO4W_DESKTOP%"\r
+if not %OSGEO4W_MENU_LINKS%==0 if not exist "%OSGEO4W_STARTMENU%" mkdir "%OSGEO4W_STARTMENU%"\r
+\r
+set OSGEO4W_ROOT_MSYS=%OSGEO4W_ROOT:\\=/%\r
+if "%OSGEO4W_ROOT_MSYS:~1,1%"==":" set OSGEO4W_ROOT_MSYS=/%OSGEO4W_ROOT_MSYS:~0,1%/%OSGEO4W_ROOT_MSYS:~3%\r
+$catdb_add\r
+if exist $b del $b\r
+echo set OSGEO4W_ROOT=%OSGEO4W_ROOT%$c\r
+echo set OSGEO4W_ROOT_MSYS=%OSGEO4W_ROOT_MSYS%$c\r
+echo set OSGEO4W_STARTMENU=%OSGEO4W_STARTMENU%$c\r
+echo set OSGEO4W_DESKTOP=%OSGEO4W_DESKTOP%$c\r
+echo set OSGEO4W_MENU_LINKS=^%OSGEO4W_MENU_LINKS%$c\r
+echo set OSGEO4W_DESKTOP_LINKS=^%OSGEO4W_DESKTOP_LINKS%$c\r
+\@echo.\r
+\@echo %DATE% %TIME%: Running postinstall\r
+\@echo --------------------------------------------------------------------------------\r
+type $b\r
+\r
+PATH %OSGEO4W_ROOT%\\bin;%PATH%\r
+cd /d %OSGEO4W_ROOT%\r
 EOF
 
 chdir "unpacked";
@@ -467,39 +467,38 @@ for my $p (<etc/postinstall/*.bat>) {
 	my($dir,$file) = $p =~ /^(.+)\\([^\\]+)$/;
 
 	print F <<EOF;
-\@echo.
-\@echo %DATE% %TIME%: Running postinstall $file...
-\@echo --------------------------------------------------------------------------------
-%COMSPEC% /c "%OSGEO4W_ROOT%\\$p"
-set e=%errorlevel%
-ren "%OSGEO4W_ROOT%\\$p" $file.done
-$catdb_del
-\@echo --------------------------------------------------------------------------------
-\@echo %DATE% %TIME%: Done postinstall $file [%e%].
-\@echo.
-
+\@echo.\r
+\@echo %DATE% %TIME%: Running postinstall $file...\r
+\@echo --------------------------------------------------------------------------------\r
+%COMSPEC% /c "%OSGEO4W_ROOT%\\$p"\r
+set e=%errorlevel%\r
+ren "%OSGEO4W_ROOT%\\$p" $file.done\r
+\@echo --------------------------------------------------------------------------------\r
+\@echo %DATE% %TIME%: Done postinstall $file [%e%].\r
+\@echo.\r
+\r
 EOF
 }
 chdir "..";
 
 print F <<EOF;
-exit /b 0
+exit /b 0\r
 EOF
 
 close F;
 
 open F, ">packages/preremove.bat";
 print F <<EOF;
-\@echo on
-\@echo %DATE% %TIME%: Running preremove...
-\@echo --------------------------------------------------------------------------------
-call "%~dp0\\preremove-conf.bat"
-\@echo OSGEO4W_ROOT=%OSGEO4W_ROOT%
-\@echo OSGEO4W_ROOT_MSYS=%OSGEO4W_ROOT_MSYS%
-\@echo OSGEO4W_STARTMENU=%OSGEO4W_STARTMENU%
-\@echo OSGEO4W_DESKTOP=%OSGEO4W_DESKTOP%
-call "%OSGEO4W_ROOT%\\bin\\o4w_env.bat"
-cd /d \"%OSGEO4W_ROOT%\"
+\@echo on\r
+\@echo %DATE% %TIME%: Running preremove...\r
+\@echo --------------------------------------------------------------------------------\r
+call "%~dp0\\preremove-conf.bat"\r
+\@echo OSGEO4W_ROOT=%OSGEO4W_ROOT%\r
+\@echo OSGEO4W_ROOT_MSYS=%OSGEO4W_ROOT_MSYS%\r
+\@echo OSGEO4W_STARTMENU=%OSGEO4W_STARTMENU%\r
+\@echo OSGEO4W_DESKTOP=%OSGEO4W_DESKTOP%\r
+call "%OSGEO4W_ROOT%\\bin\\o4w_env.bat"\r
+cd /d \"%OSGEO4W_ROOT%\"\r
 EOF
 
 chdir "unpacked";
@@ -508,29 +507,30 @@ for my $p (<etc/preremove/*.bat>) {
 	my($dir,$file) = $p =~ /^(.+)\\([^\\]+)$/;
 
 	print F <<EOF;
-\@echo Running preremove $file...
-\@echo %DATE% %TIME%: Running preremove $file...
-\@echo --------------------------------------------------------------------------------
-%COMSPEC% /c $p
-set e=%errorlevel%
-\@echo --------------------------------------------------------------------------------
-\@echo %DATE% %TIME%: Done preremove $file [%e%].
-
+\@echo Running preremove $file...\r
+\@echo %DATE% %TIME%: Running preremove $file...\r
+\@echo --------------------------------------------------------------------------------\r
+%COMSPEC% /c $p\r
+set e=%errorlevel%\r
+\@echo --------------------------------------------------------------------------------\r
+\@echo %DATE% %TIME%: Done preremove $file [%e%].\r
+\r
 EOF
 }
 
 chdir "..";
 
 print F <<EOF;
-rmdir /s /q "%OSGEO4W_STARTMENU%"
-rmdir /s /q "%OSGEO4W_DESKTOP%"
-del "%OSGEO4W_ROOT%\\etc\\postinstall\\*.done"
-del "%OSGEO4W_ROOT%\\etc\\postinstall.bat"
-del "%OSGEO4W_ROOT%\\etc\\preremove.bat"
-del "%OSGEO4W_ROOT%\\etc\\preremove-conf.bat"
-del "%OSGEO4W_ROOT%\\var\\log\\postinstall.log"
-echo --------------------------------------------------------------------------------
-echo %DATE% %TIME%: Done preremove
+rmdir /s /q "%OSGEO4W_STARTMENU%"\r
+rmdir /s /q "%OSGEO4W_DESKTOP%"\r
+del "%OSGEO4W_ROOT%\\etc\\postinstall\\*.done"\r
+del "%OSGEO4W_ROOT%\\etc\\postinstall.bat"\r
+del "%OSGEO4W_ROOT%\\etc\\preremove.bat"\r
+del "%OSGEO4W_ROOT%\\etc\\preremove-conf.bat"\r
+del "%OSGEO4W_ROOT%\\var\\log\\postinstall.log"\r
+$catdb_del\r
+echo --------------------------------------------------------------------------------\r
+echo %DATE% %TIME%: Done preremove\r
 EOF
 
 close F;
