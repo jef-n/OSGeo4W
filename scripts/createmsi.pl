@@ -390,17 +390,14 @@ EOF
 		$cmd = "smctl sign --keypair-alias $smctl_kpa --input unpacked/etc/$productuuid.cat";
 		system $cmd;
 		die "signing of catalog failed [$cmd]" if $?;
-
-		system 'cp "$(type -p signtool.exe)" unpacked/bin';
-		die "catalog creation failed [$cmd]" if $?;
 	}
 }
 
 my $catdb_add = "";
 my $catdb_del = "";
 if(-f "unpacked/etc/$productuuid.cat") {
-	$catdb_add = "\"%OSGEO4W_ROOT%\\bin\\signtool\" catdb /d \"%OSGEO4W_ROOT%\\etc\\$productuuid.cat\"";
-	$catdb_del = "\"%OSGEO4W_ROOT%\\bin\\signtool\" catdb /d /r $productuuid.cat\r\ndel \"%OSGEO4W_ROOT%\\bin\\signtool.exe\"";
+	$catdb_add = "\"%OSGEO4W_ROOT%\\bin\\catregistration\" -a \"%OSGEO4W_ROOT%\\etc\\$productuuid.cat\"";
+	$catdb_del = "\"%OSGEO4W_ROOT%\\bin\\catregistration\" -r \"%OSGEO4W_ROOT%\\etc\\$productuuid.cat\"";
 }
 
 unless( defined $binary ) {

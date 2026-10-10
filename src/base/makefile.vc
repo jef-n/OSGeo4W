@@ -1,6 +1,6 @@
 CFLAGS=-DMBCS
 
-all: dllupdate.exe textreplace.exe bgspawn.exe run.exe getspecialfolder.exe elevate.exe iswindows8orgreater.exe arpregistration.exe
+all: dllupdate.exe textreplace.exe bgspawn.exe run.exe getspecialfolder.exe elevate.exe iswindows8orgreater.exe arpregistration.exe catregistration.exe
 
 dllupdate.exe: dllupdate.obj
 	cl /nologo /Fo:$@ $** version.lib advapi32.lib
@@ -26,6 +26,9 @@ iswindows8orgreater.exe: iswindows8orgreater.obj
 
 arpregistration.exe: arpregistration.obj
 	cl /nologo /Fo:$@ $** advapi32.lib rpcrt4.lib
+
+catregistration.exe: catregistration.obj
+	cl /nologo /Fo:$@ $** wintrust.lib
 
 clean:
 	-del *.exe

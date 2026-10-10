@@ -26,6 +26,23 @@ category: Commandline_Utilities
 requires: msvcrt2019 setup
 EOF
 
+if [ -f OSGeo_DigiCert_Signing_Cert.p12 -a -f OSGeo_DigiCert_Signing_Cert.pass ]; then
+	mv catregistration.exe catregistration-unsigned.exe
+	osslsigncode sign \
+		-pkcs12 OSGeo_DigiCert_Signing_Cert.p12 \
+		-pass $(<OSGeo_DigiCert_Signing_Cert.pass) \
+		-n "OSGeo4W security catalog registration" \
+		-h sha256 \
+		-i http://osgeo4w.osgeo.org \
+		-t http://timestamp.digicert.com \
+		-in catregistration-unsigned.exe \
+		catregistration.exe
+	rm catregistration-unsigned.exe
+elif [ -n "$SMCTL" -a -n "$SMCTL_KPA" ]; then
+	"$SMCTL" sign --simple --keypair-alias $SMCTL_KPA --input catregistration.exe
+fi
+
+
 tar -cjf $R/$P-$V-$B.tar.bz2 \
 	--xform "s,^bgspawn.exe,bin/bgspawn.exe," \
 	--xform "s,^elevate.exe,bin/elevate.exe," \
@@ -35,6 +52,7 @@ tar -cjf $R/$P-$V-$B.tar.bz2 \
 	--xform "s,^textreplace.exe,bin/textreplace.exe," \
 	--xform "s,^iswindows8orgreater.exe,bin/iswindows8orgreater.exe," \
 	--xform "s,^arpregistration.exe,bin/arpregistration.exe," \
+	--xform "s,^catregistration.exe,bin/catregistration.exe," \
 	--xform "s,^o4w_env.bat,bin/o4w_env.bat," \
 	--xform "s,^ini.bat,etc/ini/$P.bat," \
 	--xform "s,^postinstall.bat,etc/postinstall/$P.bat," \
@@ -48,6 +66,7 @@ tar -cjf $R/$P-$V-$B.tar.bz2 \
 	xxmklink.exe \
 	iswindows8orgreater.exe \
 	arpregistration.exe \
+	catregistration.exe \
 	ini.bat \
 	o4w_env.bat \
 	OSGeo4W.bat \
@@ -63,6 +82,8 @@ tar -cjf $R/$P-$V-$B-src.tar.bz2 \
 	getspecialfolder.c \
 	textreplace.c \
 	iswindows8orgreater.c \
+	arpregistration.c \
+	catregistration.c \
 	makefile.vc \
 	o4w_env.bat \
 	OSGeo4W.bat \
