@@ -1,8 +1,8 @@
 export P=arrow-cpp
-export V=25.0.1
+export V=26.0.0
 export B=next
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="boost-devel openssl-devel thrift-devel zstd-devel bzip2-devel zlib-devel lz4-devel brotli-devel snappy-devel protobuf-devel utf8proc python3-devel python3-pip python3-setuptools python3-wheel python3-numpy"
+export BUILDDEPENDS="boost-devel openssl-devel thrift-devel zstd-devel bzip2-devel zlib-devel lz4-devel brotli-devel snappy-devel protobuf-devel utf8proc python3-devel python3-pip python3-setuptools python3-wheel python3-numpy uriparser-devel"
 export PACKAGES="arrow-cpp arrow-cpp-devel python3-pyarrow"
 
 source ../../../scripts/build-helpers
@@ -12,6 +12,9 @@ startlog
 [ -f apache-arrow-$V.tar.gz ] || wget https://dist.apache.org/repos/dist/release/arrow/arrow-$V/apache-arrow-$V.tar.gz
 sha512sum -c apache-arrow-$V.tar.gz.sha512
 [ -d ../apache-arrow-$V ] || tar -C .. -xzf apache-arrow-$V.tar.gz
+
+export R=$OSGEO4W_REP/x86_64/release/$P
+mkdir -p $R/$P-devel
 
 (
 	fetchenv osgeo4w/bin/o4w_env.bat
@@ -68,6 +71,7 @@ sha512sum -c apache-arrow-$V.tar.gz.sha512
 			-D utf8proc_LIB=$(cygpath -am ../osgeo4w/lib/utf8proc_static.lib) \
 		-D xsimd_SOURCE=BUNDLED \
 		-D RapidJSON_SOURCE=BUNDLED \
+		-D simdjson_SOURCE=BUNDLED \
 		-D THRIFT_CMAKE_DIR=$(cygpath -am ../osgeo4w/cmake/thrift) \
 		../../apache-arrow-$V/cpp
 
@@ -94,9 +98,6 @@ sha512sum -c apache-arrow-$V.tar.gz.sha512
 
         OSGEO4W_PY_INCLUDE_BINARY=1 wheel=$(cygpath -aw dist/*.whl) adddepends=$P externalsource=$P P=python3-pyarrow packagewheel --only-binary :all: --force-reinstall
 )
-
-export R=$OSGEO4W_REP/x86_64/release/$P
-mkdir -p $R/$P-devel
 
 cat <<EOF >$R/setup.hint
 sdesc: "Apache Arrow C++ library (runtime)"
