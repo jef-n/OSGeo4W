@@ -1,0 +1,15 @@
+diff -ur netcdf-c-4.10.1/libhdf5/hdf5attr.c ../netcdf-c-4.10.1/libhdf5/hdf5attr.c
+--- netcdf-c-4.10.1/libhdf5/hdf5attr.c	2026-07-08 00:29:49.000000000 +0200
++++ ../netcdf-c-4.10.1/libhdf5/hdf5attr.c	2026-10-12 13:56:13.700884700 +0200
+@@ -853,7 +853,10 @@
+ 
+     /* Get the name. */
+     if (name)
+-        strcpy(name, att->hdr.name);
++    {
++        strncpy(name, att->hdr.name, NC_MAX_NAME - 1);
++        name[NC_MAX_NAME - 1] = 0;
++    }
+ 
+     return NC_NOERR;
+ }

@@ -11,6 +11,10 @@ startlog
 
 [ -f $P-c-$V.tar.gz ] || wget https://downloads.unidata.ucar.edu/$P-c/$V/$P-c-$V.tar.gz
 [ -f ../$P-c-$V/CMakeLists.txt ] || tar -C .. -xzf $P-c-$V.tar.gz
+[ ! -s patch -o -f ../$P-c-$V/patched ] || {
+	patch -p1 -d ../$P-c-$V --dry-run <patch
+	patch -p1 -d ../$P-c-$V <patch >../$P-c-$V/patched
+}
 
 vsenv
 cmakeenv
@@ -105,6 +109,6 @@ tar -C install -cjf $R/$P-tools/$P-tools-$V-$B.tar.bz2 \
 tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 	include lib etc
 
-tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
+tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/patch
 
 endlog
