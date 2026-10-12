@@ -1,5 +1,5 @@
 export P=python3-numpy
-export V=2.4.6
+export V=pip
 export B=pip
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-pip python3-wheel python3-setuptools python3-devel"
@@ -46,7 +46,11 @@ EOF
 	s=$(cygpath -am osgeo4w/apps/$PYTHON/Lib/site-packages/scipy_openblas64/lib/libscipy_openblas64_.dll)
 	d=apps/$PYTHON/Lib/site-packages/numpy/_core/libscipy_openblas64_.dll
 
-	OSGEO4W_PY_INCLUDE_BINARY=1 PIP_NO_BINARY=numpy addfiles=$s=$d \
+	OSGEO4W_PY_INCLUDE_BINARY=1 \
+	PIP_NO_BINARY=numpy \
+	INCLUDE="$INCLUDE;$(cygpath -aw osgeo4w/apps/$PYTHON/include)" \
+	LIB="$LIB;$(cygpath -aw osgeo4w/apps/$PYTHON/libs)" \
+	addfiles=$s=$d \
 		packagewheel \
 			-Csetup-args=-Dcpu-baseline=none \
 			-Csetup-args=-Dallow-noblas=false
