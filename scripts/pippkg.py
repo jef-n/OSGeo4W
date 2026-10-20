@@ -304,11 +304,14 @@ for pkg in pkgs:
         print("{}: ERROR: Binary files in package without OSGEO4W_PY_INCLUDE_BINARY".format(pkg))
         raise BaseException("Binary files in package without OSGEO4W_PY_INCLUDE_BINARY")
 
-    addfiles = os.environ.get("addfiles", '').split(' ')
-    if len(addfiles) >= 2:
-        for f in addfiles:
-            src, dst = f.split("=")
-            tf.add(src, dst)
+    addfiles = os.environ.get("addfiles")
+    if addfiles:
+        for f in addfiles.split(' '):
+            if "=" in f:
+                src, dst = f.split("=")
+                tf.add(src, dst)
+            else:
+                tf.add(f)
 
     if postinstall:
         postinstall.close()
@@ -329,15 +332,20 @@ for pkg in pkgs:
     if 'externalsource' in os.environ:
         externalsource = os.environ['externalsource']
     elif pkg == mainpkg:
-        tn = join(d, "{0}-{1}-{2}-src.tar.bz2".format(pname, props['Version'], b))
+        mainpkgv = "{0}-{1}".format(props['Version'], b)
+        tn = join(d, "{0}-{1}-src.tar.bz2".format(pname, mainpkgv))
         if system("tar -C .. -cjf {0} osgeo4w/package.sh {1} {2}".format(
             tn, os.environ.get("addsrcfiles", ''),
             "osgeo4w/patch" if os.path.exists("patch") else ''
         )) != 0:
             sys.exit(1)
         externalsource = None
+    elif mainpkgv:
+        externalsource = 'python3-{} {}'.format(mainpkg.replace('_', '-').replace('.', '-'), mainpkgv)
     else:
-        externalsource = 'python3-{}'.format(mainpkg.replace('_', '-').replace('.', '-'))
+        print("{}: ERROR: main package version not found".format(pkg))
+        raise BaseException("Main package version not found")
+
 
     sf = open(join(d, "setup.hint"), "wb")
     sf.write("""\

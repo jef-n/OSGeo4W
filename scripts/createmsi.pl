@@ -1,6 +1,5 @@
 #!/usr/bin/env perl
 # creates a MSI installer from OSGeo4W packages
-# note: works also on Linux using wine and wine mono
 
 # Copyright (C) 2020 Jürgen E. Fischer <jef@norbit.de>
 

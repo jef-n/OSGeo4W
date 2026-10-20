@@ -132,10 +132,10 @@ done
 )
 
 # error out if there are outdated packages not built from pip
-if fgrep -qxf <(grep -L "export V=pip" src/python3-*/osgeo4w/package.sh | cut -d/ -f2) $o4w/outdated-packages.$i; then
+if fgrep -qvxf <(grep -L "export V=pip" src/python3-*/osgeo4w/package.sh | cut -d/ -f2) $o4w/outdated-packages.$i; then
 	echo "Outdated packages not built from pip:"
 	sed -E -e '1,2d; s/^([^        ]+)(.*)$/python3-\L\1\2/; s/_/-/g' $o4w/outdated.$i |
-		egrep "^($(fgrep -xf <(grep -L "export V=pip" src/python3-*/osgeo4w/package.sh | cut -d/ -f2) $o4w/outdated-packages.$i | paste -d"|" -s)) "
+		egrep -v "^($(fgrep -xf <(grep -L "export V=pip" src/python3-*/osgeo4w/package.sh | cut -d/ -f2) $o4w/outdated-packages.$i | paste -d"|" -s)) "
 	exit 1
 fi
 

@@ -1,5 +1,5 @@
 export P=python3-giturlparse
-export V=0.14.0
+export V=0.15.0
 export B=pip
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="python3-pip python3-wheel python3-setuptools"
