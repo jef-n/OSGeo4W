@@ -11,6 +11,10 @@ startlog
 
 [ -f $P-$V.tar.gz ] || wget https://download.savannah.gnu.org/releases/$P/$P-$V.tar.gz
 [ -f ../$P-$V/CMakeLists.txt ] || tar -C .. -xzf $P-$V.tar.gz
+[ ! -s patch -o -f ../$P-$V/patched ] || {
+	patch -p1 -d ../$P-$V --dry-run <patch
+	patch -p1 -d ../$P-$V <patch >../$P-$V/patched
+}
 
 vsenv
 cmakeenv
@@ -74,6 +78,6 @@ tar -C install -cjf $R/$P-devel/$P-devel-$V-$B.tar.bz2 \
 cp ../$P-$V/LICENSE.TXT $R/$P-$V-$B.txt
 cp ../$P-$V/LICENSE.TXT $R/$P-devel/$P-devel-$P-$V-$B.txt
 
-tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh
+tar -C .. -cjf $R/$P-$V-$B-src.tar.bz2 osgeo4w/package.sh osgeo4w/patch
 
 endlog
