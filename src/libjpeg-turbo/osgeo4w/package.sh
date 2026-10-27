@@ -1,5 +1,5 @@
 export P=libjpeg-turbo
-export V=3.2.0
+export V=3.2.1
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=zlib-devel
