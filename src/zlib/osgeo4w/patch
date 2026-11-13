@@ -1,7 +1,7 @@
-diff -ur zlib-1.3.2/CMakeLists.txt ../zlib-1.3.2/CMakeLists.txt
---- zlib-1.3.2/CMakeLists.txt	2026-02-17 13:47:06.000000000 +0100
-+++ ../zlib-1.3.2/CMakeLists.txt	2026-04-16 16:36:23.426782600 +0200
-@@ -150,7 +150,7 @@
+diff -ur osgeo4w/zlib-1.4/CMakeLists.txt zlib-1.4/CMakeLists.txt
+--- osgeo4w/zlib-1.4/CMakeLists.txt	2026-11-05 05:32:10.000000000 +0100
++++ zlib-1.4/CMakeLists.txt	2026-11-07 16:07:12.809030700 +0100
+@@ -234,7 +234,7 @@
      zutil.c)
  
  if(WIN32)
@@ -10,21 +10,21 @@ diff -ur zlib-1.3.2/CMakeLists.txt ../zlib-1.3.2/CMakeLists.txt
      set(CMAKE_DEBUG_POSTFIX "d")
  endif(WIN32)
  
-@@ -183,7 +183,7 @@
-         zlib
-         PROPERTIES DEFINE_SYMBOL ZLIB_DLL
-                    EXPORT_NAME ZLIB
--                   OUTPUT_NAME z)
-+                   OUTPUT_NAME zlib)
-     if(UNIX
-         AND NOT APPLE
-         AND NOT (CMAKE_SYSTEM_NAME STREQUAL AIX)
-@@ -219,7 +219,7 @@
-         PUBLIC $<$<BOOL:${HAVE_OFF64_T}>:_LARGEFILE64_SOURCE=1>)
-     set_target_properties(
-         zlibstatic PROPERTIES EXPORT_NAME ZLIBSTATIC OUTPUT_NAME
--                                                     z${zlib_static_suffix})
-+                                                     zlib${zlib_static_suffix})
- endif(ZLIB_BUILD_STATIC)
+@@ -277,7 +277,7 @@
+             PUBLIC_HEADER "${ZLIB_PUBLIC_HDRS}")
  
- if(ZLIB_INSTALL)
+     if(MSVC)
+-        set_target_properties(zlib PROPERTIES OUTPUT_NAME libz)
++        set_target_properties(zlib PROPERTIES OUTPUT_NAME zlib)
+     else(MSVC)
+         set_target_properties(zlib PROPERTIES OUTPUT_NAME z)
+     endif(MSVC)
+@@ -324,7 +324,7 @@
+     if(MSVC)
+         set_target_properties(zlibstatic
+             PROPERTIES
+-                ARCHIVE_OUTPUT_NAME libz${zlib_static_suffix})
++                ARCHIVE_OUTPUT_NAME zlib${zlib_static_suffix})
+     else(MSVC)
+         set_target_properties(zlibstatic
+             PROPERTIES

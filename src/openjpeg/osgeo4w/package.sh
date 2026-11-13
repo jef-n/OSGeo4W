@@ -3,7 +3,7 @@ export V=2.5.4
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS="zlib-devel libtiff-devel libpng-devel"
-export PACKAGES="openjpeg openjpeg-devel openjpeg-tools"
+export PACKAGES="openjpeg openjpeg-devel openjpeg-tools lcms2-devel"
 
 source ../../../scripts/build-helpers
 
@@ -20,16 +20,9 @@ vsenv
 cmakeenv
 ninjaenv
 
-mkdir -p build{,-lcms2} install
+mkdir -p build install
 
-cd build-lcms2
-
-cmake -G Ninja \
-	-Wno-dev \
-	../../$P-$V/thirdparty/liblcms2
-ninja
-
-cd ../build
+cd build
 cmake -G Ninja \
 	-Wno-dev \
 	-D CMAKE_BUILD_TYPE=Release \
@@ -65,7 +58,7 @@ cat <<EOF >$R/setup.hint
 sdesc: "OpenJPEG (runtime)"
 ldesc: "OpenJPEG : Open source C-Library for JPEG2000"
 category: Libs
-requires: msvcrt2019 libtiff zlib libpng
+requires: msvcrt2019 libtiff zlib libpng lcms2
 maintainer: $MAINTAINER
 EOF
 

@@ -1,5 +1,5 @@
 export P=zlib
-export V=1.3.2
+export V=1.4
 export B=next
 export MAINTAINER=JuergenFischer
 export BUILDDEPENDS=none
