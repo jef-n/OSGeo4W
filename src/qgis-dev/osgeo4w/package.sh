@@ -221,6 +221,7 @@ nextbinary
 		-D QCA_INCLUDE_DIR=$(cygpath -am $O4W_ROOT/apps/Qt6/include/QtCrypto) \
 		-D QCA_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt6/lib/qca-qt6.lib) \
 		-D QWT_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt6/lib/qwt.lib) \
+		-D ZSTD_LIBRARY=$(cygpath -am $O4W_ROOT/lib/zstd.lib) \
 		-D QSCINTILLA_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt6/lib/qscintilla2.lib) \
 		-D DART_TESTING_TIMEOUT=60 \
 		-D PUSH_TO_CDASH=$PUSH_TO_DASH \
