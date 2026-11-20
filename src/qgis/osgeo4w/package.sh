@@ -2,7 +2,7 @@ export P=qgis
 export V=tbd
 export B=tbd
 export MAINTAINER=JuergenFischer
-export BUILDDEPENDS="expat-devel fcgi-devel proj-devel qt6-qml qt6-oci sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt6 python3-sip python3-pyqt-builder python3-devel python3-pyqt6-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-qt6-devel qscintilla-qt6-devel qt6-devel qwt-qt6-devel libspatialite-devel oci-devel qtkeychain-qt6-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel pdal pdal-devel grass draco-devel libtiff-devel python3-oauthlib gdal-devel geographiclib-devel sfcgal-devel"
+export BUILDDEPENDS="expat-devel fcgi-devel proj-devel qt6-qml qt6-oci sqlite3-devel geos-devel gsl-devel libiconv-devel libzip-devel libspatialindex-devel python3-pip python3-pyqt6 python3-sip python3-pyqt-builder python3-devel python3-pyqt6-qscintilla python3-nose2 python3-future python3-pyyaml python3-mock python3-six qca-qt6-devel qscintilla-qt6-devel qt6-devel qwt-qt6-devel libspatialite-devel oci-devel qtkeychain-qt6-devel zlib-devel opencl-devel exiv2-devel protobuf-devel python3-setuptools zstd-devel libpq-devel libxml2-devel hdf5-devel hdf5-tools netcdf-devel pdal pdal-devel grass draco-devel libtiff-devel python3-oauthlib gdal-devel geographiclib-devel sfcgal-devel openssl-devel openjpeg-devel openjpeg-tools lcms2-devel freetype-devel libjpeg-turbo-devel libpng-devel"
 export PACKAGES="qgis qgis-common qgis-deps qgis-devel qgis-full qgis-full-free qgis-full-grids qgis-grass-plugin qgis-oracle-provider qgis-pdb qgis-server"
 
 : ${REPO:=https://github.com/qgis/QGIS.git}
@@ -132,6 +132,8 @@ nextbinary
 		-D WITH_GRASS=TRUE \
 		-D WITH_GRASS8=TRUE \
 		-D WITH_SFCGAL=TRUE \
+		-D WITH_PDF4QT=TRUE \
+		-D WITH_INTERNAL_BLEND2D=TRUE \
 		-D GRASS_PREFIX8="$(cygpath -m $GRASS_PREFIX)" \
 		-D WITH_ORACLE=TRUE \
 		-D WITH_CUSTOM_WIDGETS=TRUE \
@@ -160,6 +162,7 @@ nextbinary
 		-D QCA_INCLUDE_DIR=$(cygpath -am $O4W_ROOT/apps/Qt6/include/QtCrypto) \
 		-D QCA_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt6/lib/qca-qt6.lib) \
 		-D QWT_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt6/lib/qwt.lib) \
+		-D ZSTD_LIBRARY=$(cygpath -am $O4W_ROOT/lib/zstd.lib) \
 		-D QSCINTILLA_LIBRARY=$(cygpath -am $O4W_ROOT/apps/Qt6/lib/qscintilla2.lib) \
 		-D DART_TESTING_TIMEOUT=60 \
 		-D PUSH_TO_CDASH=TRUE \
@@ -315,6 +318,7 @@ EOF
 		apps/$P/resources/cpt-city-qgis-min/ \
 		apps/$P/svg/ \
 		apps/$P/crssync.exe \
+		apps/$P/qgis_html_to_pdf.exe \
 		apps/$P/untwine.exe \
 		apps/$P/pdal_wrench.exe \
 		bin/qgis_process-$P.bat \
